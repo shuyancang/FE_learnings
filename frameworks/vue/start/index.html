@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+    <div id="app">
+      <form>
+        <span v-if="!message">请输入用户信息</span>
+        <span v-show="!message">**</span>
+        <input type="text/javascript" name="" v-model="message" />
+        <span>{{count}}</span>
+      </form>
+      <h3>
+        {{message}}
+      </h3>
+      <!-- <button v-on:click="clickMyInfo">提交</button> -->
+      <button @click="clickMyInfo">提交</button>
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        message: '',
+        count: 0,
+      },
+      methods: {
+        clickMyInfo: function(e){
+          console.log(e.target);
+          this.count += 1;
+        }
+      }
+    })
+  </script>
+</body>
+</html>
