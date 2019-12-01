@@ -7,7 +7,7 @@
 * 同源策略限制的对象: cookie/storage/indexDB无法获取; dom无法获取; ajax不可发送;
 * 浏览器可以设置document.domain共享cookie在两个一级域名相同但二级域名不同的网页中; => 该方法只适用于cookie与iframe窗口; localstorage和indexdb无法通过这种方法规避同源策略; 只能通过postmessage APi进行规避
 * img-src, iframe-src, script(jsonp原理)-src, link, css-background(可能导致css攻击漏洞)均不受同源策略限制, 可以引用任意域名资源;
-* ajax规避同源策略的方案: jsonp, websocket, cors;
+* ajax规避同源策略的方案: jsonp, websocket, cors; postMessage;
 * 
 
 2. 语义化html
@@ -16,6 +16,7 @@
 * 尽量少写html标签; 减少dom渲染时间, 避免浪费文件;
 
 
+# CSS构建 3D世界
 
 
 
