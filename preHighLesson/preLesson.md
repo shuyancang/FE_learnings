@@ -12,7 +12,8 @@
 
 2. 语义化html
 * 使用div进行布局, 不要用div进行无意义的包裹
-* 
+* 多使用p替代div; 不要使用纯样式标签(b, font, u); strong, em的语义化; ul/ol(li)的使用; header, nav, article, section, footer, aside等h5新标签的使用;
+* 尽量少写html标签; 减少dom渲染时间, 避免浪费文件;
 
 
 
