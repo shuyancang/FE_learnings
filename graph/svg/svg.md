@@ -68,3 +68,6 @@ path A弧形: A/a rx ry x-axis-rotation large-arc-flag sweep-flag x y; rx为x轴
 * pattern有属性patternContentUnits 用于描述pattern元素基于基本形状使用的单元系统(默认为userSpaceOnUse-) fill缩放及适应相关。
 
 # 6. 文案text
+* [svg中的text介绍](https://developer.mozilla.org/zh-CN/docs/Web/SVG/Tutorial/Texts)
+* text中 x y属性决定了文本在视口中显示的位置; fill设置文本填充色, stroke文本描边, 可以设置font相关属性-font-family/font-weight/font-style/font-variant/font-stretch/font-size/font-size-adjust/kerning/letter-spacing/word-spacing/text-decoration等(可设置为css申明)
+* tspan标记大块文本子部分-必须是一个text或tspan的子元素; 自定义属性 x为容器设置一个新x坐标 y同理, dx从当前位置用一个水平偏移开始绘制文本, dy同理,
