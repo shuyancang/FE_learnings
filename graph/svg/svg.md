@@ -38,6 +38,18 @@
 * path最复杂最强大的路径属性: 属性d(命令-大写绝对定位/小写相对上一个点定位 + 参数);
 *********************
 path d直线指令: M x y(移动到的点的x, y); m x y; L x y(上一个点到x, y位置画直线); l x y; H x(上一个点到x位置的水平直线); h x; V y(上一个点位置到y位置的垂直线); v y;
-path 
-
+path Z闭合指令: 将path路径最后一个点自动与第一个点进行直线连接
+path C贝塞尔曲线: 三次贝塞尔曲线C/c x1 y1, x2 y2, x y(x y为坐标终点, x1 y1 x2 y2分别为起点控制点和终点控制点);
+path S贝塞尔曲线的简写命令: S/s x2 y2, x y 一个点某一侧的控制点是它另一侧控制点的对称(保持斜率不变);
+path S与C贝塞尔组合: 若S命令跟在一个C或者S后, 则它的第一个控制点会被建设成前一个命令曲线的第二个控制点的中心对称点. 如果S命令单独使用，, 那当前点作为第一个控制点;
+path Q二次贝塞尔曲线: Q/q x1 y1, x y(x1 y1为控制点, x y为终点坐标)
+path T延长二次贝塞尔曲线: T/t x y(终点); T前必须有一个Q命令或者T命令
+path A弧形: A/a rx ry x-axis-rotation large-arc-flag sweep-flag x y; rx为x轴半径 ry为y轴半径,x-axis-rotation弧形旋转(°)情况; large-arc-flag角度大小-0代表小角度弧1代表大角度弧, sweep-flag弧线方向-0代表逆时针画弧1代表顺时针画弧
 *********************
+
+# 3. fill stroke
+* [描边与填充文档链接](https://developer.mozilla.org/zh-CN/docs/Web/SVG/Tutorial/Fills_and_Strokes)
+* fill设置对象内部颜色, stroke设置绘制对象的线条颜色(可用颜色名red, rgb, #fff, rgba等); fill-opacity填充色不透明度; stroke-opacity描边不透明度;
+* 描边绘制方式: stroke-linecap: butt默认直边结束线段,线段边界90°垂直于描边方向贯穿终点, square稍微超出实际路径(stroke-width宽度), round边框终点是圆角(圆角半径为stroke-width);
+* 两条描边线段之间以什么方式连接stroke-linejoin: miter默认尖角度, round圆角, bevel斜接
+* stroke-dasharray: 将虚线类型应用描边上.
