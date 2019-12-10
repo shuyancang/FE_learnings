@@ -61,3 +61,10 @@ path A弧形: A/a rx ry x-axis-rotation large-arc-flag sweep-flag x y; rx为x轴
 * linearGradient线性渐变: 需要在对象属性的fill或者stroke中引用它(fill="url(#Gradient2)"); 在linearGradient中x1 y1 x2 y2指定了渐变的大小和出现的范围
 * radialGradient径向渐变可设置属性: cx cy r定义径向渐变范围和大小; fx fy焦点位置, 描述了渐变的中心; spreadMethod控制渐变到达终点的行为-pad默认渐变到达终点后最终渐变色填充剩余空间,reflect会将渐变一直持续下去(变回0%颜色在渐变到100%),repeat同样会让渐变继续(跳回最初的颜色后继续渐变); gradientUnits渐变单元-描述渐变的大小和方向-默认为objectBoundingBox定义对象的渐变大小范围(0-1) + userSpaceOnuse绝对单元(知道对象位置并将渐变放在同样的位置); gradientTransform可以给渐变添加额外的变化-配合transforms进行使用;
 
+# 5. 图案patterns
+* [渐变参考文档](https://developer.mozilla.org/zh-CN/docs/Web/SVG/Tutorial/Patterns)
+* pattern内部可以包含任何之前包含过的其他基本形状, 在pattern上可以定义width和height来描述重复下一个图案之前应该跨多远, 也可以使用x和y描述绘制时的开始点
+* pattern有属性patternUnits用于描述我们使用的属性单元-值为1时被缩放到被应用pattern对象的宽高值;
+* pattern有属性patternContentUnits 用于描述pattern元素基于基本形状使用的单元系统(默认为userSpaceOnUse-) fill缩放及适应相关。
+
+# 6. 文案text
