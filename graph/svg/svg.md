@@ -54,3 +54,10 @@ path A弧形: A/a rx ry x-axis-rotation large-arc-flag sweep-flag x y; rx为x轴
 * 两条描边线段之间以什么方式连接stroke-linejoin: miter默认尖角度, round圆角, bevel斜接
 * stroke-dasharray: 将虚线类型应用描边上. 数值必须用逗号分隔,第一个代表填色区域长度, 第二个表示非填色区域长度... 依此重复循环, 可写任意长度;
 * css部分也可用于svg中, 需要把background-color变为fill, border变为stroke, 而width/height不能用css设置; 可以写:hover进行样式调节等;
+
+# 4. 渐变(线性渐变 + 径向渐变)
+* [渐变参考文档](https://developer.mozilla.org/zh-CN/docs/Web/SVG/Tutorial/Gradients)
+* defs元素 linearGradient线性渐变: 节点； 线性渐变内部有几个stop节点; 节点通过offset与stop-color来说明渐变特定位置上是什么颜色(可以直接指定, 也可以通过css样式进行指定); 也可以通过stop-opacity来设置某个未知的半透明度; 
+* linearGradient线性渐变: 需要在对象属性的fill或者stroke中引用它(fill="url(#Gradient2)"); 在linearGradient中x1 y1 x2 y2指定了渐变的大小和出现的范围
+* radialGradient径向渐变可设置属性: cx cy r定义径向渐变范围和大小; fx fy焦点位置, 描述了渐变的中心; spreadMethod控制渐变到达终点的行为-pad默认渐变到达终点后最终渐变色填充剩余空间,reflect会将渐变一直持续下去(变回0%颜色在渐变到100%),repeat同样会让渐变继续(跳回最初的颜色后继续渐变); gradientUnits渐变单元-描述渐变的大小和方向-默认为objectBoundingBox定义对象的渐变大小范围(0-1) + userSpaceOnuse绝对单元(知道对象位置并将渐变放在同样的位置); gradientTransform可以给渐变添加额外的变化-配合transforms进行使用;
+
