@@ -52,4 +52,5 @@ path A弧形: A/a rx ry x-axis-rotation large-arc-flag sweep-flag x y; rx为x轴
 * fill设置对象内部颜色, stroke设置绘制对象的线条颜色(可用颜色名red, rgb, #fff, rgba等); fill-opacity填充色不透明度; stroke-opacity描边不透明度;
 * 描边绘制方式: stroke-linecap: butt默认直边结束线段,线段边界90°垂直于描边方向贯穿终点, square稍微超出实际路径(stroke-width宽度), round边框终点是圆角(圆角半径为stroke-width);
 * 两条描边线段之间以什么方式连接stroke-linejoin: miter默认尖角度, round圆角, bevel斜接
-* stroke-dasharray: 将虚线类型应用描边上.
+* stroke-dasharray: 将虚线类型应用描边上. 数值必须用逗号分隔,第一个代表填色区域长度, 第二个表示非填色区域长度... 依此重复循环, 可写任意长度;
+* css部分也可用于svg中, 需要把background-color变为fill, border变为stroke, 而width/height不能用css设置; 可以写:hover进行样式调节等;
