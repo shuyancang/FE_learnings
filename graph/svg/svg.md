@@ -70,4 +70,12 @@ path A弧形: A/a rx ry x-axis-rotation large-arc-flag sweep-flag x y; rx为x轴
 # 6. 文案text
 * [svg中的text介绍](https://developer.mozilla.org/zh-CN/docs/Web/SVG/Tutorial/Texts)
 * text中 x y属性决定了文本在视口中显示的位置; fill设置文本填充色, stroke文本描边, 可以设置font相关属性-font-family/font-weight/font-style/font-variant/font-stretch/font-size/font-size-adjust/kerning/letter-spacing/word-spacing/text-decoration等(可设置为css申明)
-* tspan标记大块文本子部分-必须是一个text或tspan的子元素; 自定义属性 x为容器设置一个新x坐标 y同理, dx从当前位置用一个水平偏移开始绘制文本, dy同理,
+* tspan标记大块文本子部分-必须是一个text或tspan的子元素; 自定义属性 x为容器设置一个新x坐标(需为逗号分隔的数列,将一个个的运用到元素内每一个字符上) y同理, dx从当前位置用一个水平偏移开始绘制文本(可为数字代表文本便宜,同样也可写为数列,用于每个元素), dy同理,
+* tspan rotate将所有字符旋转一个角度(若是数列则分别旋转对应的值); textLength给出字符串的计算长度调整字符位置;
+* tref元素: 引用已经定义的文本,将其复制到当前位置(<tref xlink:href="#example"> =经测似乎不可用~)
+* textPath元素: 利用其xlink:href获得一个path路径, 将text的字符沿着path路径进行排布。
+
+# 7. 基本变形
+* g元素: 组合并将属性付给整个元素集合; 
+* transform属性: 平移transform="translate(30,40)" 分别为x与y的偏移; 旋转transform="rotate(45, 200, 150)"分别为偏移角度+(可选)偏移中心x坐标 y坐标; 斜切transform="skewX(20) skewY(18)"x轴歪斜角度 y轴歪斜角度;缩放transform=scale(2, 2)分别为x与y的缩放比例;
+* transform可以通过matrix设置矩阵复杂变形; matrix(a, b, c, d, e, f)设置; 可以参考[css的矩阵简介](https://www.zhangxinxu.com/wordpress/2012/06/css3-transform-matrix-%E7%9F%A9%E9%98%B5/)进行使用;
