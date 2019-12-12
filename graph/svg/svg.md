@@ -79,3 +79,9 @@ path A弧形: A/a rx ry x-axis-rotation large-arc-flag sweep-flag x y; rx为x轴
 * g元素: 组合并将属性付给整个元素集合; 
 * transform属性: 平移transform="translate(30,40)" 分别为x与y的偏移; 旋转transform="rotate(45, 200, 150)"分别为偏移角度+(可选)偏移中心x坐标 y坐标; 斜切transform="skewX(20) skewY(18)"x轴歪斜角度 y轴歪斜角度;缩放transform=scale(2, 2)分别为x与y的缩放比例;
 * transform可以通过matrix设置矩阵复杂变形; matrix(a, b, c, d, e, f)设置; 可以参考[css的矩阵简介](https://www.zhangxinxu.com/wordpress/2012/06/css3-transform-matrix-%E7%9F%A9%E9%98%B5/)进行使用;
+
+# 8. 剪切与遮罩
+* [剪切与遮罩说明](https://developer.mozilla.org/zh-CN/docs/Web/SVG/Tutorial/Clipping_and_masking);
+* Clipping-用来移除别处定义的元素的部分内容; clipPath元素引用一个图形, 将图形内部范围的内容进行渲染
+* Masking使用透明度和灰度值遮罩计算软边缘; masK元素引用一个图形, 该图形提供遮罩效果(常用来展示渐变);
+* 可以直接使用opacity设置某个元素的渐变值; 需要注意的是, 若在一个元素设置了描边透明度且设置了填充, 则描边的一般使用填充色进行半透明, 另一半应用背景色进行半透明;
