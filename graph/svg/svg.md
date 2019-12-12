@@ -85,8 +85,11 @@ path A弧形: A/a rx ry x-axis-rotation large-arc-flag sweep-flag x y; rx为x轴
 * Clipping-用来移除别处定义的元素的部分内容; clipPath元素引用一个图形, 将图形内部范围的内容进行渲染
 * Masking使用透明度和灰度值遮罩计算软边缘; masK元素引用一个图形, 该图形提供遮罩效果(常用来展示渐变);
 * 可以直接使用opacity设置某个元素的渐变值; 需要注意的是, 若在一个元素设置了描边透明度且设置了填充, 则描边的一般使用填充色进行半透明, 另一半应用背景色进行半透明;
-* svg提供了一个image元素, 可以嵌入光栅图像, 将嵌入的图像变为一个普通的svg元素, 进而可以在其内容上进行svg工具的其他操作(它的规格要求应用至少支持PNG、JPG和SVG格式文件)
+* svg提供了一个image元素, 可以嵌入光栅图像, 将嵌入的图像变为一个普通的svg元素, 进而可以在其内容上进行svg工具的其他操作(它的规格要求应用至少支持PNG、JPG和SVG格式文件); 若未设置x, y则自动被设置为0; 若未设置height或width同样被设置为默认0; 若width与height为0图像将不会展示;
 * 可以通过foreignObject元素在svg中嵌入xhtml引用到它的内容;
 * svg可以通过滤镜添加模糊效果 => 高精尖的svg最高端效果。[滤镜应用参考](https://segmentfault.com/a/1190000018713698)
+* 字体: 利用font元素定义一个svg字体, 再通过@font-face引用, 利用font-family进行制定, 定义font元素时 = font-face(字体基本属性); font-face-src可以用于指向外部引用; font-face-name/font-face-uri字体把字体声明指向外源, missing-glyph定义字体找不到且没有回调机制时如何创建字形(可以在内部创建任何svg元素); glyph定义真正的字形利用unicode代表字形的unicode代码点; vkern/hkern分别有u1(字符1可多个) u2(字符2可多个)及k属性(距离减少值)用于将制定字符间间距进行调整;
 
-# 9. 光栅图像
+# svg绘制
+* URL: www.google.com/google-d-s/drawings/; 从Google Docs绘制，可以被输出为SVG。
+* http://jsxgraph.uni-bayreuth.de/wp/。为了在web上呈现图像， JSXGraph支持VML、SVG和canvas，基于浏览器的功能，自动决定使用哪种技术。
