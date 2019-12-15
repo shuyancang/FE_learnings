@@ -13,7 +13,7 @@
     const glctx = webglCanvas.getContext('webgl'); // 获取上下文
     console.log(glctx);
     glctx.clearColor(0.0, 1.0, 1.0, 1.0); // 必须是浮点型
-    glctx.clear()
+    glctx.clear(glctx.COLOR_BUFFER_BIT); // buffer清屏
   </script>
 </body>
 </html>
