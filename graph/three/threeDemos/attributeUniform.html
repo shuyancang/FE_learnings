@@ -12,33 +12,46 @@
     const canDOM = document.getElementById("canvas");
     const gl = canDOM.getContext('webgl');
 
-    const vertext = `void main(){ 
-      gl_Position=vec4(0.0, 0.0, 1.0, 1.0);
-      gl_PointSize=10.0; 
-    }`; // 定义顶点着色器
-    const fragText = `void main(){ 
-      gl_FragColor=vec4(1.0, 0.0, 0.0, 1.0); 
-    }`; // 定义片源着色器
-    const point = gl.createShader(gl.VERTEX_SHADER);
-    const frag = gl.createShader(gl.FRAGMENT_SHADER);
-    gl.shaderSource(point, vertext);
-    gl.shaderSource(frag, fragText);
 
-    gl.compileShader(point);
+
+    const vertext = `
+      attribute vec4 a_pos;
+      void main(){
+        gl_Position=a_pos;
+        gl_PointSize=25.0;
+      }
+    `;
+    const fragtext = `
+      precision lowp float;
+      uniform vec4 u_color;
+      void main(){
+        gl_FragColor=u_color;
+      }
+    `;
+    
+    const ver = gl.createShader(gl.VERTEX_SHADER); // 创建一个着色器对象
+    const frag = gl.createShader(gl.FRAGMENT_SHADER);
+
+    gl.shaderSource(ver, vertext); // 设置着色器
+    gl.shaderSource(frag, fragtext);
+
+    gl.compileShader(ver); // 编译
     gl.compileShader(frag);
 
-    const program = gl.createProgram();
-    gl.attachShader(program, point);
+    const program = gl.createProgram(); // 创建程序对象
+    gl.attachShader(program, ver); // 为程序对象分配着色器对象
     gl.attachShader(program, frag);
-
-    gl.linkProgram(program);
+    gl.linkProgram(program); // 连接程序对象
+    gl.useProgram(program); // 使用程序对象
 
     gl.useProgram(program);
 
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    const a_position = gl.getAttribLocation(program, 'a_pos');
+    const u_color = gl.getUniformLocation(program, 'u_color');
+    gl.vertexAttrib4f(a_position, 0.0, 0.0, 1.0, 1.0);
+    gl.uniform4f(u_color, 1.0, 0.0, 1.0, 1.0);
+    gl.drawArrays(gl.POINTS, 0, 1);
 
-    gl.drawArrays(gl.POINTS, 0, 1); 
   </script>
 </body>
 </html>

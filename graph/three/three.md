@@ -29,11 +29,12 @@
 
 # 3. webjs入门, 使用attribute, uniform变量
 * 使用attribute变量绘制一个点(传输的是与顶点相关的数据)
-**************
-在定点着色器中生命attribute变量
-将attribute变量赋值给js变量
-想attribute变量传输数据
-**************
+* 关键函数 在定点着色器中生命attribute变量=>getAttributeLocation(program, 'a_pos'); 将attribute变量赋值给js变量并向attribute变量传输数据vertexAttribute4f(location, v1, v2, v3, v4);
+* uniform改变点的颜色: uniform传输的是对于所有点都相同的数据;
+* uniform操作: 在片元着色器中声明uniform变量, 获取uniform变量存储位置赋值给js变量，向uniform变量传输数据
+* getUniformLocation(program, 'u_color'); uniform4f(location, v1, v2, v3, v4);
+* 片元着色器中precision lowp float;用于指定精度(低精度)
+
 
 
 
