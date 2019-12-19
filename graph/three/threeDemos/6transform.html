@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas" height="600" width="1200"></canvas>
+  <script src='./glprogram.js'></script>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const gl = canvas.getContext('webgl');
+    const verText = `
+      attribute vec4 a_pos;
+      uniform vec4 u_change;
+      void main(){
+        gl_Position = a_pos + u_change;
+        gl_PointSize = 15.0;
+      }
+    `;
+    const fragText = `
+      void main(){
+        gl_FragColor = vec4(1.0, 0.5, 0.9, 1.0);
+      }
+    `;
+    const program = initShader(gl, verText, fragText);
+    
+    const datavers = new Float32Array([
+      0.0, 0.0,
+      0.5, 0.5,
+      0.3, 0.0,
+    ]);
+    bufferInit(gl, datavers, 'a_pos', program);
+    var u_change = gl.getUniformLocation(program, 'u_change', )
+
+    let x = 0.0, y = 0.0;
+    window.onkeydown = function(e) { // 键盘操作
+      if( e.keyCode === 37) {
+        x -= 0.01;
+      }
+      if (e.keyCode === 39) {
+        x += 0.01;
+      }
+      if (e.keyCode === 38) {
+        y += 0.01;
+      }
+      if (e.keyCode === 40) {
+        y -= 0.01;
+      }
+      run();
+    }
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+
+
+    function run(){
+      gl.uniform4f(u_change, x, y, 0.0, 0.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+    run();
+
+
+  </script>
+</body>
+</html>

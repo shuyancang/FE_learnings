@@ -24,7 +24,7 @@
 * gl.createProgram();创建对象; gl.attachShader(program, 常量); gl.linkProgram(program)链接对象; gl.useProgram(program)使用对象;
 * 设置背景色gl.clearColor(0.0, 0.0, 0.0, 1.0);
 * 清除gl.clear(gl.COLOR_BUFFER_BIT);
-* 绘图gl.drawArrays(gl.POINTS, 0, 1); 
+* 绘图gl.drawArrays(gl.POINTS, 0, 1); // 1 count绘制几个点
 *************
 
 # 3. webgl入门, 使用attribute, uniform变量
@@ -41,16 +41,29 @@
 * 准备步骤: 设置点的坐标信息-关键函数new Float32Array([]);
 * 缓冲区对象是webgl的一块存储区, 创建后才能像其中写入顶点数据
 ********************
-创建缓冲区对象
-绑定缓冲区对象
-将数据写入缓冲区
-给缓冲区分配一个attribute变量
-开启attribute变量
-
+创建缓冲区对象createBuffer()
+绑定缓冲区对象bindBuffer()
+将数据写入缓冲区bufferData()
+给缓冲区分配一个attribute变量 vertexAttributePointer()
+开启attribute变量enableVertexAttribuArray()
 ********************
 
 
+# 5. webgl 图形绘制
+* 绘制点
+* 绘制线段(两个顶点)，线段带(多段折线)，回路(封闭线段)
+* 绘制三角形(三个顶点)
+* 利用三角带(新点会自动捕捉上两个点形成三角形)绘制平行四边形
+* 利用三角扇(新点自动与第一个点及上一个点形成三角形)绘制六边形
+* gl.drawArrays(mode, first, count); mode取值 POINTS点, LINES线段, LINE_STRIP线段带, LINE_LOOP回路, TRIANGLES三角形, TRIANGLE_STRIP三角带, TRIANGLE_FAN三角扇
 
+
+# 6. webgl 平移
+* 平移: 对顶点的每个分量加上对应轴的平移距离; 
+* var u_change = gl.getUniformLocation(program, 'u_change') // 得到变量
+* gl.uniform4f(u_change, 0.0, 0.1, 0.0, 0.0); // 设置平移量；
+* 将相关的平移功能封装入一个函数，并对操作进行监听。
+* 
 
 
 
