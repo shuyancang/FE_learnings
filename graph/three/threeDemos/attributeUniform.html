@@ -44,11 +44,10 @@
     gl.linkProgram(program); // 连接程序对象
     gl.useProgram(program); // 使用程序对象
 
-    gl.useProgram(program);
-
     const a_position = gl.getAttribLocation(program, 'a_pos');
     const u_color = gl.getUniformLocation(program, 'u_color');
     gl.vertexAttrib4f(a_position, 0.0, 0.0, 1.0, 1.0);
+    gl.vertexAttrib4f(a_position, 0.4, 0.5, 1.0, 1.0);
     gl.uniform4f(u_color, 1.0, 0.0, 1.0, 1.0);
     gl.drawArrays(gl.POINTS, 0, 1);
 
