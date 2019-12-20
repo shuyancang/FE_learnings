@@ -58,13 +58,13 @@
 * gl.drawArrays(mode, first, count); mode取值 POINTS点, LINES线段, LINE_STRIP线段带, LINE_LOOP回路, TRIANGLES三角形, TRIANGLE_STRIP三角带, TRIANGLE_FAN三角扇
 
 
-# 6. webgl 平移
+# 6. webgl 平移 / 旋转 / 缩放
 * 平移: 对顶点的每个分量加上对应轴的平移距离; 
 * var u_change = gl.getUniformLocation(program, 'u_change') // 得到变量
 * gl.uniform4f(u_change, 0.0, 0.1, 0.0, 0.0); // 设置平移量；
 * 将相关的平移功能封装入一个函数，并对操作进行监听。
-* 旋转
-
+* 旋转: 旋转轴，旋转方向，旋转角度; (三角函数的cos, sin变换)
+* 缩放: 对顶点的每个分项倍数放大或者缩小;
 
 
 
