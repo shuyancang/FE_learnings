@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas" height="600" width="1200"></canvas>
+  <script src='./glprogram.js'></script>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const gl = canvas.getContext('webgl');
+    const verText = `
+      attribute vec4 a_pos;
+      uniform float u_scale;
+      void main(){
+        gl_Position.x = a_pos.x;
+        gl_Position.y = a_pos.y;
+        gl_Position.z = a_pos.z;
+        gl_Position.w = u_scale;
+      }
+    `;
+    const fragText = `
+      void main(){
+        gl_FragColor = vec4(1.0, 0.5, 0.9, 1.0);
+      }
+    `;
+    const program = initShader(gl, verText, fragText);
+    
+    const datavers = new Float32Array([
+      -0.2, -0.2,
+      0.0, 0.2,
+      0.2, -0.2,
+    ]);
+    bufferInit(gl, datavers, 'a_pos', program);
+
+
+    var u_change = gl.getUniformLocation(program, 'u_scale');
+    let w = 1;
+
+    window.onkeydown = (e) => {
+      if(e.keyCode === 38) {
+        w -= 0.02;
+      }
+      if (e.keyCode === 40) {
+        w += 0.02;
+      }
+      scaleFunc();
+    }
+
+    function scaleFunc(){
+      gl.uniform1f(u_change, w);
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+    scaleFunc();
+  </script>
+</body>
+</html>
