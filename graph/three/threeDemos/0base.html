@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas height="500" width="1200" id="base"></canvas>
+  <script>
+    const baseDOM = document.getElementById('base');
+    const baseCtx = baseDOM.getContext('webgl');
+
+    baseCtx.clearColor(0.0, 1.0, 1.0, 0.5);
+    baseCtx.clear(baseCtx.COLOR_BUFFER_BIT);
+    console.log(baseDOM, baseCtx)
+  
+  </script>
+</body>
+</html>

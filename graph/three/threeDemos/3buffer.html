@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas" height="600" width="1200"></canvas>
+  <script src="./glprogram.js"></script>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const gl = canvas.getContext('webgl');
+
+    const verText = `
+      attribute vec4 a_pos;
+      void main(){
+        gl_Position = a_pos;
+        gl_PointSize = 15.0;
+      }
+    `;
+    const fragText = `
+      void main(){
+        gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);
+      }
+    `;
+
+    const program = initShader(gl, verText, fragText); // 创建着色器
+    
+    const dataVertices = new Float32Array([ // 顶点信息
+      0.0, 0.0,
+      0.5, 0.5, 
+      0.5, -0.5,
+      -0.5, 0.5,
+      -0.5, -0.5,
+    ]);
+    const buffer = gl.createBuffer(); // 创建buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer); // 绑定buffer
+    gl.bufferData(gl.ARRAY_BUFFER, dataVertices, gl.STATIC_DRAW); // 绑定数据, STATIC_DRAW多次绘制一次写入
+
+    const a_pos = gl.getAttribLocation(program, "a_pos");
+    gl.vertexAttribPointer(a_pos, 2, gl.FLOAT, false, 0, 0); // 2代表dataVertices每两个数为一组, 
+    gl.enableVertexAttribArray(a_pos);
+    gl.drawArrays(gl.POINTS, 0, 5); // 5个点
+  
+  </script>
+</body>
+</html>
