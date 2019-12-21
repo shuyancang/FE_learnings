@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    html, body{
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <script src="./three.js"></script>
+  <script>
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+    camera.position.x = -50;
+    camera.position.y = 60;
+    camera.position.z = 30;
+    camera.lookAt(scene.position);
+    
+    scene.fog = new THREE.Fog(0xffffff, 0.005, 100); // 雾化颜色, 雾化距离
+    scene.overrideMaterial = new THREE.MeshLambertMaterial({color: 0xff55dd}); // 设置统一的材质颜色
+
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setClearColor(new THREE.Color(0xeeeeee));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+  
+    const planeGeo = new THREE.PlaneGeometry(70, 50, 1, 1);
+    const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xcccccc});
+    const plane = new THREE.Mesh(planeGeo, planeMaterial);
+    plane.rotation.x = -0.5 * Math.PI;
+    plane.position.x = 0;
+    plane.position.y = 0;
+    plane.position.z = 0;
+    scene.add(plane);
+  
+    const ambientLight = new THREE.AmbientLight(0x0c0c0c); // 环境光
+    scene.add(ambientLight);
+
+    const spotLight = new THREE.SpotLight(0xffffff); // 点光源
+    spotLight.position.set(-40, 60, -10);
+    spotLight.castShadow = true;
+    scene.add(spotLight);
+
+    function addCube(){// 增加方块函数
+      const cubeGeometry = new THREE.CubeGeometry(4, 4, 4);
+      const cubeMaterial = new THREE.MeshLambertMaterial({
+        color: 0xff0000,
+      });
+      const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+      cube.position.x = -30 + Math.round(Math.random() * planeGeo.parameters.width);
+      cube.position.y = Math.round(Math.random() * 5);
+      cube.position.z = -20 + Math.round(Math.random() * planeGeo.parameters.height);
+      cube.castShadow = true; // 打开立方体阴影
+      scene.add(cube);
+    }
+
+    function render(){
+      addCube();
+      renderer.render(scene, camera);
+      requestAnimationFrame(render);
+    }
+
+    render();
+
+    document.body.appendChild(renderer.domElement);
+
+    
+  </script>
+</body>
+</html>
