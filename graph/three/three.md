@@ -25,6 +25,11 @@
 * 场景的基本功能: scene.add()场景中添加物体; scene.remove()场景中移除物体; scene.children()获取场景中所有子对象的列表; scene.getChildByName()获得场景中所有对象的列表;
 * fog通过该属性可以设置场景的雾化效果: scene.fog = new THREE.Fog(颜色, 近距离0.05, 雾化远距离1000);
 * overrideMaterial 通过这个属性可以让场景中的所有物体都使用相同材质=> scene.overrideMaterial = new THREE.MeshLambertMaterial({color: 0xff55dd}); 
+
+# 几何和网格对象
+* THREE.Geometry是所有集合对象的基类(简称geom);
+* geom.vertices表示几何体的顶点, 是一个数组; geom.faces表示几何体的侧面;
+* 
 * 
 
 
