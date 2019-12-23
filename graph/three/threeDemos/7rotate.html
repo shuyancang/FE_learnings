@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas" height="600" width="1200"></canvas>
+  <script src='./glprogram.js'></script>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const gl = canvas.getContext('webgl');
+    const verText = `
+      attribute vec4 a_pos;
+      uniform float u_sinB, u_cosB;
+      void main(){
+        gl_Position.x = a_pos.x*u_cosB-a_pos.y*u_sinB;
+        gl_Position.y = a_pos.x*u_sinB + a_pos.y*u_cosB;
+        gl_Position.z = a_pos.z;
+        gl_Position.w = a_pos.w;
+        gl_PointSize = 15.0;
+      }
+    `;
+    const fragText = `
+      void main(){
+        gl_FragColor = vec4(1.0, 0.5, 0.9, 1.0);
+      }
+    `;
+    const program = initShader(gl, verText, fragText);
+    
+    const datavers = new Float32Array([
+      0.0, 0.0,
+      0.3, 0.3,
+      0.6, 0.0,
+    ]);
+    bufferInit(gl, datavers, 'a_pos', program);
+
+    let angle = 0.0;
+    window.onkeydown = (e) => {
+      if(e.keyCode === 38) {
+        angle += 0.2;
+      }
+      if (e.keyCode === 40) {
+        angle -= 0.2;
+      }
+      rotateRun();
+    }
+    var u_sinB = gl.getUniformLocation(program, 'u_sinB')
+    var u_cosB = gl.getUniformLocation(program, 'u_cosB')
+
+    function rotateRun(){
+      let sinB = Math.sin(angle/180 * Math.PI), cosB = Math.cos(angle/180*Math.PI);
+      gl.uniform1f(u_sinB, sinB);
+      gl.uniform1f(u_cosB, cosB);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+    rotateRun();
+
+
+  </script>
+</body>
+</html>
