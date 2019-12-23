@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <canvas height="400" width="800" id="webgl"></canvas>
+  <script>
+    const webglCanvas = document.getElementById('webgl');
+    const glctx = webglCanvas.getContext('webgl'); // 获取上下文
+    console.log(glctx);
+    glctx.clearColor(0.0, 1.0, 1.0, 1.0); // 必须是浮点型
+    glctx.clear(glctx.COLOR_BUFFER_BIT); // buffer清屏
+  </script>
+</body>
+</html>
