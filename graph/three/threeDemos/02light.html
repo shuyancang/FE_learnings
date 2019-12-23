@@ -7,13 +7,8 @@
   <title>Document</title>
 </head>
 <body>
-  <div id="statsOutput"></div>
-  <script src="./three.js"></script>
-  <script src="./stats.min.js"></script>
+  <script src="../three.js"></script>
   <script>
-    // 增加动画的统计功能
-    const statOutput = initStas();
-
     const scene = new THREE.Scene();
 
     const camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 1000);
@@ -70,40 +65,10 @@
     const spotLight = new THREE.SpotLight(0xffffff); // 设置点光源
     spotLight.position.set(-40, 60, -10); // 设置点光源位置
     spotLight.castShadow = true; // 定义可以生成阴影的光源
-    scene.add(spotLight);
-
-    // 引入动画函数
-    let step = 0;
-    function renderGraph(){
-      statOutput.update();
-      // 转动方块
-      cube.rotation.x += 0.02;
-      cube.rotation.y += 0.02;
-      cube.rotation.z += 0.02;
-
-      // 球体跳跃
-      step += 0.04;
-      sphere.position.x = 20 + 10 * Math.cos(step);
-      sphere.position.y = 2 + 10 * Math.abs(Math.sin(step));
-
-      requestAnimationFrame(renderGraph);
-      renderer.render(scene, camera);
-    }
-
-    // 初始化统计对象
-    function initStas() {
-      const stats = new Stats();
-      stats.setMode(0); //参数 0 显示fps帧, 1 显示渲染时间
-      stats.domElement.style.position = 'absolute';
-      stats.domElement.style.left = '0px';
-      stats.domElement.style.top = '0px';
-      const statsDOM = document.getElementById('statsOutput');
-      statsDOM.appendChild(stats.domElement);
-      return stats;
-    }
+    scene.add(spotLight)
 
     document.body.appendChild(renderer.domElement);
-    renderGraph();
+    renderer.render(scene, camera);
   </script>
 </body>
 </html>
