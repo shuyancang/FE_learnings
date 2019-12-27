@@ -36,10 +36,19 @@
 
 # 3. 相机
 * 定义三维空间向二位显示器的投影方式: 透视投影(近大远小-实际场景较多)摄像机, 正交投影(数学理论投影-常用展示效果场景较多)摄像机
-* THREE.OrghographicCamera(left, rigth, top, bottom, near, far);为了保持显示比例，常见用相机宽高比例与canvas宽高比例应该保持一致。
+* 正交投影照相机THREE.OrthographicCamera(left, rigth, top, bottom, near, far);为了保持显示比例，常见用相机宽高比例与canvas宽高比例应该保持一致。near经常设置很小，far设置很大，以保证图形不会被忽略
+* left左边界, right右边界, top上边界, bottom下边界, near近裁面, far远裁面
+* camera.lookAt 设置目标点
+* 透视投影照相机THREE.PerspectiveCamera(fov张角-视野宽度推荐45°,aspect长宽比-推荐window/innerWidth/widow.innerHeight,near最近距离推荐0.1,far最远距离-应该远大于near推荐1000, 值太大影响性能, 值太小场景显示不全);
 * 
-* 
-* 
+
+# 4. 认识光源
+* AmbientLight环境光-基础光源, 影响整个场景;
+* PointLight点光源-空间中的一个点, 所有方向发射光源;
+* SpotLight聚光灯-具有锥形效果的聚光光源;
+* DirectionalLight平行光 - 无限光，模拟远处太阳的光源;
+* 高级光照效果-半球光(模拟自然), 平面光(指定散发光源的平面), 镜头眩光(为光源添加眩光效果);
+* AmbientLight没有明确的光源位置, 在各处形成的亮度一致, 且不会影响阴影的产生; 不能讲环境光作为场景中的唯一光源 => THREE.AmbientLight(hex); add(color); clone();
 * 
 
 

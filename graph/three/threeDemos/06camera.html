@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>照相机</title>
+  <style>
+    html, body{
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <script src="../three.js"></script>
+  <script src="../SceneUtils.js"></script>
+  <script>
+    const scene = new THREE.Scene();
+    let camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 1000);
+    camera.position.x = -50;
+    camera.position.y = 60;
+    camera.position.z = 30;
+    camera.lookAt(scene.position);
+
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setClearColor(new THREE.Color(0xeeeeee));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+  
+    const planeGeo = new THREE.PlaneGeometry(70, 50, 1, 1);
+    const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xcccccc});
+    const plane = new THREE.Mesh(planeGeo, planeMaterial);
+    plane.rotation.x = -0.5 * Math.PI;
+    plane.position.x = 0;
+    plane.position.y = 0;
+    plane.position.z = 0;
+    scene.add(plane);
+
+    const spotLight = new THREE.SpotLight(0xffffff); // 点光源
+    spotLight.position.set(-40, 60, -10);
+    spotLight.castShadow = true;
+    scene.add(spotLight);
+
+    const ambientLight = new THREE.AmbientLight(0x0c0c0c);
+    scene.add(ambientLight);
+
+
+    const cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
+    for (let i = 0; i < planeGeo.parameters.height/5;i++) {
+      for(let j = 0; j < planeGeo.parameters.width/5; j ++ ){
+        const rnd = Math.random() *0.75 + 0.25;
+        const cubeMaterial = new THREE.MeshLambertMaterial();
+        cubeMaterial.color = new THREE.Color(rnd,0,0);
+        const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+        cube.position.x = -(planeGeo.parameters.width / 2) + 2 + (i * 5);
+        cube.position.y = 2;
+        cube.position.z = -(planeGeo.parameters.height / 2) + 2 + (j * 5);
+        scene.add(cube);
+      }
+    }
+
+    const controls = new function(){
+      this.perspective = 'Perspective';
+      this.switchCamera = function (){
+        if(camera instanceof THREE.PerspectiveCamera){
+          camera = new THREE.OrthographicCamera(
+            window.innerWidth / -16,
+            window.innerWidth / 16,
+            window.innerHeight / -16,
+            window.innerHeight / 16,
+            -200,
+            500,
+          );
+          camera.position.x = -20;
+          camera.position.y = 60;
+          camera.position.z = 50;
+          camera.lookAt(scene.position);
+          this.perspective = 'Orthographic';
+        } else {
+          this.perspective = 'Perspective';
+          camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+          camera.position.x = -20;
+          camera.position.x = 60;
+          camera.position.x = 50;
+        }
+      }
+    }
+
+    setInterval(function(){
+      controls.switchCamera();
+    }, 2000);
+
+    document.onkeydown = function(event){
+      switch (event.keyCode) {
+        case 37: 
+          camera.rotation.y += 0.02;
+          render();
+          break;
+        case 39:
+          camera.rotation.y -= 0.02;
+          render();
+          break;
+      }
+    }
+
+    function render(){
+      renderer.render(scene, camera);
+    }
+
+    render();
+
+    document.body.appendChild(renderer.domElement);
+
+
+
+  </script>
+</body>
+</html>

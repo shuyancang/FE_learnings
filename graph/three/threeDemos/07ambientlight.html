@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>环境光</title>
+  <style>
+    html, body{
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <script src="../three.js"></script>
+  <script src="../SceneUtils.js"></script>
+  <script src="./common.js"></script>
+  <script>
+
+    const {
+      scene,
+      renderer,
+      plane,
+      camera
+    } = common();
+
+    const cubeGeometry = new THREE.BoxGeometry(5, 5, 5);
+    const cubeMaterial = new THREE.MeshLambertMaterial({
+      color: 0xff0000,
+    });
+    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    cube.castShadow = true;
+    cube.position.set(-4, 3, 0);
+    scene.add(cube);
+
+    camera.position.set(-25, 30, 25);
+    camera.lookAt(scene.position);
+
+    // 加入点光源
+    const spotLight = new THREE.SpotLight(0xffffff);
+    spotLight.position.set(-40, 60, -10);
+    spotLight.castShadow = true;
+    scene.add(spotLight);
+    // 添加环境光源 => 用色应该尽量保守 防止画面饱和过高引起视觉难受; 常用白色或黑色
+    scene.add(new THREE.AmbientLight(0xff0000));
+  
+    document.body.appendChild(renderer.domElement);
+    renderer.render(scene, camera);
+  </script>
+</body>
+</html>
