@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>环境光</title>
+  <style>
+    html, body{
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <script src="../three.js"></script>
+  <script src="../SceneUtils.js"></script>
+  <script src="./common.js"></script>
+  <script>
+
+    const {
+      scene,
+      renderer,
+      plane,
+      camera
+    } = common();
+
+    // 创建立方体
+    const cubeGeometry = new THREE.BoxGeometry(5, 5, 5);
+    const cubeMaterial = new THREE.MeshLambertMaterial({
+      color: 0xff0000,
+    });
+    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    cube.castShadow = true;
+    cube.position.set(0, 6, 0);
+    scene.add(cube);
+
+
+    // 创建球体
+    const sphereGeometry = new THREE.SphereGeometry(4, 20, 30);
+    const sphereMaterial = new THREE.MeshLambertMaterial({
+      color: 0x7777ff,
+    });
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    sphere.position.set(20, 6, 0);
+    scene.add(sphere);
+
+    camera.position.set(-25, 30, 25);
+    camera.lookAt(scene.position);
+
+    // 加入点光源
+    const spotLight = new THREE.SpotLight(0xffffff);
+    spotLight.position.set(-40, 60, -10);
+    scene.add(spotLight);
+
+    function render(){ // 点光源绕轴转动
+      requestAnimationFrame(render);
+      spotLight.position.z += 0.2;
+      renderer.render(scene, camera);
+    }
+
+    render();
+  
+    document.body.appendChild(renderer.domElement);
+  </script>
+</body>
+</html>

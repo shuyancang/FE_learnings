@@ -4,7 +4,8 @@ function common(){
   const scene = new THREE.Scene();
 
   const renderer = new THREE.WebGLRenderer();
-  renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
+  // renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
+  renderer.setClearColor(new THREE.Color(0xEEEEEE));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
 

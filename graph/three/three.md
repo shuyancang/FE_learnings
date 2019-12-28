@@ -49,7 +49,7 @@
 * DirectionalLight平行光 - 无限光，模拟远处太阳的光源;
 * 高级光照效果-半球光(模拟自然), 平面光(指定散发光源的平面), 镜头眩光(为光源添加眩光效果);
 * AmbientLight没有明确的光源位置, 在各处形成的亮度一致, 且不会影响阴影的产生; 不能讲环境光作为场景中的唯一光源 => THREE.AmbientLight(hex); add(color); clone();
-* 
+* PointLight点光源-单点发光照射所有方向, 不会产生阴影, 减少GPU负担, 亮度线性递减; THREEE.PointLight(hex, intensity-光照强度默认1, distance-光源的照射距离默认0); clone(), color光源颜色;  
 
 
 
