@@ -65,7 +65,24 @@
     directionalLight.target = target;
     scene.add(directionalLight);
 
-    controlSpotRender();
+    document.onkeydown = function(event){
+      switch(event.keyCode){
+        case 37:
+          directionalLight.intensity += 0.1;
+          break;
+        case 39:
+          directionalLight.intensity = directionalLight.intensity > 0.1 ? (directionalLight.intensity - 0.1) : 0.1;
+          break; 
+      }
+    }
+
+    function render(){
+      renderer.render(scene, camera);
+      requestAnimationFrame(render);
+    }
+
+    render()
+
     document.body.appendChild(renderer.domElement);
   </script>
 </body>
