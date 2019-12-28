@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>环境光</title>
+  <style>
+    html, body{
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <script src="../three.js"></script>
+  <script src="../SceneUtils.js"></script>
+  <script src="./common.js"></script>
+  <script>
+
+    const {
+      scene,
+      renderer,
+      plane,
+      camera
+    } = common();
+
+    // 创建立方体
+    const cubeGeometry = new THREE.BoxGeometry(5, 5, 5);
+    const cubeMaterial = new THREE.MeshLambertMaterial({
+      color: 0xff0000,
+    });
+    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    cube.castShadow = true;
+    cube.position.set(0, 6, 0);
+    scene.add(cube);
+
+    // 创建球体
+    const sphereGeometry = new THREE.SphereGeometry(4, 20, 30);
+    const sphereMaterial = new THREE.MeshLambertMaterial({
+      color: 0x7777ff,
+    });
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    sphere.castShadow = true;
+    sphere.position.set(20, 6, 0);
+    scene.add(sphere);
+
+    camera.position.set(-25, 30, 25);
+    camera.lookAt(scene.position);
+
+    // 定义环境光
+    const ambiLight = new THREE.AmbientLight('#1c1c1c');
+    scene.add(ambiLight);
+    const target = new THREE.Object3D();
+    target.position.set(5, 0, 0);
+    // 定义平行光
+    const directionalLight = new THREE.DirectionalLight('#ff5818');
+    directionalLight.position.set(-40, -60, -11);
+    directionalLight.castShadow = true;
+    directionalLight.shadowCameraFar = 200;
+    directionalLight.shadowCameraNear = 200;
+    directionalLight.intensity = 0.5; // 环境光强度值
+    directionalLight.shadowMapHeight = 2000; // 越高 阴影越细腻
+    directionalLight.shadowMapWidth = 1000;
+    directionalLight.target = target;
+    scene.add(directionalLight);
+
+    controlSpotRender();
+    document.body.appendChild(renderer.domElement);
+  </script>
+</body>
+</html>

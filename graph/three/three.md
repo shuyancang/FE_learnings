@@ -51,6 +51,7 @@
 * AmbientLight没有明确的光源位置, 在各处形成的亮度一致, 且不会影响阴影的产生; 不能讲环境光作为场景中的唯一光源 => THREE.AmbientLight(hex); add(color); clone();
 * PointLight点光源-单点发光照射所有方向, 不会产生阴影, 减少GPU负担, 亮度线性递减; THREEE.PointLight(hex, intensity-光照强度默认1, distance-光源的照射距离默认0); clone(), color光源颜色;  
 * SpotLight聚光灯光源(锥形光)-是最常用的可以产生阴影的光源, 类似电筒光照效果; THREE.SpotLight(hex, intensity, distance, angle, exponent), castShadow属性设置为true则产生阴影; target决定光照方向, angle光照角度默认为Math.PI / 3;
+* DirectionalLight 平行光(方向光~太阳光), 方向光光照强度不变; 常用属性castShadow, target, angle; 不常用属性shadowCameraVisible,shadowCameraFar-阴影近距点, shadowDarkness-阴影, shadowMapWidth-阴影宽高, shadowMapHeight等;
 
 
 

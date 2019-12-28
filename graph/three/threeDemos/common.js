@@ -14,6 +14,7 @@ function common(){
     color: 0xffffff,
   });
   const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+  plane.receiveShadow = true; // 允许平面接收阴影;
   const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000)
 
   plane.rotation.x = -0.5 * Math.PI;
