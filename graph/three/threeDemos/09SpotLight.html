@@ -48,19 +48,43 @@
     camera.position.set(-25, 30, 25);
     camera.lookAt(scene.position);
 
-    // 加入点光源
-    const pointLight = new THREE.PointLight(0xffffff);
-    pointLight.position.set(-40, 60, -10);
-    scene.add(pointLight);
+    // 加入聚光灯光源
+    const spotLight = new THREE.SpotLight('#ffffff');
+    spotLight.position.x = -40;
+    spotLight.position.y = 60;
+    spotLight.position.z = -12;
+    spotLight.target = sphere; // 指向
+    scene.add(spotLight);
 
-    function render(){ // 点光源绕轴转动
-      requestAnimationFrame(render);
-      pointLight.position.z += 0.2;
+    // function render(){ // 点光源绕轴转动
+    //   requestAnimationFrame(render);
+    //   pointLight.position.z += 0.2;
+    //   renderer.render(scene, camera);
+    // }
+    let angleValue = 3;
+    function controlSpotRender(){
+      requestAnimationFrame(controlSpotRender);
+      spotLight.angle = Math.PI / angleValue;
       renderer.render(scene, camera);
     }
+    document.onkeydown = function(event){
+      switch (event.keyCode){
+        case 38:
+          angleValue += 1;
+          break;
+        case 40:
+          angleValue = angleValue > 1 ? (angleValue - 1) : 1;
+          break; 
+        case 37:
+          spotLight.position.z += 1; 
+          break;
+        case 39: 
+          spotLight.position.z -= 1;
+          break;
+      }
+    }
 
-    render();
-  
+    controlSpotRender();
     document.body.appendChild(renderer.domElement);
   </script>
 </body>
