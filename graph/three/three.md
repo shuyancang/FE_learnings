@@ -52,6 +52,18 @@
 * PointLight点光源-单点发光照射所有方向, 不会产生阴影, 减少GPU负担, 亮度线性递减; THREEE.PointLight(hex, intensity-光照强度默认1, distance-光源的照射距离默认0); clone(), color光源颜色;  
 * SpotLight聚光灯光源(锥形光)-是最常用的可以产生阴影的光源, 类似电筒光照效果; THREE.SpotLight(hex, intensity, distance, angle, exponent), castShadow属性设置为true则产生阴影; target决定光照方向, angle光照角度默认为Math.PI / 3;
 * DirectionalLight 平行光(方向光~太阳光), 方向光光照强度不变; 常用属性castShadow, target, angle; 不常用属性shadowCameraVisible,shadowCameraFar-阴影近距点, shadowDarkness-阴影, shadowMapWidth-阴影宽高, shadowMapHeight等;
+* 高级光照效果-半球光光源: THREE.HemisphereLight(hex, intensity); groundColor从地面发出的光线的颜色, Color从天空中发出的光线的颜色, intensity光线照射的强度;
+* 高级光照效果-平面光光源THREE.AreaLight-扩展库提供的效果-效果比较复杂, 性能要求较高: 不能使用THREE.WebGLRenderer()需要使用THREE.WebGLDeferedRenderer() (引入);
+* 镜头眩光 THREE.LensFlare(texture, size像素, distance距离, blending融合模式, color)进行添加即可; 在threejs官方demo中, texture文件可以查看部分的眩光位图。
+
+
+# 5. 认识材质
+* 
+* 
+* 
+* 
+* 
+* 
 
 
 
