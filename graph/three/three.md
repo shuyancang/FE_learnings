@@ -57,10 +57,13 @@
 * 镜头眩光 THREE.LensFlare(texture, size像素, distance距离, blending融合模式, color)进行添加即可; 在threejs官方demo中, texture文件可以查看部分的眩光位图。
 
 
-# 5. 认识材质
-* 
-* 
-* 
+# 5. 认识材质Material
+* 材质：决定几何体外表的样式，独立于物体顶点信息之外的与渲染效果相关的属性; 基础材质/深度材质/法向材质/网格面材质/郎伯材质/Phong式材质/着色器材质;
+* 理解材质共有属性: THREE.Material基类, 基础属性/融合属性/高级属性;
+* 基础属性: id标识符; name赋予材质名称; opacity透明度, transparent是否透明, overdraw过度描绘, visible是否可见, side决定属性在几何体哪个面应用-默认frontside前面; needsUpdate是否刷新;
+* 融合属性: blending融合, blenders融合源, blandest融合目标, blending equation融合公式; 指定物体如何与背景进行融合
+* 高级属性: depthTest深度测试; depthWrite内部属性, alphaTest决定像素是否展示; ploygonOffset/ploygonOffsetFactor/ploygonOffsetUnits
+* MeshBasicMaterial 基础材质-不受光照影响, 被渲染成简单的多边形, 可以显示几何体的线框; 属性color, wireframe-bool显示线框, fog是否受全局雾化效果影响;
 * 
 * 
 * 
