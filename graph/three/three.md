@@ -67,6 +67,16 @@
 * 深度材质: 外观不由光照和材料决定, 由物体到相机的距离决定; 可以与其他材质结合; 属性wireframe是否展示线框, writeframeLinewidth;
 * 联合材质: THREE.SceneUtils.createMultiMaterialObject联合多个材质, 产生综合渲染效果 
 * 法向材质: MeshNormalMaterial通过法向计算颜色, 法向量是与面垂直;属性shading着色方法, wireframe
-* 网格面材质: MeshFaceMaterial可以为材质容器的每个面指定材质;
+* 网格面材质: MeshFaceMaterial可以为材质容器的每个面指定材质; 创建一个材质数组mets, 利用new THREE.MeshFaceMaterial(mets)进行材质添加。
+* 高级材质: MeshLambertMaterial材质-用于暗淡不光亮表面, MeshPhongMaterial材质用于光亮(金属)表面; MeshLambertMaterial材质(color堆散射光的反射能力, ambient对环境光的反射能力, emissive材质自发光颜色); MeshPhongMaterial材质(ambient对环境光的反射能力, emissive材质自发光颜色, specular材质的光亮程度);
 
+# 6. 几何体-二维/三维/多面
+* 二维几何体
+********
+二维矩形PlaneGeometry; THREE.PlaneGeometry(width宽, height高, widthSegments宽度段数, heightSegments高度段数);
+二维圆属性CircleGeometry: THREE.CircleGeometry(radius半径, segments面数量-段数, start圆起始位置, length圆有多大);
+********
+* 
+* 
+* 
 
