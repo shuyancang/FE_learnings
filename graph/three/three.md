@@ -66,7 +66,7 @@
 * MeshBasicMaterial 基础材质-不受光照影响, 被渲染成简单的多边形, 可以显示几何体的线框; 属性color, wireframe-bool显示线框, fog是否受全局雾化效果影响;
 * 深度材质: 外观不由光照和材料决定, 由物体到相机的距离决定; 可以与其他材质结合; 属性wireframe是否展示线框, writeframeLinewidth;
 * 联合材质: THREE.SceneUtils.createMultiMaterialObject联合多个材质, 产生综合渲染效果 
-* 
-
+* 法向材质: MeshNormalMaterial通过法向计算颜色, 法向量是与面垂直;属性shading着色方法, wireframe
+* 网格面材质: MeshFaceMaterial可以为材质容器的每个面指定材质;
 
 
