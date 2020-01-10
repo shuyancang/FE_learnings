@@ -64,8 +64,8 @@
 * 融合属性: blending融合, blenders融合源, blandest融合目标, blending equation融合公式; 指定物体如何与背景进行融合
 * 高级属性: depthTest深度测试; depthWrite内部属性, alphaTest决定像素是否展示; ploygonOffset/ploygonOffsetFactor/ploygonOffsetUnits
 * MeshBasicMaterial 基础材质-不受光照影响, 被渲染成简单的多边形, 可以显示几何体的线框; 属性color, wireframe-bool显示线框, fog是否受全局雾化效果影响;
-* 
-* 
+* 深度材质: 外观不由光照和材料决定, 由物体到相机的距离决定; 可以与其他材质结合; 属性wireframe是否展示线框, writeframeLinewidth;
+* 联合材质: THREE.SceneUtils.createMultiMaterialObject联合多个材质, 产生综合渲染效果 
 * 
 
 
