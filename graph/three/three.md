@@ -74,7 +74,7 @@
 * 二维几何体
 ********
 二维矩形PlaneGeometry; THREE.PlaneGeometry(width宽, height高, widthSegments宽度段数, heightSegments高度段数);
-二维圆属性CircleGeometry: THREE.CircleGeometry(radius半径, segments面数量-段数, start圆起始位置, length圆有多大);
+二维圆属性CircleGeometry: THREE.CircleGeometry(radius半径, segments面数量-段数默认8, start圆起始位置, length圆有多大);
 ********
 * 
 * 

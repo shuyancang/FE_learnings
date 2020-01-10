@@ -29,8 +29,8 @@
     renderer.shadowMap.enabled = true;
     
     // 创建网格对象 - 平面 - 二维矩阵
-    const plane = createMesh(new THREE.PlaneGeometry(12, 15, 10, 15));
-    scene.add(plane);
+    // const plane = createMesh(new THREE.PlaneGeometry(12, 15, 10, 15));
+    // scene.add(plane);
     function createMesh(geom) { // 创建联合材质
       const meshMaterial = new THREE.MeshNormalMaterial();
       const wireFrameMaterial = new THREE.MeshBasicMaterial();
@@ -38,18 +38,29 @@
       return THREE.SceneUtils.createMultiMaterialObject(geom, [meshMaterial, wireFrameMaterial]);
     }
 
+    const circle = createMesh(new THREE.CircleGeometry(4, 10, 0.3*Math.PI, 0.3*Math.PI));
+    scene.add(circle);
+
     // 添加光源
     const spotLight = new THREE.SpotLight(0xffffff);
     scene.add(spotLight);
 
-    function render(){
-      plane.rotation.x += 0.01;
-      plane.rotation.y += 0.01;
-      plane.rotation.z += 0.01;
-      requestAnimationFrame(render);
+    // function planeRender(){
+    //   plane.rotation.x += 0.01;
+    //   plane.rotation.y += 0.01;
+    //   plane.rotation.z += 0.01;
+    //   requestAnimationFrame(planeRender);
+    //   renderer.render(scene, camera);
+    // }
+    // planeRender();
+
+    function circleRender(){
+      circle.rotation.y += 0.01;
+      requestAnimationFrame(circleRender);
       renderer.render(scene, camera);
     }
-    render();
+    circleRender();
+
     document.body.appendChild(renderer.domElement);
 
   </script>
