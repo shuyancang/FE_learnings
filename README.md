@@ -13,3 +13,5 @@ some basic front end knowledge~
 7. /javascript: es5, es6, js精髓等相关基础学习
 8. /leetCodes: leetCodes题集测试
 9. /typescript: ts使用
+10. /css
+11. /optimization: 性能优化专题
