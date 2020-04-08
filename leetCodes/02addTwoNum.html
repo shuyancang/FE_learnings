@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function ListNode(val) {
+      this.val = val;
+      this.next = null;
+    }
+
+    let link1 = new ListNode(2);
+    link1.next = new ListNode(1);
+    // link1.next.next = new ListNode(3);
+
+    let link2 = new ListNode(5);
+    link2.next = new ListNode(6);
+    link2.next.next = new ListNode(4);
+
+    const addTwoNumbers = function(l1, l2) {
+      const initList = new ListNode(0);
+      let tmpLink = new ListNode(0);
+      let tmpCarry = 0;
+      while((l1 && l1.val >= 0) || (l2 && l2.val >= 0)){
+        let valSum = (l1.val || 0) + (l2.val || 0) + tmpCarry;
+        tmpCarry = 0; // 进位使用完毕，归零
+        if(valSum >= 10) {
+          valSum = valSum % 10;
+          tmpCarry = 1; // 大于10, 再次记录进位
+        }
+        if (initList.next) {
+          tmpLink = tmpLink.next = new ListNode(valSum);
+        } else {
+          tmpLink = new ListNode(valSum);
+          initList.next = tmpLink;
+        }
+        if (l1.next || l2.next){
+          l1 = l1.next || new ListNode(0);
+          l2 = l2.next || new ListNode(0);
+        } else { // 循环即将结束
+          l1 = null;
+          l2 = null;
+          if (tmpCarry === 1) {
+            tmpLink.next = new ListNode(1);
+          }
+        }
+      }
+      return initList.next;
+    };
+
+    const result = addTwoNumbers(link1, link2);
+    console.log(result);
+  </script>
+</body>
+</html>

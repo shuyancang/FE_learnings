@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+  <input id="strInput" type="text" onchange="strChanging()" />
+  <script>
+    const strInput = document.getElementById('strInput');
+    strInput.onchange = function(e){
+      console.log(e);
+    }
+    strInput.onpropertychange = function(e){
+      console.log('onpropertychange', e);
+    }
+    function strChanging(e){
+      console.log('strChanging', e);
+    }
+  </script>
+</body>
+</html>
