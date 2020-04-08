@@ -1,0 +1,15 @@
+// sass的初步使用。
+
+$baseBackground: lightblue;
+$baseColor: #fff;
+$borderWidth: 10px;
+$baseBorder: 1px;
+
+
+
+body{
+    background-color: $baseBackground; 
+}
+
+
+

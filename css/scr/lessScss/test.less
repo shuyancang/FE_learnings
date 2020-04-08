@@ -1,0 +1,39 @@
+
+@color: #1224fe;
+@baseWidth: 1px;
+
+.header{
+    color: @color;
+}
+
+h3{
+    background-color: @color;
+}
+
+.round-radius(@radius: 5px){
+    border-radius: @radius;
+    -webkit-border-radius: @radius;
+}
+
+.header{
+    .round-radius;
+}
+h3 {
+    .round-radius(20px);
+}
+
+.header{
+    .subSpan{
+        background-color: yellowgreen;
+        &:hover{
+            background-color: aqua;
+        }
+        .innderLast{
+            color: #ededed;
+        }
+        width: @baseWidth * 3;
+        color: @color * 2;
+    }
+}
+
+

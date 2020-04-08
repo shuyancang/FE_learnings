@@ -1,0 +1,66 @@
+body{
+    background-color: black;
+}
+
+body > div {
+    margin: 10px;
+    width: 300px;
+    height: 300px;
+    border: 30px solid;
+    border-left-color: blue;
+    border-bottom-color: brown;
+    border-right-color: yellowgreen;
+    border-top-color: pink; 
+}
+
+/* .base{ */
+    /* width: 300px;
+    height: 300px;
+    background-color: orange;
+    border: 30px solid;
+    border-left-color: blue;
+    border-bottom-color: brown;
+    border-right-color: yellowgreen;
+    border-top-color: pink;  */
+/* } */
+
+.basetri{
+    width: 0;
+    height: 0px;
+    border-left-color: transparent;
+    border-top-color: transparent;
+    border-right-color: transparent;
+}
+
+.zhijiaotri{
+    width: 0px;
+    height: 0px;
+    border-left: 0px;
+    border-bottom: 0px;
+    border-right-color: transparent;
+}
+
+.tixing{
+    width: 80px;
+    height: 50px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-bottom: 0px;
+}
+
+.yuan{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.tuoyuan{
+    width: 100px;
+    height: 80px;
+    border: 0;
+    background-color: lightskyblue;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+}
