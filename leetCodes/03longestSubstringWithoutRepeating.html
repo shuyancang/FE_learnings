@@ -25,20 +25,22 @@
     // 解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
     //      请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串
     var lengthOfLongestSubstring = function(str) {
-      let strQueue = [];
-      
-      // const strMap = {}; // str: index
-      // let index = 0, longestNum = 0, queue = [];
-      // while(str[index]){
-      //   let curStr = str[index];
-      //   if (strMap[curStr]) { // map中已有 - 重复字母
-      //     const preIndex = strMap[curStr];
-      //     queue.
-      //   } else { // map中无， 存入
-
-      //   }
-      //   index++;
-      // }
+      let tmpArr = [], curIndex = 0, maxLength = 0;
+      while(str[curIndex]){
+        const curStr = str[curIndex];
+        const strIndexInTmpArr = tmpArr.indexOf(curStr);
+        if (strIndexInTmpArr >= 0) {
+          tmpArr = tmpArr.slice(strIndexInTmpArr + 1);
+          tmpArr.push(curStr);
+        } else {
+          tmpArr.push(curStr);
+          if (tmpArr.length > maxLength) {
+            maxLength = tmpArr.length;
+          }
+        }
+        curIndex++;
+      }
+      return maxLength;
     };
   </script>
 </body>
