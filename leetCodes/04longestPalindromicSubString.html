@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>最长回文子串</title>
+</head>
+<body>
+  <script>
+    // 给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为 1000。
+    // 示例 1：
+    // 输入: "babad"
+    // 输出: "bab"
+    // 注意: "aba" 也是一个有效答案。
+    // 示例 2：
+    // 输入: "cbbd"
+    // 输出: "bb"
+    /**
+    * @param {string} s
+    * @return {string}
+    */
+    var longestPalindrome = function(s) {
+      let stackArr = '', curIndex = 0, result = '', isPal = false;
+      while(s[curIndex]){
+        if (isPal) {
+          const tmpStrOne = `${stackArr}${s[curIndex]}`;
+          const tmpStrTwo = `${s[curIndex - stackArr.length - 1]}${stackArr}${s[curIndex]}`;
+          const tmpReverseOne = tmpStrOne.split('').reverse().join('');
+          const tmpReverseTwo = tmpStrTwo.split('').reverse().join('');
+          if (tmpStrOne === tmpReverseOne) {
+            stackArr = tmpStrOne;
+          } else if (tmpStrTwo === tmpReverseTwo) {
+            stackArr = tmpStrTwo;
+          } else if(s[curIndex - 1] === s[curIndex]) {
+            isPal = true;
+            stackArr = `${s[curIndex]}${s[curIndex]}`;
+          } else if (s[curIndex - 2] === s[curIndex]) {
+            isPal = true;
+            stackArr = `${s[curIndex]}${s[curIndex - 1]}${s[curIndex]}`;
+          } else {
+            isPal = false;
+            stackArr = s[curIndex];
+          }
+        } else if (s[curIndex - 1] === s[curIndex]) {
+          isPal = true;
+          stackArr = `${s[curIndex]}${s[curIndex]}`;
+        } else if (s[curIndex - 2] === s[curIndex]) {
+          isPal = true;
+          stackArr = `${s[curIndex]}${s[curIndex - 1]}${s[curIndex]}`;
+        } else {
+          isPal = false;
+          stackArr = s[curIndex];
+        }
+        if (stackArr.length > result.length) {
+          result = stackArr;
+        }
+        curIndex++;
+      }
+      return result;
+    };
+  </script>
+</body>
+</html>
