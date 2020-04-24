@@ -20,44 +20,27 @@
     * @return {string}
     */
     var longestPalindrome = function(s) {
-      let stackArr = '', curIndex = 0, result = '', isPal = false;
-      while(s[curIndex]){
-        if (isPal) {
-          const tmpStrOne = `${stackArr}${s[curIndex]}`;
-          const tmpStrTwo = `${s[curIndex - stackArr.length - 1]}${stackArr}${s[curIndex]}`;
-          const tmpReverseOne = tmpStrOne.split('').reverse().join('');
-          const tmpReverseTwo = tmpStrTwo.split('').reverse().join('');
-          if (tmpStrOne === tmpReverseOne) {
-            stackArr = tmpStrOne;
-          } else if (tmpStrTwo === tmpReverseTwo) {
-            stackArr = tmpStrTwo;
-          } else if(s[curIndex - 1] === s[curIndex]) {
-            isPal = true;
-            stackArr = `${s[curIndex]}${s[curIndex]}`;
-          } else if (s[curIndex - 2] === s[curIndex]) {
-            isPal = true;
-            stackArr = `${s[curIndex]}${s[curIndex - 1]}${s[curIndex]}`;
-          } else {
-            isPal = false;
-            stackArr = s[curIndex];
+      let resultStr = s[0] || '', curIndex = 0, curChar = s[curIndex];
+      while(curChar){
+        debugger;
+        let tmpLastIndex = s.lastIndexOf(curChar);
+        let tmpStr = s.slice(curIndex, tmpLastIndex + 1);
+        while(tmpLastIndex > curIndex){
+          const isPalindrome = tmpStr.split('').reverse().join('') === tmpStr;
+          if (isPalindrome) {
+            resultStr.length < tmpStr.length && (resultStr = tmpStr);
+            break; 
           }
-        } else if (s[curIndex - 1] === s[curIndex]) {
-          isPal = true;
-          stackArr = `${s[curIndex]}${s[curIndex]}`;
-        } else if (s[curIndex - 2] === s[curIndex]) {
-          isPal = true;
-          stackArr = `${s[curIndex]}${s[curIndex - 1]}${s[curIndex]}`;
-        } else {
-          isPal = false;
-          stackArr = s[curIndex];
-        }
-        if (stackArr.length > result.length) {
-          result = stackArr;
+          tmpStr = tmpStr.slice(0, tmpStr.length - 1);
+          tmpLastIndex = tmpStr.lastIndexOf(curChar);
+          tmpStr = tmpStr.slice(0, tmpLastIndex + 1);
         }
         curIndex++;
+        curChar = s[curIndex];
       }
-      return result;
+      return resultStr;
     };
+    console.log(longestPalindrome('abcdbbfcba')); // aa
   </script>
 </body>
 </html>
