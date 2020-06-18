@@ -16,4 +16,15 @@
 * 比较推荐的直接创建稳定长度数组的方法: Array.applay(null, {length: 3}) 或 Array.from({length: 3}) 或 Array(3).fill(0)
 * Symbol 不能带new关键字;
 * String.prototype: indexOf, charAt, substr, substring, toUpperCase, toLowerCase, slice, trim;
-* Function.prototype
+* Function.prototype: function; Function.__proto__ === Function.prototype
+* RegExp.prototype.toString => /(?:)/ 空正则
+* Array.prototype: 是一个数组
+
+## 2.2 强制类型转换
+* 
+* 
+* 
+* 
+* 
+
+## 2.3 语法
