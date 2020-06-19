@@ -21,9 +21,9 @@
 * Array.prototype: 是一个数组
 
 ## 2.2 强制类型转换
-* 
-* 
-* 
+* toString基本转化规则null => 'null'; undefined => 'undefined'; true=> 'true' 数字直接转换(若数值极大/极小, 转为指数形式);普通对象返回"[object, Object]";
+* 数组的toString方法经过了重定义, 将所有单元字符串化后再用','连接所得。
+* JSON.stringify也进行了类型转化(虽然非严格意义), 处理安全的JSON值(undefined, function, symbol和包含循环引用不能处理, 自动忽略, 必须返回时返回null: JSON.stringify([1, undefined, function(){}, 4]) => "[1, null, null, 4]")
 * 
 * 
 
