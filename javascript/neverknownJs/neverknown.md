@@ -23,7 +23,11 @@
 ## 2.2 强制类型转换
 * toString基本转化规则null => 'null'; undefined => 'undefined'; true=> 'true' 数字直接转换(若数值极大/极小, 转为指数形式);普通对象返回"[object, Object]";
 * 数组的toString方法经过了重定义, 将所有单元字符串化后再用','连接所得。
-* JSON.stringify也进行了类型转化(虽然非严格意义), 处理安全的JSON值(undefined, function, symbol和包含循环引用不能处理, 自动忽略, 必须返回时返回null: JSON.stringify([1, undefined, function(){}, 4]) => "[1, null, null, 4]")
+* JSON.stringify也进行了类型转化(虽然非严格意义), 处理安全的JSON值(undefined, function, symbol和包含循环引用不能处理, 自动忽略, 必须返回时返回null: JSON.stringify([1, undefined, function(){}, 4]) => "[1, null, null, 4]"; JSON.stringify({a: 1, b: function(){}}) => "{"a": 1}"); 当函数定义了toJSON方法时候, JSON.stringify会直接调用toJSON方法进行返回一个默认安全的json结构然后再对其进行默认字符串化, 无toJSON则直接仅仅调用默认转化;
+* JSON.stringify(target, replacer, space)第二个可选参数replacer字符串数组/函数参数, 传入后代表对target的哪些属性进行字符串化; 第三个参数space为指定的缩进格式
+* toNumber: 基本转化规则: null => 0; undefined => NaN; true => 1/false => 0; "" => 0; 对象会首先被转化为相应的基础类型(ToPrimitive, 检查是否有valueOf方法, 有就用该值进行转换, 无就使用toString的返回值, 若valueOf和toString均无返回则产生typeError错误); Object.create(null)生成的对象即无法进行转换报错。
+* 
+* 
 * 
 * 
 
