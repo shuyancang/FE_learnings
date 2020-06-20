@@ -32,6 +32,7 @@
 * 位运算符: 0 | -0 => 0; 0 | NaN => 0; 0 | Infinity => 0; 0 | -Infinity => 0; 先将值强制转换为32位数字再进行位操作; ~x大致等于-(x + 1), 则当x为-1时候得到0, 可以结合indexOf进行使用(str.indexOf() === -1或str.indexOf() >= 0 暴露底层实现, 为抽象渗漏, 应该屏蔽, 使用~str.indexOf()进行判定)
 * ~~可以用来截取数值的小数部分, 但只适用于32位数字, 且对负数的处理与Math.floor不同(~~-49.6 = -49); 同样可以使用x | 0的位操作符达到相同给的效果, 但~~操作符优先级高于 (x | 0), 故更推荐使用.
 * parseInt()针对字符串, 传入其他类型会被先隐式转为字符串, 然后进行处理输出; parseInt(0.0000008) => "8e-7"输出结果为8; parseInt(false, 16) => "fa lse"的fa为250; parseInt(parseInt, 16) => "function "的f为15; parseInt("0x10") => 16; parseInt("103", 2)=> '10'为2
-* 
+* 隐式强制类型转换:(string => number, bool => number, ...)若某操作数是字符串或能通过后续操作转为字符串, +号进行拼接工作: 若一个操作项是对象, 对其调用toPrimitive抽象操作, 该抽象操作再调用[[DefaultValue]]; - 0, * 1, / 1可以强制将操作数转为数字;
+* Symbol可以显示的转为字符串(String(Symbol('abc'))); 但 Symbol('abc') + ''或 Symbol('abc') - 1隐式转为字符串或数字均报错, 然而!!Symbol('abc')可正常转为bool(true);
 
 ## 2.3 语法
