@@ -34,5 +34,14 @@
 * parseInt()针对字符串, 传入其他类型会被先隐式转为字符串, 然后进行处理输出; parseInt(0.0000008) => "8e-7"输出结果为8; parseInt(false, 16) => "fa lse"的fa为250; parseInt(parseInt, 16) => "function "的f为15; parseInt("0x10") => 16; parseInt("103", 2)=> '10'为2
 * 隐式强制类型转换:(string => number, bool => number, ...)若某操作数是字符串或能通过后续操作转为字符串, +号进行拼接工作: 若一个操作项是对象, 对其调用toPrimitive抽象操作, 该抽象操作再调用[[DefaultValue]]; - 0, * 1, / 1可以强制将操作数转为数字;
 * Symbol可以显示的转为字符串(String(Symbol('abc'))); 但 Symbol('abc') + ''或 Symbol('abc') - 1隐式转为字符串或数字均报错, 然而!!Symbol('abc')可正常转为bool(true);
+* == 允许在相等比较中进行强制类型转换, ===不允许; 他们都会检查操作数的类型; NaN !== NaN, +0 === -0;
+******
+x == y 的比较规则:
+1. x, y一个数字一个字符串时, 字符串变为数字后, 进行数字比较;
+2. x, y中有一个是bool类型时, bool将变为数字(0, 1)再与另外一个值比较;
+3. null == undefined; 除此以外, 任意值都不与null ,undefined相等
+4. 对象与非对象的比较: 将ToPrimitive(对象) 与 非对象进行比较; > 那些诡异的坑: [] == ![]; "" == 0; "" == [null]; "" == [undefined]; 0 == "\n";
+5. 根据规范 a <= b 实际上被处理为 !(b < a)即 a 不大于 b; 若要避免a < b发生隐式强制类型转换, 只能确保a, b为统一类型，别无他法；
+*******
 
 ## 2.3 语法
