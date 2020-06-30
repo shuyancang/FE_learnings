@@ -12,6 +12,15 @@
 * 位运算 | & ^ >> << 只进行到Math.pow(2, 31)位有符号整数, 不会进行更大的比较
 * 可以有 undefined = 2一类的赋值骚操作····但, 绝对不要乱搞·
 * void ___ 表达式: 返回一个undefined;
+* 使用Number.isNaN() 判断NaN => window.isNaN('foo')为true为一直存在的bug, 
+* Infinity为无穷数, js中, 无穷数一旦产生将不可能回归有穷, Infinity / Infinity => NaN; Infinity * 0 => NaN
+* Object.is()判断两个参数是否绝对相等, 可以用于区分0, -0(Object.is(-0, 0);保持向量信息); 但尽量使用==, ===(效率更高);
+* 值与引用: 简单值赋值传递, 复杂值引用传递, 一个引用不能修改另外一个引用的指向 => 函数的参数传入的困惑(函数体内function foo(arr){ arr.push(4)// 可以作用于参数修改影响外界传入参数, 及直接arr = [3]不会影响外界传入参数})
+* 基本类性值不可更改: string ,number, bool均不可更改！function foo(x){x = x + 1} var b = new Number(2); foo(b); b 依然为2实质是b = 2不会被修改
+
+## 2.2 原生函数(String, Number, Boolean, Array, Object, Function, RegExp, Date, Error, Symbol)
+* 所有typeof返回值为"object"的对象, 都包含一个内部属性[[class]]
+
 * [[call]]内部属性, Object.prototype.toString.call([1, 2, 3])=>"[object Array]";Object.prototype.toString.call({}) => "[object Object]"; Object.prototype.toString.call(function foo(){}) => "[object Function]";Object.prototype.toString.call(1) => "[object Number]"; Object.prototype.toString.call('2') => "[object String]"; Object.prototype.toString.call(true) => "[object Boolean]"; Object.prototype.toString.call(undefined) => "[object Undefined]"; Object.prototype.toString.call(null)=> "[object Null]"; Object.prototype.toString.call(Symbol(123)) => "[object Symbol]"; Object.prototype.toString.call(/12/) => "[object RegExp]"
 * 比较推荐的直接创建稳定长度数组的方法: Array.applay(null, {length: 3}) 或 Array.from({length: 3}) 或 Array(3).fill(0)
 * Symbol 不能带new关键字;
