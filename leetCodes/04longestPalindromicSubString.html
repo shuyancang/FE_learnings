@@ -19,27 +19,34 @@
     * @param {string} s
     * @return {string}
     */
-    var longestPalindrome = function(s) {
-      let resultStr = s[0] || '', curIndex = 0, curChar = s[curIndex];
-      while(curChar){
-        let tmpLastIndex = s.lastIndexOf(curChar);
-        let tmpStr = s.slice(curIndex, tmpLastIndex + 1);
-        while(tmpLastIndex > 0){
-          const isPalindrome = tmpStr.split('').reverse().join('') === tmpStr;
-          if (isPalindrome) {
-            resultStr.length < tmpStr.length && (resultStr = tmpStr);
-            break; 
-          }
-          tmpStr = tmpStr.slice(0, tmpStr.length - 1);
-          tmpLastIndex = tmpStr.lastIndexOf(curChar);
-          tmpStr = tmpStr.slice(0, tmpLastIndex + 1);
+    // 解法1: 暴力枚举;
+    function isPalindrom(str){ // 判断一个字符串是回型;
+      const len = str.length;
+      const centerIndex = len | 0;
+      for(let i = 0; i < len / 2; i++){
+        if (str[i] !== str[len - i - 1]) {
+          return false;
         }
-        curIndex++;
-        curChar = s[curIndex];
       }
-      return resultStr;
+      return true;
+    }
+
+    var longestPalindrome = function(s) {
+      const len = s.length;
+      let maxGroup = '';
+      for(let i = 0; i < len; i++){
+        for(let strLen = 1; strLen <= len; strLen++){
+          const tmpStrGroup = s.substring(i, strLen);
+          const isPal = isPalindrom(tmpStrGroup);
+          if(isPal && tmpStrGroup.length > maxGroup.length){
+            maxGroup = tmpStrGroup;
+          }
+        }
+      }
+      return maxGroup;
     };
-    console.log(longestPalindrome('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabcaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')); // aa
+
+    // 解法2:
   </script>
 </body>
 </html>
