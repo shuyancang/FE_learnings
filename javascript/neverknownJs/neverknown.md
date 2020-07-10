@@ -68,4 +68,7 @@ x == y 的比较规则:
 
 ## 2.5 异步和性能
 * console.log的实现是基于宿主环境, 在有些情况下, console.log一个对象不一定准确(也可能控制台展示和展开不同); 断点可保证正确, 其次使用stringify后console也可;
-* 
+* function () { return new Promise((res, rej) => { ...someCode }) }; 常见的promise
+* Promise的可信任性: Promise.resolve()参数中若为一个真正的Pomise(pro01); 则Promise.resolve(pro01) === pro01;可依此来安全的进行第三方工具的.then使用;
+* function delay(timer){ return new Promise(res => setTimeout(res, timer))}
+* 未定义then中的rej, 若出现错误, 默认throw => 有利于错误的定位与处理; 未定义then中的res(null), 会有默认res => res进行替代继续往后传输;
