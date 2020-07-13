@@ -46,7 +46,38 @@
       return maxGroup;
     };
 
-    // 解法2: 动态规划
+    // 解法2: 动态规划(O(n2))
+    var longestPal = function (s) {
+      let len = s.length, valGroup = [], maxNum = 0, maxI = 0, maxJ = 0, maxStr = '';
+      for(let i = 0; i < len; i ++) {
+        valGroup[i] = [];
+        for(let j = 0; j < len; j++){
+          if (s[len - 1 - i] === s[j]) {
+            valGroup[i][j] = (valGroup[i - 1] && valGroup[i - 1][j - 1]) > 0 ?  (valGroup[i - 1][j - 1] + 1) : 1;
+            if (valGroup[i][j] > maxNum) {
+              maxNum = valGroup[i][j];
+              maxI = i;
+              maxJ = j;
+            }
+          } else {
+            valGroup[i][j] = 0
+          }
+        }
+      }
+      while(s[maxJ]){
+        maxStr = s[maxJ] + maxStr;
+        maxJ--;
+      }
+      return maxStr;
+    };
+
+    // 解法3: manache算法
+    var longestPal = function (s) {
+      
+      return maxStr;
+    };
   </script>
 </body>
 </html>
+
+
