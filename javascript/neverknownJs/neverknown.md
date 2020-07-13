@@ -73,3 +73,7 @@ x == y 的比较规则:
 * new Promise(...).catch: Promise执行链中的错误收集 => 也返回一个promise
 * new Promise(...).finally: 决议/拒绝后最终的回调 => 但实际上他依然是返回了一个promise;
 * Promise局限性: 错误很容易被忽略; 返回值单一(多值返回需要必须额外进行封装处理); 单决议(事件/数据流无法支持); 无法取消(~网上有不少实现~);
+* function () { return new Promise((res, rej) => { ...someCode }) }; 常见的promise
+* Promise的可信任性: Promise.resolve()参数中若为一个真正的Pomise(pro01); 则Promise.resolve(pro01) === pro01;可依此来安全的进行第三方工具的.then使用;
+* function delay(timer){ return new Promise(res => setTimeout(res, timer))}
+* 未定义then中的rej, 若出现错误, 默认throw => 有利于错误的定位与处理; 未定义then中的res(null), 会有默认res => res进行替代继续往后传输;

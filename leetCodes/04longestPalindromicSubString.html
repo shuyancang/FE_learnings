@@ -19,27 +19,65 @@
     * @param {string} s
     * @return {string}
     */
-    var longestPalindrome = function(s) {
-      let resultStr = s[0] || '', curIndex = 0, curChar = s[curIndex];
-      while(curChar){
-        let tmpLastIndex = s.lastIndexOf(curChar);
-        let tmpStr = s.slice(curIndex, tmpLastIndex + 1);
-        while(tmpLastIndex > 0){
-          const isPalindrome = tmpStr.split('').reverse().join('') === tmpStr;
-          if (isPalindrome) {
-            resultStr.length < tmpStr.length && (resultStr = tmpStr);
-            break; 
-          }
-          tmpStr = tmpStr.slice(0, tmpStr.length - 1);
-          tmpLastIndex = tmpStr.lastIndexOf(curChar);
-          tmpStr = tmpStr.slice(0, tmpLastIndex + 1);
+    // 解法1: 暴力枚举;
+    function isPalindrom(str){ // 判断一个字符串是回型;
+      const len = str.length;
+      const centerIndex = len | 0;
+      for(let i = 0; i < len / 2; i++){
+        if (str[i] !== str[len - i - 1]) {
+          return false;
         }
-        curIndex++;
-        curChar = s[curIndex];
       }
-      return resultStr;
+      return true;
+    }
+
+    var longestPalindrome = function(s) {
+      const len = s.length;
+      let maxGroup = '';
+      for(let i = 0; i < len; i++){
+        for(let strLen = 1; strLen <= len; strLen++){
+          const tmpStrGroup = s.substring(i, strLen);
+          const isPal = isPalindrom(tmpStrGroup);
+          if(isPal && tmpStrGroup.length > maxGroup.length){
+            maxGroup = tmpStrGroup;
+          }
+        }
+      }
+      return maxGroup;
     };
-    console.log(longestPalindrome('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabcaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')); // aa
+
+    // 解法2: 动态规划(O(n2))
+    var longestPal = function (s) {
+      let len = s.length, valGroup = [], maxNum = 0, maxI = 0, maxJ = 0, maxStr = '';
+      for(let i = 0; i < len; i ++) {
+        valGroup[i] = [];
+        for(let j = 0; j < len; j++){
+          if (s[len - 1 - i] === s[j]) {
+            valGroup[i][j] = (valGroup[i - 1] && valGroup[i - 1][j - 1]) > 0 ?  (valGroup[i - 1][j - 1] + 1) : 1;
+            if (valGroup[i][j] > maxNum) {
+              maxNum = valGroup[i][j];
+              maxI = i;
+              maxJ = j;
+            }
+          } else {
+            valGroup[i][j] = 0
+          }
+        }
+      }
+      while(s[maxJ]){
+        maxStr = s[maxJ] + maxStr;
+        maxJ--;
+      }
+      return maxStr;
+    };
+
+    // 解法3: manache算法
+    var longestPal = function (s) {
+      
+      return maxStr;
+    };
   </script>
 </body>
 </html>
+
+
