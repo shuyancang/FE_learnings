@@ -54,7 +54,7 @@
         for(let j = 0; j < len; j++){
           if (s[len - 1 - i] === s[j]) {
             valGroup[i][j] = (valGroup[i - 1] && valGroup[i - 1][j - 1]) > 0 ?  (valGroup[i - 1][j - 1] + 1) : 1;
-            if (valGroup[i][j] > maxNum) {
+            if (valGroup[i][j] > maxNum && (j === len - 1 - i + (valGroup[i][j] - 1))) {
               maxNum = valGroup[i][j];
               maxI = i;
               maxJ = j;
@@ -64,15 +64,17 @@
           }
         }
       }
-      while(s[maxJ]){
+      while(valGroup[maxI] && valGroup[maxI][maxJ] > 0){
         maxStr = s[maxJ] + maxStr;
         maxJ--;
+        maxI--;
       }
       return maxStr;
     };
+    longestPal('aac');
 
     // 解法3: manache算法
-    var longestPal = function (s) {
+    var longestManache = function (s) {
       
       return maxStr;
     };
@@ -80,4 +82,12 @@
 </body>
 </html>
 
-
+<!-- 
+  a a c b a f c a a
+a 1
+a   2
+c     3
+.
+.
+.
+ -->
