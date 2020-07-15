@@ -31,7 +31,7 @@
       return true;
     }
 
-    var longestPalindrome = function(s) {
+    var longestPalindromeNoob = function(s) {
       const len = s.length;
       let maxGroup = '';
       for(let i = 0; i < len; i++){
@@ -71,13 +71,73 @@
       }
       return maxStr;
     };
-    longestPal('aac');
 
-    // 解法3: manache算法
-    var longestManache = function (s) {
-      
+    // 解法3: 中心扩散(O(n2))
+    var longestCenter = function(s){
+      const len = s.length;
+      let maxStr = '';
+      for (let i = 0; i < len; i++) { // 一种是基于当前位置[i]，左右各一位依次扩散, 一种是基于'当前位置[当前位置下一个位置]'进行扩散
+        const tmpPalStrEven = spreadFunc(s, i, i+1);
+        const tmpPalStrOdd = spreadFunc(s, i, i);
+        const maxTmpPal = tmpPalStrEven.length > tmpPalStrOdd.length ? tmpPalStrEven: tmpPalStrOdd;
+        if (maxTmpPal.length > maxStr.length) {
+          maxStr = maxTmpPal;
+        }
+      }
       return maxStr;
-    };
+    }
+    var spreadFunc = function(totalStr, left, right ){ // 指定中心位置, 对应双指针下 得到的最大回文字符串;
+      const len = totalStr.length;
+      while(left >= 0 && right <= len - 1){
+        if (totalStr[left] === totalStr[right]) {
+          left--;
+          right++;
+        } else {
+          break;
+        }
+      }
+      return totalStr.substring(left + 1, right);
+    }
+
+    // 解法3: manache算法 => 基于中心扩散 + 中心对称减少计算次数的新算法。
+
+    function createStr(str){
+      let longerStr = '';
+      if(str.length === 0) {
+        return '';
+      }
+      for(let i = 0; i< str.length; i++){
+        longerStr += ('#' + str[i]);
+      }
+      return longerStr + '#';
+    }
+    var longestPalindrome = function (s) {
+      const newStr = createStr(s);
+      const len = newStr.length;
+      let maxLen = 0, group = [], maxRight = 0, center = 0, start = 0;
+      for(let i = 0; i < len; i++){
+        group[i] = 0;
+        if (maxRight > i) {
+          let mirror = center * 2 - i;
+          group[i] = Math.min(group[mirror], maxRight - i);
+        }
+        let left = i - (group[i] + 1), right = i + (group[i] + 1);
+        while(left >= 0 && right < len && newStr[left] === newStr[right]) {
+          group[i]++;
+          left--;
+          right++;
+        }
+        if (i + group[i] > maxRight) {
+          maxRight = i + group[i];
+          center = i;
+        }
+        if (group[i] > maxLen) {
+          maxLen = group[i];
+          start = (i - maxLen) / 2;
+        }
+      }
+      return s.substring(start, start + maxLen);;
+    }
   </script>
 </body>
 </html>
