@@ -77,3 +77,8 @@ x == y 的比较规则:
 * Promise的可信任性: Promise.resolve()参数中若为一个真正的Pomise(pro01); 则Promise.resolve(pro01) === pro01;可依此来安全的进行第三方工具的.then使用;
 * function delay(timer){ return new Promise(res => setTimeout(res, timer))}
 * 未定义then中的rej, 若出现错误, 默认throw => 有利于错误的定位与处理; 未定义then中的res(null), 会有默认res => res进行替代继续往后传输;
+
+## 2.6 生成器
+* function *foo(x){ return x * (yield 20); }  ====> var it = foo(10); it.next(); it.next(10); it.next(); next输入参数可以作为foo内的yield返回值; yield与next调用有一个不匹配: 第一个next只是进行启动, 传入的参数无任何作用会默认抛弃;
+* 迭代器是一个定义良好的接口, 用与从一个生产者一步步得到一系列值;Symbol.iterator
+* function *foo(){ while(true){ ... } } ===> var it = foo()可以无限按步骤生成, 也可以通过it.return(20)手动指定停止生成;
