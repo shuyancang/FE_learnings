@@ -93,46 +93,55 @@
     // [1, 2, 3]
     // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     var findNum = function(aArr, bArr, orderNum){ // 找到有序数组aArr, bArr中, 第小的数;
-      var aIndex = 0, bIndex = 0, recordNum = 0, aLen = aArr.length ,bLen = bArr.length;
-      var halfNum = Math.floor(orderNum / 2);
-      while(recordNum < orderNum) {
-        var aNum = aArr[halfNum + aIndex - 1], bNum = bArr[halfNum + bIndex - 1];
+      var aLen = aArr.length, bLen = bArr.length, aIndex = 0, bIndex = 0;
+      var k = parseInt(orderNum / 2);
+      var stop = 0;
+      while(orderNum > 1) {
+        stop++;
+        if (stop > 10000 ) {
+          return [k, aIndex, bIndex, orderNum]
+        }
+        if (aIndex + k > aLen) {
+          k = aLen - 1 - aIndex;
+        } else if (bIndex + k > bLen) {
+          k = bLen - 1 - bIndex;
+        }
+        var aNum = aArr[aIndex + k - 1], bNum = bArr[bIndex + k - 1];
         if (aNum === undefined) {
-          if (aIndex === aLen - 1) { // aArr已经数完
-            return bArr[orderNum - recordNum - 1];
-          } else {
-            halfNum = aLen - aIndex;
-            aNum = aArr[halfNum + aIndex - 1];
-            bNum = bArr[halfNum + bIndex - 1];
-          }
+
         } else if (bNum === undefined) {
-          if (bIndex === bLen - 1) { // bArr已经数完
-            return aArr[orderNum - recordNum - 1];
-          } else {
-            halfNum = bLen - bIndex;
-            aNum = aArr[halfNum + aIndex - 1];
-            bNum = bArr[halfNum + bIndex - 1];
-          }
-        }
-        if (aNum <= bNum) {
-          aIndex += halfNum;
+
         } else {
-          bIndex += halfNum;
+
         }
-        recordNum += halfNum;
-        halfNum = Math.floor(orderNum - recordNum) / 2;
-        if (halfNum === 0) {
-          halfNum = 1;
+
+
+
+
+
+        if (aNum === undefined) {
+          bIndex += k;
+        } else if (bNum === undefined) {
+          aIndex += k;
+        } else if (aNum <= bNum) {
+          aIndex += k;
+        } else {
+          bIndex += k;
         }
+        orderNum -= k;
+        k = parseInt(orderNum / 2);
       }
-      var aNum = aArr[aIndex + 1], bNum = bArr[bIndex + 1];
-      if (aNum === undefined) {
-        return bNum;
-      } else if (bNum === undefined) {
-        return aNum;
+      var aResult = aArr[aIndex], bResult = bArr[bIndex];
+      if (aResult === undefined) {
+        return bResult;
+      } else if (bResult === undefined) {
+        return aResult;
       }
-      return Math.min(aNum, bNum);
+      return Math.min(aResult, bResult);
     }
+
+    findNum([1], [2], 1);
+    findNum([1], [2], 2);
   </script>
 </body>
 </html>
