@@ -88,60 +88,59 @@
     }
 
     var findMedianSortedArrays = function(nums1, nums2){
-      
+      var aLen = nums1.length;
+      var bLen = nums2.length;
+      if ((aLen + bLen) % 2 === 1) {
+        return findNum(nums1, nums2, (aLen + bLen + 1) / 2);
+      } else {
+        return (findNum(nums1, nums2, (aLen + bLen) / 2) + findNum(nums1, nums2, (aLen + bLen) / 2 + 1)) / 2;
+      }
     }
-    // [1, 2, 3]
-    // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
     var findNum = function(aArr, bArr, orderNum){ // 找到有序数组aArr, bArr中, 第小的数;
       var aLen = aArr.length, bLen = bArr.length, aIndex = 0, bIndex = 0;
       var k = parseInt(orderNum / 2);
-      var stop = 0;
-      while(orderNum > 1) {
-        stop++;
-        if (stop > 10000 ) {
-          return [k, aIndex, bIndex, orderNum]
+      // 要找第10个: 5; 2; 1; 1; => orderNum = 1找到对应的数据并返回;
+      // 要找第8个: 4; 2; 1
+      if (aLen === 0) {
+        return bArr[orderNum - 1];
+      } else if (bLen === 0) {
+        return aArr[orderNum - 1];
+      }
+      while(orderNum > 0) {
+        if (orderNum === 1) { // 最后一个数值即是结果;
+          if (aArr[aIndex] === undefined) {
+            return bArr[bIndex];
+          } else if (bArr[bIndex] === undefined) {
+            return aArr[aIndex];
+          }
+          return Math.min(aArr[aIndex], bArr[bIndex]);
         }
+        
         if (aIndex + k > aLen) {
-          k = aLen - 1 - aIndex;
+          k = aLen - aIndex;
         } else if (bIndex + k > bLen) {
-          k = bLen - 1 - bIndex;
+          k = bLen - bIndex;
         }
         var aNum = aArr[aIndex + k - 1], bNum = bArr[bIndex + k - 1];
-        if (aNum === undefined) {
-
-        } else if (bNum === undefined) {
-
-        } else {
-
-        }
-
-
-
-
-
-        if (aNum === undefined) {
-          bIndex += k;
-        } else if (bNum === undefined) {
-          aIndex += k;
-        } else if (aNum <= bNum) {
-          aIndex += k;
-        } else {
-          bIndex += k;
-        }
         orderNum -= k;
+        if (aNum <= bNum) {
+          aIndex += k;
+          if (aIndex === aLen) { // a数组使用完了~
+            return bArr[bIndex + orderNum - 1];
+          }
+        } else {
+          bIndex += k;
+          if (bIndex === bLen) {
+            return aArr[aIndex + orderNum - 1];
+          }
+        }
         k = parseInt(orderNum / 2);
       }
-      var aResult = aArr[aIndex], bResult = bArr[bIndex];
-      if (aResult === undefined) {
-        return bResult;
-      } else if (bResult === undefined) {
-        return aResult;
-      }
-      return Math.min(aResult, bResult);
     }
 
-    findNum([1], [2], 1);
-    findNum([1], [2], 2);
+
+    
   </script>
 </body>
 </html>
