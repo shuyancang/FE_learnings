@@ -87,7 +87,7 @@
       return newArr[0];
     }
 
-    var findMedianSortedArrays = function(nums1, nums2){
+    var findMedianSortedArrays = function(nums1, nums2){ // 解法1： 找第k个小的数，每次抛弃掉数组前k/2 进行比较,
       var aLen = nums1.length;
       var bLen = nums2.length;
       if ((aLen + bLen) % 2 === 1) {
@@ -139,7 +139,29 @@
       }
     }
 
+    var findMedianSortedArrays = function (nums1, nums2) { // 解法2: 几何对称,
+      // 假定有数组1的i, 数组2的j, 有: i + j = nums1.length - 1 - i + nums2.length - 1 - j ( - 1); 且: ij两个数组可以互换
+      //              1 2 3 4     5 6 7 8 
+      //                2 4 4     6 8 10    => 可以直接得出中位数
+      // 
+      //       1 2 3 4     5 6 7 9
+      //           6 7     7 9          => 4 < 7 但 7 < 5 不符合
+      var shortArr = nums1, longArr = nums2;
+      if (nums1.length > nums2) {
+        shortArr = nums2;
+        longArr = nums1;
+      }
+      var shortLen = shortArr.length; longLen = longArr.length;
+      if(shortLen === 0) {
+        return (longLen % 2 === 1) ? longArr[(longLen - 1) / 2] : (longArr[longLen / 2] + longArr[longLen / 2 - 1]) / 2;
+      }
+      
+      var totalNum = shortLen + longLen;
+      var leftNum = (totalNum % 2 === 1) ? (totalNum + 1) / 2 : totalNum / 2; // 左边区数据量 === 右边区数据量( + 1)
 
+
+      return [];
+    }
     
   </script>
 </body>
