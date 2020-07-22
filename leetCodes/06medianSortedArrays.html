@@ -157,7 +157,41 @@
       }
       
       var totalNum = shortLen + longLen;
-      var leftNum = (totalNum % 2 === 1) ? (totalNum + 1) / 2 : totalNum / 2; // 左边区数据量 === 右边区数据量( + 1)
+      var shortIndex = Math.ceil(shortLen / 2) - 1;
+      var longIndex = Math.floor(longLen / 2) - 1;
+      var compareLength = Math.ceil(shortLen / 2);
+
+      var debuggerNum = 0;
+      while(true){
+        debuggerNum++;
+        if(debuggerNum > 1000) {
+          return ['死循环', shortIndex, longIndex];
+        }
+        // 短数组如果移动完依然没找到，则必定在长数组对应index找到;
+        var shortLeftNum = shortArr[shortIndex], shortRightNum = shortArr[shortIndex + 1];
+        var longLeftNum = longArr[longIndex], longRightNum = longArr[longIndex + 1];
+        compareLength = parseInt(compareLength / 2) || 1;
+        if (shortLeftNum === undefined) { // 左边到头了。即短数组内所有数都比中位数大;
+          return (totalNum % 2 === 1) ? longArr[(totalNum - 1) / 2] : (longArr[totalNum / 2] + longArr[totalNum / 2 - 1]) / 2;
+        }
+        if (shortLeftNum > longRightNum) { // shortIndex应该减小, longIndex应该增大
+          shortIndex -= compareLength;
+          longIndex += compareLength;
+        } else if (longLeftNum > shortRightNum) { // shortIndex 增大, longIndex减小
+          if (shortIndex === shortLen - 1) { // 短数组尽头, 即短数组内所有数都比中位数小;
+            return (totalNum % 2 === 1) ? longArr[(totalNum - 1) / 2] : (longArr[totalNum / 2] + longArr[totalNum / 2 - 1]) / 2;
+          }
+          shortIndex += compareLength;
+          longIndex -= compareLength;
+        }
+
+        if (shortLeftNum <= longRightNum && longLeftNum <= shortRightNum) { // 找到正确的位置！满足条件！
+          // 总长度为奇数 => 中位数是左侧大的那个; 偶数 => 中位数是(左边大数 + 右边小数) / 2
+          var leftBigger = Math.max(shortLeftNum, longLeftNum);
+          var rightMiner = Math.min(shortRightNum, longRightNum);
+          return (totalNum % 2 === 1) ? leftBigger : (leftBigger + rightMiner) / 2;
+        }
+      }
 
 
       return [];
