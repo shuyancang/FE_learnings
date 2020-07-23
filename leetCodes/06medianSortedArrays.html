@@ -140,23 +140,74 @@
     }
 
     var findMedianSortedArrays = function (nums1, nums2) { // 解法2: 几何对称,
-      // 假定有数组1的i, 数组2的j, 有: i + j = nums1.length - 1 - i + nums2.length - 1 - j ( - 1); 且: ij两个数组可以互换
-      //              1 2 3 4     5 6 7 8 
-      //                2 4 4     6 8 10    => 可以直接得出中位数
-      // 
-      //       1 2 3 4     5 6 7 9
-      //           6 7     7 9          => 4 < 7 但 7 < 5 不符合
       var shortArr = nums1, longArr = nums2;
       if (nums1.length > nums2) {
         shortArr = nums2;
         longArr = nums1;
       }
       var shortLen = shortArr.length; longLen = longArr.length;
-      if(shortLen === 0) {
+      var totalUnit = shortLen + longLen; // 总数
+      if(shortLen === 0) { // 短数组长度0 => 中位数直接获得
         return (longLen % 2 === 1) ? longArr[(longLen - 1) / 2] : (longArr[longLen / 2] + longArr[longLen / 2 - 1]) / 2;
+      } else if (longLen === 1) { // 长短数组均只有一个元素的情况
+        return (shortArr[0] + longArr[0]) / 2;
+      } else if (shortLen === 1 && longLen % 2 === 1) { // 短数组只有一个长度, 长数组为奇数(>=3)长度
+        var longMedian =  longArr[(longLen - 1) / 2];
+        var smallerMedian = longArr[(longLen - 3) / 2];
+        var biggerMedian = longArr[(longLen + 1) / 2];
+        return longMedian >= shortArr[0] ? (Math.max(smallerMedian, shortArr[0]) + longMedian) / 2 : (Math.min(biggerMedian, shortArr[0]) + longMedian) / 2;
       }
-      
-      var totalNum = shortLen + longLen;
+      var shortIndex = Math.ceil(shortLen / 2) - 1; // 短数组左侧用于比较的数据个数; => shortIndex = shortLeftLen - 1;
+      var longIndex = Math.floor(longLen / 2) - 1; // 长数组左侧用于比较数据个数; => longIndex = longLeftLen - 1;
+      // 进入循环的前提: 短数组长度 >= 2;
+      var half = parseInt(shortLen / 2);
+      while(true){
+        // 正常情况, 长短数组均左右值均存在正常 比较+移动index => 直接找到了对应的中间点; 
+        var shortLeftNum = shortArr[shortIndex], 
+            shortRightNum = shortArr[shortIndex + 1],
+            longLeftNum = longArr[longIndex],
+            longRightNum = longArr[longIndex + 1];
+        if (shortLeftNum <= longRightNum && longLeftNum <= shortRightNum) { // 找到了对应的位置
+          if (totalUnit % 2 === 1) { // 奇数 => 第 (n + 1) / 2 个数;
+            var resultUnit = (n + 1) / 2;
+            var leftUnits = shortIndex + longIndex + 2; // 左侧数据个数;
+            return (resultUnit = leftUnits) ? Math.max(shortLeftNum, longLeftNum) : Math.min(shortRightNum, longRightNum);
+          } else { // 偶数 => 四个数中的两个最接近数的 平均值
+            return (Math.max(shortLeftNum, longLeftNum) + Math.min(shortRightNum, longRightNum)) / 2;
+          }
+        } else if (shortLeftNum > longRightNum) { // 短数组左侧 大于 长数组右侧数据 => shortIndex应减小, longIndex增大
+          if (shortIndex === 0 || longIndex === longLen - 1) { // 无法继续移动 => 短数组最小的数都大于长数组最大的数;
+            var tmpMedianBigger = longArr[(totalUnit - 1) / 2];
+            var medianBigger = tmpMedianBigger === undefined ? shortIndex[0] : tmpMedianBigger;
+            if (totalUnit % 2 === 1) { // 奇数
+              return medianBigger;
+            } else { // 偶数
+              return (longArr[(totalUnit - 3) / 2] + medianBigger) / 2;
+            }
+          }
+          shortIndex -= half;
+          longIndex += half;
+        } else if (longLeftNum > shortRightNum) { // 长数组左侧 大于 短数组右侧数据 => shortIndex应增大, longIndex减小
+          if (shortIndex === shortLen - 1 || longIndex === 0) { // 短数组最大的数都小于长数组最小的数;
+            // var tmpMedianSmaller = longArr[(totalUnit + 1) / 2 - (shortIndex + 1) - 1];
+            // var tmpMedianSmaller = longArr[(totalUnit + 1) / 2 - (shortIndex + 1)] === undefined ? shortIndex[0] : longArr[(totalUnit - 1) / 2];
+            if (totalUnit % 2 === 1) { // 奇数
+              // return tmpMedianBigger;
+            } else { // 偶数
+              // return (longArr[(totalUnit - 3) / 2] + tmpMedianBigger) / 2;
+            }
+          }
+          shortIndex += half;
+          longIndex -= half;
+        }
+        half = parseInt(half / 2) > 0 ? parseInt(half / 2) : 1;
+      }
+
+
+
+
+
+
       var shortIndex = Math.ceil(shortLen / 2) - 1;
       var longIndex = Math.floor(longLen / 2) - 1;
       var compareLength = Math.ceil(shortLen / 2);
