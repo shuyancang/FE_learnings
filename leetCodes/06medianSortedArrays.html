@@ -139,115 +139,36 @@
       }
     }
 
-    var findMedianSortedArrays = function (nums1, nums2) { // 解法2: 几何对称,
-      var shortArr = nums1, longArr = nums2;
-      if (nums1.length > nums2) {
-        shortArr = nums2;
-        longArr = nums1;
-      }
-      var shortLen = shortArr.length; longLen = longArr.length;
-      var totalUnit = shortLen + longLen; // 总数
-      if(shortLen === 0) { // 短数组长度0 => 中位数直接获得
-        return (longLen % 2 === 1) ? longArr[(longLen - 1) / 2] : (longArr[longLen / 2] + longArr[longLen / 2 - 1]) / 2;
-      } else if (longLen === 1) { // 长短数组均只有一个元素的情况
-        return (shortArr[0] + longArr[0]) / 2;
-      } else if (shortLen === 1 && longLen % 2 === 1) { // 短数组只有一个长度, 长数组为奇数(>=3)长度
-        var longMedian =  longArr[(longLen - 1) / 2];
-        var smallerMedian = longArr[(longLen - 3) / 2];
-        var biggerMedian = longArr[(longLen + 1) / 2];
-        return longMedian >= shortArr[0] ? (Math.max(smallerMedian, shortArr[0]) + longMedian) / 2 : (Math.min(biggerMedian, shortArr[0]) + longMedian) / 2;
-      }
-      var shortIndex = Math.ceil(shortLen / 2) - 1; // 短数组左侧用于比较的数据个数; => shortIndex = shortLeftLen - 1;
-      var longIndex = Math.floor(longLen / 2) - 1; // 长数组左侧用于比较数据个数; => longIndex = longLeftLen - 1;
-      // 进入循环的前提: 短数组长度 >= 2;
-      var half = parseInt(shortLen / 2);
-      while(true){
-        // 正常情况, 长短数组均左右值均存在正常 比较+移动index => 直接找到了对应的中间点; 
-        var shortLeftNum = shortArr[shortIndex], 
-            shortRightNum = shortArr[shortIndex + 1],
-            longLeftNum = longArr[longIndex],
-            longRightNum = longArr[longIndex + 1];
-        if (shortLeftNum <= longRightNum && longLeftNum <= shortRightNum) { // 找到了对应的位置
-          if (totalUnit % 2 === 1) { // 奇数 => 第 (n + 1) / 2 个数;
-            var resultUnit = (n + 1) / 2;
-            var leftUnits = shortIndex + longIndex + 2; // 左侧数据个数;
-            return (resultUnit = leftUnits) ? Math.max(shortLeftNum, longLeftNum) : Math.min(shortRightNum, longRightNum);
-          } else { // 偶数 => 四个数中的两个最接近数的 平均值
-            return (Math.max(shortLeftNum, longLeftNum) + Math.min(shortRightNum, longRightNum)) / 2;
-          }
-        } else if (shortLeftNum > longRightNum) { // 短数组左侧 大于 长数组右侧数据 => shortIndex应减小, longIndex增大
-          if (shortIndex === 0 || longIndex === longLen - 1) { // 无法继续移动 => 短数组最小的数都大于长数组最大的数;
-            var tmpMedianBigger = longArr[(totalUnit - 1) / 2];
-            var medianBigger = tmpMedianBigger === undefined ? shortIndex[0] : tmpMedianBigger;
-            if (totalUnit % 2 === 1) { // 奇数
-              return medianBigger;
-            } else { // 偶数
-              return (longArr[(totalUnit - 3) / 2] + medianBigger) / 2;
-            }
-          }
-          shortIndex -= half;
-          longIndex += half;
-        } else if (longLeftNum > shortRightNum) { // 长数组左侧 大于 短数组右侧数据 => shortIndex应增大, longIndex减小
-          if (shortIndex === shortLen - 1 || longIndex === 0) { // 短数组最大的数都小于长数组最小的数;
-            // var tmpMedianSmaller = longArr[(totalUnit + 1) / 2 - (shortIndex + 1) - 1];
-            // var tmpMedianSmaller = longArr[(totalUnit + 1) / 2 - (shortIndex + 1)] === undefined ? shortIndex[0] : longArr[(totalUnit - 1) / 2];
-            if (totalUnit % 2 === 1) { // 奇数
-              // return tmpMedianBigger;
-            } else { // 偶数
-              // return (longArr[(totalUnit - 3) / 2] + tmpMedianBigger) / 2;
-            }
-          }
-          shortIndex += half;
-          longIndex -= half;
-        }
-        half = parseInt(half / 2) > 0 ? parseInt(half / 2) : 1;
-      }
 
+    var findMedianSortedArrays = (nums1, nums2) => {
+      let len1 = nums1.length, len2 = nums2.length
+      if (len1 > len2) return findMedianSortedArrays(nums2, nums1)
+      let len = len1 + len2
+      let start = 0, end = len1 
+      let partLen1, partLen2 
 
+      while (start <= end) {
+        partLen1 = (start + end) >> 1
+        partLen2 = ((len + 1) >> 1) - partLen1
 
+        let L1 = partLen1 === 0 ? -Infinity : nums1[partLen1 - 1]
+        let L2 = partLen2 === 0 ? -Infinity : nums2[partLen2 - 1]
+        let R1 = partLen1 === len1 ? Infinity : nums1[partLen1]
+        let R2 = partLen2 === len2 ? Infinity : nums2[partLen2]
 
-
-
-      var shortIndex = Math.ceil(shortLen / 2) - 1;
-      var longIndex = Math.floor(longLen / 2) - 1;
-      var compareLength = Math.ceil(shortLen / 2);
-
-      var debuggerNum = 0;
-      while(true){
-        debuggerNum++;
-        if(debuggerNum > 1000) {
-          return ['死循环', shortIndex, longIndex];
-        }
-        // 短数组如果移动完依然没找到，则必定在长数组对应index找到;
-        var shortLeftNum = shortArr[shortIndex], shortRightNum = shortArr[shortIndex + 1];
-        var longLeftNum = longArr[longIndex], longRightNum = longArr[longIndex + 1];
-        compareLength = parseInt(compareLength / 2) || 1;
-        if (shortLeftNum === undefined) { // 左边到头了。即短数组内所有数都比中位数大;
-          return (totalNum % 2 === 1) ? longArr[(totalNum - 1) / 2] : (longArr[totalNum / 2] + longArr[totalNum / 2 - 1]) / 2;
-        }
-        if (shortLeftNum > longRightNum) { // shortIndex应该减小, longIndex应该增大
-          shortIndex -= compareLength;
-          longIndex += compareLength;
-        } else if (longLeftNum > shortRightNum) { // shortIndex 增大, longIndex减小
-          if (shortIndex === shortLen - 1) { // 短数组尽头, 即短数组内所有数都比中位数小;
-            return (totalNum % 2 === 1) ? longArr[(totalNum - 1) / 2] : (longArr[totalNum / 2] + longArr[totalNum / 2 - 1]) / 2;
-          }
-          shortIndex += compareLength;
-          longIndex -= compareLength;
-        }
-
-        if (shortLeftNum <= longRightNum && longLeftNum <= shortRightNum) { // 找到正确的位置！满足条件！
-          // 总长度为奇数 => 中位数是左侧大的那个; 偶数 => 中位数是(左边大数 + 右边小数) / 2
-          var leftBigger = Math.max(shortLeftNum, longLeftNum);
-          var rightMiner = Math.min(shortRightNum, longRightNum);
-          return (totalNum % 2 === 1) ? leftBigger : (leftBigger + rightMiner) / 2;
+        if (L1 > R2) {
+          end = partLen1 - 1
+        } else if (L2 > R1) {
+          start = partLen1 + 1
+        } else { // L1 <= R2 && L2 <= R1
+          return len % 2 === 0 ?
+            (Math.max(L1, L2) + Math.min(R1, R2)) / 2 :
+            Math.max(L1, L2)
         }
       }
-
-
-      return [];
     }
-    
+
+
   </script>
 </body>
 </html>
