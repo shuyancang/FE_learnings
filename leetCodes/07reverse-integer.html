@@ -14,6 +14,7 @@
       var sign = '+';
       var resultStr = '';
       var strX = x + '';
+      var max = 2 ** 31;
       if (x < 0) {
         sign = '-';
         strX = strX.substring(1);
@@ -21,12 +22,26 @@
       for (var i = strX.length - 1; i >= 0; i--){
         resultStr += strX[i];
       }
-      if (resultStr > 2 ** 31 - 1 && sign === '+') {
+      if (resultStr > (max - 1) && sign === '+') {
         return 0;
-      } else if (resultStr > (2 ** 31) && sign === '-') {
+      } else if (resultStr > max && sign === '-') {
         return 0;
       }
-      return parseInt(sign + resultStr);
+      return (sign + resultStr) >> 0;
+    };
+
+    var reverse = function(x) {
+      var MAX_INT = 2 ** 31 - 1;
+      var MIN_INT = -(2 ** 31);
+      var result = 0;
+      while( x >= 1 || x <= -1) { // 每个循环/ 10; 每次记录余数,
+        result = 10 * result + (x % 10);
+        x = parseInt(x / 10);
+        if (result > MAX_INT || result < MIN_INT) {
+          return 0;
+        }
+      }
+      return result;
     };
 
   </script>
