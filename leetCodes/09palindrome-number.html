@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+
+  var isPalindrome = function(x) {
+    if (x < 0) { // 负数必然非回型;
+      return false;
+    }
+    var originNum = x;
+    var reverseNum = 0;
+    var remainder = 0;
+    while(originNum >= 1) {
+      remainder = originNum % 10;
+      originNum = parseInt(originNum / 10);
+      reverseNum = remainder + reverseNum * 10;
+    }
+    return x === reverseNum;
+  };
+
+
+  var isPalindrome = function(x){ // 遍历一半长度
+    if (x === 0) { // 0为回文
+      return true;
+    }
+    if (x < 0 || x % 10 === 0) { // 负数或末尾0的数，必定不是回文
+      return false
+    }
+    var reverseNum = 0;
+    while (x > reverseNum) {
+      reverseNum = reverseNum * 10 + (x % 10);
+      x = parseInt(x / 10);
+    }
+    return x === reverseNum || x === parseInt(reverseNum / 10);
+  }
+
+
+  isPalindrome(1)
+  isPalindrome(123)
+  isPalindrome(1331)
+  isPalindrome(13231)
+  isPalindrome(11)
+  isPalindrome(1122)
+  isPalindrome(1002)
+  
+
+  </script>
+</body>
+</html>
