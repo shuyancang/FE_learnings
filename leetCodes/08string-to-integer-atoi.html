@@ -25,13 +25,71 @@
       假设我们的环境只能存储 32 位大小的有符号整数，那么其数值范围为 [−231,  231 − 1]。如果数值超过这个范围，请返回  INT_MAX (231 − 1) 或 INT_MIN (−231) 。
     */
 
-    var myAtoi = function(str) {
+    var myAtoi = function(str) { // 正常判断
       var result = 0;
       var index = 0;
-      while(result[index]){
-        
+      var len = str.length;
+      var isGettingNum = false;
+      var INT_MAX = 2 ** 31 - 1;
+      var INT_MIN = - (2 ** 31);
+      var curStr = str[index];
+      var sign = '+';
+      while(curStr){
+        if(!isGettingNum && curStr === ' ') { // 空格跳过
+
+        } else if (!isGettingNum && curStr === '+' && str[index + 1] >= 0) { // 第一个+
+          isGettingNum = true;
+        } else if (!isGettingNum && curStr === '-' && str[index + 1] >= 0) { // 第一个-
+          isGettingNum = true;
+          sign = '-';
+        } else if (!isGettingNum && curStr >= 0) { // 第一个数值
+          isGettingNum = true;
+          result = curStr * 1;
+        } else if (!isGettingNum) { // 匹配到第一个即是非法字符
+          return 0;
+        } else if (isGettingNum && curStr !== ' ' && curStr >= 0) { // 继续往后匹配的数值
+          result = result * 10 + curStr *(sign === '+' ? 1 : (-1));
+          if (result > INT_MAX) {
+            return INT_MAX;
+          } else if (result < INT_MIN) {
+            return INT_MIN;
+          }
+        } else { // 有数值循环中遇到了非法字符，跳出
+          break;
+        }
+        curStr = str[++index];
       }
+      return result;
     };
+
+
+    var myAtoi = function(str) { // 取巧, 利用parseInt;
+      // 满足parseInt条件的整数, 正常返回, 不满足的返回0, 超额的返回大数
+      var INT_MAX = 2 ** 31 - 1;
+      var INT_MIN = - (2 ** 31);
+      var result = parseInt(str);
+      if (result > INT_MAX) {
+        return INT_MAX;
+      } else if (result < INT_MIN) {
+        return INT_MIN;
+      } else if (result * 1 !== result) { // 非数值
+        return 0;
+      }
+      return result;
+    }
+
+    myAtoi('abc')
+    myAtoi('1abc')
+    myAtoi('+1abc')
+    myAtoi('-1abc')
+    myAtoi('a123bc')
+    myAtoi('    abc')
+    myAtoi('    42')
+    myAtoi('    -42')
+    myAtoi('    -42abc')
+    myAtoi('    -4a2bc')
+    myAtoi('    -4   a2bc')
+
 
   </script>
 </body>
