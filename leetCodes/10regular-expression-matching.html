@@ -51,22 +51,19 @@
       p = "mis*is*p*."
       输出: false
     */ 
-    var isMatch = function(s, p) {
-      if (!s && !p) {
-        return true;
-      } else if (!s || !p) {
-        return false
+    var isMatch = function(s, p) { // s字符串, p匹配规则
+      // 动态规划: 主要思路: 取出s最末一个字符, 与p最后一个规则进行对比, 然后对比s(0 => length - 2)与p(0 => length - 2)
+      var strLen = s.length;
+      var matchLen = p.length;
+      var dp = [];
+      for (var i = 0; i < strLen.length; i++) {
+        dp[i] = [];
+        for(var j = 0; j < matchLen.length; j++){
+          dp[i][j] = false;
+        }
       }
-      // 需不需要判断'*abc'和'abc**abc'等非法字符?
-      var strIndex = 0;
-      var matchIndex = 0;
-      var curStr = s[strIndex];
-      var curModel = p[matchIndex];
-      // while(curModel){
-      //   if(p[matchIndex + 1] !== '*'){
+      dp[0][0] = true; // 
 
-      //   }
-      // }
     };
   </script>
 </body>
