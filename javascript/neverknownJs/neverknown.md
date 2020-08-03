@@ -82,3 +82,12 @@ x == y 的比较规则:
 * function *foo(x){ return x * (yield 20); }  ====> var it = foo(10); it.next(); it.next(10); it.next(); next输入参数可以作为foo内的yield返回值; yield与next调用有一个不匹配: 第一个next只是进行启动, 传入的参数无任何作用会默认抛弃;
 * 迭代器是一个定义良好的接口, 用与从一个生产者一步步得到一系列值;Symbol.iterator
 * function *foo(){ while(true){ ... } } ===> var it = foo()可以无限按步骤生成, 也可以通过it.return(20)手动指定停止生成;
+* 生成器 + Promise => async + await语法糖;
+* 生成器委托yield * 实质就是委托自动迭代
+* 生成器的并发, 异步, 递归;
+* 另一种: 形实转换程序(thunk)
+* 生成器的es5手工转换;
+
+
+## 2.7 性能
+* Web Worker(浏览器的h5功能 - 并非js)
