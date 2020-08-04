@@ -51,20 +51,58 @@
       p = "mis*is*p*."
       输出: false
     */ 
-    var isMatch = function(s, p) { // s字符串, p匹配规则
-      // 动态规划: 主要思路: 取出s最末一个字符, 与p最后一个规则进行对比, 然后对比s(0 => length - 2)与p(0 => length - 2)
-      var strLen = s.length;
-      var matchLen = p.length;
-      var dp = [];
-      for (var i = 0; i < strLen.length; i++) {
-        dp[i] = [];
-        for(var j = 0; j < matchLen.length; j++){
-          dp[i][j] = false;
+    /* s字符串, p匹配规则 递归方法: 复杂度O(nm*2);
+      思路: s字符串从[0, s.length - 1]与p字符串从[0, p.length - 1]进行依次匹配; 若从前往后匹配, 导致向后匹配多少不好考虑 => 从后往前匹配
+      1. 以fn(s[0, m-1], p[0, n-1])代表长度为m的s字符串, 与长度为n的p字符串的匹配结果, 结果为bool值
+      2. 若s[m-1] === p[n-1] 或p[n-1] === '.'则此时fn(s, n)的结果与fn(s[0, m-2], p[0, n-2])结果相同;
+      3. 若s[m-1] !== p[n-1], 且p[n-1] !== '*', 两个字符串无论如何均无法匹配, 则fn(s, n) === false;
+      4. 若s[m-1] !== p[n-1], 且p[n-1] === '*', 依然可能匹配
+        4.1 若s[m-1] === p[n-2] 或 p[n-2] === '.', 则fn(s, n)应该将s最末位往前直到不同的字符为止, 依次截取结果与fn(s[for], p[n])比较;
+        4.2 若s[m-1] !== p[n-2] 或s[m-1]不存在, 则fn(s, n)结果与fn(s, p[0, n-2])相同(去掉正则模板的最后一组x*)
+      5. fn('', '') === true;
+    */
+    var isMatch = function(s, p) {
+      if (s === '' && p === '') { // 规则5
+        return true;
+      }
+      var sLen = s.length, pLen = p.length;
+      var lastStr = s[sLen - 1];
+      var lastReg = p[pLen - 1];
+      if (lastStr !== lastReg && lastReg !== '*' && lastReg !== '.') { // 规则3
+        return false;
+      } else if (lastStr && (lastStr === lastReg || lastReg === '.')) { // 规则2
+        return isMatch(s.substring(0, sLen - 1), p.substring(0, pLen - 1));
+      } else if (lastStr !== lastReg && lastReg === '*') { // 规则4
+        if(lastStr && (lastStr === p[pLen - 2] || p[pLen - 2] === '.')) { // 规则4.1
+          var matchResult = isMatch(s, p.substring(0, pLen - 2)); // s一位都不去
+          for(var i = sLen - 1; s[i] === lastStr; i--){
+            matchResult = matchResult || isMatch(s.substring(0, i),p);
+          }
+          return matchResult;
+        } else { // 规则4.2
+          return isMatch(s, p.substring(0, pLen - 2));
         }
       }
-      dp[0][0] = true; // 
-
+      return false;
     };
+
+    /* dp动态规划
+      思路
+    */
+    var isMatch = function(s, p) {
+
+    }
+
+    isMatch('', ''); // true
+    isMatch('abc', 'abc'); // true
+    isMatch('aa', 'a'); // false
+    isMatch('aa', 'a*'); // true
+    isMatch('aa', '.*'); // true
+    isMatch("aab", "c*a*b"); // true
+    isMatch("mississippi", 'mis*is*p*.'); // false
+    isMatch('mississippi', 'mis*is*ip*.'); // true
+    isMatch('aa', 'ab*a*'); // true
+    isMatch('a', '.*..a*'); // false
   </script>
 </body>
 </html>
