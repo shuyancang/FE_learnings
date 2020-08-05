@@ -21,80 +21,30 @@
 
     // 解法二: 面积 = index差 * minHeight; 模拟一条长度无限的线从上往下按数组从高到低依次阶梯向下匹配，则面积 = 阶梯高度 * 最左最右差; 
     // 先将数组从大到小(或从小到达)排序,生成一个[index=21, index=0, index=3,...]记录排序后最大值索引的结构(O(nlogn));再进行第二次遍历(o(n))计算最大值; 
+    // var quicksort = function(objArr, start, end){// 对objArr进行快排;
+    //   if (end - start < 1) { // 一个元素或更小的，就不排序了。
+    //     return;
+    //   }
+    //   var compareInfo = { ...objArr[start] };
+    //   var left = start, right = end;
+    //   var compareValue = compareInfo.value;
+    //   while(left < right){
+    //     while(left < right && compareValue < objArr[right].value){ // 从右开始, 右数大于基准数, 则跳过
+    //       right--;
+    //     }
+    //     objArr[left] = { ...objArr[right] };
+    //     while(left < right && compareValue >= objArr[left].value) { // 从左开始往右, 左数小于基准数, 则跳过 
+    //       left++;
+    //     }
+    //     objArr[right] = { ...objArr[left] };
+    //   }
+    //   objArr[left] = compareInfo;
+    //   quicksort(objArr, start, left - 1);
+    //   quicksort(objArr, left + 1, end);
+    // }
 
-    var quicksortNum = function(arr, start, end){
-      if (end - start <= 1) { // 一个元素或更小的，就不排序了。
-        return arr;
-      }
-      var compareNum = arr[start];
-      var left = start, right = end;
-      debugger;
-      while(left < right){
-        while(left < right && compareNum < arr[right]){ // 从右开始, 右数大于基准数, 则跳过
-          right--;
-        }
-        arr[left] = arr[right];
-        while(left < right && compareNum >= arr[left]) { // 从左开始往右, 左数小于基准数, 则跳过 
-          left++;
-        }
-        arr[right] = arr[left];
-      }
-      arr[left] = compareNum;
-      quicksortNum(arr, start, left - 1);
-      quicksortNum(arr, left + 1, end);
-      return arr;
-    }
+    // 解法三: 双指针;
 
-    var quicksort = function(objArr, start, end){// 对objArr进行快排;
-      if (end - start <= 1) { // 一个元素或更小的，就不排序了。
-        return;
-      }
-      var compareInfo = { ...objArr[start] };
-      var left = start, right = end;
-      var compareValue = compareInfo.value;
-      while(left < right){
-        while(left < right && compareValue < objArr[right].value){ // 从右开始, 右数大于基准数, 则跳过
-          right--;
-        }
-        objArr[left] = { ...objArr[right] };
-        while(left < right && compareValue >= objArr[left].value) { // 从左开始往右, 左数小于基准数, 则跳过 
-          left++;
-        }
-        objArr[right] = { ...objArr[left] };
-      }
-      objArr[left] = compareInfo;
-      quicksort(objArr, start, left - 1);
-      quicksort(objArr, left + 1, end);
-    }
-
-    var maxArea = function(height) {
-      var heightInfoArr = [];
-      var len = height.length;
-      for(var h = 0; h < height.length; h++){
-        heightInfoArr[h] = {
-          index: h,
-          value: height[h],
-        }
-      }
-    };
-
-    var testheight = [{
-      index: 0,
-      value: 2,
-    }, {
-      index: 1,
-      value: 20,
-    }, {
-      index: 2,
-      value: 12,
-    }, {
-      index: 3,
-      value: 9,
-    }, {
-      index: 4,
-      value: 7,
-    }]
-    quicksort(testheight, 0, testheight.length - 1);
   </script>
 </body>
 </html>

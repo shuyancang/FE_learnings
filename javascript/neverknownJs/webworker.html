@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button id='btn'>看看</button>
+  <script>
+    console.log('我准备启动webworker');
+    console.log('开始启动worder01');
+    var w1 = new Worker('./worker01.js');
+    w1.onmessage = function(e){
+      console.log('收到w1的反馈', e);
+    };
+    w1.postMessage(21);
+    console.log('worker01启动命令已发出');
+
+    console.log('开始启动worder02');
+    var w2 = new Worker('./worker02.js');
+    w2.onmessage = function(e){
+      console.log('收到w1的反馈', e);
+    };
+    w2.postMessage({ a: 123, b: 123 });
+    console.log('worker02启动命令已发出');
+  
+    console.log('随便干啥吧！？')
+  </script>
+</body>
+</html>
