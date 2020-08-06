@@ -44,7 +44,23 @@
     // }
 
     // 解法三: 双指针;
-
+    var maxArea = function(height) {
+      if(height.length < 2) {
+        return 0;
+      }
+      var leftIndex = 0, rightIndex = height.length - 1;
+      var maxCalcArea = 0;
+      while(leftIndex < rightIndex){
+        var tmpArea = (rightIndex - leftIndex) * Math.min(height[leftIndex], height[rightIndex]);
+        maxCalcArea = Math.max(tmpArea, maxCalcArea);
+        if (height[leftIndex] <= height[rightIndex]) {
+          leftIndex++;
+        } else {
+          rightIndex--;
+        }
+      }
+      return maxCalcArea;
+    };
 
 
   </script>
