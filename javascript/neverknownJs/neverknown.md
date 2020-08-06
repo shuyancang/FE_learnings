@@ -90,8 +90,11 @@ x == y 的比较规则:
 
 
 ## 2.7 性能
+宏观性能部分
 * Web Worker(浏览器的h5功能 - 并非js); webworker需要在服务中使用; postMessage, new Worker, onmessage; 
 * web worker中, 可以使用importScripts同步引入某些js工具插件; 使用Transferable对象降低传输的性能损耗;
 * worker.port.start()初始化Worker的port对象用于通信, 区分worker共享到过个程序实例时的来源; 需要处理connect事件来处理连接;
 * SIMD单指令多数据 => 数据并行
 * asm.js 特别激进的底层优化; => 数学运算，图形大数据集时候, 可能会考虑的一种写法;
+微观性能部分
+
