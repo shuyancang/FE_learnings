@@ -28,13 +28,31 @@
 ```
 
 # 2.算法：实现36进制转换
-var intTo36 = function(num){
- // String.fromCharCode(90) 进行转化
-}
+```javascript
+  // # 2.算法：实现36进制转换 ？？  要不要实现 负数, 小数啊 ? 
+  var intToThirtySix = function(num, base){ // 十进制整数转36进制
+    // String.fromCharCode(65 + num) 进行转化
+    var result = '';
+    while(num > 0 || num < 0){ // 
+      var digit = num % base;
+      var rest = Math.floor(num / base);
+      num = rest;
+      result = digit + result;
+    }
+    return result;
+  }
+
+  var thritySixToInt = function(num, base){
+    var result = '';
+    // 每一位拆出来 * base就好
+    return result;
+  }
+```
+
 
 # 3.给定一个整数数组 nums，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和
 var findMaxSubArr = function(){
-
+  
 }
 
 
