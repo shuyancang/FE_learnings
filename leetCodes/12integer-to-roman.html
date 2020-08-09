@@ -74,62 +74,39 @@
   
     // var # 3.给定一个整数数组 nums，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和
     var findMaxSubArr = function(nums){
+      // 统计两个负数段之间的累计和,
+      // 若 > 0更新增加max继续往后找到下一个负数段结尾,
+      // 若 < 0; max不变从负数段结尾重新统计 再与max比较
       var len = nums.length;
-      if (len <= 1){
-        return nums;
-      }
-      var index = 0, maxSum = nums[0], maxLeft = 0, maxRight = 0;
-      while(index < len){
+      var index = 0, initMax = nums[0];
+      while(nums[index] < 0) {
+        if (nums[index] > initMax) {
+          initMax = nums[index];
+        }
         index++;
       }
-      return [maxLeft, maxRight, maxSum];
-    }
-
-
-
-    var intToDigit = function(num){ // 十进制整数转36进制
-      var baseDigit = 36;
-      if (typeof num !== 'number' || (parseInt(num) !== num && num !== 0)) {
-        throw '请输入整数数字进行转换';
+      if (index === len) { // 数组全是负数; 返回最大值即可
+        return initMax;
       }
-      if (num === 0) {
-        return 0;
-      }
-      var result = '';
-      var sign = num > 0 ? '' : '-';
-      num < 0 && (num = -num);
-      while(num > 0){// while 循环, 配合 String.fromCharCode(65 + num) 进行转化
-        var restNum = num % baseDigit;
-        var restStr = String.fromCharCode((restNum > 9 ? 55 : 48) + restNum);
-        result = restStr + result;
-        num = Math.floor(num / baseDigit);
-      }
-      result = sign + result;
-      return result;
-    }
-
-    var digitToInt = function(numStr){ // 36进制字符串转十进制
-      var baseDigit = 36;
-      if (typeof numStr !== 'string') {
-        throw '非法36进制字符';
-      }
-      var result = 0;
-      for(var i = 0; i < numStr.length; i++){
-        var eachStr = numStr[i];
-        var eachCharCode = eachStr.charCodeAt();
-        var eachNum;
-        if (eachCharCode >= 48 && eachCharCode <= 57) { // 0 - 9;
-          eachNum = +eachStr;
-        } else if (eachCharCode >= 65 && eachCharCode <= 90) { // 10 - 35
-          eachNum = numStr[i].charCodeAt() - 55;
-        } else {
-          throw '非法36进制字符';
+      while(nums[index] !== undefined) { // 正 负 分别统计累加和
+        var sumPositive = 0, sumNegative = 0, tmpSum = 0;
+        while(nums[index] >= 0) {
+          sumPositive += nums[index];
+          index++;
         }
-        result = result * baseDigit + eachNum;
+        while(nums[index] < 0) {
+          sumNegative += nums[index];
+          index++;
+        }
+        if(initMax < 0){ // 初始负数值重置为正值, 继续循环;
+          initMax = sumPositive;
+        } else if (sumPositive + sumNegative >= 0) {
+          initMax = initMax + sumNegative + sumPositive;
+        } else if (sumPositive > ) { // sumPositive + sumNegative < 0 暂存initMax, 重新统计后续进行比较;
+
+        }
       }
-      return result;
     }
-  
   </script>
 </body>
 </html>
