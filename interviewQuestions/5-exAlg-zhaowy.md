@@ -29,32 +29,56 @@
 
 # 2.算法：实现36进制转换
 ```javascript
-  // # 2.算法：实现36进制转换 ？？  要不要实现 负数, 小数啊 ? 
-  var intToThirtySix = function(num, base){ // 十进制整数转36进制
-    // String.fromCharCode(65 + num) 进行转化
-    var result = '';
-    while(num > 0 || num < 0){ // 
-      var digit = num % base;
-      var rest = Math.floor(num / base);
-      num = rest;
-      result = digit + result;
+  var intToDigit = function(num){ // 十进制整数转36进制
+    var baseDigit = 36;
+    if (typeof num !== 'number' || (parseInt(num) !== num && num !== 0)) {
+      throw '请输入整数数字进行转换';
     }
+    if (num === 0) {
+      return 0;
+    }
+    var result = '';
+    var sign = num > 0 ? '' : '-';
+    num < 0 && (num = -num);
+    while(num > 0){// while 循环, 配合 String.fromCharCode(65 + num) 进行转化
+      var restNum = num % baseDigit;
+      var restStr = String.fromCharCode((restNum > 9 ? 55 : 48) + restNum);
+      result = restStr + result;
+      num = Math.floor(num / baseDigit);
+    }
+    result = sign + result;
     return result;
   }
 
-  var thritySixToInt = function(num, base){
-    var result = '';
-    // 每一位拆出来 * base就好
+  var digitToInt = function(numStr){ // 36进制字符串转十进制
+    var baseDigit = 36;
+    if (typeof numStr !== 'string') {
+      throw '非法36进制字符';
+    }
+    var result = 0;
+    for(var i = 0; i < numStr.length; i++){
+      var eachStr = numStr[i];
+      var eachCharCode = eachStr.charCodeAt();
+      var eachNum;
+      if (eachCharCode >= 48 && eachCharCode <= 57) { // 0 - 9;
+        eachNum = +eachStr;
+      } else if (eachCharCode >= 65 && eachCharCode <= 90) { // 10 - 35
+        eachNum = numStr[i].charCodeAt() - 55;
+      } else {
+        throw '非法36进制字符';
+      }
+      result = result * baseDigit + eachNum;
+    }
     return result;
   }
+  
 ```
 
 
 # 3.给定一个整数数组 nums，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和
 
 ```javascript
-// 最大和的连续子数组 意思是说[1, -1, 2, -3, 4, 5, 0, 6]; [1, -1, -1, -1, 2, -9, 3, -3, 4, -4]
-// 这个'连续'是指数组内的值连续(直接出现4, 5, 6这种还是出现0 0 0这种?) 还是说是一个数组的某个区间的和一直在连续正增长?
+
 ```
 
 var findMaxSubArr = function(){
