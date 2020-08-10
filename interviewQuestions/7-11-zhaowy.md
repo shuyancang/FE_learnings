@@ -5,7 +5,39 @@
 * 例3: str = '3[abc]2[cd]ff' => 'abcabccdcdff';
 
 ```javascript
-var decodeStr = function(str){
-  return str;
-}
+    var decodeStr = function(str){
+      if(typeof str !== 'string') {
+        throw '请输入字符串';
+      }
+      var index = 0, decodeQueue = [];
+      while(index < str.length) {
+        var eleStr = str[index];
+        if (eleStr === '[') {
+          decodeQueue.push(index);
+        }
+        if (decodeQueue.length > 0 && eleStr === ']') {
+          var leftIndex = decodeQueue.pop();
+          var rightIndex = index;
+          str = strFormat(str, leftIndex, rightIndex);
+          index = 0;
+          continue;
+        }
+        index++;
+      }
+      return str;
+    }
+    var strFormat = function(str, startIndex, rightIndex){ // 辅助函数: 将形如str[]对应左右index展开;
+      var temp = str.substring(startIndex + 1, rightIndex);
+      var copiedStr = '';
+      var copyNum = '';
+      while(str[--startIndex] >= 0) {
+        copyNum = str[startIndex] + copyNum;
+      }
+      for(var i = 0; i < copyNum; i++){
+        copiedStr += temp;
+      }
+      str = str.substring(0, startIndex + 1) + copiedStr + str.substring(rightIndex + 1);
+      return str;
+    }
+
 ```
