@@ -73,39 +73,8 @@
     };
   
     // var # 3.给定一个整数数组 nums，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和
-    var findMaxSubArr = function(nums){
-      // 统计两个负数段之间的累计和,
-      // 若 > 0更新增加max继续往后找到下一个负数段结尾,
-      // 若 < 0; max不变从负数段结尾重新统计 再与max比较
-      var len = nums.length;
-      var index = 0, initMax = nums[0];
-      while(nums[index] < 0) {
-        if (nums[index] > initMax) {
-          initMax = nums[index];
-        }
-        index++;
-      }
-      if (index === len) { // 数组全是负数; 返回最大值即可
-        return initMax;
-      }
-      while(nums[index] !== undefined) { // 正 负 分别统计累加和
-        var sumPositive = 0, sumNegative = 0, tmpSum = 0;
-        while(nums[index] >= 0) {
-          sumPositive += nums[index];
-          index++;
-        }
-        while(nums[index] < 0) {
-          sumNegative += nums[index];
-          index++;
-        }
-        if(initMax < 0){ // 初始负数值重置为正值, 继续循环;
-          initMax = sumPositive;
-        } else if (sumPositive + sumNegative >= 0) {
-          initMax = initMax + sumNegative + sumPositive;
-        } else if (sumPositive > ) { // sumPositive + sumNegative < 0 暂存initMax, 重新统计后续进行比较;
-
-        }
-      }
+    var decodeStr = function(str){
+      return str;
     }
   </script>
 </body>

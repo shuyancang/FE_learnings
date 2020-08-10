@@ -78,6 +78,43 @@
 # 3.给定一个整数数组 nums，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和
 
 ```javascript
+    var findMaxSubArr = function(nums){
+      var len = nums.length;
+      var index = 0, initSum = nums[0], maxResult = 0;
+      while(nums[index] < 0) {
+        if (nums[index] > initSum) {
+          initSum = nums[index];
+        }
+        index++;
+      }
+      if (index === len) { // 数组全是负数; 直接返回最大值即可;
+        return initSum;
+      }
+      initSum = 0;
+      while(nums[index] >= 0) { // 初始化第一段正值累计和
+        initSum += nums[index];
+        index++;
+      }
+      maxResult = initSum;
+      while(nums[index] !== undefined) { // 此后的数组变为一段负, 一段正 正 负 分别统计累加和
+        var sumPositive = 0, sumNegative = 0, tmpSum = 0;
+        while(nums[index] < 0) {
+          sumNegative += nums[index];
+          index++;
+        }
+        while(nums[index] >= 0) {
+          sumPositive += nums[index];
+          index++;
+        }
+        if (sumNegative + sumPositive >= 0 && initSum + sumNegative >= 0) { // 和继续增大
+          initSum = sumNegative + sumPositive + initSum;
+        } else { // 负值影响最大值
+          initSum = sumPositive;
+        }
+        maxResult = Math.max(initSum, maxResult);
+      }
+      return maxResult;
+    }
 ```
 
 
