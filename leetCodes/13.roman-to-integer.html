@@ -22,24 +22,30 @@
       I 可以放在 V (5) 和 X (10) 的左边，来表示 4 和 9。
       X 可以放在 L (50) 和 C (100) 的左边，来表示 40 和 90。 
       C 可以放在 D (500) 和 M (1000) 的左边，来表示 400 和 900。
-      给定一个整数，将其转为罗马数字。输入确保在 1 到 3999 的范围内。
-      示例 1: 输入: 3 输出: "III"
-      示例 2: 输入: 4 输出: "IV"
-      示例 3: 输入: 9 输出: "IX"
-      示例 4: 输入: 58 输出: "LVIII" 解释: L = 50, V = 5, III = 3.
-      示例 5: 输入: 1994 输出: "MCMXCIV" 解释: M = 1000, CM = 900, XC = 90, IV = 4.
+      给定罗马数字，将其转为一个整数。输入确保在 1 到 3999 的范围内。
+      示例 1: 输入: "III" 输出: 3
+      示例 2: 输入: "IV" 输出: 4
+      示例 3: 输入: "IX" 输出: 9
+      示例 4: 输入: "LVIII" 输出: 58 解释: L = 50, V = 5, III = 3.
+      示例 5: 输入: "MCMXCIV" 输出: 1994 解释: M = 1000, CM = 900, XC = 90, IV = 4.
     */
     
 
-    var intToRoman = function(num) { // 贪心算法, 从最高位开始依次往下匹配;
-      var romanNum = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
-      var romanStr = ['M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I'];
-      var result = '', index = 0;
-      for(var i = 0; i < romanNum.length; i++) {
-        while(num >= romanNum[i]){
-          num -= romanNum[i];
-          result += romanStr[i];
-        }
+    var romanToInt = function(s) { // 左侧小于右侧，则为负数, 否则正常累加即可
+      var romanInfo = {
+        M: 1000,
+        D: 500,
+        C: 100,
+        L: 50,
+        X: 10,
+        V: 5, 
+        I: 1,
+      };
+      var result = 0;
+      debugger;
+      for(var i = 0; i < s.length; i++){
+        var tmp = romanInfo[s[i]] < romanInfo[s[i + 1]] ? -romanInfo[s[i]] : romanInfo[s[i]];
+        result += tmp;
       }
       return result;
     };
