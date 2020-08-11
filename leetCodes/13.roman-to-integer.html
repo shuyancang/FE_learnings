@@ -42,7 +42,6 @@
         I: 1,
       };
       var result = 0;
-      debugger;
       for(var i = 0; i < s.length; i++){
         var tmp = romanInfo[s[i]] < romanInfo[s[i + 1]] ? -romanInfo[s[i]] : romanInfo[s[i]];
         result += tmp;
