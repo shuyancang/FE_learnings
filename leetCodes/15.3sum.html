@@ -25,8 +25,43 @@
     * @return {number[][]}
     */
     var threeSum = function(nums) {
-
+      var result = [], record = {}, circlyRecord = {};
+      debugger;
+      for(var i = 0; i < nums.length; i++){
+        if (circlyRecord[nums[i]] !== undefined) { // 已经循环过的数值，跳出不必要的循环
+          continue;
+        } else {
+          circlyRecord[nums[i]] = nums[i]; // 记录已经循环过的外层数值
+        }
+        if(record[nums[i]] === undefined){
+          record[nums[i]] = {};
+        }
+        for(var j = i + 1; j < nums.length; j++){
+          var needNum = 0 - nums[i] - nums[j];
+          if (record[nums[i]][nums[j]] === undefined) {
+            record[nums[i]][needNum] = Infinity;
+          } else if(record[nums[i]][nums[j]] === Infinity) { // 找到且非重复
+            result.push([nums[i], nums[j], needNum]);
+            if (record[nums[j]] === undefined) {
+              record[nums[j]] = {
+                [nums[i]]: needNum,
+                needNum: nums[i],
+              }
+            } else {
+              record[nums[j]][nums[i]] = needNum;
+              record[nums[j]][needNum] = nums[i];
+            }
+          }
+        }
+      }
+      return result;
     };
+
+    threeSum([-1, 0, 1, 2, -1, -4]);
+    threeSum([-1, 0]);
+    threeSum([]);
+    threeSum([-1, 2, 3]);
+    threeSum([-1, 2, 3, -1, -2, 0, -3]);
   </script>
 </body>
 </html>
