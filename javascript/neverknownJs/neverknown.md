@@ -108,9 +108,19 @@ x == y 的比较规则:
 # 3. 下
 
 # 3.1 
-* 
-* 
-* 
-* 
+* 正则的变动: unicode(/u), 虚拟锚点(/y), 影响相关test, match, exec等使用的结果; 
+* 获取正则的标识: reg.flags => 'gi'
+* 新的各进制字面量: 0o52(八进制-或0O52，也可用052但不推荐~); 0x2a(十六进制-或0X2a), 0b1010(二进制-或0B1010); 通过Number('0O52')可以实现各进制向10进制的转换; ----补充, 可以使用(42).toString(8)实现对各进制的转换
+* Unicode字符: 0X000 => 0xFFFF包含标准打印字符, 但此外还有很多拓展字符范围直到0x10FFFF, es6以前只能通过两个特别计算的unicode字符才能使用, 现在可以通过'/u{1D11E}'携带{}进行码点转义;
+* unicode规范化: str.normalize();
+* charCodeAt在需要支持unicode时使用codePointAt, fromCharCode在需要支持unicode时使用fromCodePoint; 
+* Symbol.for + Symbol.keyFor: 全局符号 + 提取符号描述文本;
+* Symbol作为键值将不会出现在一般枚举属性(可近似作为私有隐藏键) => getOwnPropertySymbols()
+* 内置符号Symbol.iterator可以在可迭代对象内进行默认获取arr[Symbol.iterator];
+* 部署自定义的[Symbol.iterator]接口自定义next指定return { value: any, done: bool }
+* Class与Function区别: Class不存在提升; Class声明不会创建一个同名全局对象属性(window.SomeClass不存在, window.SomeFunc会创建);
+* Super 在构造器中指向父构造器, 在方法中指向父对象;
+* 元属性: new target; 在所有函数中可用的魔法值, 一般函数中为undefined;在构造器中指向new实际上直接调用的构造器
+* 对象的Symbol.species: 指向当前对象的构造函数, 创建实例时会默认调用这个方法, 使用这个属性返回的函数当作构造函数来创建新的实例对象;
 * 
 * 
