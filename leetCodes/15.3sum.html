@@ -10,7 +10,6 @@
     /*
       给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有满足条件且不重复的三元组。
       注意：答案中不可以包含重复的三元组
-
       示例：
       给定数组 nums = [-1, 0, 1, 2, -1, -4]，
       满足要求的三元组集合为：
@@ -24,44 +23,87 @@
     * @param {number[]} nums
     * @return {number[][]}
     */
+    // 解法1: hash暴力破解: O(n2);
     var threeSum = function(nums) {
-      var result = [], record = {}, circlyRecord = {};
-      debugger;
+      var result = {}, record = {}, res = [];
       for(var i = 0; i < nums.length; i++){
-        if (circlyRecord[nums[i]] !== undefined) { // 已经循环过的数值，跳出不必要的循环
-          continue;
-        } else {
-          circlyRecord[nums[i]] = nums[i]; // 记录已经循环过的外层数值
-        }
-        if(record[nums[i]] === undefined){
-          record[nums[i]] = {};
-        }
+        var restSum = -nums[i]; // 需要在剩下的数中, 找到和为restSum的两个数
+        if (!record[restSum]) { record[restSum] = {} }
         for(var j = i + 1; j < nums.length; j++){
-          var needNum = 0 - nums[i] - nums[j];
-          if (record[nums[i]][nums[j]] === undefined) {
-            record[nums[i]][needNum] = Infinity;
-          } else if(record[nums[i]][nums[j]] === Infinity) { // 找到且非重复
-            result.push([nums[i], nums[j], needNum]);
-            if (record[nums[j]] === undefined) {
-              record[nums[j]] = {
-                [nums[i]]: needNum,
-                needNum: nums[i],
-              }
-            } else {
-              record[nums[j]][nums[i]] = needNum;
-              record[nums[j]][needNum] = nums[i];
-            }
+          var curEle = nums[j], needEle = restSum - curEle;
+          if(record[restSum][curEle] !== undefined) { // 找到和符合要求的3个数
+            var outerKey = Math.min(nums[i], nums[j], needEle);
+            var innerKey = Math.max(nums[i], nums[j], needEle);
+            var restValue = 0 - outerKey - innerKey;
+            result[outerKey] === undefined ? (
+                result[outerKey] = { [innerKey]: restValue }
+              ) : (
+                result[outerKey][innerKey] = restValue
+              );
+          } else {
+            record[restSum][needEle] = curEle;
+          }
+        }
+        record[restSum] = {};
+      }
+      for(var outerKey in result) {
+        for(var innerKey in result[outerKey]){
+          res.push([
+            +outerKey, +innerKey, result[outerKey][innerKey]
+          ])
+        }
+      }
+      return res;
+    };
+
+    // 解法2: fn(0 => n) = fn(0 => n-1) + (0 => n-1和为 -n的组合): O(n2);
+    // 解法3: 双指针 + hash两数和
+    var threeSum = function (nums) {
+      var len = nums.length;
+      var result = [];
+      nums.sort((a, b) => a - b); // 排序
+      if (nums[0] > 0 || nums[len - 1] < 0 || len < 3) { // 最小值大于零 或 最大值小于零 或长度不符要求，直接返回即可
+        return [];
+      }
+      for(var i = 1; i < len - 1; i++){
+        if(nums[i] === nums[i + 1] && i !== len - 2) { // 避免循环重复值
+          continue;
+        }
+        var left = 0, right = len - 1;
+        while(left < i && i < right) {
+          if(nums[left] === nums[left + 1] && left < i - 1) {
+            left++;
+            continue;
+          }
+          if(nums[right] === nums[right - 1] && right > i + 1) {
+            right--;
+            continue;
+          }
+          var tmpSum = nums[i] + nums[left] + nums[right];
+          if (tmpSum === 0) {
+            result.push([nums[i], nums[left], nums[right]]);
+            left++;
+          }
+          if (tmpSum < 0) {
+            left++;
+          }
+          if (tmpSum > 0) {
+            right--;
           }
         }
       }
       return result;
-    };
+    }
+
 
     threeSum([-1, 0, 1, 2, -1, -4]);
+    threeSum([0, 0, 0, 0, 0, 0]);
+    threeSum([0, 0, 0]);
     threeSum([-1, 0]);
     threeSum([]);
     threeSum([-1, 2, 3]);
     threeSum([-1, 2, 3, -1, -2, 0, -3]);
+    threeSum([-4,-2,-2,-2,0,1,2,2,2,3,3,4,4,6,6]);
   </script>
 </body>
 </html>
