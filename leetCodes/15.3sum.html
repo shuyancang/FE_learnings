@@ -65,17 +65,20 @@
       if (nums[0] > 0 || nums[len - 1] < 0 || len < 3) { // 最小值大于零 或 最大值小于零 或长度不符要求，直接返回即可
         return [];
       }
-      for(var i = 1; i < len - 1; i++){
-        if(nums[i] === nums[i + 1] && i !== len - 2) { // 避免循环重复值
+      for(var i = 0; i < len - 2; i++){
+        if(nums[i] > 0) {
+          break;
+        }
+        if(nums[i] === nums[i - 1]) { // 避免循环重复值
           continue;
         }
-        var left = 0, right = len - 1;
-        while(left < i && i < right) {
-          if(nums[left] === nums[left + 1] && left < i - 1) {
+        var left = i + 1, right = len - 1;
+        while(left < right){
+          if(nums[left] === nums[left - 1] && left > i + 1) {
             left++;
             continue;
           }
-          if(nums[right] === nums[right - 1] && right > i + 1) {
+          if(nums[right] === nums[right + 1]) {
             right--;
             continue;
           }
@@ -84,11 +87,11 @@
             result.push([nums[i], nums[left], nums[right]]);
             left++;
           }
-          if (tmpSum < 0) {
-            left++;
-          }
           if (tmpSum > 0) {
             right--;
+          }
+          if (tmpSum < 0) {
+            left++
           }
         }
       }
@@ -99,11 +102,10 @@
     threeSum([-1, 0, 1, 2, -1, -4]);
     threeSum([0, 0, 0, 0, 0, 0]);
     threeSum([0, 0, 0]);
-    threeSum([-1, 0]);
-    threeSum([]);
     threeSum([-1, 2, 3]);
     threeSum([-1, 2, 3, -1, -2, 0, -3]);
     threeSum([-4,-2,-2,-2,0,1,2,2,2,3,3,4,4,6,6]);
+    threeSum([-2,0,1,1,2])
   </script>
 </body>
 </html>

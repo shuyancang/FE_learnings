@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*
+      给定一个包括 n 个整数的数组 nums 和 一个目标值 target。找出 nums 中的三个整数，使得它们的和与 target 最接近。返回这三个数的和。假定每组输入只存在唯一答案。
+      示例：
+      输入：nums = [-1,2,1,-4], target = 1
+      输出：2
+      解释：与 target 最接近的和是 2 (-1 + 2 + 1 = 2) 。
+
+      提示：
+      3 <= nums.length <= 10^3
+      -10^3 <= nums[i] <= 10^3
+      -10^4 <= target <= 10^4
+    */
+    var threeSumClosest = function(nums, target) {
+      // 三个数和 - target 最接近于0;
+      var len = nums.length;
+      if(len < 3) {
+        return;
+      }
+      // 如果能找到三数 - target === 0, 可直接退出; 记录最附近的几组数据进行比较, 再返回最近值;
+      nums.sort((a, b) => a - b); // 从小到达排序
+      for(var i = 0; i < len; i++){
+        var nearbyNum = target - nums[i]; // 剩余两数和的最理想数值;
+      }
+    };
+  </script>
+</body>
+</html>
