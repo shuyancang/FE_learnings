@@ -19,18 +19,45 @@
       -10^3 <= nums[i] <= 10^3
       -10^4 <= target <= 10^4
     */
-    var threeSumClosest = function(nums, target) {
-      // 三个数和 - target 最接近于0;
+    var threeSumClosest = function(nums, target) {// 解法一: 三个数和 - target 最接近于0; 使用的是三数之和的几乎相同思路
       var len = nums.length;
       if(len < 3) {
         return;
       }
+      var result;
       // 如果能找到三数 - target === 0, 可直接退出; 记录最附近的几组数据进行比较, 再返回最近值;
       nums.sort((a, b) => a - b); // 从小到达排序
       for(var i = 0; i < len; i++){
-        var nearbyNum = target - nums[i]; // 剩余两数和的最理想数值;
+        if (nums[i] === nums[i - 1]) {
+          continue;
+        }
+        var left = i + 1, right = len - 1;
+        while(left < right){
+          if(left > i + 1 && nums[left] === nums[left - 1]) {
+            left++;
+            continue;
+          }
+          if (nums[right] === nums[right + 1]) {
+            right--;
+            continue;
+          }
+          var tmpSum = nums[left] + nums[right] + nums[i];
+          if (tmpSum === target) { // 和正好为目标
+            return target;
+          } else if (tmpSum < target) {
+            left++;
+          } else {
+            right--;
+          }
+          if(result === undefined || Math.abs(tmpSum - target) < Math.abs(result - target)) {
+            result = tmpSum;
+          }
+        }
       }
+      return result;
     };
+
+    
   </script>
 </body>
 </html>
