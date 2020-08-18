@@ -122,5 +122,12 @@ x == y 的比较规则:
 * Super 在构造器中指向父构造器, 在方法中指向父对象;
 * 元属性: new target; 在所有函数中可用的魔法值, 一般函数中为undefined;在构造器中指向new实际上直接调用的构造器
 * 对象的Symbol.species: 指向当前对象的构造函数, 创建实例时会默认调用这个方法, 使用这个属性返回的函数当作构造函数来创建新的实例对象;
-* 
-* 
+ 
+# 3.2 
+* buffer: new ArrayBuffer(32); buffer.byteLength;
+* bufferView: new Uint16Array(buffer); bufferView.length(视图-类数组)
+* new DataView(buffer, byteOffset, byteLength): 视图是一个可以从 二进制ArrayBuffer 对象中读写多种数值类型的底层接口(.setInt16)
+* new Int16Array(buffer)
+* Int8Array, Unit8Array(也有对应的16位, 32位)
+* Float32Array, Float64Array; 可以把他们当做普通数组使用无需转换, 但不能用不合理的方法如修改自身(typedArray元素限制在声明的位数大小中)
+* Unit16Array.from() ( TypedArray.from 可以解决位数不够的问题, 转移到更大的数组中); typedarray也有sort方法, 但使用的是默认数字排序方法;
