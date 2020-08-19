@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*
+      给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。
+      给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
+      示例:
+      输入："23"
+      输出：["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+    */
+    var letterCombinations = function(digits) { // 实际是递归的思路
+      if(!digits || digits.length === 0) {
+        return '';
+      }
+      var len = digits.length, index = 0, result = [];
+      var numDigitMap = {
+        '2': ['a', 'b', 'c'],
+        '3': ['d', 'e', 'f'],
+        '4': ['g', 'h', 'i'],
+        '5': ['j', 'k', 'l'],
+        '6': ['m', 'n', 'o'],
+        '7': ['p', 'q', 'r', 's'],
+        '8': ['t', 'u', 'v'],
+        '9': ['w', 'x', 'y', 'z'],
+      };
+      while(digits[index]){
+        var tmpDigit = numDigitMap[digits[index]];
+        if (!tmpDigit) {
+          throw '输入的数值有误';
+        }
+        if (result.length === 0) {
+          result = tmpDigit;
+          index++;
+          continue;
+        }
+        var tmpArr = [];
+        for(var i = 0; i < tmpDigit.length; i++) {
+          for(var j = 0; j < result.length; j++) {
+            tmpArr.push(result[j] + tmpDigit[i]);
+          }
+        }
+        result = tmpArr;
+        index++;
+      }
+      return result;
+    };
+
+    var letterCombinations = function(digits) { // 先直接计算出结果的长度, 基于数学规律直接进行一次匹配;
+      if(!digits || digits.length === 0) {
+        return '';
+      }
+      var len = digits.length, index = 0, result = [], resultLen = 0;
+      var numDigitMap = {
+        '2': ['a', 'b', 'c'],
+        '3': ['d', 'e', 'f'],
+        '4': ['g', 'h', 'i'],
+        '5': ['j', 'k', 'l'],
+        '6': ['m', 'n', 'o'],
+        '7': ['p', 'q', 'r', 's'],
+        '8': ['t', 'u', 'v'],
+        '9': ['w', 'x', 'y', 'z'],
+      };
+      for (var l = 0; l < len; l++) {
+        var curLen = numDigitMap[digits[l]].length;
+        resultLen = (resultLen === 0) ? curLen : resultLen * curLen;
+      }
+      for (var i = 0; i < resultLen; i++) {
+        var tmpEle = []; var total = i;
+        for(var j = len - 1; j >= 0; j--) {
+          var tmpNumInfo = numDigitMap[digits[j]];
+          var tmpDigit = tmpNumInfo[total % tmpNumInfo.length];
+          total = parseInt(total / tmpNumInfo.length);
+          tmpEle[j] = tmpDigit;
+        }
+        result.push(tmpEle.join(''));
+      }
+      return result;
+    };
+  </script>
+</body>
+</html>
