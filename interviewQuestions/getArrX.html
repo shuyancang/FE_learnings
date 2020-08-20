@@ -61,37 +61,48 @@
     getArrX([1, 3, 4, 5, 6])
     getArrX([2, 1, 3, 5])
 
-    // 1. 实质上是生成一个谷形数组(正态分布?)
-    // 2. 状态方程: f(n) = f(n - 1)两个最大值(n - 1)位置的左, 中, 右分别插入n的三种情况的集合;
     var createMausoleum = function(num){
       if(num === 0) {
         return [];
       } else if (num === 1) {
         return [1, 1];
       }
-      return insertMaxNum(createMausoleum(num - 1), num);
-    }
-
-    var insertMaxNum = function(mausoleunResult, maxNum){ // 辅助函数, 向一个Mausoleum最大值num处插入num + 1(maxNum) ( * 3 )
-      var len = mausoleunResult.length;
-      var curMax = len / 2;
+      var len = Math.pow(3, num - 1);
       var result = [];
-      for(var j = 0; j < len; j++) {
-        var tmp0 = [], tmp1 = [], tmp2 = [];
-        if(mausoleunResult[j] === curMax && mausoleunResult[j + 1] === curMax){ // 原数组最大值处;
-          tmp0.push(maxNum, maxNum, curMax, curMax);
-          tmp1.push(curMax, maxNum, maxNum, curMax);
-          tmp2.push(curMax, curMax, maxNum, maxNum);
-        } else if (mausoleunResult[j] !== curMax) {
-          tmp0.push(mausoleunResult[j]);
-          tmp1.push(mausoleunResult[j]);
-          tmp2.push(mausoleunResult[j]);
-        } else { // mausoleunResult[j] === curMax 后面那个大值, 忽略
-          continue;
+      for(var i = 0; i < len; i++){
+        // var leftThreeRadixStr = i.tostring(3).padStart(n-1, '0'); // 快捷转为3进制数
+        var threeRadixArr = createThreeRadixArr(i, num - 1); // 获取最大值左右三进制数
+        var leftStr = threeRadixArr[0], rightStr = threeRadixArr[1];
+        var tmpResult = [];
+        for(var m = 0; m < leftStr.length; m++){ // 最大值左侧区域
+          var leftVal = leftStr[m];
+          while(leftVal > 0){ // 数值: m + 1; 次数: leftStr[m]
+            tmpResult.push(m + 1);
+            leftVal--;
+          }
         }
-        result.push(tmp0, tmp1, tmp2);
+        tmpResult.push(num, num);
+        for(var n = 0; n < rightStr.length; n++){ // 最大值右侧区域
+          var rightVal = rightStr[n];
+          while(rightVal > 0){// 数值: num - 1 - m; 次数: leftStr[m]
+            tmpResult.push(num - 1 - n);
+            rightVal--;
+          }
+        }
+        result.push(tmpResult);
       }
       return result;
+    }
+
+    var createThreeRadixArr = function(num, len){
+      var leftThreeRadix = '', rightThreeRadix = '';
+      while(len > 0){
+        leftThreeRadix = (num % 3) + leftThreeRadix;
+        rightThreeRadix += (2 - num % 3);
+        num = parseInt(num / 3);
+        len--;
+      }
+      return [leftThreeRadix, rightThreeRadix];
     }
 
   </script>
