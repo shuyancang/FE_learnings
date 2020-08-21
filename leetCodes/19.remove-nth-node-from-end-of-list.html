@@ -45,10 +45,29 @@
         curNode = curNode.next;
         length++;
       }
-      var deleteIndex = length - n;
-      while(){
-        
+      var deleteStep = length - n;
+      curNode = dummy;
+      while(deleteStep > 0){
+        curNode = curNode.next;
+        deleteStep--;
       }
+      curNode.next = curNode.next.next || null;
+      return dummy.next;
+    };
+    // 解法三: 双指针: 两个指针之间, 间隔n
+    var removeNthFromEnd = function(head, n) {
+      var dummy = new ListNode(0);
+      dummy.next = head; // 添加哑结点;
+      var left = dummy, right = dummy;
+      for(var i = 0; i < n ; i++){
+        right = right.next;
+      }
+      while(right.next !== null) {
+        left = left.next;
+        right = right.next;
+      }
+      left.next = left.next.next || null;
+      return dummy.next;
     };
   </script>
 </body>
