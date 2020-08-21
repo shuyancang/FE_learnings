@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*
+      给定一个链表，删除链表的倒数第 n 个节点，并且返回链表的头结点。
+      示例：
+      给定一个链表: 1->2->3->4->5, 和 n = 2.
+      当删除了倒数第二个节点后，链表变为 1->2->3->5.
+      说明： 给定的 n 保证是有效的。
+      进阶： 你能尝试使用一趟扫描实现吗？
+    */
+    /**
+      * Definition for singly-linked list.
+      * function ListNode(val) {
+      *     this.val = val;
+      *     this.next = null;
+      * }
+      */
+    // 解法一, 每个节点缓存 => js写法~这是完全不懂数据结构啊~~~~~
+    var removeNthFromEnd = function(head, n) {
+      var nodeArr = [head], curNode = head;
+      while(curNode.next){
+        nodeArr.push(curNode.next);
+        curNode = curNode.next;
+      }
+      if(n <= 0 || n > nodeArr.length) {
+        return head;
+      }
+      nodeArr[nodeArr.length - 1 - n].next = nodeArr[nodeArr.length - 2 - n] || null;
+      return head;
+    };
+
+    // 解法二: 两次遍历;
+    var removeNthFromEnd = function(head, n) {
+      var dummy = new ListNode(0);
+      dummy.next = head; // 添加哑结点;
+      var length = 1, curNode = head;
+      while(curNode.next){
+        curNode = curNode.next;
+        length++;
+      }
+      var deleteIndex = length - n;
+      while(){
+        
+      }
+    };
+  </script>
+</body>
+</html>

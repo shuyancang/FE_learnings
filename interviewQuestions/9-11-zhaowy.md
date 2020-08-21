@@ -13,6 +13,9 @@
       if(tmpCollection[tmpValue] === undefined && tmpValue !== undefined){
         result.push(tmpValue);
         tmpCollection[tmpValue] = tmpValue;
+      } else if (tmpInfo.hasOwnProperty(key) && tmpCollection[tmpValue] === undefined && tmpValue === undefined) {
+        tmpCollection[tmpValue] = 'undefined';
+        result.push(tmpValue);
       }
     }
     return result;

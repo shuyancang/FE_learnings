@@ -21,6 +21,45 @@
       [-2,  0, 0, 2]
     ]
     */
+    var fourSum = function(nums, target) {
+      var len = nums.length;
+      if(!nums || len < 4) {
+        return [];
+      }
+      nums.sort((a, b) => a - b);
+      var result = [];
+      for(var a = 0; a < len; a++){
+        if(nums[a] === nums[a - 1]) {
+          continue;
+        }
+        for(var b = a + 1; b < len; b++){
+          if(b - 1 > a && nums[b] === nums[b - 1]) {
+            continue;
+          }
+          var left = b + 1, right = len - 1;
+          while(left < right){
+            var sum = nums[a] + nums[b] + nums[left] + nums[right];
+            if(left > b + 1 && nums[left] === nums[left -  1]){
+              left++;
+              continue;
+            }
+            if(nums[right] === nums[right + 1]){
+              right--;
+              continue;
+            }
+            if(sum === target){
+              result.push([nums[a], nums[b], nums[left], nums[right]]);
+              left++;
+            } else if (sum > target){
+              right--;
+            } else {
+              left++;
+            }
+          }
+        }
+      }
+      return result;
+    };
   </script>
 </body>
 </html>
