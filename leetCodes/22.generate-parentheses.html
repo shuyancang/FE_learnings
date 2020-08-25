@@ -11,15 +11,73 @@
     数字 n 代表生成括号的对数，请你设计一个函数，用于能够生成所有可能的并且 有效的 括号组合。
     示例： 输入：n = 3
     输出：[
-          "((()))",
-          "(()())",
-          "(())()",
-          "()(())",
-          "()()()"
-        ]
+      "((()))",
+      "(()())",
+      "(())()",
+      "()(())",
+      "()()()"
+    ]
     */
+    // 思路1: f(n) = f(n - 1)的每个位置都加一次()，再去重一次;
+    // 思路2: 暴力, 得到C(n,2n)(最左侧必定是"(", 最右侧必定是")"可用C(n-2, 2n-2)减少计算)的所有可能, 遍历看是否符合条件;
+    // 思路3: 2n个位置, 每个位置,都有可能是左右括号, 先创建一个栈, 满足条件入栈, 不满足直接下一个循环; O(2(2n - 1))
     var generateParenthesis = function(n) {
+      if (n === 0) {
+        return '';
+      }
+      if(n === 1){
+        return ['()'];
+      }
+      var lastResult = generateParenthesis(n - 1);
+      var lastLen = lastResult.length;
+      var tmpResult = [];
+      for(var i = 0; i < lastLen; i++){
+        var str = lastResult[i];
+        for(var j = 0; j < str.length; j++){
+          tmpResult.push(str.substring(0, j) + '()' + str.substring(j));
+        }
+      }
+      return Array.from(new Set(tmpResult)); // 懒得写去重函数了哈。。。。
+    };
 
+    // 题解思路: 深度优先(回溯算法)
+    var generateParenthesis = function(n){
+      var res = [];
+      dfs('', n, n, res);
+      return res;
+    }
+    var dfs = function(str, left, right, res){
+      if(left === 0 && right === 0) {
+        res.push(str);
+      }
+      if(left > right || right < 0 || left < 0){
+        return;
+      } else if(left > 0){
+        dfs(str + '(', left - 1, right, res);
+        dfs(str + ')', left, right - 1, res);
+      } else { // left === 0; right > 0
+        dfs(str + ')', left, right - 1, res);
+      }
+    }
+    // 题解思路: 动态规划(f(n) = '(' + f(m) ')' + f(n - m - 1))
+    var generateParenthesis = function(n) {
+      if (n === 0) {
+        return [''];
+      }
+      if(n === 1){
+        return ['()'];
+      }
+      var result = [];
+      for(var i = 0; i < n; i++){
+        var leftResult = generateParenthesis(i);
+        var rightResult = generateParenthesis(n - i - 1);
+        for(var j = 0; j < leftResult.length; j++){
+          for(var k = 0; k < rightResult.length; k++){
+            result.push('(' + leftResult[j] + ')' + rightResult[k]);
+          }
+        }
+      }
+      return result;
     };
   </script>
 </body>
