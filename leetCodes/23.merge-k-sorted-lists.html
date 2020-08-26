@@ -29,9 +29,45 @@
     lists[i] 按 升序 排列
     lists[i].length 的总和不超过 10^4
     */
-    // wuli思路: 直接将所有链表合并成一个单链, 然后单链利用堆排序的思路~
+    // wuli思路一: 直接将所有链表合并成一个单链, 然后单链利用堆排序的思路~
+    // 思路二: 分治, 每一个合并分为两部分，分别进行合并，直至到2链时, 进行两链合并，依次继续。
     var mergeKLists = function(lists) {
-    
+      var len = lists.length;
+      if (lists.length === 0) {
+        return null;
+      }
+      return mergeHelper(lists, 0, len);
+    };
+
+    var mergeHelper = function(lists, left, length) {
+      if (length === 1) {
+        return lists[left];
+      } else if (length === 2) { // 合并双链
+        var l1 = lists[left], l2 = lists[left + 1];
+        var dummy = new ListNode();
+        var first = dummy;
+        while(l1 || l2){
+          if(!l1){
+            first.next = l2;
+            l2 = l2.next;
+          } else if (!l2) {
+            first.next = l1;
+            l1 = l1.next;
+          } else if (l1.val >= l2.val) {
+            first.next = l2;
+            l2 = l2.next;
+          } else {
+            first.next = l1;
+            l1 = l1.next;
+          }
+          first = first.next;
+        }
+        return dummy.next;
+      }
+      var half = length >> 1;
+      var leftList = mergeHelper(lists, left, (left + half));
+      var rightList = mergeHelper(lists, (left + half), (length - half));
+      return mergeHelper([leftList, rightList], 0, 2);
     };
 
   </script>
