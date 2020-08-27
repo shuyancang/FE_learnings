@@ -138,7 +138,44 @@ x == y 的比较规则:
 * Set: add, size, has, delete, clear, values, entries, keys
 * WeakSet: 基本同WeakMap, 不保持引用时, 值销毁;
 
-# 3.4 新增api
+# 3.4 Array新增api
 * Array.of: 传入的参数为值, 长度自动生成, 类似于字面量定义数组; 静态方法!
 * Array.from: 类数组 转为数组 - 不会有空槽位数组(Array(4), Array.from({length: 4})), 第二个参数是一个映射回调(.map类似)
-* copyWithin: 数组中复制一部分到另一部分位置: copyWithin(target,start, end-可选)
+* copyWithin: 数组中复制一部分到另一部分位置: copyWithin(target,start, end-可选), 任何一个参数为负数都被当做是结束的相对值;
+* fill(val, ?start, ?end); find(func, ?customThis); findeIndex(func, ?customthis); keys; entries; values;
+
+# 3.5 Object新增api
+* Object.is; 可用于判定NaN, -0等
+* Object.getOwnPropertySymbols(): 对象上的符号属性;
+* Object.setPrototypeOf(); 行为委托;
+* Object.assign(); 属性分配; 不可枚举及非自有属性均不参与赋值;
+
+# 3.6 Math新增api
+* 三角函数cosh; acosh; sinh; asinh; tanh; atanh; hypot(平方和的平方根-勾股定理); cbrt; clz32;expm1; log2; log10; log1p; imul; sign(数值符号); trunc(数值的整数部分); fround
+
+# 3.7 Number新增api
+* Number.EPSILON 任意两个值的最小差; 浮点精度误差;
+* Number.MAX_SAFE_INTEGER 安全最大整数;
+* Number.MIN_SAFE_INTEGER 安全最小整数;
+* Number.isNaN; Number.isFinite; -与原 全局isFinite函数略有区别-不自动进行类型转换;
+* Number.isInteger; 是否整型数
+* Number.isSafeInteger: 是否安全整型数
+
+# 3.8 String
+* Unicode函数: fromCodePoint; codePointAt; normalize; 
+* String.raw: 内置标签函数
+* repeat: 字符串复制重复
+* startsWith, endsWidth, includes
+
+# 3.9 元编程(操作目标是程序本身的行为特性的编程 - 代码查看/修改自身或修改默认语言特性以此影响其他代码)
+* isPrototypeOf; for ... in; function的name; 
+* ES6对函数/类的name有一套固定的规则; 默认情况下name不可写但可配置;
+* 元属性: new.target指向调用new目标的目标构造器; => 如class内的constructor使用new.target来判断是类本身使用还是其子类型使用
+* 公开符号: Symbol.iterator(定义对象的迭代行为); Symbol.toStringTag(字符串化时的标识); Symbol.hasInstance(实例对象值返回一个bool来指定instanceof的结果); Symbol.species()
+* 
+ 
+ 
+ 
+ 
+
+
