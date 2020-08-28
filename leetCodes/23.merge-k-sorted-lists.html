@@ -29,7 +29,7 @@
     lists[i] 按 升序 排列
     lists[i].length 的总和不超过 10^4
     */
-    // wuli思路一: 直接将所有链表合并成一个单链, 然后单链利用堆排序的思路~
+    // 堆排序可否~
     // 思路二: 分治, 每一个合并分为两部分，分别进行合并，直至到2链时, 进行两链合并，依次继续。
     var mergeKLists = function(lists) {
       var len = lists.length;
@@ -70,6 +70,47 @@
       return mergeHelper([leftList, rightList], 0, 2);
     };
 
+    // 思路二的leetcode解法
+    var mergeTwoList = function(l1, l2){
+      var dummy = new ListNode();
+      var first = dummy;
+      while(l1 && l2){
+        if(l1.val >= l2.val){
+          first.next = l2;
+          l2 = l2.next;
+        } else {
+          first.next = l1;
+          l1 = l1.next;
+        }
+        first = first.next;
+      }
+      first.next = l1 ? l1 : l2;
+      return dummy.next;
+    }
+
+    var mergeHelper = function(lists, left, right){
+      if (left > right) {
+        return null;
+      } if(left === right){
+        return lists[left];
+      }
+      var mid = (right + left) >> 1;
+      return mergeTwoList(mergeHelper(lists, left, mid), mergeHelper(lists, mid, right)); 
+    }
+
+    var mergeKLists = function(lists) {
+      var len = lists.length;
+      if (lists.length === 0) {
+        return null;
+      } else if (lists.length === 1) {
+        return lists[0];
+      } else if (lists.length === 2) {
+        return mergeTwoList(lists[0], lists[1]);
+      }
+      return mergeHelper(lists, 0, len - 1);
+    }
+
+    // 思路3: leetcode思路 - 优先队列合并
   </script>
 </body>
 </html>
