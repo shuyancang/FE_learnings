@@ -172,8 +172,25 @@ x == y 的比较规则:
 * ES6对函数/类的name有一套固定的规则; 默认情况下name不可写但可配置;
 * 元属性: new.target指向调用new目标的目标构造器; => 如class内的constructor使用new.target来判断是类本身使用还是其子类型使用
 * 公开符号: Symbol.iterator(定义对象的迭代行为); Symbol.toStringTag(字符串化时的标识); Symbol.hasInstance(实例对象值返回一个bool来指定instanceof的结果); Symbol.species(生成新实例时类的内置方法使用哪个构造器); Symbol.toPrimitive(定制toPrimitive强制转换-'default'/'number'/'string'); 正则表达式符号Symbol.match、Symbol.replace、Symbol.search、Symbol.split; Symbol.isConcatSpreadable是否展开传给数组的concat; Symbol.unscopables那些属性在with语句不可暴露为词法变量
-* 代理Proxy - 封装一个普通对象, 在其上注册特殊的处理函数; target-代理对象, key-处理属性, context-上下文对象(get, set, deleteProperty, apply, constructor, getOwnpropertyDescriptor, defineProperty; getPrototypeOf; setPrototypeOf; preventExtensions; isExtensible; ownKeys; enumerate; has); 部分操作无法拦截(局限性): 部分操作String(obj), 字面量声明, ==操作, typeof输出; 代理可取消Proxy.revocable调用
-* Reflect
+* 代理Proxy
+**************
+* 封装一个普通对象, 在其上注册特殊的处理函数; target-代理对象, key-处理属性, context-上下文对象
+* (get, set, deleteProperty, apply, constructor, getOwnpropertyDescriptor, defineProperty; getPrototypeOf; setPrototypeOf; preventExtensions; isExtensible; ownKeys; enumerate; has);
+* 部分操作无法拦截(局限性): 部分操作String(obj), 字面量声明, ==操作, typeof输出;
+* Proxy.revocable可创建-代理/取消代理操作;
+* 两种常见模式-代理在前/后;
+* 可利用该特性模拟环形Prototype, 模拟多Prototype继承;
+**************     
+* Reflect - 持有对于各种可控元编程任务的静态函数;
+*************
+* Reflect.getOwnPropertyDescriptor; Reflect.defindeProperty; Reflect.getPrototypeOf; Reflect.setPrototypeOf; Reflect.prevenExtensions; Reflect.isExtensible;
+* Reflect.ownKeys-目标键的列表; Reflect.enumerate-可枚举键集合的迭代器; Reflect.has-属性是否在对象上; Reflect.apply-调整this调用; Reflect.construct等同于new; Reflect.get提取属性; Reflect.set设置属性; Reflect.deleteProperty删除属性;
+* 属性排序, es6中按照[[OwnprpertyKeys]]进行定义; 一般对象键值列出顺序并无保障;
+*************
+
+# 3.10
+* 特性测试与分批发布
+* 尾递归调用
  
  
  
