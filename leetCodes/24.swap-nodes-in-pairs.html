@@ -14,6 +14,52 @@
       示例:
       给定 1->2->3->4, 你应该返回 2->1->4->3.
     */
+    var swapPairs = function(head) { // 先创建一个辅助链, 再重新合并两个链
+      var anotherList = new ListNode();
+      while(head && head.next){ // 有两个 需要交换
+      
+      }
+      return dummy.next;
+    };
+
+    // var separateArrClosedThreeSum = function(arr){
+    //   if(arr.length < 3) {
+    //     throw new Error('数组长度不足3, 不满足计算要求');
+    //   }
+    //   var result = [arr[0], arr[1], arr[2]];
+    //   return result;
+    // }
+
+    var getCloestArrFromNum = function(arr, num){ // 背包问题: 从arr数组中, 找到一组数, 使得该组数和最接近num;
+      var result = [];
+      // for(var i = 0; i < arr.length; i++) {
+      //   arr[i] = [];
+      //   for(var j = 0; j < arr.length; j++){
+      //     arr[i][j]
+      //   }
+      // }
+      // var len = arr.length;
+      // if(len === 1) {
+      //   return arr;
+      // }
+      // debugger;
+      // var lastNum = arr[len - 1];
+      // var mayResultArr1 = getCloestArrFromNum(arr.slice(0, len - 1), num);
+      // var mayResultArr2 = getCloestArrFromNum(arr.slice(0, len - 1), num - lastNum);
+      // var sum1 = 0, sum2 = 0;
+      // for(var i = 0; i < mayResultArr1.length; i++){
+      //   sum1 += mayResultArr1[i];
+      // }
+      // for(var j = 0; j < mayResultArr1.length; j++){
+      //   sum2 += mayResultArr2[j];
+      // }
+      // if(Math.abs(sum1 - num) <= Math.abs(sum2 - num)) {
+      //   return mayResultArr1;
+      // }
+      // return mayResultArr2;
+    }
+
+    var 
   </script>
 </body>
 </html>
