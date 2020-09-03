@@ -22,16 +22,39 @@
       你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。
     */
     var reverseKGroup = function(head, k) {
+      var step = k;
+      var result = new ListNode();
+      var resultHead = result;
       var dummy = new ListNode();
-
+      var eachNode = dummy;
+      while(head){
+        if (step > 0) {
+          step--;
+          eachNode.next = head;
+          eachNode = eachNode.next;
+          head = head.next;
+        } else { // step === 0
+          // head = head.next;
+          var nextLink = head.next;
+          // eachNode.next = null;
+          resultHead.next = reverseList(dummy.next);
+          dummy = new ListNode();
+          eachNode = dummy;
+          step = k;
+          resultHead = resultHead.next;
+        }
+      }
+      return result.next;
     };
     var reverseList = function(head){ // 辅助函数 - 翻转链表
-      var dummy = new ListNode();
-      // dummy.next = head;
-      // var preNode = dummy;
+      var reverseLink = null;
       while(head){
+        var tmpNode = head;
         head = head.next;
+        tmpNode.next = reverseLink;
+        reverseLink = tmpNode;
       }
+      return reverseLink;
     }
 
     // a => b => c; 
