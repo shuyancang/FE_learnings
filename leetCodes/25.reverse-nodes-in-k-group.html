@@ -66,17 +66,17 @@
    
     // a => b => c; 
     // leetcode解法: 
-    const myReverse = (head, tail) => {
-      let prev = tail.next;
-      let p = head;
-      while (prev !== tail) {
-        const nex = p.next;
-        p.next = prev;
-        prev = p;
-        p = nex;
-      }
-      return [tail, head];
+  const myReverse = (head, tail) => {
+    let prev = tail.next;
+    let p = head;
+    while (prev !== tail) { // 这特么可读性写的真垃圾。纯粹只为了解决问题写的·····还写的个屁的题解。
+      const nex = p.next;
+      p.next = prev;
+      prev = p;
+      p = nex;
     }
+    return [tail, head];
+  }
 
   var reverseKGroup = function(head, k) {
     const hair = new ListNode(0);
@@ -100,6 +100,56 @@
     }
     return hair.next;
   };
+
+
+  // 1. 基础: 翻转链表
+  var reverseList = function(head) {
+    let cur = head;
+    let result = null;
+    while(cur){
+      var rest = cur.next;
+      cur.next = result;
+      result = cur;
+      cur = rest;
+    }
+    return result
+  };
+
+  // 2. 调整: 对链head 到 last 阶段的节点进行翻转
+  var reversePartLink = function(head, last){
+    var fir = head;
+    var nextNode = last.next;
+    var res = null;
+    while(fir !== nextNode ){
+      var rest = fir.next;
+      fir.next = res;
+      res = fir;
+      fir = rest;
+    }
+    res.next = last.next;
+    return res;
+  }
+
+
+  var reversePartLink = function(head, last){ // 对链中的head => last节点反转， last后续节点, head前的节点均不变
+    var prev = last.next; // 断开后, 下一个链的头部
+    var startNode = head; // 指向头结点的备份;
+    while(last !== prev) { // last === prev: 完成翻转
+      //起始链结构: startNode => a => b => last => prev
+      var secNode = startNode.next; // secNode/a => b => last => prev
+      startNode.next = prev; // startNode => prev; 
+      prev = startNode; // 
+      startNode = secNode; // 
+    }
+    return last;
+  }
+  var a = {a: 1}, b = {b: 2}, c = {c: 3}, d = {d: 4}, e = {e: 5}, f = {f: 6}
+  var head = {h: 0, next: a}
+  a.next = b;
+  b.next = c;
+  c.next = d;
+  d.next = e;
+  e.next = f;
 
   </script>
 </body>
