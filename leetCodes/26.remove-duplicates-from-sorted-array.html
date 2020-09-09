@@ -35,8 +35,22 @@
       }。
     */
     var removeDuplicates = function(nums) {
-      
+      if(!nums || nums.length === 0) {
+        return 0;
+      }
+      var recordIndex = 0;
+      for(var i = 0; i < nums.length; i++){
+        if(nums[i] !== nums[recordIndex]) {
+          nums[++recordIndex] = nums[i];
+        }
+      }
+      return recordIndex + 1
     };
+    var arr1 = [];
+    var arr2 = [0, 1, 1, 1, 2, 2, 2, 3];
+    var arr3 = [0, 0, 0, 0];
+    var arr4 = [0, 1, 2, 3];
+    var arr5 = [0, 1, 2, 3, 3, 3];
   </script>
 </body>
 </html>
