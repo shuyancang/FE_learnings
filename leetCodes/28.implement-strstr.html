@@ -20,6 +20,7 @@
       当 needle 是空字符串时，我们应当返回什么值呢？这是一个在面试中很好的问题。
       对于本题而言，当 needle 是空字符串时我们应当返回 0 。这与C语言的 strstr() 以及 Java的 indexOf() 定义相符。
     */
+    // 解法1: 暴力匹配
     var strStr = function(haystack, needle) {
       if(!needle) {
         return 0
@@ -27,19 +28,33 @@
       if(!haystack) {
         return -1;
       }
-      var dp = [];
-      for(var i = 0; i < haystack.length; i++){
-        dp[i] = [];
-        for(var j = 0; j < needle.length; j++){
-          dp[i][j] = 0;
-          if(i === 0) {
-            dp[i][j] = haystack[i] === needle[j] ? 1 : 0;
-          } else if(j = 0) {
-
+      var longLen = haystack.length, shortLen = needle.length;
+      if(longLen < shortLen ){
+        return -1;
+      }
+      for(var i = 0; i <= longLen - shortLen; i++){
+        if(haystack[i] !== needle[0]){
+          continue;
+        }
+        var isSame = false;
+        for(var j = 0; j < shortLen; j++){ // 第一个相等, 满足基础的匹配条件
+          if(haystack[i + j] !== needle[j]) { // 不满足匹配条件, 直接退出该循环
+            break;
+          }
+          if(j === shortLen - 1){ // 最后一项字母相同
+            isSame = true;
           }
         }
+        if(isSame){ // 找到, 退出;
+          return i;
+        }
       }
+      return -1;
     };
+
+    // 解法2: leetcode - 双指针 - 找到第一个相同的位置, 往后匹配记录长度, 匹配成功返回不成功指针重置继续后匹配; - 与解法一相比并无优化
+    // 解法3: leetcode - RabinKarp - 最坏时间复杂度O(N)
+
   </script>
 </body>
 </html>
