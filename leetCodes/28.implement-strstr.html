@@ -53,8 +53,18 @@
     };
 
     // 解法2: leetcode - 双指针 - 找到第一个相同的位置, 往后匹配记录长度, 匹配成功返回不成功指针重置继续后匹配; - 与解法一相比并无优化
-    // 解法3: leetcode - RabinKarp - 最坏时间复杂度O(N)
+    
+    // 解法3: leetcode - RabinKarp - 最坏时间复杂度O(N) - 字符串转化为0-25的整数, 可以将字符串转化为一个26进制表示c1*a(n-1) + c2 * a(n-2)...
+    // 将模板字符串转为该数字，匹配字符串基于改长度进行计算。相等时直接返回即可 - 纯数字方法, 了解即可;
 
+    // 解法4: KMP - 更高效的字符串匹配模式O(m + n); 获取到不匹配点前面字符串的对应回溯长度O(m), 基于回溯长度进行一次比较O(n);
+    var getNext = function(templete){ // 获取模板字符串的前缀长度 - 
+      var nextArr = [0];
+      for(var i = 1; i < templete.length; i++){
+        nextArr.push(1);
+      }
+      return nextArr;
+    }
   </script>
 </body>
 </html>
