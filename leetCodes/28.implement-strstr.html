@@ -58,13 +58,13 @@
     // 将模板字符串转为该数字，匹配字符串基于改长度进行计算。相等时直接返回即可 - 纯数字方法, 了解即可;
 
     // 解法4: KMP - 更高效的字符串匹配模式O(m + n); 获取到不匹配点前面字符串的对应回溯长度O(m), 基于回溯长度进行一次比较O(n);
-    var getNext = function(templete){ // 获取模板字符串的前缀长度 - 
-      var nextArr = [0];
-      for(var i = 1; i < templete.length; i++){
-        nextArr.push(1);
-      }
-      return nextArr;
-    }
+    // var getNext = function(templete){ // 获取模板字符串的前缀长度 - 
+    //   var nextArr = [0];
+    //   for(var i = 1; i < templete.length; i++){
+    //     nextArr.push(1);
+    //   }
+    //   return nextArr;
+    // }
   </script>
 </body>
 </html>
