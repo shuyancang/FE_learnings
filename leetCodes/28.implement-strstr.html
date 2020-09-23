@@ -57,7 +57,7 @@
     // 解法3: leetcode - RabinKarp - 最坏时间复杂度O(N) - 字符串转化为0-25的整数, 可以将字符串转化为一个26进制表示c1*a(n-1) + c2 * a(n-2)...
     // 将模板字符串转为该数字，匹配字符串基于改长度进行计算。相等时直接返回即可 - 纯数字方法, 了解即可;
 
-    // 解法4: KMP - 更高效的字符串匹配模式O(m + n); 获取到不匹配点前面字符串的对应回溯长度O(m), 基于回溯长度进行一次比较O(n);
+    // 解法4: leetcode - KMP - 更高效的字符串匹配模式O(m + n); 获取到不匹配点前面字符串的对应回溯长度O(m), 基于回溯长度进行一次比较O(n);
     // var getNext = function(templete){ // 获取模板字符串的前缀长度 - 
     //   var nextArr = [0];
     //   for(var i = 1; i < templete.length; i++){
@@ -65,6 +65,8 @@
     //   }
     //   return nextArr;
     // }
+
+    // 解法5: 获取到needle的长度l, 创建一个hash表，滑动窗口记录haystack内长度为l的子串, 然后直接判断needle是否位于hash表中即可, 空间复杂度高, 时间复杂度O(n);
   </script>
 </body>
 </html>

@@ -26,8 +26,30 @@
           words = ["word","good","best","word"]
         输出：[]
     */
+    /*
+      思路一: 输出words可能的所有拼接结果(n的阶乘), 将该结果依次与s判定是否子串(Om * On), 再基于子串位置计算。。。emm复杂度爆表啊
+      思路二: 缓存一个位置对象, 记录words中每一项(On)位于s中的位置(Om * On); {word: [0, 9, 20], good: [4, 18, 90]...}, 所有单词位置差=单词长度即为连续，输出最小位置找到一个(多数组的头部条件判断 + 栈推出排序~)(需考虑重复情况 - index: [result]再处理更合适);
+      思路三: 算出words总长度并创建一个hash表(On){word: [0, 3], good: [1], best: [2]}, 从s中顺序截取该长度字符串(Om)('wordgoodgoodgood'), 判定是否一一对应(Om * O1)(in hash去掉该hash对应信息, 若最终为空，匹配，若not in hash, 指针后续一格);
+      思路四: 滑动窗口, 同思路三, 但更优化;
+    */
+    // 见link； https://leetcode-cn.com/problems/substring-with-concatenation-of-all-words/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by-w-6/ 或者: https://leetcode-cn.com/problems/substring-with-concatenation-of-all-words/solution/chuan-lian-suo-you-dan-ci-de-zi-chuan-by-powcai/
     var findSubstring = function(s, words) {
+      if (!s || !words || words.length === 0){next-permutation
+        return [];
+      }
+      var len = s.length, wordLen = words.length;
+      var wordTotalLen = wordLen * words[0].length;
+      var wordHash = {};
+      for(var k = 0; k < wordLen; k++){
+        wordHash[words[k]] = wordHash[words[k]] ? (wordHash[words[k]] + 1) : 1;
+      }
+      for(var i = 0; i < wordTotalLen; i++){
+        var left = i, right = i, count = 0;
+        var tmpMap = {};
+        while(false){
 
+        }
+      }
     };
   </script>
 </body>
