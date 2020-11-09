@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="../three.js"></script>
+  <script src="../SceneUtils.js"></script>
+  <script src="./common.js"></script>
+  <script>
+    // radiusTop顶部尺寸, radiusButtom底部尺寸, height高度, segX, segY, segZ延三个轴的分段数, openEnded：网格顶部与底部是否封闭;
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
+    camera.position.set(-20, 30, 40);
+    camera.lookAt(new THREE.Vector3(10, 0, 0));
+
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setClearColor(new THREE.Color(0xeeeeff));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+
+    function createMesh(geom) { // 创建联合材质
+      const meshMaterial = new THREE.MeshNormalMaterial();
+      meshMaterial.side = THREE.DoubleSide;
+      const wireFrameMaterial = new THREE.MeshBasicMaterial();
+      wireFrameMaterial.wireframe = true;
+      return THREE.SceneUtils.createMultiMaterialObject(geom, [meshMaterial, wireFrameMaterial]);
+    }
+
+    // 创建圆柱体
+    const cylinder = createMesh(new THREE.CylinderGeometry(20, 20, 30, 20, 20));
+    scene.add(cylinder);
+
+    // 添加光源
+    const spotLight = new THREE.SpotLight(0xffffff);
+    scene.add(spotLight);
+
+    function circleRender(){
+      cylinder.rotation.y += 0.01;
+      requestAnimationFrame(circleRender);
+      renderer.render(scene, camera);
+    }
+    circleRender();
+
+    document.body.appendChild(renderer.domElement);
+  </script>
+</body>
+</html>
