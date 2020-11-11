@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const factory = {}; // 工厂, 作用-产衣服, 产鞋子, 运输
+    factory.createCloth = function(){
+      this.workers = 50;
+      alert('we have ' + this.workers + 'workers');
+    }
+    factory.createShoose = function(){
+      alert('we createShoose');
+    }
+    factory.createTrans = function(){
+      alert('we trans sth to beijing');
+    }
+    factory.leader = function(param){ // 消费者 => 子类 决定到底
+      return new factory[param]();
+    }
+    const clothCreate = factory.leader('createCloth');
+    // XMLHttpRequest的兼容性使用函数, 就是一个简单工厂, 根据兼容性消费返回对应可用的XMLHttp对象, 再将XMLHttp对象输出, 提供给后续使用;
+    
+  </script>
+</body>
+</html>
