@@ -7,13 +7,13 @@
 </head>
 <body>
   <script src="../three.js"></script>
-  <script src="../controls/FirstPersonControls.js"></script>
+  <script src="../controls/MathUtils.js"></script>
   <script src="../SceneUtils.js"></script>
+  <script src="../controls/FirstPersonControls.js"></script>
   <script src="./common.js"></script>
   <script>
     // 第一人称控件 FirstPersonControls movementSpeed移动速度, noFly非飞行模式, lon/lat定位相机初始位置; lookSpeed
     // 操作方式类似，上下左右前进，鼠标控制观看效果
-    // radToDeg报错
     const scene = new THREE.Scene();
     const clock = new THREE.Clock(); // 用于精确计算上一次计算经过的时间(循环渲染);
 
@@ -40,13 +40,13 @@
     scene.add(spotLight);
 
     const firstPerson = new THREE.FirstPersonControls(camera, renderer.domElement); // 轨迹球控件;
-    firstPerson.movementSpeed = 5;
-    firstPerson.lookSpeed = 1;
-    firstPerson.noFly = true;
-    firstPerson.lookVertical = true;
-    firstPerson.constrainVertical = true;
-    firstPerson.verticalMin = 1.0;
-    firstPerson.verticalMax = 2.0;
+    firstPerson.movementSpeed = 0.5;
+    firstPerson.lookSpeed = 0.1;
+    // firstPerson.noFly = true;
+    // firstPerson.lookVertical = true;
+    // firstPerson.constrainVertical = true;
+    // firstPerson.verticalMin = 1.0;
+    // firstPerson.verticalMax = 2.0;
     firstPerson.lon = -150;
     firstPerson.lat = 120;
 

@@ -335,7 +335,7 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 
 		lookDirection.set( 0, 0, - 1 ).applyQuaternion( quaternion );
 		spherical.setFromVector3( lookDirection );
-
+		console.log(THREE.MathUtils);
 		lat = 90 - THREE.MathUtils.radToDeg( spherical.phi );
 		lon = THREE.MathUtils.radToDeg( spherical.theta );
 
