@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>飞行控件</title>
+</head>
+<body>
+  <script src="../three.js"></script>
+  <script src="../controls/FlyControls.js"></script>
+  <script src="../SceneUtils.js"></script>
+  <script src="./common.js"></script>
+  <script>
+    // 轨迹球 TrackballControls moveSpeed移动速度 rollSpeed转速 autoForward自动前进
+    // 鼠标滑动或前后左右(键盘)控制展示效果。
+    const scene = new THREE.Scene();
+    const clock = new THREE.Clock(); // 用于精确计算上一次计算经过的时间(循环渲染);
+
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+    camera.position.set(100, 100, 300);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setClearColor(new THREE.Color(0xeeeeee));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+
+    const planeGeometry = new THREE.PlaneGeometry(129, 55, 1, 1);
+    const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
+    const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    plane.position.set(15, 0, 0);
+    plane.rotation.x = -0.2 * Math.PI;
+    scene.add(plane);
+
+    const ambientLight = new THREE.AmbientLight(0x0c0c0c);
+    const spotLight = new THREE.SpotLight(0xffffff);
+    spotLight.position.set(100, 130, 130);
+    scene.add(ambientLight);
+    scene.add(spotLight);
+
+    const fly = new THREE.FlyControls(camera, renderer.domElement); // 轨迹球控件;
+    fly.moveSpeed = 1;
+    fly.rollSpeed = Math.PI / 10;
+    fly.autoForward = true;
+
+    const cyliderMaterial = new THREE.MeshLambertMaterial({ color: 0x77ff77 });
+    function addCylider (x, y, z){
+      const cyliderGeometry = new THREE.CylinderGeometry(2, 2, 20);
+      const cylinder = new THREE.Mesh(cyliderGeometry, cyliderMaterial);
+      cylinder.position.set(x, y, z);
+      scene.add(cylinder);
+    }
+
+    addCylider(0, 0, 1);
+    addCylider(10, 5, 5);
+    addCylider(2, -10, 0);
+
+    function render(){
+      requestAnimationFrame(render);
+      const delta = clock.getDelta();
+      fly.update(delta);
+      renderer.render(scene, camera);
+    }
+    render();
+    document.body.appendChild(renderer.domElement);
+  </script>
+</body>
+</html>
