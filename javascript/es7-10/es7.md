@@ -17,6 +17,7 @@
 * Object.values, Object.keys, Object.entries 对对象自身属性的数组集合; 非对象进行以上调用, 会强制转化为对象, 然后进行调用;
 * 优雅的遍历对象的键值: for(let [key, value] of Object.entries){ console.log(key, value) }
 * String Padding: String.prototype.padStart, String.prototype.padEnd对字符串的头尾进行添加操作;
+* 函数参数、对象的结尾允许逗号;function tt(a, b, c,){}; 版本管理时, 对象错行多一个逗号经常导致改变的行多一行, 有利于简化版本管理的对比 
 
 
 
