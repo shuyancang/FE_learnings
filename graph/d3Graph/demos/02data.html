@@ -10,20 +10,14 @@
       height: 20px;
       margin-top: 10px;
     }
+
+    .hero{
+      background-color: #000;
+      height: 20px;
+    }
   </style>
 </head>
 <body>
-  <h1 id="D3title"></h1>
-  <section>
-    <h3>英雄集合</h3>
-    <ul class="heroBox">
-      <li class="hero">李牧</li>
-      <li class="hero">廉颇</li>
-      <li class="hero">王翦</li>
-      <li class="hero">蒙恬</li>
-      <li class="hero">赵奢</li>
-    </ul>
-  </section>
   <script src="../source/d3.js"></script>
   <script>
     // 数据模式： 数组, 对象字面量, 函数, 均可以作为数据进行绑定
@@ -37,7 +31,7 @@
       d3.select('body').selectAll('div.databar').data(data).enter().append('div').attr('class', 'databar').append('span');
       d3.select('body').selectAll('div.databar').data(data).style('width', function(d){
         return d * 5 + 'px';
-      }).select('span').text(function(d){
+      }).select('span').text(function(d){ // 所有绑定了数据的父元素，其子元素均具有从父元素上继承下来的值;
         return `${d}px`;
       });
       d3.select('body').selectAll('div.databar').data(data).exit().remove();
@@ -46,10 +40,33 @@
     setInterval(() => {
       const first = initArr.shift();
       initArr.push(first);
-      console.log(initArr);
       render(initArr);
     }, 3000);
-    
+    // 也可以使用字面量绑定数据
+    const secArr = [20, 11, 61, 19, 81, 9, 77];
+    const objArr = secArr.map(e => ({
+      width: e,
+      color: e,
+    }));
+    const colorScale = d3.scaleQuantize().domain([0, 100]).range(['red', 'blue']); // 颜色生成器
+    function renderObj(data){
+      d3.select('body').selectAll('p.hero').data(data).enter().append('p').attr('class', 'hero').append('span');
+      d3.select('body').selectAll('p.hero').data(data).style('width', function(d){
+        return d.width * 5 + 'px';
+      }).style('background-color', function(d){
+        return colorScale(d.color);
+      }).select('span').text(function(d){ // 所有绑定了数据的父元素，其子元素均具有从父元素上继承下来的值;
+        return `${d.width}px`;
+      });
+    }
+    renderObj(objArr);
+    setInterval(() => {
+      const first = objArr.shift();
+      objArr.push(first);
+      renderObj(objArr);
+    }, 3000);
+
+    // 将函数作为数据进行数据绑定
   </script>
 </body>
 </html>
