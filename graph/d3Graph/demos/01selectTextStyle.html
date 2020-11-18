@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1 id="D3title"></h1>
+  <script src="../source/d3.js"></script>
+  <script>
+    d3.select('#D3title').text('d3 可视化调研');
+    const titleSelection = d3.select('#D3title');
+    titleSelection
+      .text('d3 可视化调研') // 文本内容
+      .style('font-size', '30px') // 样式
+      .style('text-align', 'center')
+      .style('color', () => {
+        const colorArr = ['#353535', '#666', 'red', '#199', '#000'];
+        return colorArr[Math.round(Math.random() * 7)] || '#ececec';
+      })
+      // .classed(styles.title, true) // 类
+      .attr('test', 'testAttr'); // 属性
+      // .html('<span>11223344</span>'); // 也可调用更变元素
+      // console.log(titleSelection.style('font-size')); // get相关设置
+      // console.log(titleSelection.attr('test')); // get相关设置
+  </script>
+</body>
+</html>
