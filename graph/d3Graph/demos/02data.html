@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据绑定</title>
+  <style>
+    .databar{
+      background-color: yellowgreen;
+      height: 20px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="D3title"></h1>
+  <section>
+    <h3>英雄集合</h3>
+    <ul class="heroBox">
+      <li class="hero">李牧</li>
+      <li class="hero">廉颇</li>
+      <li class="hero">王翦</li>
+      <li class="hero">蒙恬</li>
+      <li class="hero">赵奢</li>
+    </ul>
+  </section>
+  <script src="../source/d3.js"></script>
+  <script>
+    // 数据模式： 数组, 对象字面量, 函数, 均可以作为数据进行绑定
+    // 进入enter - 更新 - 退出;
+    // selection.data(data)返回一个绑定了数据的对象集合
+    // selection.data(data).enter 返回一个新的对象集合, 包含了没有被可视化的数据
+    // selcction.exit() 没有任何关联数据的图形
+    // dom上调用__data__, 可以查看当前元素的引用数据 => 调试好用!
+    const initArr = [20, 11, 61, 19, 81, 9, 77];
+    function render(data){
+      d3.select('body').selectAll('div.databar').data(data).enter().append('div').attr('class', 'databar').append('span');
+      d3.select('body').selectAll('div.databar').data(data).style('width', function(d){
+        return d * 5 + 'px';
+      }).select('span').text(function(d){
+        return `${d}px`;
+      });
+      d3.select('body').selectAll('div.databar').data(data).exit().remove();
+    }
+    render(initArr);
+    setInterval(() => {
+      const first = initArr.shift();
+      initArr.push(first);
+      console.log(initArr);
+      render(initArr);
+    }, 3000);
+    
+  </script>
+</body>
+</html>
