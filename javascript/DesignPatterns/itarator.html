@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const arr = [1, 2, 3, 4, 5, 6];
+    const itorator = function(){
+      const len = arr.length;
+      let index = 0;
+      return {
+        hasNext: function(){
+          return index < len;
+        },
+        next: function(){
+          const data = arr[index++];
+          return data;
+        },
+      }
+    }
+  </script>
+</body>
+</html>

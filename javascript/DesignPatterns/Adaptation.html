@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const fir = {
+      test: function(){
+        console.log('test');
+      },
+      go: function(){
+        console.log('go');
+      }
+    }
+
+    function sec(){
+      this.test = function(){
+        console.log('changing aa function => test');
+      }
+    }
+    sec.prototype.gogo = function(){
+      console.log('new gogo function in prototype');
+    }
+
+    fir.test(); // 使用aa => 后续第二个aa导致不适配
+
+    function adapt(){
+      const temp = new aa;
+      const res = {
+        test: function(){
+          temp.test();
+        },
+        go: function(){
+          temp.gogo();
+        }
+      }
+      return res;
+    }
+    const res = adapt();
+    res.test();
+    res.go();
+  </script>
+</body>
+</html>

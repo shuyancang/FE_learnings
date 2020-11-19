@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据绑定</title>
+  <style>
+    .databar{
+      background-color: yellowgreen;
+      height: 20px;
+      margin-top: 10px;
+    }
+
+    .hero{
+      background-color: #000;
+      height: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script src="../source/d3.js"></script>
+  <script>
+    const data = [10, 2, 99, 28, 1, 82, 17];
+    console.log(d3.min(data)); // 最小值
+    console.log(d3.max(data)); // 最大值 
+    console.log(d3.extent(data)); // 最大最小值的数组
+    console.log(d3.sum(data)); // 和
+    console.log(d3.mean(data)); // 平均值
+    console.log(d3.median(data)); // 中间值
+    console.log(data.sort(d3.ascending), data.sort(d3.descending)); // 排序函数
+    console.log(d3.quantile(data, 50)); // 分位数
+    console.log(d3.bisect(60)); // 排序函数的一个插入点, 值插入一个排序函数时, 这个值的index
+    // console.log(d3.nest);
+    // console.log(d3.nest().key(function(d){ //
+    //   return d.type;
+    // }))
+    // filter => 数据的过滤
+  </script>
+</body>
+</html>

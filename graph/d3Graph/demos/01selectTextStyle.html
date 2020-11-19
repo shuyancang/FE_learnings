@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>选择器, 样式等</title>
+  <style>
+    .title{
+      background-color: yellowgreen;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="D3title"></h1>
+  <section>
+    <h3>英雄集合</h3>
+    <ul class="heroBox">
+      <li class="hero">李牧</li>
+      <li class="hero">廉颇</li>
+      <li class="hero">王翦</li>
+      <li class="hero">蒙恬</li>
+      <li class="hero">赵奢</li>
+    </ul>
+  </section>
+  <script src="../source/d3.js"></script>
+  <script>
+    d3.select('#D3title').text('title see');
+    const titleSelection = d3.select('#D3title'); // 实际上使用的是document.querySelector
+    titleSelection
+      .text('d_title see') // 文本内容
+      .style('font-size', '30px') // 样式
+      .style('text-align', 'center')
+      .style('color', () => { // 也可以使用函数的返回值作为当前项的样式属性值。
+        const colorArr = ['#353535', '#666', 'red', '#199', '#000'];
+        return colorArr[Math.round(Math.random() * 7)] || '#ececec';
+      })
+      .classed('title', true) // 添加类样式
+      .attr('test', 'testAttr'); // 属性
+      // .html('<span>11223344</span>'); // 也可调用更变元素
+      // console.log(titleSelection.style('font-size')); // get相关设置
+      // console.log(titleSelection.attr('test')); // get相关设置
+
+    d3.selectAll('li.hero').style('color', 'yellowgreen').each(function(d, i){
+      d3.select(this).append('span').text(i); // 遍历的每一项选中dom元素的引用;
+    });
+    d3.select('.heroBox').select('.hero').style('font-size', '24px'); // 子选择器, 选中dom的子集中进行继续严格的父子关系选择;
+  </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第一人称控件</title>
+</head>
+<body>
+  <script src="../three.js"></script>
+  <script src="../controls/MathUtils.js"></script>
+  <script src="../SceneUtils.js"></script>
+  <script src="../controls/FirstPersonControls.js"></script>
+  <script src="./common.js"></script>
+  <script>
+    // 第一人称控件 FirstPersonControls movementSpeed移动速度, noFly非飞行模式, lon/lat定位相机初始位置; lookSpeed
+    // 操作方式类似，上下左右前进，鼠标控制观看效果
+    const scene = new THREE.Scene();
+    const clock = new THREE.Clock(); // 用于精确计算上一次计算经过的时间(循环渲染);
+
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+    camera.position.set(100, 100, 300);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setClearColor(new THREE.Color(0xeeeeee));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+
+    const planeGeometry = new THREE.PlaneGeometry(129, 55, 1, 1);
+    const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
+    const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    plane.position.set(15, 0, 0);
+    plane.rotation.x = -0.2 * Math.PI;
+    scene.add(plane);
+
+    const ambientLight = new THREE.AmbientLight(0x0c0c0c);
+    const spotLight = new THREE.SpotLight(0xffffff);
+    spotLight.position.set(100, 130, 130);
+    scene.add(ambientLight);
+    scene.add(spotLight);
+
+    const firstPerson = new THREE.FirstPersonControls(camera, renderer.domElement); // 轨迹球控件;
+    firstPerson.movementSpeed = 0.5;
+    firstPerson.lookSpeed = 0.1;
+    // firstPerson.noFly = true;
+    // firstPerson.lookVertical = true;
+    // firstPerson.constrainVertical = true;
+    // firstPerson.verticalMin = 1.0;
+    // firstPerson.verticalMax = 2.0;
+    firstPerson.lon = -150;
+    firstPerson.lat = 120;
+
+    const cyliderMaterial = new THREE.MeshLambertMaterial({ color: 0x77ff77 });
+    function addCylider (x, y, z){
+      const cyliderGeometry = new THREE.CylinderGeometry(2, 2, 20);
+      const cylinder = new THREE.Mesh(cyliderGeometry, cyliderMaterial);
+      cylinder.position.set(x, y, z);
+      scene.add(cylinder);
+    }
+
+    addCylider(0, 0, 1);
+    addCylider(10, 5, 5);
+    addCylider(2, -10, 0);
+
+    const cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+    function addCube(x, y, z){
+      const cubeGeo = new THREE.BoxGeometry(4, 4, 4);
+      const cube = new THREE.Mesh(cubeGeo, cubeMaterial);
+      cube.position.set(x, y, z);
+      scene.add(cube);
+    }
+
+    addCube(-9, 3, 0);
+    addCube(9, 3, 0);
+    addCube(-10, -5, 5);
+    addCube(10, -5, -5);
+
+    function render(){
+      requestAnimationFrame(render);
+      const delta = clock.getDelta();
+      firstPerson.update(delta);
+      renderer.render(scene, camera);
+    }
+    render();
+    document.body.appendChild(renderer.domElement);
+  </script>
+</body>
+</html>
