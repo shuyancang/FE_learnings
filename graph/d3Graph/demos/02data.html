@@ -18,6 +18,7 @@
   </style>
 </head>
 <body>
+  <div id="container"></div>
   <script src="../source/d3.js"></script>
   <script>
     // 数据模式： 数组, 对象字面量, 函数, 均可以作为数据进行绑定
@@ -67,6 +68,27 @@
     }, 3000);
 
     // 将函数作为数据进行数据绑定
+    const funData = [];
+    const next = x => 10 + x * x;
+    const newValue = () => {
+      funData.push(next);
+      return funData;
+    }
+    function renderFunc(){
+      const selection = d3.select('#container').selectAll('div').data(newValue);
+      selection.enter().append('div').append('span');
+      selection.exit().remove();
+      selection.attr('class', 'funbar').style('height', function(d, i){
+        console.log(d);
+        return d(i) + 'px';
+      }).select('span').text(function(d, i){
+        return d(i);
+      })
+    }
+    setInterval(function(){
+      renderFunc();
+    }, 1500);
+    renderFunc();
   </script>
 </body>
 </html>
