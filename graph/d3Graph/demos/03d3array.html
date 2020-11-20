@@ -5,20 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>数据绑定</title>
   <style>
-    .databar{
+    .bar{
       background-color: yellowgreen;
       height: 20px;
-      margin-top: 10px;
+      margin-top: 5px;
     }
-
-    .hero{
-      background-color: #000;
-      height: 20px;
+    .selected{
+      background-color: green;
     }
   </style>
 </head>
 <body>
   <div id="container"></div>
+  <button onclick="select('a')">a</button>
+  <button onclick="select('b')">b</button>
+  <button onclick="select('clear')">clear</button>
+  <button onclick="barAscending('none')">ascend sort</button>
+  <button onclick="barDescending('none')">descend sort</button>
+  <button onclick="getjson()">get json</button>
   <script src="../source/d3.js"></script>
   <script>
     const data = [10, 2, 99, 28, 1, 82, 17];
@@ -36,6 +40,58 @@
     //   return d.type;
     // }))
     // filter => 数据的过滤
+    const infoList = [
+      {name: 'a', value: 12},
+      {name: 'b', value: 23},
+      {name: 'c', value: 78},
+      {name: 'd', value: 4},
+      {name: 'a', value: 41},
+      {name: 'b', value: 85},
+      {name: 'c', value: 77},
+      {name: 'd', value: 35},
+      {name: 'l', value: 44},
+    ]
+    function renderData(data, category='clear', sorter){
+      d3.select('body').selectAll('div.bar').data(data).enter().append('div').attr('class', 'bar').append('span');
+      d3.select('body').selectAll('div.bar').data(data).exit().remove();
+      d3.select('body').selectAll('div.bar').data(data).attr('class', 'bar').style('width', function(d){
+        return d.value * 5 + 'px';
+      }).select('span').text(function(d){
+        return `${d.value}px`;
+      });
+      if(sorter){
+        d3.select('body').selectAll('div.bar').sort(sorter); // 排序
+      }
+      d3.select('body').selectAll('div.bar').filter(function(d,i){ // 选中集合的筛选: return bool过滤
+        return d.name === category;
+      }).classed('selected', true);
+      d3.select('body').selectAll('div.bar').filter(function(d,i){
+        return d.name !== category;
+      }).classed('selected', false);
+    }
+    renderData(infoList);
+    function select(category){
+      renderData(infoList, category);
+    }
+    // sort => 数据的排序
+    function barAscending(){
+      renderData(infoList, '', function(a, b){
+        return a.value - b.value;
+      })
+    }
+
+    function barDescending(){
+      renderData(infoList, '', function(a, b){
+        return b.value - a.value;
+      })
+    }
+
+    function getjson(){
+      d3.json('/mock.json',function(res){ // d3 自带的获取json文件的方式
+        console.log(res);
+      })
+    }
+
   </script>
 </body>
 </html>
