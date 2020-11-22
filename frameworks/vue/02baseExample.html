@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>vue实例</title>
+</head>
+<body>
+    <div id="app">
+      {{ message }}
+      <p>{{str}}</p>
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    const data = {
+      message: 'vue实例信息',
+      // str: null, // 如果一开始不在实例化中挂入str, 后续app.str赋值将不能渲染
+    }
+    const app = new Vue({ // vue实例
+      el: '#app', // 实例挂在到el
+      data, // 实例挂载数据
+    });
+    app.str = 'test null str';
+    // vue实例属性的方法: $开头，与普通属性区分开
+    // app.$el 实例挂载的dom元素
+    // app.$data 实例的数据对象
+    app.$watch('message', function(oldVal, newVal){ // 监听数据变化
+      console.log(oldVal, newVal);
+    });
+    // 其他实例属性见官网相关说明;
+  </script>
+</body>
+</html>
