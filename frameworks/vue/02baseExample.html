@@ -15,11 +15,18 @@
   <script>
     const data = {
       message: 'vue实例信息',
-      // str: null, // 如果一开始不在实例化中挂入str, 后续app.str赋值将不能渲染
+      str: null, // 如果一开始不在实例化中挂入str, 后续app.str赋值将不能渲染
     }
     const app = new Vue({ // vue实例
       el: '#app', // 实例挂在到el
       data, // 实例挂载数据
+      beforeCreate: function(){ console.log('beforeCreate'); },
+      created: function(){ console.log('created'); }, // 实例生成, 常在此发起请求
+      beforeMount: function(){ console.log('beforeMount'); }, // 实例挂载前
+      mounted: function(){ console.log('mounted'); }, // 实例挂载完成
+      beforeUpdate: function(){ console.log('beforeUpdate'); }, // 实例更新前
+      updated: function(){ console.log('updated'); }, // 实例更新完毕
+      destroyed: function(){}, // 实例销毁
     });
     app.str = 'test null str';
     // vue实例属性的方法: $开头，与普通属性区分开
@@ -29,6 +36,7 @@
       console.log(oldVal, newVal);
     });
     // 其他实例属性见官网相关说明;
+    // 生命周期函数, 一般不使用箭头函数(this错误);
   </script>
 </body>
 </html>
