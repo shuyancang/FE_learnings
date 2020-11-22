@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据绑定</title>
+  <style>
+    .bar{
+      background-color: yellowgreen;
+      height: 20px;
+      margin-top: 5px;
+    }
+    .selected{
+      background-color: green;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script src="../source/d3.js"></script>
+  <script>
+    // d3-scale Continuous (Linear, Power, Log, Identity, Time, Radial)
+    const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    const linear = d3.scaleLinear().domain([1, 10]).range([1, 10]); // 线性尺度
+    linearList = data.map(e => linear(e));
+    console.log(linearList); // 线性
+  </script>
+</body>
+</html>
