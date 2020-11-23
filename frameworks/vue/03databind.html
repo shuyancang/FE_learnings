@@ -4,17 +4,94 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>vue基础入门</title>
+  <title>vue数据绑定</title>
+  <style>
+    .base{
+      background-color: yellowgreen;
+    }
+    .foo{
+      font-size: 30px;
+    }
+    .bar{
+      font-size: 20px;
+    }
+  </style>
 </head>
 <body>
     <div id="app">
-      <p>{{ age }}</p>
-      <input type='text' v-model="val" >
-      <span>{{val}}</span>
+      <p>{{ isShow ? message + '-' + myTitle : 'hide'}}</p>
+      <div>{{htmlStr}}</div>
+      <div
+        v-html="htmlStr"
+        v-bind:id="myId"
+        v-bind:title="myTitle"
+        v-if="isShow"
+        class="txt"
+      ></div>
+      <div>
+        <h1>{{ count }}</h1>
+        <button v-on:click="addClick">点击 + 1</button>
+        <input type="text" placeholder="请输入" v-on:focus="onInputFocus" v-on:blur="onInputBlur" />
+      </div>
+      <div>
+        <span :class="initClass">str class binding</span>
+        <button @click="onClassChange">点点</button>
+      </div>
+      <div>
+        <span :class="{foo:isFoo, base: true}">obj class binding</span>
+        <button @click="onClassObjChange">obj按钮</button>
+      </div>
+      <div>
+        <span :class="[firClass, secClass]">arr class binding</span>
+      </div>
+      <div style="border: 1px solid #000;">
+        <p :style="styleColor1">style样式2</p>
+        <p :style="{backgroundColor: 'yellowgreen'}">style样式2</p>
+        <p :style="[styleColor1, styleColor2]">style样式3</p>
+        <p>style样式4</p>
+      </div>
     </div>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script>
-    
+    // 最常见{{}}文本绑定; 其他绑定v- 前缀
+    // 动态属性绑定: v-bind:id 可以简写为 :id
+    // 动态方法绑定: v-on:方法 定义在methods中绑定对应的事件 => 事件可以通过@进行简写(v-on:click => @click)
+    // 样式绑定: class支持多种方法的绑定; :class="字符串" :class="对象{a: true, b: false}" :class="数组[name1, name2]"
+    // 样式绑定:style, 行内, 对象, 数组(相同样式覆盖, 不同样式会叠加); 样式中自动加样式兼容前缀(-webkit-transition...);
+    const app = new Vue({
+      el: '#app',
+      data: {
+        message: '文本绑定', // 双大括号直接展示即可, 双大括号内只能是表达式, 如果是语句将不被支持;
+        htmlStr: '<p>html插入</p>', // 直接输入p标签无效 使用v-html配套才能生成; `<p>${Math.random()}tt</p>`
+        myId: 'myVueId', // v-bind动态绑定id => 绑定属性后可以随时进行动态改变 => 动态改变样式class适用
+        myTitle: 'myVueTitle',
+        isShow: true,
+        count: 0,
+        initClass: 'foo', // :class方式进行数
+        isFoo: true,
+        firClass: 'foo',
+        secClass: 'base',
+        styleColor1: {color: 'blue'}, // 行内
+        styleColor2: {'background-color': 'yellowgreen'}, // 行内
+      },
+      methods: {
+        addClick: function(){
+          this.count++;
+        },
+        onInputFocus: function(){
+          console.log('on input focus');
+        },
+        onInputBlur: function(){
+          console.log('onInputBlur');
+        },
+        onClassChange: function(){
+          this.initClass = this.initClass === 'foo' ? 'bar' : 'foo';
+        },
+        onClassObjChange: function(){
+          this.isFoo = !this.isFoo;
+        },
+      }
+    })
   </script>
 </body>
 </html>
