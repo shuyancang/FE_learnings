@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>计算属性</title>
+  <style>
+    .base{
+      background-color: yellowgreen;
+    }
+    .foo{
+      font-size: 30px;
+    }
+    .bar{
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+    <div id="app">
+      <!-- {{firstName + '_' + lastName.split('').reverse().join('-')}} -->
+      {{ endName }}
+      {{ computedName() }}
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    // 不推荐将复杂逻辑渲染到dom的写法中 => 行22内容 => 推荐使用计算属性处理相关逻辑
+    // 计算属性computed: 缓存, 多个属性汇总进行统一输出(多对一); 
+    // 监听属性watch: 缓存, 单个属性的变更影响多个地方的输出(一对多);
+    // 方法methods: 不缓存, 属性变化时即自动调用;
+    const app = new Vue({
+      el: '#app',
+      data: {
+        firstName: '第一名',
+        lastName: '嚯嚯最后',
+        msg: '改变的值',
+      },
+      computed: { // 计算属性: 多个属性有规律的处理, 形成一个统一的输出(多对一)
+        endName: function(){ // firstName, lastName改变也会触发endName的重新计算; 但msg的改变不会导致重新计算 => 有缓存(性能较好)
+          return this.firstName + '_' + this.lastName.split('').reverse().join('-');
+        }
+      },
+      methods: { 
+        computedName(){ // 方法中, 每次改变data中的数据, 都会进行重新计算 => 无缓存(性能较差)
+          console.log('方法中进行计算属性');
+          return this.firstName + '_' + this.lastName.split('').reverse().join('-');
+        }
+      },
+      watch: { // 监听属性的变化 - watch很容易滥用, 需注意; 某属性变化时对外多个输出(一对多)
+        firstName: function(){ // firstName变更时, 调用
+          console.log('监听firstName的变化');
+          this.msg = this.msg + '1';
+        },
+        lastName: function(){
+          console.log('监听lastName的变化');
+          this.msg = this.msg + '2';
+        }
+      }
+    })
+  </script>
+</body>
+</html>
