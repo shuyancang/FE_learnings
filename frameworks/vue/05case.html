@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>条件渲染</title>
+  <style>
+    .base{
+      background-color: yellowgreen;
+    }
+    .foo{
+      font-size: 30px;
+    }
+    .bar{
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+    <div id="app">
+      <p v-if="flag">{{message}}</p>
+      <p v-else>{{hideMsg}}</p>
+      <button @click="onShowToggle">点击显示/隐藏</button>
+      <p v-if="count > 0">计数{{count}}</p>
+      <p v-else>else{{count}}</p>
+      <button @click="onCountAdd">点击 count++</button>
+      <template v-if="flag">
+        <p>多个1</p>
+        <p>多个2</p>
+        <p>多个3</p>
+        <p>多个4</p>
+      </template>
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    // 条件渲染v-if v-show
+    // v-if="data属性 或 表达式(count, / count ===0 / count > 0)"
+    // v-if 满足条件时渲染对应dom, 否则不渲染(dom销毁-渲染性能较低); v-if和v-else需要挨着; 切换开销大
+    // v-show 使用方法 同 v-if; 但其渲染为display: none; 性能较好, 初始渲染效率较低; - 切换开销小
+    // template 可以用v-if控制下面多个标签, v-show不能作用于模板template;
+    const app = new Vue({
+      el: '#app',
+      data: {
+        message: '显示时, 展示的信息',
+        hideMsg: '隐藏时, 显示的信息',
+        flag: true,
+        count: 0,
+      },
+      methods: {
+        onShowToggle: function(){
+          this.flag = !this.flag;
+        },
+        onCountAdd:function(){
+          this.count++;
+        }
+      }
+    })
+  </script>
+</body>
+</html>
