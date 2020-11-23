@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>列表渲染</title>
+  <style>
+    .base{
+      background-color: yellowgreen;
+    }
+    .foo{
+      font-size: 30px;
+    }
+    .bar{
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+    <div id="app">
+      <ul>
+        <li @click="onItemClick(index)" v-for="(item, index) in list">{{ item.id }} __ {{ item.name }} __ {{index}}</li>
+      </ul>
+      <ul>
+        <li v-for="(item, index) of list">{{ item.id }} __ {{ item.name }} __ {{ index }}</li>
+      </ul>
+      <ul>
+        <li v-for="(item, index) of list" v-bind:key="item.id">{{ item.id }} __ {{ item.name }} __ {{ index }}</li>
+        <button @click="onValueChange">点击改变所属值</button>
+      </ul>
+      <ul>
+        <li v-for="(value, key, index) in objValue">{{value}}_{{key}}_{{index}}</li>
+        <button @click="onObjValueChange">点击对象属性值</button>
+      </ul>
+      <ul>
+        <li v-for="(item, index) in exList">{{ item.id }} __ {{ item.name }} __ {{index}}</li>
+      </ul>
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    // v-for="(item, index) in/of list";
+    // v-for 遍历渲染 (ele(每一项的别名)/index(索引)) in/of(遍历方式) data(数据源属性名)
+    // v-for 也可以遍历对象 v-for="(value, key, index) in obj"; 对象遍历可以直接获取到遍历中的键, 值, 索引
+    // 注1: 遍历中改变数据, 一般列表会重绘, 为提升性能可为遍历对象使用标识v-bind:key="item.id", 提高渲染性能(重用); key唯一不可重复
+    // 注2: 数组数据更新时, 如果是更新数组某一条数据, 并不会出现渲染变化(item变化, 但所属list指向并没有改变) => 使用$set
+    // 注3: 对象的更新, 直接增加键值, 不会渲染 => $set; 使用Object.assign 进行多个键值的添加
+    // 注4: v-for中尽量不要使用v-if: 渲染具有优先级; 如果需要: 在template进行v-if的判定, 内部进行v-for
+    // 注5: v-for可以结合computed计算使用进行数据的循环前处理
+    const values = [ // 渲染数据
+      {id: 1, name: 'aaa'},
+      {id: 2, name: 'bbb'},
+      {id: 3, name: 'ccc'},
+      {id: 4, name: 'ddd'},
+    ]
+    const app = new Vue({
+      el: '#app',
+      data: {
+        list: values,
+        objValue: {
+          age: 4,
+          name: 'yiyi',
+          address: 'bj',
+          value: 'get some obj'
+        }
+      },
+      computed: {
+        exList: function(){
+          return this.list.filter(e => e.id !== 1);
+        },
+      },
+      methods: {
+        onItemClick: function(index){ // 删除点击项
+          this.list.splice(index, 1);
+        },
+        onValueChange: function(){
+          this.list[0] = {id: 5, name: 'changItem'}; // 直接这样改变数据, 无效;
+          this.$set(this.list, 0, {id: 5, name: 'changItem'}); // 改变数组值并渲染的方式; 
+          this.list.push({ id: 6, name: 'pushing '}); // push, pop, shift, unshift, splice, sort, reverse等变异方法, 可检测并渲染更新;
+        },
+        onObjValueChange: function(){
+          // this.objValue.age = 18; // 在data中已有定义, 响应式 => 修改对象值 => 正常渲染
+          // this.objValue.test = 'test'; // 直接增加对象值不会进行渲染; => 并不是响应式
+          this.$set(this.objValue, 'test', 'test'); // 增加对象键值的正确渲染方式
+          this.objValue = Object.assign({}, this.objValue, {
+            phone: 18917,
+            like: 'mom',
+            skill: 'hohoho',
+          })
+        }
+      }
+    })
+  </script>
+</body>
+</html>

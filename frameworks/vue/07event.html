@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>事件处理</title>
+  <style>
+    .base{
+      background-color: yellowgreen;
+    }
+    .foo{
+      font-size: 30px;
+    }
+    .bar{
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+    <div id="app">
+      <p>{{ count }}</p>
+      <div @click="outerClick">
+        <button @click="count++">表达式行内++</button>
+        <button @click="onCountAdd($event)">事件处理+1</button>
+        <button @click="onCountAdd($event)">修饰符事件处理事件处理</button>
+      </div>
+      <input type="text" placeholder="请输入" v-on:keydown.enter="onInputSubmit" />
+      <input type="text" placeholder="请输入" v-on:keydown.vdown="onInputSubmit" />
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    // 监听v-on:click(简写@click), 方法, 修饰符
+    // $event传入, 可以传入相关的原生event事件;
+    // 事件修饰符: @click => @click.stop="methodName" 可以阻止冒泡; .once只触发一次, .prevent阻止默认事件(@符号时, 默认就阻止了阻止事件)
+    // 事件修饰符可以进行串联调用@click.stop.once.self="methodName";
+    // 按键修饰符: v-on:keydown.enter="onInputSubmit" => 按enter触发onInputSubmit事件; .enter, .tab, .esc, .up, .left等均可按键
+    // 自定义按键修饰符: Vue.config.keyCodes.vdown = 86
+    Vue.config.keyCodes.vdown = 86; // (v按键code为86, vdown为86对应的自定义的按键修饰符)
+    const app = new Vue({
+      el: '#app',
+      data: {
+        count: 0,
+      },
+      computed: {
+        
+      },
+      methods: {
+        outerClick: function(){
+          console.log('冒泡， 父级元素点击');
+        },
+        onCountAdd: function(event){
+          event.stopPropagation(); // 传入的事件 阻止冒泡。
+          this.count ++;
+        },
+        onInputSubmit: function(){
+          console.log('数据提交')
+        },
+      }
+    })
+  </script>
+</body>
+</html>
