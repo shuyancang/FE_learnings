@@ -19,19 +19,134 @@
 </head>
 <body>
     <div id="app">
-      <button-item :parent-val="parentVal"></button-item>
-      <input-item></input-item>
+      <child-one :init-time="initTime" :msg="parentVal" :num="count" @childone-event="childoneEvent"></child-one>
+      <child-two></child-two>
     </div>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script>
-    // vue中的组件通信： 父组件=> 子组件; 子组件=>父组件; 兄弟组件通信; 嵌套组件通信;
+    // vue中的组件通信： 
+    // 1. 父组件 => 子组件(props, $parent); ; 
+    // 2. 子组件 => 父组件($emit事件传值- 父组件v-on监听对应事件); $child同$parent, 同样不推荐~呼呼
+    // 3. 兄弟组件通信 => a. bus中央事件总线-非空的vue实例作为中央事件, 结合实例方法$on, $emit使用, 将bus挂到vue根实例原型上 => 注册的$bus需要及时销毁, 避免出现触发一次多个响应的情况(beforeDestroy时进行销毁-this.$); b. Vuex的状态管理模式, 管理兄弟组件通信(state状态管理); c. 通过父组件过度, 借用父组件给两个子组件传值(子组件A $emit给父组件F, 父组件通过props传给子组件B);
+    // 4. 嵌套组件通信 => a. 依赖注入 provide/inject-不推荐直接用于程序代码中, 主要是服务高阶组件/组件库; b. $attrs(绑定在dom上的元素属性直接连续绑定往下传递)/inheritAttrs(bool:true-属性是否显示在dom上, 默认显示)
+    Vue.prototype.$bus = new Vue(); // 兄弟组件通信的中央事件 注册=> 挂到根原型;
+    // import Vue from 'vue'; const Bus = new Vue(); 也可工程化开发中将Bus注入到vue根对象中： new Vue({ el, data: {data: Bus}})
+    // bus最推荐方式: import Vue from 'vue'; const Bus = new Vue(); export defaut Bus; 这种方式直接导出一个需使用的实例上;
+    const innerChild = {
+      inheritAttrs: false,
+      template: `<span>
+        <span>最里层组件</span>
+        <span>{{$attrs["init-time"]}}</span>
+      </span>`
+    };
+    const childOne = { // 子组件1: 使用props
+      props: {
+        msg: String,
+        num: Number,
+      },
+      data: function(){
+        return {
+          toUpperMsg: 'hoho',
+          myname: '子组件1',
+          info: '呼叫兄弟, 我是子组件1, 请来增援',
+        }
+      },
+      methods: {
+        transToFarther(){
+          this.$emit('childone-event', `子组件1给父组件${this.toUpperMsg}${this.num}`); // 方法名 + 传递的值;
+        },
+        toBrotherTwo(){ // 注册给兄弟组件的事件(借用$bus作为中央事件总线);
+          this.$bus.$emit('sendToTwo', `${this.myname}_${this.info}`);
+        }
+      },
+      template: `<div>
+        <span>子组件一: </span>
+        <span>{{msg}}</span>
+        <span>_____</span>
+        <span>{{num}}</span>
+        <button @click="transToFarther">点击=>父组件</button>
+        <button @click="toBrotherTwo">至兄弟2</button>
+        <span>{{$attrs["init-time"]}}</span>
+        <inner-child v-bind="$attrs"></inner-child>
+      </div>`,
+      inheritAttrs: false, // 属性是否直接在dom上展示(dom调试台直接可见)
+      mounted(){
+        console.log('provide传递过来的值', this.originList);
+      },
+      beforeDestroy(){
+        this.$bus.off('sendToTwo'); // 销毁注册的事件;
+      },
+      components: {
+        innerChild,
+      },
+      inject: ['originList'], // 接受provide的值;
+    }
+    const childTwo = { // 子组件2: 使用$parent-并不是严格意义的值传递，而是取父组件的实例信息; 不推荐
+      data: function(){
+        return {
+          msg: '',
+          num: null,
+          subList: [1, 2, 3],
+          myname: '子组件2',
+          info: '子组件2, 请求增援！顶不住了！',
+        }
+      },
+      methods: {
+        handleClick(){
+          this.$parent.parentFun();
+        },
+        handleToFarther(){
+          console.log('???');
+        },
+        toBrotherOne(){},
+      },
+      mounted(){ // 获取父组件属性的方法
+        this.msg = this.$parent.parentVal;
+        this.num = this.$parent.count;
+        this.$bus.$on('sendToTwo', function(data){ // 总线监听事件, 触发接收;
+          console.log(data);
+        });
+      },
+      beforeDestroy(){
+        this.$bus.off('sendToTwo');
+      },
+      template: `<div>
+        <span>子组件二: </span>
+        <span>{{msg}}</span>
+        <span>_____</span>
+        <span>{{num}}</span>
+        <button @click="handleClick">按下</button>
+        <button @click="handleToFarther">给父组件传2</button>
+      </div>`
+    }
     const app = new Vue({
       el: '#app',
       data: {
         parentVal: '父级组件信息',
+        count: 0,
+        initTime: '2020-01-12 12:11:12',
+        // Bus, 可以在这里挂在bus
       },
-      components: {}
+      methods: {
+        parentFun: function(){
+          console.log(this.parentVal, this.count, '父组件方法');
+        },
+        childoneEvent: function(val){ // 子组件$emit时, 触发到绑定在父组件的时间
+          console.log(val);
+        }
+      },
+      provide: {
+        originList: '1-2-3-4-5-6',
+      },
+      mounted: function(){
+        console.log(this.$children[1].subList); // 获取组件下的子组件: 组件实例数组;
+      },
+      components: {
+        childOne,
+        childTwo
+      }
     });
+
   </script>
 </body>
 </html>
