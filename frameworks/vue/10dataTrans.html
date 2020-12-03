@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>组件通信</title>
+  <style>
+    .base{
+      background-color: yellowgreen;
+    }
+    .foo{
+      font-size: 30px;
+    }
+    .bar{
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+    <div id="app">
+      <button-item :parent-val="parentVal"></button-item>
+      <input-item></input-item>
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    // vue中的组件通信： 父组件=> 子组件; 子组件=>父组件; 兄弟组件通信; 嵌套组件通信;
+    const app = new Vue({
+      el: '#app',
+      data: {
+        parentVal: '父级组件信息',
+      },
+      components: {}
+    });
+  </script>
+</body>
+</html>

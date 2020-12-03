@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>表单绑定</title>
+  <style>
+    .base{
+      background-color: yellowgreen;
+    }
+    .foo{
+      font-size: 30px;
+    }
+    .bar{
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+    <div id="app">
+      <p>input输入值: {{inputVal}}, textarea输入值:{{textVal}}</p>
+      <input placeholder="请输入" v-model="inputVal" />
+      <textarea name="" id="text" placeholder="textarea" v-model="textVal" ></textarea>
+      <p>
+        <input type="checkbox" id="read" value="read" v-model="checkRead" />
+        <label for="read">读书{{checkRead}}</label>
+      </p>
+      <input type="checkbox" id="boy" value="boy" v-model="checkboxVals" />
+      <label for="boy">男孩儿{{checkboxVals}}</label>
+      <input type="checkbox" id="girl" value="girl" v-model="checkboxVals" />
+      <label for="girl">女孩儿{{checkboxVals}}</label>
+      <input type="checkbox" id="child" value="child" v-model="checkboxVals" />
+      <label for="child">孩子们{{checkboxVals}}</label>
+      <p>
+        <input type="radio" id="gameMoney" value="充钱" v-model="gameMoney" />
+        <input type="radio" id="gameMoney" value="白嫖" v-model="gameMoney" />
+        <label for="gameMoney">打游戏要{{gameMoney}}</label>
+      </p>
+      <p>
+        <select v-model="user" >
+          <option value="">所有</option>
+          <option value="normal">普通用户</option>
+          <option value="manager">管理员</option>
+          <option value="superManager">超级管理员</option>
+        </select>
+        <span>{{user}}</span>
+      </p>
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    // 表单(input, textarea, select, radio, checkbox)输入绑定: 值绑定 + 修饰符
+    // v-model指定创建双向数据绑定自动更新: 监听输入并自动绑定到inputVal上; input或textArea等表单元素手动指定的value值会被忽略;
+    // input, textarea: value + input事件
+    // select: value + change事件
+    // radio: checked + change事件
+    // checkbox: checked + change事件
+    // 修饰符: input, textarea触发过于频繁, 可通过.lazy修饰符进行v-model.lazy => change时触发; v-model.number => 过滤掉输入后的非数字; .trim过滤首尾空格;
+    const app = new Vue({
+      el: '#app',
+      data: {
+        inputVal: '',
+        textVal: '',
+        checkRead: true, // 普通绑定
+        checkboxVals: [], // 复选框用数组的方式进行绑定数组与value对应;
+        gameMoney: '充钱',
+        user: '', // 也可以改为数组进行多选
+      }
+    })
+  </script>
+</body>
+</html>

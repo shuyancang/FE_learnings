@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>组件基础</title>
+  <style>
+    .base{
+      background-color: yellowgreen;
+    }
+    .foo{
+      font-size: 30px;
+    }
+    .bar{
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+    <div id="app">
+      <button-item :parent-val="parentVal"></button-item>
+      <input-item></input-item>
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    // 组件的组成, 注册, 数据传递 => 与new Vue的实例属性写法极为相似, 其data必须是函数(保证每个组件的数据是单独的);
+    // 组件数据: 使用props接受外部参数, data使用函数;
+    // 组件注册: 组件名在dom中只能xx-xxx方式引用, 声明注册使用驼峰或xx-xx均可;
+    // 全局组件注册后(公用组件), 在任何地方均可使用, 即使不使用也引入(有一定的性能问题); 局部组件注册-导入引入使用;
+    // props的数据传递: 单向;
+    Vue.component('buttonItem', { // 申明一个全局组件: 驼峰在界面中使用时, 需转化为标签写法(短横线+小写连接)
+      data: function(){ // 组件的数据源 => 必须是函数; 保证组件的数据分离
+        return {
+          count: 0,
+        }
+      },
+      props: ['parentVal'], // v-bind:parent-val绑定
+      methods: { // 同vue实例; 同理也有对应的watch, computed, 生命周期钩子函数均具有; 唯一不同的是没有实例的el对应的dom选项;
+        handleAdd: function(){
+          this.count++;
+        }
+      },
+      watch: {},
+      computed: {},
+      beforeCreated: function(){},
+      template: '<div><span>{{parentVal}}</span><button @click="handleAdd">点击{{count}}</button></div>'
+    });
+    const inputItem = { // 局部组件; 直接导出, 在其他地方使用引入即可
+      data: function(){
+        return {
+          inputVal: '012',
+        }
+      },
+      template: '<div><span>{{inputVal}}</span><input type="text" v-model="inputVal" /></div>',
+    }
+    const app = new Vue({
+      el: '#app',
+      data: {
+        parentVal: '父级组件信息',
+      },
+      components: {
+        inputItem
+      }
+    });
+  </script>
+</body>
+</html>
