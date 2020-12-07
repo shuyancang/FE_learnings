@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>动态组件</title>
+  <style>
+    .base{
+      background-color: yellowgreen;
+    }
+    .foo{
+      font-size: 30px;
+    }
+    .bar{
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+    <div id="app">
+      <!-- <com></com> -->
+      <!-- <huo></huo> -->
+      <component :is="currentName">
+
+      </component>
+      <keep-alive>
+        <component :is="currentName">
+
+        </component>
+      </keep-alive>
+      <button @click="toggleCom">切换组件</button>
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    // 动态组件: component, is;
+    // 组件缓存: keep-alive: 保存组件的状态
+    Vue.component('com', {
+      data: function(){
+        return {
+          first: '第一个',
+          last: '尾部',
+        }
+      },
+      template: `<div>组件1架飞机为空龙卷风_<input type="radio" /><label>男</label></div>`,
+    });
+    Vue.component('huo', {
+      data: function(){
+        return {
+          time: '时光',
+          day: '日期',
+        }
+      },
+      template: `<div>组件2氛围里看风景问了客服——<input type="radio" /><label>女</label></div>`,
+    });
+    const app = new Vue({
+      el: '#app',
+      data: {
+        currentName: 'com',
+      },
+      methods: {
+        toggleCom(){
+          this.currentName = this.currentName === 'com' ? 'huo' : 'com';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

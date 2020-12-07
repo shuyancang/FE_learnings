@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>组件深入</title>
+  <style>
+    .base{
+      background-color: yellowgreen;
+    }
+    .foo{
+      font-size: 30px;
+    }
+    .bar{
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+    <div id="app">
+      <box>
+        <p>我是里面的段落</p>
+      </box>
+      <named-slot>
+        <template v-slot:head>
+          <p>头部</p>
+        </template>
+        <template v-slot:end>
+          <p>结束语</p>
+        </template>
+        <template v-slot:content>
+          <div>内容</div>
+        </template>
+        <template v-slot:default>
+          <div>内容</div>
+          <p>1</p>
+          <p>3</p>
+          <p>5</p>
+        </template>
+      </named-slot>
+      <data-slot>
+        <template v-slot:top="slotInfo">
+          <p>这个要接受值: {{slotInfo.first}}</p>
+        </template>
+      </data-slot>
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    // 插槽(普通, 具名); 动态组件; 组件缓存
+    // slot: 传递dom的一种方式; dom中的元素, 在模板中slot(没有值时, 可以有默认值)接收;
+    // 具名插槽:v-slot配合name属性在template中使用;
+    // 作用域插槽: 让插槽可以访问到组件提供数据;
+    Vue.component('box', {
+      template: '<div style="border: 1px solid #000;">我是组件<slot>没有内容时候的默认值</slot></div>',
+    });
+    Vue.component('namedSlot', {
+      template: '<div style="border: 1px solid #000;"><slot name="head"></slot><slot name="content"></slot><slot name="end"></slot><slot></slot></div>',
+    })
+    Vue.component('dataSlot', {
+      data: function(){
+        return {
+          first: '第一名',
+          last: '完蛋了',
+        };
+      },
+      template: '<div><slot v-bind:first="first" name="top">{{first}}</slot></div>',
+    })
+    const app = new Vue({
+      el: '#app',
+      data: {
+        
+      },
+    });
+  </script>
+</body>
+</html>
