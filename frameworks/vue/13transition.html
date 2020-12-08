@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>过度与动画</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+  <style>
+    /*第一种动画添加方式-详细定义每个类样式细节*/
+    /* .transbox-leave-active, .transbox-enter-active{ 
+      transition: all 4s linear;
+    }
+    .transbox-leave{
+      opacity: 1;
+    }
+    .transbox-leave-active{
+      background-color: #c1c1c1;
+    }
+    .transbox-leave-to{
+      opacity: 0;
+    }
+    .transbox-enter{
+      opacity: 0;
+    }
+    .transbox-enter-active{
+      background-color: yellowgreen;
+    }
+    .transbox-enter-to{
+      opacity: 1;
+    } */
+    /*第二种动画添加方式-简写*/
+    /* .transbox-leave-active, .transbox-enter-active{ 
+      transition: all 4s linear;
+    }
+    .transbox-enter, .transbox-leave-to{
+      opacity: 0;
+    } */
+    /*第三种动画添加方式-利用animation进行动画操作*/
+    @keyframes transbox-in { /* */
+      0%{
+        transform: scale(0);
+      }
+      50%{
+        transform: scale(1.5);
+      }
+      100%{
+        transform: scale(1);
+      }
+    }
+    @keyframes transbox-out {
+      0%{
+        transform: scale(1);
+      }
+      50%{
+        transform: scale(1.5);
+      }
+      100%{
+        transform: scale(0);
+      }
+    }
+    .transbox-leave-active{
+      animation: transbox-in 2s linear;
+    }
+    .transbox-enter-active{
+      animation: transbox-out 2s linear;
+    }
+  </style>
+</head>
+<body>
+    <div id="app">
+      <transition name="transbox">
+        <p style="border: 2px solid red; width: 100px;" v-show="isShow">元素</p>
+      </transition>
+      <button @click="toggleShow">元素显/隐</button>
+
+      <transition
+        enter-active-class="animate__animated animate__rotateOut"
+        leave-active-class="animate__animated animate__bounceIn"
+        mode="out-in"
+      >
+        <p key="1" v-if="isCustomShow" style="border: 2px solid red; width: 100px;">自1</p>
+        <p key="2" v-else style="border: 2px solid red; width: 100px;">2定义</p>
+      </transition>
+      <button @click="customToggle">自定义元素的显/隐</button>
+      <div style="border: 2px solid red; width: 700px; background-color: lightblue; height: 300px;">
+        <transition
+          @before-enter="beforeEnter"
+          @enter="enter"
+          @after-enter="afterEnter"
+          @before-leave="beforeLeave"
+          @leave="leave"
+          @after-leave="afterLeave"
+        >
+          <p key="1" v-show="isJsShow" style="border: 2px solid #000; width: 120px;">自1</p>
+        </transition>
+        <button @click="jsToggle">js库显影控制</button>
+      </div>
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.0/velocity.min.js"></script>
+  <script>
+    // css过渡动画, 自定义过渡动画, 过渡模式, 列表过渡
+    /*
+      transition标签进行动画定制(name用于自动添加类) - {name}-{leave/enter}-{active/to/无}进行动画各个生命周期的类控制;
+      点击隐藏触发 => {name}-leave-active激活隐藏 => {name}-leave-to离开 => 完成隐藏,移除相关类
+      点击显示触发 => {name}-enter-active激活显示 => {name}-enter-to显示 => 完成显示,移除相关类
+      也可自定义类名(结合第三方库进行处理)enter/leave-active-class; 
+      transition渲染后, 内部只能有一个元素; 多个元素过渡需要设置key属性进行唯一标记;
+      过渡模式: 默认元素进入=>离开同时发生, in-out新元素先进行过渡, 完成后当前元素过渡离开; out-in当前元素先进性过渡完成后新元素过渡进入
+      与js库动画函数进行样式展示
+    */
+    const app = new Vue({
+      el: '#app',
+      data: {
+        isShow: true,
+        isCustomShow: true,
+        isJsShow: true,
+      },
+      methods: {
+        toggleShow(){
+          this.isShow = !this.isShow;
+        },
+        customToggle(){
+          this.isCustomShow = !this.isCustomShow;
+        },
+        jsToggle(){
+          this.isJsShow = !this.isJsShow;
+        },
+        beforeEnter(el){ // 自带参数: el当前元素
+          console.log('beforeEnter');
+        },
+        enter(el){
+          console.log('enter', Velocity);
+          Velocity(el, { right: '40px' });
+        },
+        afterEnter(el){
+          console.log('afterEnter');
+        },
+        beforeLeave(el){
+          console.log('beforeLeave');
+        },
+        leave(el){
+          console.log('leave');
+        },
+        afterLeave(el){
+          console.log('afterLeave');
+        },
+      },
+    });
+  </script>
+</body>
+</html>
