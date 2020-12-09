@@ -61,10 +61,32 @@ new Vue({ router, store, render}).$mount('#app'); 根实例中完成路由的注
     beforeRouteLeave: 离开前执行的钩子;
 
 # Vuex
-* 
-* 
-* 
-* 
+* 集中进行装填管理, 可追踪可预测的数据仓库;
+* 基础安装+配置:
+  **********
+    npm i --save vuex;
+    一般在/src/store创建文件夹下创建index.js: import Vuex from 'vuex'; Vue.use(Vuex); 
+    导出export default new Vuex.Store({ state, mutations, actions, modules });
+    在根实例中进行注册: new Vue({ router, store, render: h=>h(App)}).mounted('#app');
+  **********
+* Vuex相关核心概念(state, mutations, actions, modules, getters):
+  *****
+    state: 状态数据 - 唯一数据源;
+    mutations: 对数据进行更改的方法: 唯一改变state的方法; 配合commit使用
+    actions: 异步处理操作;
+    modules: 数据模块化;
+    getters: 计算属性;
+  *****
+* 在子组件中通过this.$store.state获取数据管理的状态; 经常在组件的computed中进行获取
+* import {mapState} from 'vuex';后可以使用辅助函数: ...mapState(['a', 'b', 'c'])可以直接获取多个属性, 简化操作;
+* getters对状态进行操作后再返回(类似于组件中的computed): this.$store.getters获取即可, 对应mapGetters辅助函数同mapState使用;
+* mapState, mapGetters使用数组获取state的数据, 也可以使用对象为获取的state的数据取别名;...mapState({ oa: 'a' }); 值也可以通过函数的方式进行调用返回;
+* mutations: 类似于组件中的methods, 注册不同方法对state进行改变; 组件内this.$store.commit('add')使用, 对应mapMutations辅助使用;
+* Vue.set(state, 'newState', '新值'); 或 this.replaceState({...state, newState: '新值'})两种方式添加state中未预设的值;
+* mutations必须是同步函数, 异步必须放在actions中: 对应mapActions辅助使用; 异步后提交到matations改变状态
+* actions中函数的第一个参数context(用于获得state, 使用mutations方法改变状态), 第二个参数为可接受的外部的第二个参数; context.commit('fn1', asyncData); 同样可以配合mapActions辅助函数简介使用;
+* 组建中，通过this.$store.dispatch('actionName')触发store中的action方法调用异步函数;
+* module模块
 
 
 
