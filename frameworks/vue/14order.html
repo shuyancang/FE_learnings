@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>vue指令</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+  <style>
+
+  </style>
+</head>
+<body>
+    <div id="app">
+      <input type="text" placeholder="请输入" v-autofocus v-fixed="100" />
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.0/velocity.min.js"></script>
+  <script>
+    /*
+      vue指令: 常用内嵌指令, 自定义指令, 使用指令
+      1. 内嵌指令: v-text: 更新文本; v-html: 更新html; v-if(v-else-if/v-else), v-show条件判断; v-for循环渲染; v-model数据绑定;v-on事件监听;v-bind属性绑定;
+      2. 自定义指令: 利用相关钩子函数进行配置配置
+        2.1 bind钩子: 只会调用一次, 初始被绑定到元素上时调用;
+        2.2 insert钩子: 插入到父节点时触发;
+        2.3 update钩子: dom节点有更新时触发;
+        2.4 componentUpdated: 所在组件节点更新时触发;
+        2.5 unbind: 只调用一次, 指令与元素解绑时触发
+        2.6 钩子函数的相关参数: function(
+          el-指令所绑定的元素,
+          binding-对象{
+            name指令名, 
+            value指令绑定的值v-focus="2"的2, 
+            oldValue指令绑定的前一个值, 
+            expression: v-focus="1+1"的1+1, 
+            arg: v-focus:foo的foo
+            modifiers: v-focus.last的last修饰符
+          }),
+          vnode-虚拟节点,
+          oldnode-update和componentUpdated时的上一个节点
+        ){ ... }
+      3. 使用指令
+    */
+    // 页面加载后自动获得input的焦点 => 自定义指令v-autofocus
+    // 通过自定义指令实现fixed固定布局;
+    Vue.directive('autofocus', { // 第一参数指令名称; 第二个指令相关配置,有相关的钩子函数
+      inserted: function(el){ // 绑定元素插入时触发, 参数为绑定的元素
+        el.focus();
+      }
+    });
+    Vue.directive('fixed', {
+      inserted: function(el, obj){
+        el.style.position = "fixed";
+        el.style.top = `${obj.value || 50}px`;
+        console.log(obj);
+      }
+    });
+    const app = new Vue({
+      el: '#app',
+      data: {
+        
+      },
+      methods: {
+        
+      },
+    });
+  </script>
+</body>
+</html>

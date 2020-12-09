@@ -94,10 +94,28 @@
           @before-leave="beforeLeave"
           @leave="leave"
           @after-leave="afterLeave"
+          :css="false"
+          appear
+          appear-class="appear"
+          appear-to-class="animate__animated animate__bounceInRight"
+          appear-active-class="animate__animated animate__bounceInLeft"
         >
-          <p key="1" v-show="isJsShow" style="border: 2px solid #000; width: 120px;">自1</p>
+          <p key="1" v-show="isJsShow" style="border: 2px solid #000; width: 120px; position: absolute;">自1</p>
         </transition>
         <button @click="jsToggle">js库显影控制</button>
+      </div>
+      <div style="border: 2px solid red; width: 700px; background-color: lightblue; height: 300px;">
+        <button @click="addGroup">列表增加</button>
+        <transition-group
+          name="transbox"
+          tag="ul"
+        >
+          <li v-for="(item, index) of dataList" :key="item">
+            <span>{{item}}</span>
+            <button @click="removeGroup(index)">删除</button>
+          </li>
+        </transition>
+        
       </div>
     </div>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -111,7 +129,12 @@
       也可自定义类名(结合第三方库进行处理)enter/leave-active-class; 
       transition渲染后, 内部只能有一个元素; 多个元素过渡需要设置key属性进行唯一标记;
       过渡模式: 默认元素进入=>离开同时发生, in-out新元素先进行过渡, 完成后当前元素过渡离开; out-in当前元素先进性过渡完成后新元素过渡进入
-      与js库动画函数进行样式展示
+      与js库动画函数进行样式展示=>@before-enter等相关钩子, enter和leave需要done回调, 否则会立刻过渡完成; 为了避免隐患需要:css="false"
+      appear属性可以用于装饰元素初始渲染时候的类样式, 同样也有对应的钩子函数配合使用
+          @before-appear="beforeAppear"
+          @after-appear="afterAppear"
+    */
+    /* 列表过渡 - transition-group: 以一个真实元素(默认span, 可利用tag设置为指定标签)进行渲染
     */
     const app = new Vue({
       el: '#app',
@@ -119,6 +142,8 @@
         isShow: true,
         isCustomShow: true,
         isJsShow: true,
+        dataList: [],
+        count: 0,
       },
       methods: {
         toggleShow(){
@@ -131,24 +156,40 @@
           this.isJsShow = !this.isJsShow;
         },
         beforeEnter(el){ // 自带参数: el当前元素
+          // el.style.opacity = 0;
           console.log('beforeEnter');
         },
-        enter(el){
-          console.log('enter', Velocity);
-          Velocity(el, { right: '40px' });
+        enter(el, done){
+          Velocity(el, 
+            { right: '40px' },
+            { duration: 1000 },
+            { complete: done },
+          );
         },
         afterEnter(el){
+          // el.style.opacity = 1;
           console.log('afterEnter');
         },
         beforeLeave(el){
           console.log('beforeLeave');
         },
-        leave(el){
+        leave(el, done){
           console.log('leave');
+          Velocity(el, 
+            { right: '-40px' },
+            { duration: 1000 },
+            { complete: done },
+          );
         },
         afterLeave(el){
           console.log('afterLeave');
         },
+        addGroup(){
+          this.dataList.push(this.count++);
+        },
+        removeGroup(index){
+          this.dataList.splice(index, 1);
+        }
       },
     });
   </script>
