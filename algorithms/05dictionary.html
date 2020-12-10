@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>字典</title>
+</head>
+<body>
+  <script>
+    function Dictionary(){
+      this.dataStore = [];
+      this.add = add;
+      this.find = find;
+      this.remove = remove;
+      this.showAll = showAll;
+      this.count = count;
+      this.clear = clear;
+    }
+    function add(key, value){ // 根据键-值添加
+      this.dataStore[key] = value;
+    }
+    function find(key){ // 根据键查找值
+      return this.dataStore[key];
+    }
+    function remove(key){ // 根据键删除
+      delete this.dataStore[key];
+    }
+    function showAll(){ // 展示所有 => 可以在此进行对key的排序。
+      const keys = Object.keys(this.dataStore);
+      for(let i = 0; i< keys.length; i++){
+        console.log(`${i} => ${this.dataStore[i]}`);
+      }
+    }
+    function count(){ // 大小
+      return Object.keys(this.dataStore).length;
+    }
+    function clear(){ // 清除所有
+      const keys = Object.keys(this.dataStore).length;
+      for(let i = 0; i < keys.length; i++){
+        delete this.dataStore[i];
+      }
+    }
+
+  </script>
+</body>
+</html>
