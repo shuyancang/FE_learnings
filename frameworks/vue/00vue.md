@@ -86,7 +86,10 @@ new Vue({ router, store, render}).$mount('#app'); 根实例中完成路由的注
 * mutations必须是同步函数, 异步必须放在actions中: 对应mapActions辅助使用; 异步后提交到matations改变状态
 * actions中函数的第一个参数context(用于获得state, 使用mutations方法改变状态), 第二个参数为可接受的外部的第二个参数; context.commit('fn1', asyncData); 同样可以配合mapActions辅助函数简介使用;
 * 组建中，通过this.$store.dispatch('actionName')触发store中的action方法调用异步函数;
-* module模块
-
+* module模块: 更小粒度的状态管理模块, 每个模块内都含有以上关键方法; 声明模块 => 引用模块; this.$store.state.moduleName.attr使用;
+* module中获取全局状态: rootState(不带命名空间: 全局模块状态信息集合); state(为当前模块状态集合);
+* 默认mutations, actions, getters是注册在全局上的; 为了保证每个模块的独立性, 可以利用namespaced: true将模块内的mutations, actions,getters方法局部化(this.$store.dispatch('moduleName/actionFunc')调用携带模块名/方法名即可);
+* 带命名空间的module中, 方法使用第三个参数{root: true}获取全局方法, 状态使用rootGetters, rootState获取; 不带命名空间的module中使用rootState获取全局状态;
+* 模块中的辅助函数: 使用规则同;额外增加一个空间名称参数即可。也可以使用createNamespacedHelpers创建基于某个命名空间辅助函数(推荐)
 
 
