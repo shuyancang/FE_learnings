@@ -8,8 +8,122 @@
 <body>
   <script>
     // 删除的节点 一般需要指向null, 防止引用未销毁导致不能及时进行垃圾回收而内存溢出;
-    function Link(){
-      
+    function Node(val){ // 节点
+      this.val = val;
+      this.next = null;
+    }
+    function LinkList(){ // 链表
+      this.head = new Node('head');
+      this.findNode = findNode;
+      this.insert = insert;
+      this.display = display;
+      this.findPreNode = findPreNode;
+      this.remove = remove;
+    }
+    function findNode(item){ // 找到节点
+      let curNode = this.head;
+      while(item !== curNode){
+        curNode = curNode.next;
+      }
+      return curNode;
+    }
+    function insert(val, item){ // 在item节点后插入值为val的节点
+      const newNode = new Node(val);
+      const curNode = this.find(item);
+      newNode.next = curNode.next;
+      curNode.next = newNode;
+    }
+    function display(){ // 遍历
+      let curNode = this.head;
+      while(curNode.next){
+        console.log(curNode.val);
+        curNode = curNode.next;
+      }
+    }
+    function findPreNode(item){ // 找到节点的前一个节点
+      let curNode = this.head;
+      while(curNode.next && curNode.next !== item){
+        curNode = curNode.next;
+      }
+      return curNode;
+    }
+    function remove(item){ // 移除指定节点
+      const preNode = findPreNode(item);
+      const curNode = preNode.next;
+      if(curNode !== null){
+        preNode.next = curNode.next;
+        curNode.next = null;
+      }
+    }
+
+
+    // 双向链表: 每个节点有前驱和后继的指向
+    function DoubleNode(val){
+      this.val = val;
+      this.next = null;
+      this.pre = null;
+    }
+    function DoubleLink(){ // 双向链
+      this.head = new DoubleNode('head');
+      this.findDoubleNode = findDoubleNode;
+      this.doubleInsert = doubleInsert;
+      this.doubleDisplay = doubleDisplay;
+      this.doubleRemove = doubleRemove;
+      this.reverseDisplay = reverseDisplay;
+    }
+    function findDoubleNode(val){ // 同单链
+      let curNode = this.head;
+      while(curNode.val !== val){
+        curNode = curNode.next;
+      }
+      return curNode;
+    }
+    function doubleInsert(newVal, val){ // 在val处插入值为newVal的节点
+      const newNode = new DoubleNode(newVal);
+      const curNode = this.find(val);
+      newNode.next = curNode.next;
+      newNode.pre = curNode;
+      curNode.next = newNode;
+      if(!newNode.next === null){
+        newNode.next.pre = newNode;
+      }
+    }
+    function doubleDisplay(){ // 辅助方法展示列表每个节点
+      let curNode = this.head;
+      while(curNode.next){
+        console.log(curNode.next.val);
+        curNode = curNode.next;
+      }
+    }
+    function doubleRemove(val){ // 删除双向链节点
+      const curNode = findDoubleNode(val);
+      const preNode = curNode.pre;
+      const nextNode = curNode.next;
+      if(nextNode !== null){
+        preNode.next = nextNode;
+        nextNode.pre = preNode;
+        curNode.pre = null;
+        curNode.next = null;
+      } else { // 尾节点
+        preNode.next = null;
+        curNode.pre = null;
+        curNode.next = null;
+      }
+    }
+    function findLastNode(){ // 找到最后一个节点
+      let curNode = this.head;
+      if(curNode.next !== null){
+        curNode = curNode.next;
+      }
+      return curNode;
+    }
+
+    function reverseDisplay(){ // 反向遍历
+      let lastNode = this.findLastNode();
+      while(lastNode.pre !== null){
+        console.log(lastNode.val);
+        lastNode = lastNode.pre;
+      }
     }
   </script>
 </body>
