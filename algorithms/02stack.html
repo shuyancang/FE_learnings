@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>栈</title>
+</head>
+<body>
+  <script>
+    fucntion Stack(){
+      this.dataStore = [];
+      this.top = 0; // 标记可以插入新元素的位置
+      this.push = push; // 入栈
+      this.pop = pop; // 出栈
+      this.peek = peek; // 返回栈顶元素
+      this.clear = clear; // 清空
+      this.length = length;
+    }
+
+    function push(ele){
+      this.dataStore[this.top++] = ele;
+    }
+    function pop(){
+      return this.dataStore[--this.top];
+    }
+    function length(){ return this.top; }
+    function clear(){ this.top = 0; }
+    // 回文算法: 单次分解开推入栈, 栈取出来=>反向 再与原单词进行比较; 相同: 回文; 不同: 非回文;
+  </script>
+</body>
+</html>

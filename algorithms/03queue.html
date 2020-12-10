@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>队列</title>
+</head>
+<body>
+  <script>
+    function Queue(){ // 队列数据结构
+      this.dataStore = [];
+      this.enqueue = enqueue;
+      this.dequeue = dequeue;
+      this.front = front;
+      this.back = back;
+      this.empty = empty;
+      this.toString = toString;
+    }
+    function enqueue(el){ // 入队
+      this.dataStore.push(el);
+    }
+    function dequeue(){ // 出队
+      return this.dataStore.shift();
+    }
+    function front(){ // 获得队首元素
+      return this.dataStore[0];
+    }
+    function back(){ // 获得队尾元素
+      return this.dataStore[this.dataStore.length - 1];
+    }
+    function empty(){ // 是否空队列
+      return this.dataStore.length === 0;
+    }
+    function toString(){ // 查看整个队列
+      return this.dataStore.join('\n');
+    }
+
+    // 优先队列 出队方法需基于优先级进行调整; 出队前获取当前队列优先级最高元素 => 出队, 其余队列位置保持(arr.splice);
+  </script>
+</body>
+</html>
