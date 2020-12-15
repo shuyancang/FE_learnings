@@ -7,7 +7,63 @@
 </head>
 <body>
   <script>
+    function HashTable(){
+      this.table = new Array(137); // 质数137避免碰撞
+      this.simpleHash = simpleHash;
+      this.betterHash = betterHash;
+      this.insert = insert;
+      this.getVal = getVal;
+      this.showHashTable = showHashTable;
+    }
+    function simpleHash(data){ // 简单的散列函数
+      let total = 0;
+      for(let i = 0; i < data.length; i++){
+        total += data.charCodeAt(i); // 整个字符串的每个元素code总值 - 除留余数法;
+      }
+      return total % this.table.length; // 可能有重复 => 1. total相同； 2. 余数相同
+    }
+    function betterHash(data){
+      const H = 31; // 取一个新质数;
+      let total = 0;
+      for(let i = 0; i < data.length; i++){
+        total += H * total + data.charCodeAt(i); // 利用质数
+      }
+      if(total < 0){
+        total += this.table.length - 1;
+      }
+      return total % this.table.length; // 键的分布更加均匀;
+    }
+    function buildChians(){ // 开链法 - 开辟数组
+      for (let i = 0; i < this.table.length; i++) {
+        this.table[i] = new Array();
+      }
+    }
+    function insert(data){ // 插入操作
+      let pos = this.simpleHash(data); // 找到位置
+      let index = 0;
+      if(this.table[pos][index] === undefined){
+        this.table[pos][index] = data;
+        index++;
+      } else {
+        while(this.table[pos][index] !== undefined){
+          ++index;
+        }
+        this.table[pos][index] = data;
+      }
+      // this.table[pos] = data;
+    }
+    function getVal(key){ // 取出操作
+      return this.table[key];
+    }
+    function showHashTable(){ // 辅助函数-展示散列
+      for (let i = 0; i < this.table.length; i++) {
+        if(this.table[i][0] !== undefined){
+          console.log('键是'+ i + ' => 值是' + this.table[i] )
+        }
+      }
+    }
 
+    // 线性碰撞: 一旦在放置位置探测到有内容, 放置到下一个可放置的空位;-insert方法进行index++循环即可;
   </script>
 </body>
 </html>
