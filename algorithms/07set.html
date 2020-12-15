@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>集合</title>
+</head>
+<body>
+  <script>
+    function SetData(){ // 无序, 无相同成员
+      this.dataStore = [];
+      this.add = add;
+      this.remove = remove;
+      this.showData = showData;
+      this.union = union;
+      this.hasData = hasData;
+      this.intersect = intersect;
+      this.difference = difference;
+      this.getSize = getSize;
+      this.subSet = subSet;
+    }
+
+    function add(data){
+      if(this.dataStore.indexOf(data) < 0){
+        this.dataStore.push(data);
+      }
+    }
+
+    function remove(){
+      const pos = this.dataStore.indexOf(data);
+      if( pos > -1){
+        this.dataStore.splice(pos, 1);
+      }
+    }
+
+    function showData(){ // 辅助, 展示集合元素
+      return this.dataStore;
+    }
+
+    function union(newSet){ // 并集
+      const tmpSet = new SetData();
+      for(let i = 0; i < this.dataStore.length; i++){
+        tmpSet.add(this.dataStore[i]);
+      }
+      for(let i = 0; i < newSet.length; i++){
+        tmpSet.add(newSet[i]);
+      }
+      return tmpSet;
+    }
+
+    function hasData(data){
+      return this.dataStore.indexOf(data) > -1;
+    }
+
+    function intersect(newSet){ // 交集
+      // 同时属于两个集合
+      const tmpSet = new SetData();
+      for(let i = 0; i < this.dataStore.length; i++){
+        if(newSet.hasData(this.dataStore[i])){
+          tmpSet.add(this.dataStore[i]);
+        }
+      }
+      return tmpSet;
+    }
+
+    function difference(newSet){ // 补给 ，属于A不属于B
+      const tmpSet = new SetData();
+      for(let i = 0; i < this.dataStore.length; i++){
+        if(!newSet.hasData(this.dataStore[i])){
+          tmpSet.add(this.dataStore[i]);
+        }
+      }
+      return tmpSet;
+    }
+
+    function getSize(){ // 集合的长度
+      return this.dataStore.length;
+    }
+
+    function subSet(newSet){ // 是否是指定集合的子集 略
+      // 长度大于必定不是子集;
+      if(this.getSize() > newSet.getSize()){
+        return false;
+      }
+      // 每个元素都属于newSet
+      let isNewSetSub = true;
+      for(let i = 0; i < this.dataStore.length; i++){
+        if(!newSet.hasData(this.dataStore[i])){
+          return false;
+        }
+      }
+      return true;
+    }
+  </script>
+</body>
+</html>
