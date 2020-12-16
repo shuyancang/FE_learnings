@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>串联所有单词的子串</title>
 </head>
 <body>
   <script>
@@ -33,23 +33,43 @@
       思路四: 滑动窗口, 同思路三, 但更优化;
     */
     // 见link； https://leetcode-cn.com/problems/substring-with-concatenation-of-all-words/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by-w-6/ 或者: https://leetcode-cn.com/problems/substring-with-concatenation-of-all-words/solution/chuan-lian-suo-you-dan-ci-de-zi-chuan-by-powcai/
-    var findSubstring = function(s, words) {
-      if (!s || !words || words.length === 0){next-permutation
-        return [];
-      }
-      var len = s.length, wordLen = words.length;
-      var wordTotalLen = wordLen * words[0].length;
-      var wordHash = {};
-      for(var k = 0; k < wordLen; k++){
-        wordHash[words[k]] = wordHash[words[k]] ? (wordHash[words[k]] + 1) : 1;
-      }
-      for(var i = 0; i < wordTotalLen; i++){
-        var left = i, right = i, count = 0;
-        var tmpMap = {};
-        while(false){
 
+    function isStrMatchHash(str, wordHash, pieceLen){
+      for(let i = 0; i < str.length; i += pieceLen){
+        let pieceWord = str.slice(i, i + pieceLen);
+        if(wordHash[pieceWord] > 0){
+          wordHash[pieceWord] -= 1;
+        } else {
+          return false;
         }
       }
+      return true;
+    }
+
+    var findSubstring = function(s, words) {
+      const sLen = s.length;
+      const wordsLen = words.length; // 多少个单词
+      const pieceLen = wordsLen > 0 ? words[0].length : 0; // 每个单词长度
+      const matchLen = pieceLen * wordsLen; // 要匹配的字符串的长度;
+      if (!s || !words || wordsLen === 0 || sLen < matchLen){ // 显然不符合~
+        return [];
+      }
+      const result = [];
+      const wordHash = {}; // 生成一个对word信息的hash记录
+      for(let i = 0; i < wordsLen; i++){
+        if(wordHash[words[i]]){
+          wordHash[words[i]]++;
+        } else {
+          wordHash[words[i]] = 1;
+        }
+      }
+      for(let i = 0; i < s.length - (matchLen - 1); i++){
+        let tmpStr = s.slice(i, i + matchLen); // 当前要匹配的片段
+        if(isStrMatchHash(tmpStr, { ...wordHash }, pieceLen)){
+          result.push(i);
+        }
+      }
+      return result;
     };
   </script>
 </body>
