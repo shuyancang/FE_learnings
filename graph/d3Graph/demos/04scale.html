@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>数据绑定</title>
+  <title>比例尺</title>
   <style>
     .bar{
       background-color: yellowgreen;
@@ -20,10 +20,32 @@
   <script src="../source/d3.js"></script>
   <script>
     // d3-scale Continuous (Linear, Power, Log, Identity, Time, Radial)
+    // 定义域domain + 值域range(rangeRound类似,但会进行四舍五入取整操作避免小数出现)
     const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    const linear = d3.scaleLinear().domain([1, 10]).range([1, 10]); // 线性尺度
-    linearList = data.map(e => linear(e));
+    const linearScale = d3.scaleLinear().domain([0, 10]).range([0, 200]); // 线性尺度
+    linearList = data.map(e => linearScale(e));
+    // 线性尺度: f(n) = a * n + b; 0 <= f(n) <= 200; 0 <= n <= 10; => 根据定义域值域得到对应的f()关系式再对data进行处理;
+    // f(0) = 0; f(10) = 200; => b = 0; a = 20 => f(n) = 20 * n;
     console.log(linearList); // 线性
+
+    const powerScale = d3.scalePow().exponent(2).domain([1, 10]).range([1, 100]); // 指数尺度(exponent-指数: 默认1)
+    const powerList = data.map(e => powerScale(e));
+    console.log(powerList); // 指数
+
+    const logScale = d3.scaleLog().base(2).domain([1, 10]).rangeRound([1, 10000]); // 对数尺度(base-底数)
+    const logList = data.map(e => logScale(e));
+    console.log(logList); // 对数
+
+    const timeScale = d3.scaleTime().domain([new Date(2010, 1, 1), new Date(2020, 12, 31)]).rangeRound([0, 1200]); // 时间尺度
+    // .ticks(50) 分成多少份进行展示; 
+    // .tickFormat(10) 显示效果优化 => %a
+    const timeList = data.map(e => timeScale(e));
+    console.log(timeList); // 将2010-01-01到2020-12-31日作为时间跨度映射到0-1200值域, 对应时间进行对应值域的计算;
+
+    // 有序尺度:
+    const seqScale = d3.scaleSequential(t => `hello ${t}`).domain([1, 200]).range([1, 100]);
+    const seqList = data.map(e => seqScale(e));
+    console.log(seqList);
   </script>
 </body>
 </html>
