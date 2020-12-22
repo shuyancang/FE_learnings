@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>插值</title>
+  <title>坐标轴</title>
   <style>
     .bar{
       background-color: yellowgreen;
@@ -16,10 +16,52 @@
   </style>
 </head>
 <body>
+  <div>
+    <button onclick="renderAll('bottom')">bottom</button>
+    <button onclick="renderAll('top')">top</button>
+    <button onclick="renderAll('left')">left</button>
+    <button onclick="renderAll('right')">right</button>
+  </div>
   <div id="container"></div>
   <script src="../source/d3.js"></script>
   <script>
-    
+    let svg;
+    const margin = 25, offset = 50;
+    const width = 500, height = 500;
+    const axisWidth = width - 2 * margin;
+    function createSvg(){
+      svg = d3.select('body').append('svg')
+        .attr('class', 'axis')
+        .attr('width', width)
+        .attr('height', height)
+      return svg;
+    }
+
+    function renderAxis(scale, i, orient){
+      const axis = d3.svg.axis()
+        .scale(scale)
+        .orient(orient)
+        .ticks(5);
+      svg.append('g')
+        .attr('transform', function(){
+          if(['top', 'bottom'].includes(orient)){
+            return `translate(${margin},${i * offset}`;
+          }
+          return `translate(${i * offset},${margin}`;
+        })
+        .call(axis);
+    }
+
+    function renderAll(orient){
+      if(svg){
+        svg.remove();
+      }
+      createSvg();
+      const linearScale = d3.scaleLinear().domain([0, 1000]).range([0, axisWidth], 1, orient);
+      const powerScale = d3.scalePow().exponent(2).domain([1, 1000]).range([0, axisWidth], 2, orient);
+      const timeScale = d3.scaleTime().domain([new Date(2010, 1, 1), new Date(2020, 12, 31)]).range([0, axisWidth], 3, orient);
+      renderAxis()
+    }
   </script>
 </body>
 </html>
