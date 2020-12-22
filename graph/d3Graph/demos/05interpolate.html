@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>插值</title>
+  <style>
+    .bar{
+      background-color: yellowgreen;
+      height: 20px;
+      margin-top: 5px;
+    }
+    .selected{
+      background-color: green;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script src="../source/d3.js"></script>
+  <script>
+    // 根据不同的输入, 选取不同的输出: d3.interpolate
+    // const interbase = d3.interpolate(0, 100); // 值域为0 - 100, 定义域默认0 - 1; 
+    // console.log(interbase(0.1)); // 线性函数
+    const max = 11, data = [];
+    const sizeScale = d3.scaleLinear().domain([0, max]).range([
+      'italic bold 12px/30px Georgia, serif',
+      'italic bold 120px/180px Georgia, serif'
+    ]);
+    const colorScale = d3.scaleLinear().domain([0, max / 2, 10]).range(['lightblue', '#4169e1', 'lightblue']); // 颜色同样进行线性变化
+    const powScale = d3.scalePow().exponent(2).domain([0, max]).range([
+      { color: '#add8e6', height: '15px' },
+      { color: '#4169e1', height: '150px' },
+    ]);
+    for(let i = 0; i < max; i++){
+      data.push(i);
+    }
+    function render(values, scale, selector){
+      d3.select(selector).selectAll('div.cell')
+        .data(data)
+        .enter().append('div').classed('cell',true).append('span');
+      d3.select(selector).selectAll('div.cell')
+        .data(data)
+        .exit().remove();
+      d3.select(selector).selectAll('div.cell')
+        .data(data)
+        .style('display', 'inline-block')
+        .style('background-color', (d) => powScale(d).color)
+        .style('height', (d) => powScale(d).height)
+        .select('span')
+        .style('font', (d, i) => scale(d)) // 将值域的样式数值, 自动按比例进行调整~但，数值直接映射，在style里完成配置，是不是更好?
+        .style('color', (d, i) => colorScale(d)) // 实现颜色的渐变
+        .text((d, i) => i);
+    }
+    render(data, sizeScale, '#container');
+    // 可以对d3.interpolatores.push(function(a, b){}); 利用正则实现自定义插值;
+    // 插值器中，含有对默认插值的所有实现, 自定义的插值规则会默认放在最顶部-类似于栈-进行优先匹配 => 插值转换;
+  </script>
+</body>
+</html>
