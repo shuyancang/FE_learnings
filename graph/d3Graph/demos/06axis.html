@@ -17,10 +17,10 @@
 </head>
 <body>
   <div>
-    <button onclick="renderAll('bottom')">bottom</button>
-    <button onclick="renderAll('top')">top</button>
-    <button onclick="renderAll('left')">left</button>
-    <button onclick="renderAll('right')">right</button>
+    <button onclick="renderAll('axisBottom')">bottom</button>
+    <button onclick="renderAll('axisTop')">top</button>
+    <button onclick="renderAll('axisLeft')">left</button>
+    <button onclick="renderAll('axisRight')">right</button>
   </div>
   <div id="container"></div>
   <script src="../source/d3.js"></script>
@@ -30,7 +30,7 @@
     const width = 500, height = 500;
     const axisWidth = width - 2 * margin;
     function createSvg(){
-      svg = d3.select('body').append('svg')
+      svg = d3.select('body').append('svg') // 创建一个具有宽高的svg元素
         .attr('class', 'axis')
         .attr('width', width)
         .attr('height', height)
@@ -38,18 +38,17 @@
     }
 
     function renderAxis(scale, i, orient){
-      const axis = d3.svg.axis()
-        .scale(scale)
-        .orient(orient)
+      console.log(orient, d3[orient]);
+      const axis = d3[orient](scale) // d3.axisBottom/axisTop/axisLeft/axisRight
         .ticks(5);
       svg.append('g')
         .attr('transform', function(){
-          if(['top', 'bottom'].includes(orient)){
-            return `translate(${margin},${i * offset}`;
+          if(['axisTop', 'axisBottom'].includes(orient)){
+            return `translate(${margin},${i * offset})`;
           }
-          return `translate(${i * offset},${margin}`;
+          return `translate(${i * offset},${margin})`;
         })
-        .call(axis);
+        .call(axis); // .call(添加创建的坐标轴实例)
     }
 
     function renderAll(orient){
@@ -57,10 +56,12 @@
         svg.remove();
       }
       createSvg();
-      const linearScale = d3.scaleLinear().domain([0, 1000]).range([0, axisWidth], 1, orient);
-      const powerScale = d3.scalePow().exponent(2).domain([1, 1000]).range([0, axisWidth], 2, orient);
-      const timeScale = d3.scaleTime().domain([new Date(2010, 1, 1), new Date(2020, 12, 31)]).range([0, axisWidth], 3, orient);
-      renderAxis()
+      const linearScale = d3.scaleLinear().domain([0, 1000]).range([0, axisWidth]);
+      const powerScale = d3.scalePow().exponent(2).domain([1, 1000]).range([0, axisWidth]);
+      const timeScale = d3.scaleTime().domain([new Date(2010, 1, 1), new Date(2020, 12, 31)]).range([0, axisWidth]);
+      renderAxis(linearScale, 1, orient);
+      renderAxis(powerScale, 2, orient);
+      renderAxis(timeScale, 3, orient);
     }
   </script>
 </body>
