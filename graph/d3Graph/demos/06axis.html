@@ -40,8 +40,12 @@
     function renderAxis(scale, i, orient){
       console.log(orient, d3[orient]);
       const axis = d3[orient](scale) // d3.axisBottom/axisTop/axisLeft/axisRight
-        .ticks(5);
-      svg.append('g')
+        .ticks(10)
+        // .tickValues([1, 2, 3, 5, 8, 13, 21]) // 直接设置坐标轴数值
+        // .tickFormat((d) => d > 0 ? `${d}%` : d); // 每一项ticks值都可以通过函数获取。设置显示数值对应的文字效果
+        // .tickFormat(d3.format) // 也可以直接利用d3.format生成便捷的展示公式
+        // .tickPadding(50); 刻度位置
+      svg.append('g')  // svg中的g元素 自动生成包含坐标相关刻度/标识的svg元素组。
         .attr('transform', function(){
           if(['axisTop', 'axisBottom'].includes(orient)){
             return `translate(${margin},${i * offset})`;
@@ -49,6 +53,7 @@
           return `translate(${i * offset},${margin})`;
         })
         .call(axis); // .call(添加创建的坐标轴实例)
+        // d3.selection.call(foo) => 代表foo函数执行参数为d3.selection的方法;
     }
 
     function renderAll(orient){
