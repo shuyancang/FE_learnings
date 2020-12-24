@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+  /*
+    给定一个只包含 '(' 和 ')' 的字符串，找出最长的包含有效括号的子串的长度。
+    示例 1: 输入: "(()" 输出: 2
+    解释: 最长有效括号子串为 "()"
+
+    示例 2: 输入: ")()())" 输出: 4
+    解释: 最长有效括号子串为 "()()"
+  */
+  var longestValidParentheses = function(s) {
+    if(!s || !s.length){
+      return 0;
+    }
+    const units = getUnists(s);
+    
+  };
+  function getUnists(str){ // 步骤1 找到所有的()
+    let i = 0, units = [];
+    while(str[i]){
+      if(str[i] === '(' && str[i + 1] === ')'){
+        units.push([i, i + 1]);
+        i += 2;
+      } else {
+        i++;
+      }
+    }
+    return units;
+  }
+  function stretchUnit(str, [left, right]){ // 步骤2
+    while(left > 0 && right < str.length - 1 && str[left - 1] === '(' && str(right + 1) === ')'){
+      left--;
+      right++;
+    }
+    return [left, right];
+  }
+  function combineUnit(units){ // 步骤3
+    let newUnits = [];
+    for(let i = 0; i < units.length; i++){
+      if(units[i][1] + 1 === units[i + 1][0]){ // 相邻元 => 合并
+        newUnits.push([units[i][0], units[i + 1][1]]);
+      } else {
+        newUnits.push(units[i]);
+      }
+    }
+    return newUnits;
+  }
+  // 1. 顺序找到每个有效基点-相邻的左右括号: (); 
+  // 2. 对基点进行左右指针: 左===(右===)进行拓展 无即停止;
+  // 3. 相邻的基点进行合并; => 若有合并操作, 继续执行2-3操作;
+  // 4. 取出基点数组中, 差值最大的 
+  </script>
+</body>
+</html>
