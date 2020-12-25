@@ -19,9 +19,34 @@
     if(!s || !s.length){
       return 0;
     }
-    const units = getUnists(s);
-    
+    let units = getUnists(s);
+    let unitsLen = units.length;
+    let resultUnits;
+    while(true){
+      let copyUnits = handleUnits(s, units);
+      if(units.toString() === copyUnits.toString()){ // 处理完毕
+        resultUnits = copyUnits;
+        break;
+      } else {
+        units = copyUnits;
+      }
+    }
+    let result = 0;
+    for(let i = 0; i < resultUnits.length; i++){
+      const tmpLen = resultUnits[i][1] - resultUnits[i][0];
+      if(tmpLen > result){
+        result = tmpLen + 1;
+      }
+    }
+    return result;
   };
+  function handleUnits(str, units){
+    let copyUnits = units.map(e => {
+      return stretchUnit(str, e);
+    });
+    copyUnits = combineUnit(copyUnits);
+    return copyUnits;
+  }
   function getUnists(str){ // 步骤1 找到所有的()
     let i = 0, units = [];
     while(str[i]){
@@ -35,7 +60,7 @@
     return units;
   }
   function stretchUnit(str, [left, right]){ // 步骤2
-    while(left > 0 && right < str.length - 1 && str[left - 1] === '(' && str(right + 1) === ')'){
+    while(left > 0 && right < str.length - 1 && str[left - 1] === '(' && str[right + 1] === ')'){
       left--;
       right++;
     }
@@ -43,15 +68,28 @@
   }
   function combineUnit(units){ // 步骤3
     let newUnits = [];
+    let tmpUnit = null;
     for(let i = 0; i < units.length; i++){
-      if(units[i][1] + 1 === units[i + 1][0]){ // 相邻元 => 合并
-        newUnits.push([units[i][0], units[i + 1][1]]);
+      if(units[i + 1] && units[i][1] + 1 === units[i + 1][0]){ // 相邻元 => 合并
+        tmpUnit = [tmpUnit ? tmpUnit[0] : units[i][0], units[i+1][1]];
       } else {
-        newUnits.push(units[i]);
+        newUnits.push(tmpUnit ? tmpUnit : units[i]);
+        tmpUnit = null;
       }
     }
     return newUnits;
   }
+  
+  // leetcode官方代码:
+  
+  longestValidParentheses(''); // 0
+  longestValidParentheses('('); // 0
+  longestValidParentheses(')'); // 0
+  longestValidParentheses('()'); // 2
+  longestValidParentheses('())'); // 2
+  longestValidParentheses('(()()))'); // 6
+  longestValidParentheses('((()())())'); // 10
+  longestValidParentheses('((()())()))))((('); // 10
   // 1. 顺序找到每个有效基点-相邻的左右括号: (); 
   // 2. 对基点进行左右指针: 左===(右===)进行拓展 无即停止;
   // 3. 相邻的基点进行合并; => 若有合并操作, 继续执行2-3操作;
