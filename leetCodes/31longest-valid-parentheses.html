@@ -80,8 +80,35 @@
     return newUnits;
   }
   
-  // leetcode官方代码:
-  
+  // leetcode官方题解: 动态规划
+
+  // 官方题解2: 栈
+
+  // 官方题解3: 贪心算法;
+  var longestValidParentheses = function(s) {
+    if(!s || !s.length || s.length < 2){
+      return 0;
+    }
+    let startLeft = 0, startRight = 0, result = 0;
+    for(let i = 0; i < s.length; i++){
+      if(s[i] === '('){
+        startLeft++;
+      }
+      if(s[i] === ')'){
+        startRight++;
+      }
+      if(startLeft === startRight){
+        startLeft = 0;
+        startRight = 0;
+        if(result < (startLeft + startRight)){
+          result = startRight + startLeft;
+        }
+      }
+    }
+    for(let i = s.length - 1; i >= 0; i--){
+
+    }
+  }
   longestValidParentheses(''); // 0
   longestValidParentheses('('); // 0
   longestValidParentheses(')'); // 0
