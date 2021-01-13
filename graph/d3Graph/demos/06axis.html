@@ -38,7 +38,6 @@
     }
 
     function renderAxis(scale, i, orient){
-      console.log(orient, d3[orient]);
       const axis = d3[orient](scale) // d3.axisBottom/axisTop/axisLeft/axisRight
         .ticks(10)
         // .tickValues([1, 2, 3, 5, 8, 13, 21]) // 直接设置坐标轴数值

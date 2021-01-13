@@ -4,8 +4,66 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>绘制网格线</title>
+  <style>
+    .x-axis{
+      color: blue;
+    }
+    .grid-line{
+      stroke: #ccc;
+    }
+  </style>
 </head>
 <body>
-  
+  <div id="grid"></div>
+  <script src="../source/d3.js"></script>
+  <script>
+    const height = 500, width = 500, margin = 25;
+    const svg = d3.select('body').append('svg')
+      .attr('class', 'axis')
+      .attr('width', width)
+      .attr('height', height);
+    function renderX(){
+      const axisLen = width - 2 * margin;
+      const linearScale = d3.scaleLinear().domain([0, 1000]).range([0, axisLen]);
+      const xAxis = d3.axisBottom(linearScale);
+      // 若需动态绘制xAxis可再次调用xAxis.domain([a, b]); 再利用svg.transition().call(xAxis)调用渲染刷新;
+      svg.append('g')
+        .attr('class', 'x-axis')
+        .attr('transform', () => {
+          return `translate(${margin},${height - margin})`;
+        })
+        .call(xAxis)
+      d3.selectAll('g.x-axis g.tick')
+        .append('line')
+        .classed('grid-line', true)
+        // .attr('style', 'stroke:rgb(99,99,99)')
+        .attr('x1', '0')
+        .attr('y1', '0')
+        .attr('x2', '0')
+        .attr('y2', - (height - 2 * margin));
+        // 若需要动态: 此处lines可以进行remove后, 动态基于轴再次渲染
+    }
+
+    function renderY(){
+      const axisLen = height - 2 * margin;
+      const linearScale = d3.scaleLinear().domain([0, 1000]).range([0, axisLen]);
+      const yAxis = d3.axisLeft(linearScale);
+      svg.append('g')
+        .attr('class', 'y-axis')
+        .attr('transform', () => {
+          return `translate(${margin},${margin})`;
+        })
+        .call(yAxis)
+      d3.selectAll('g.y-axis g.tick')
+        .append('line')
+        .classed('grid-line', true)
+        .attr('x1', 0)
+        .attr('y1', 0)
+        .attr('x2', axisLen)
+        .attr('y2', 0);
+    }
+    renderX();
+    renderY();
+  </script>
 </body>
 </html>
