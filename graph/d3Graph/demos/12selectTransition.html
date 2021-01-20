@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>transition选择过渡</title>
+  <style>
+    .fixed-ceil{
+      width: 100px;
+      height: 20px;
+      position: relative;
+      background-color: #e9967a;
+    }
+  </style>
+</head>
+<body>
+  <script src="../source/d3.js"></script>
+  <script>
+    const data = ['dog', 'cat', 'dog', 'cat', 'dog', 'cat', 'dog', 'cat', 'dog', 'cat', 'dog']
+    const duration = 1500;
+    
+    d3.select('body').selectAll('div').data(data)
+      .enter()
+      .append('div')
+      .attr('class', 'fixed-ceil')
+      .style('top', ((d, i) => `${i * 40}px`))
+      .style('background-color', 'steelblue')
+      .style('color', 'white')
+      .style('left', '500px')
+      .text(d => d)
+      .transition().duration(duration)
+      .style('left', '10px')
+      .filter(d => d === 'cat') // 指定选中, 进行选择动画过渡功能
+      .transition().duration(duration)
+      .style('left', '500px')
+
+  </script>
+</body>
+</html>

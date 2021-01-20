@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>transition监听</title>
+  <style>
+    .box{
+      width: 100px;
+      height: 20px;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <script src="../source/d3.js"></script>
+  <script>
+    const duration = 3000;
+    const body = d3.select('body');
+
+    const div = body.append('div')
+      .classed('box', true)
+      .style('background-color', 'steelblue')
+      .style('color', 'white')
+      .text('waiting')
+      .transition().duration(duration)
+      .delay(2000)
+      .on('start', function(a, b, c){ // 添加动画时的事件监听
+        console.log('start', a, b, c)
+        d3.select(this).text('transitioning');
+      })
+      .on('end', function(a, b, c){
+        console.log('end', a, b, c)
+        d3.select(this).text('done');
+      })
+      .style('left', '600px')
+      /*
+        start - when the transition starts.
+        end - when the transition ends.
+        interrupt - when the transition is interrupted.
+        cancel - when the transition is cancelled.
+      */
+
+  </script>
+</body>
+</html>
