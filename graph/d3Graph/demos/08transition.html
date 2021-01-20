@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>transition动画</title>
+  <style>
+    .box{
+      width: 200px;
+      height: 200px;
+      background-color: #e9967a;
+    }
+    .v-bar{
+      background-color: lightblue;
+    }
+  </style>
+</head>
+<body>
+  <div id="transition_init"></div>
+  <script src="../source/d3.js"></script>
+  <script>
+    var abc = 123;
+    const body = d3.select('#transition_init');
+    const duration = 5000;
+
+    body.append('div').classed('box', true)
+      .transition()
+      .duration(duration)
+      // .classed('newbox', true)
+      .style('background-color', '#add8e6')
+      .style('margin-left', '600px')
+      .style('width', '100px')
+      .style('height', '100px')
+
+  </script>
+  <script>
+    let id = 0;
+    const data = [], timer = 500, chartHeight = 100, chartWidth = 680;
+    for(let i = 0; i < 20; i++){
+      barPush(data);
+    }
+
+    function barPush(data){
+      data.push({
+        id: ++id,
+        value: Math.round(Math.random() * chartHeight),
+      })
+    }
+
+    function barLeft(i) {
+      return i * (30 + 2);
+    }
+
+    function barHeight(d) {
+      return d.value;
+    }
+
+    function render(data){
+      const selection = d3.select('body').selectAll('div.v-bar')
+        .data(data, d => d.id);
+      selection.enter().append('div')
+        .attr('class', 'v-bar')
+        .style('position', 'fixed')
+        .style('top', chartHeight + 'px') // 随便赋值高度
+        .style('left', (d, i) => barLeft(i + 1) + 'px')
+        .style('height', '0px') // 初始0高度防止渲染
+        .append('span');
+      selection.transition().duration(timer) // 关键的动画函数, 将每个bar的位置进行计算处理变换;
+        .style('top', d => chartHeight - barHeight(d) + 'px')
+        .style('left', (d, i) => barLeft(i) + 'px')
+        .style('height', d => barHeight(d) + 'px')
+        .select('span')
+          .text(d => d.value);
+      selection.exit()
+        .transition().duration(timer) // 没有数据的~移动到最左边去, 销毁掉，呼呼。
+        .style('left', (d, i) => barLeft(-1) + 'px')
+        .remove();
+    }
+
+    setInterval(function(){
+      data.shift();
+      barPush(data);
+      render(data);
+    }, 2000);
+
+    d3.select('body')
+      .append('div')
+        .attr('class', 'baseline')
+        .style('position', 'fixed')
+        .style('top', chartHeight + 'px')
+        .style('left', '0px')
+        .style('width', chartWidth + 'px')
+  </script>
+</body>
+</html>

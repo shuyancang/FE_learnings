@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>transition各类预定义动画</title>
+  <style>
+    .fixed-ceil{
+      width: 100px;
+      height: 20px;
+      position: relative;
+      background-color: #e9967a;
+    }
+  </style>
+</head>
+<body>
+  <script src="../source/d3.js"></script>
+  <script>
+    const types = ['Poly', 'Quad', 'Cubic', 'Sin', 'Exp', 'Circle', 'Elastic', 'Back', 'Bounce'];
+    const keys = ['In', 'Out', '', 'InOut'];
+    const easeTypes = ['easeLinear'].concat(...types.map(e => (
+      keys.map(k => `ease${e}${k}`)
+    )));
+    // easeTypes.push((t) => t * t);
+    const colors = [...d3.schemeCategory10, ...d3.schemeAccent, ...d3.schemeDark2, ...d3.schemePaired, ...d3.schemePastel1, ...d3.schemePastel2, ...d3.schemeSet1, ...d3.schemeSet2, ...d3.schemeSet3]; // d3的颜色器
+
+    d3.select('body').selectAll('div')
+      .data(easeTypes)
+      .enter()
+      .append('div')
+        .attr('class', 'fixed-ceil')
+        .style('top', (d, i) => i * 10 + 'px')
+        .style('background-color', (d, i) => colors[i])
+        .style('color', 'white')
+        .style('left', '500px')
+        .text(d => {
+          if (typeof d === 'function'){
+            return 'custom';
+          }
+          return d;
+        })
+
+    d3.selectAll('div').each(function(d){
+      let curType = d3[d];
+      d3.select(this)
+        .transition().ease(curType)
+        .duration(1500)
+        .style('left', '10px')
+    })
+
+</script>
+</body>
+</html>

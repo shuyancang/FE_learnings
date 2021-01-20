@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>transition级联过渡</title>
+  <style>
+    .fixed-ceil{
+      width: 100px;
+      height: 20px;
+      position: relative;
+      background-color: #e9967a;
+    }
+  </style>
+</head>
+<body>
+  <script src="../source/d3.js"></script>
+  <script>
+    const body = d3.select('body');
+    // 实际上是三个transition结束后的继续链式调用 即可实现;
+    // 每个过渡在上一个过渡完成后进行作用 => 联动;
+    function teleport(s){
+      s.transition().duration(500)
+        .style('width', '200px')
+        .style('height', '1px')
+        .transition().duration(1000)
+        .style('left', '600px')
+        .transition().duration(300)
+        .style('left', '800px')
+        .style('height', '80px')
+        .style('width', '80px')
+    }
+
+    body.append('div')
+      .style('position', 'fixed')
+      .style('background-color', 'steelblue')
+      .style('left', '10px')
+      .style('height', '80px')
+      .style('width', '80px')
+      .call(teleport)
+  </script>
+</body>
+</html>
