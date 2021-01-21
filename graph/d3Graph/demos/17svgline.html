@@ -4,11 +4,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>d3-svg创建线条</title>
+  <style>
+    .line{
+      fill: none;
+      stroke: yellowgreen;
+      stroke-width: 2px;
+    }
+  </style>
 </head>
 <body>
   <script src="../source/d3.js"></script>
   <script>
-    
+    const width = 500, height = 500, margin = 50;
+    const x = d3.scaleLinear().domain([0, 10]).range([margin, width - margin]);
+    const y = d3.scaleLinear().domain([0, 10]).range([height - margin, margin]);
+    const data = [
+      [
+        {x: 0, y: 5}, {x: 1, y: 9}, { x: 2, y: 7},
+        {x: 3, y: 5}, {x: 4, y: 3}, { x: 6, y: 4},
+        {x: 7, y: 2}, {x: 8, y: 3}, { x: 9, y: 2},
+      ],
+      d3.range(10).map(function(i){
+        return {x: i, y: Math.sin(i) + 5};
+      })
+    ];
+    const line = d3.line().x(function(d){ return x(d.x)})
+      .y(function(d){return y(d.y)});
+    const svg = d3.select('body').append('svg');
+    svg.attr('height', height)
+      .attr('width', width)
+    svg.selectAll('path.line')
+      .data(data)
+      .enter()
+      .append('path')
+      .attr('class', 'line')
+      .attr('d', function(d){
+        return line(d);
+      })
   </script>
 </body>
 </html>
