@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>transition定时器</title>
+  <style>
+    .countdown{
+      width: 100px;
+      height: 20px;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <div class="group">
+    <button onclick="countup(100)">
+      开始
+    </button>
+    <button onclick="reset()">
+      重置
+    </button>
+  </div>
+  <script src="../source/d3.js"></script>
+  <script>
+    const body = d3.select('body');
+    const countdown = body.append('div').append('input');
+
+    countdown.attr('type', 'button')
+      .attr('class', 'countdown')
+      .attr('value', '0')
+    function countup(target){
+      d3.timer(function(){ // 定时函数, 定时执行;
+        let value = countdown.attr('value');
+        if(+value === +target){
+          return true;
+        }
+        countdown.attr('value', ++value);
+      });
+    }
+
+    // d3.time(function, [delay], [mark])
+
+    function reset(){
+      countdown.attr('value', '0')
+    }
+
+
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>d3-svg简介</title>
+</head>
+<body>
+  <script src="../source/d3.js"></script>
+  <script>
+    const svg = d3.select('body').append('svg');
+    svg.attr('height', 500).attr('width', 600);
+    // 基本的svg元素; 线形图, 原型图, 矩形, 多边形
+    svg.append('line').attr('x1', 0).attr('y1', 200)
+      .attr('x2', 100).attr('y2', 100)
+      .attr('style', 'stroke:rgb(99,99,99);');
+    svg.append('circle').attr('cx', 200).attr('cy', 150).attr('r', 50);
+    svg.append('rect').attr('x', 300).attr('y', 100)
+      .attr('width', 100).attr('height', 100).attr('rx', 5)
+    svg.append('polygon').attr('points', '450,200 500,100 550,200');
+    // svg画布坐标原点(0, 0) => 左上角! 止于右下角。
+    // line: (x1, y1) => (x2, y2)的线;
+    // circle: 圆心(rx, ry) + 半径r的圆
+    // rect: 左上角(x, y)宽width, 高height矩形;
+    // polygon: points基于多组点(x1, y1) (x2, y2) ...的连线;
+    // 其他: 椭圆ellipse; 折线polyline
+    /**
+      最强大的svg:path搭配d属性:
+      移动: M(绝对坐标), m(相对坐标)
+      闭合路径: Z(绝对坐标), z(相对坐标)
+      连线: L, l; 水平连线H, l; 垂直连线V, v;
+      三次贝塞尔曲线: C, c, S, s
+      二次贝塞尔曲线: Q, q, T, t;
+      椭圆曲线:A, a
+    **/
+  </script>
+</body>
+</html>
