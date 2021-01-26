@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>d3-svg区域生成器</title>
+  <style>
+    .line, .dot{
+      fill: none;
+      stroke: yellowgreen;
+      stroke-width: 2px;
+    }
+    .dot{
+      stroke-width: 1px;
+    }
+    .area{
+      fill: lightblue;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+  <script src="../source/d3.js"></script>
+  <script>
+    const width = 500, height = 500, margin = 30, duration = 500;
+    const x = d3.scaleLinear().domain([0, 10]).range([margin, width - margin]);
+    const y = d3.scaleLinear().domain([3, 6]).range([height - margin, margin]);
+    const data = d3.range(11).map(function(i){
+      return { x: i, y: Math.sin(i * 3) + 5};
+    });
+    const svg = d3.select('body').append('svg');
+    svg.attr('height', height).attr('width', width);
+    renderAxis(x, 'axisBottom');
+    renderAxis(y, 'axisLeft');
+    render([1]);
+
+    function renderAxis(scale, orient){ // 坐标轴绘制
+      const axis = d3[orient](scale).ticks(5);
+      svg.append('g')  // svg中的g元素 自动生成包含坐标相关刻度/标识的svg元素组。
+        .attr('transform', function(){
+          if(orient === 'axisLeft'){
+            return `translate(${margin},0)`;
+          }
+          if(orient === 'axisBottom'){
+            return `translate(0,${height - margin})`;
+          }
+        })
+        .call(axis);
+    }
+
+    function render(){
+      const line = d3.line().curve(d3.curveCardinal).x((d) => x(d.x)).y(d => y(d.y));
+      svg.selectAll('path.line').data([data])
+        .enter()
+        .append('path')
+        .attr('class', 'line');
+
+      svg.selectAll('path.line').data([data])
+        .attr('d', d => line(d));
+
+      svg.selectAll('circle').data(data)
+        .enter().append('circle')
+          .attr('class', 'dot')
+          .attr('cx', d => x(d.x))
+          .attr('cy', d => y(d.y))
+          .attr('r', 4.5);
+      const area = d3.area().x(d => x(d.x)).y0(y(3.5)).y1(d => y(d.y)); // x, y, x0, y0, x1, y1... 上下边界0, 1 相同时直接xy即可
+      svg.selectAll('path.area').data([data]).enter().append('path')
+        .attr('class', 'area')
+        .attr('d', d => area(d));
+    }
+
+  </script>
+</body>
+</html>
