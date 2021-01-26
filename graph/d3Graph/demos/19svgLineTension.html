@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>d3-svg线条张力</title>
+  <style>
+    .line, .dot{
+      fill: none;
+      stroke: yellowgreen;
+      stroke-width: 2px;
+    }
+    .dot{
+      stroke-width: 1px;
+    }
+  </style>
+</head>
+<body>
+  <h4>线条张力</h4>
+  <div>
+    <button onclick="render([0])">0</button>
+    <button onclick="render([0.2])">0.2</button>
+    <button onclick="render([0.4])">0.4</button>
+    <button onclick="render([0.6])">0.6</button>
+    <button onclick="render([1])">1</button>
+  </div>
+  <script src="../source/d3.js"></script>
+  <script>
+    const width = 500, height = 500, margin = 30, duration = 500;
+    const x = d3.scaleLinear().domain([0, 10]).range([margin, width - margin]);
+    const y = d3.scaleLinear().domain([0, 1]).range([height - margin, margin]);
+    const data = d3.range(10).map(function(i){
+      return { x: i, y: (Math.sin(i * 3) + 1) / 2};
+    });
+    console.log(data);
+    const svg = d3.select('body').append('svg');
+    svg.attr('height', height).attr('width', width);
+    renderAxis(x, 1, 'axisBottom');
+    renderAxis(y, 2, 'axisLeft');
+    render([1]);
+
+    function renderAxis(scale, i, orient){
+      const axis = d3[orient](scale).ticks(10);
+      svg.append('g')  // svg中的g元素 自动生成包含坐标相关刻度/标识的svg元素组。
+        .attr('transform', function(){
+          if(orient === 'axisLeft'){
+            return `translate(${margin},0)`;
+          }
+          if(orient === 'axisBottom'){
+            return `translate(0,${height - margin})`;
+          }
+        })
+        .call(axis);
+    }
+
+    function render(tension){
+      const line = d3.line().curve(d3.curveCardinal.tension(tension)).x((d) => x(d.x)).y(d => y(d.y)); // 曲线的张力d3.curveCardinal.tension
+      svg.selectAll('path.line').data([data])
+        .enter()
+        .append('path')
+        .attr('class', 'line');
+      svg.selectAll('path.line').data([data])
+        .transition().ease(d3.easeLinear).duration(duration)
+        .attr('d', d => line(d));
+
+      svg.selectAll('circle').data(data)
+        .enter().append('circle')
+          .attr('class', 'dot')
+          .attr('cx', d => x(d.x))
+          .attr('cy', d => y(d.y))
+          .attr('r', 4.5)
+    }
+
+  </script>
+</body>
+</html>
