@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>d3-svg圆弧生成器</title>
+  <style>
+    .line, .dot{
+      fill: none;
+      stroke: yellowgreen;
+      stroke-width: 2px;
+    }
+    .dot{
+      stroke-width: 1px;
+    }
+    .area{
+      fill: lightblue;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <button onclick="render(0)">circle</button>
+    <button onclick="render(100)">annulus(donut)</button>
+    <button onclick="render(0, Math.PI)">circular sector</button>
+    <button onclick="render(100, Math.PI)">annulus sector</button>
+  </div>
+  <script src="../source/d3.js"></script>
+  <script>
+    const width = 400, height = 400, fullAngle = 2 * Math.PI;
+    const colors = d3.schemeCategory10; // 自带颜色
+    const svg = d3.select('body').append('svg')
+      .attr('class', 'pie')
+      .attr('height', height)
+      .attr('width', width)
+
+    function render(innerRadius, endAngle){
+      if(!endAngle){
+        endAngle = fullAngle;
+      }
+      const data = [
+        {startAngle: 0, endAngle: 0.1 * endAngle},
+        {startAngle: 0.1, endAngle: 0.2 * endAngle},
+        {startAngle: 0.2, endAngle: 0.4 * endAngle},
+        {startAngle: 0.4, endAngle: 0.6 * endAngle},
+        {startAngle: 0.6, endAngle: 0.7 * endAngle},
+        {startAngle: 0.7, endAngle: 0.9 * endAngle},
+        {startAngle: 0.9, endAngle: endAngle},
+      ];
+      const arc = d3.arc().outerRadius(200).innerRadius(innerRadius); // 内外径
+      svg.select('g').remove();
+      svg.append('g').attr('transform', 'translate(200, 200)')
+        .selectAll('path.arc').data(data)
+        .enter().append('path')
+          .attr('class', 'arc')
+          .attr('fill', (d, i) => colors[i])
+          .attr('d', (d, i) => arc(d, i));
+    }
+    // render(0, Math.PI / 2);
+    // render(0, Math.PI);
+    render(0);
+
+
+  </script>
+</body>
+</html>

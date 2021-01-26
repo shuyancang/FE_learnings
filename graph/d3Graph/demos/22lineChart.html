@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>创建线性图表_工程化</title>
+</head>
+<body>
+  <script src="../source/d3.js"></script>
+  <script>
+    function lineChartCreator(){ // 线形图生成器;
+      const _chart = {};
+      const _width = 600, _height = 600, _margins = { // 默认值
+        top: 30, left: 30, right: 30, bottom: 30,
+      };
+      let _x, _y, _data = [], _colors = d3.schemeCategory10, _svg, _body, _line;
+      _chart.height = function(h){ // 指定高;
+        if(!arguments.length){
+          return _height;
+        }
+        _height = h;
+        return _chart;
+      };
+      _chart.width = function(w){ // 指定宽;
+        if(!arguments.length){
+          return _width;
+        }
+        _width = w;
+        return _chart;
+      }
+      _chart._margins = function (m){ // 指定边距;
+        if(!arguments.length){
+          return _margins;
+        }
+        _margins = m;
+        return _chart;
+      }
+      _chart.addSeries = function(series){
+        _data.push(series);
+        return _chart;
+      }
+      _chart.x = function(x){
+        _x = x;
+        return _chart;
+      }
+      _chart.y = function(y){
+        _y = y;
+        return _chart;
+      }
+      _chart.render = function(){
+        if(!_svg){
+          _svg = d3.select('body').append('svg').attr('height', _height).attr('width', _width);
+          renderAxis(_svg); // 坐标轴
+          defineBodyClip(_svg); // 作图区域
+          renderBody(_svg); // 主体元素
+          renderLines(_svg); // 绘制线条
+        }
+      };
+      function defineBodyClip(svg){
+        const padding = 5;
+        svg.append('defs').append('clipPath').attr('id', 'body-clip')
+          .append('rect')
+          .attr('x', 0 - padding)
+          .attr('y', 0)
+          .attr('width', _width)
+          .attr('height', _height)
+      }
+
+      function renderAxis(svg){
+        const axes = svg.append('g').attr('class', 'axes');
+        renderXAxis(axes, 'axisLeft');
+        renderYAxis(axes, 'axisBottom');
+      }
+
+      function renderLines(svg){
+        _line = d3.line().curve(d3.curveCardinal).x((d) => _x(d.x)).y(d => _y(d.y));
+        _body.selectAll('path.line').data(_data)
+          .enter().append('path').style('stroke', (d, i) => _colors[i])
+          .attr('class', 'line');
+        _body.selectAll('path.line').data(_data)
+        .transition()
+        .attr('d', d => _line(d));
+      }
+
+      function renderBody(svg){
+
+      }
+
+      function renderDots(svg){
+        _data.forEach((list, i) => {
+          _body.selectAll('circle._' + i).data(list).enter()
+            .append('circle')
+            .attr('class', 'dot _' + i);
+          _body.selectAll('circle._' + i).data(list).style('stroke', (d, i) => _colors[i])
+            .transition()
+            .attr('cx', d => d.x)
+            .attr('cy', d => d.y)
+            .attr('r', 4.5)
+        })
+      }
+      return _chart;
+    }
+
+
+
+
+
+
+    const lineChartDemo = lineChartCreator().x(d3.scaleLinear().domain([0, 10])).y(d3.scaleLinear().domain([0, 10]));
+    data.forEach(eseries => lineChartDemo.push(series));
+    lineChartDemo.render();
+
+    // 后续拓展: 
+    // 面积图: 
+    function renderAreas () {
+      // 面积图绘制
+      // d3.area().x(d => x(d.x)).y0(y(3.5)).y1(d => y(d.y))
+    }
+    // 散点图
+  </script>
+</body>
+</html>
