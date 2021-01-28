@@ -23,10 +23,8 @@
           const { k, x, y } = event.transform;
           // const transformInfo = d3.zoomTransform(event.target); // 事件对象的移动属性;
           // d3.zoomIdentity.translate(x, y).scale(k); // 指定如何移动
-
-          // svg.attr('transform', `translate(${x}, ${y})scale(${k})`);
-          console.log(event.target.translate)
-          console.log(event.target.attr)
+          // d3.select(event.target).attr('transform', `translate(${x}, ${y})scale(${k})`);
+          svg.attr('transform', `translate(${x}, ${y})scale(${k})`);
         }));
       svg.selectAll('circle').data(data).enter().append('circle')
         .attr('r', r)
