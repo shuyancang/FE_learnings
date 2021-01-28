@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>可视化交互-拖拽</title>
+</head>
+<body>
+  <script src="../source/d3.js"></script>
+  <script>
+    const width = 960, height = 500, r = 50;
+    const data = [
+      [width / 2 - r, height / 2 - r],
+      [width / 2 - r, height / 2 + r],
+      [width / 2 + r, height / 2 - r],
+      [width / 2 + r, height / 2 + r],
+    ];
+    const svg = d3.select('body').append('svg')
+      .attr('width', width)
+      .attr('height', height)
+      .append('g');
+    const drag = d3.drag().on('drag', moving);
+    svg.selectAll('circle').data(data).enter().append('circle')
+      .attr('r', r)
+      .attr('transform', d => `translate(${d})`)
+      .call(drag);
+    function moving(event){
+      console.log(event);
+      const { x, y } = event || {};
+      if(inBoundaries(x, y)){
+        d3.select(this).attr('transform', function(d){
+          return `translate(${x},${y})`;
+        });
+      }
+    }
+
+    function inBoundaries(x, y){
+      return (x >= r && x <= width - r) && ( y >= r && y <= height - r);
+    }
+
+  </script>
+</body>
+</html>
