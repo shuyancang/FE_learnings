@@ -1,0 +1,45 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>可视化交互-鼠标点击/移动</title>
+ </head>
+ <body>
+  <script src="../source/d3.js"></script>
+  <script>
+    const r = 400;
+    const svg = d3.select('body').append('svg').attr('width', 1000).attr('height', 800).style('background-color', 'lightblue');
+    const positionLabel = svg.append('text').attr('x', 10).attr('y', 30);
+    svg.on('mousemove', function(event){
+      printPosition(event);
+    });
+    function printPosition(event){
+      const position = d3.pointer(event); // d3.pointer()获取鼠标事件得到对应坐标
+      positionLabel.text(position);
+    }
+    // d3.pointer('click', svg)
+    // console.log(d3.pointer('click', svg));
+    svg.on('click', function(event){
+      for(let i = 1; i < 5; ++i){
+        const position = d3.pointer(event);
+        const circle = svg.append('circle')
+          .attr('cx', position[0])
+          .attr('cy', position[1])
+          .attr('r', 0)
+          .style('stroke-width', 5 / i)
+          .transition()
+          .delay(Math.pow(i, 2.5) * 50)
+          .duration(2000)
+          .ease(d3.easeLinear)
+          .attr('r', r)
+          .style('stroke-opacity', 0)
+          .style('fill', 'transparent')
+          .on('end', function(){
+            d3.select(this).remove();
+          });
+      }
+    })
+  </script>
+ </body>
+ </html>
