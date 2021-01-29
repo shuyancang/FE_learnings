@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>力导向图</title>
+  <style>
+    svg{
+      background-color: lightblue;
+      margin: 20px 0 0 20px;
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <button onclick="changeForce(0)">no force</button>
+    <button onclick="changeForce(-0.5)">mutual repulsion</button>
+    <button onclick="changeForce(-0.05)">mutual attrction</button>
+    <button onclick="changeForce(0.05)">gravity</button>
+    <button onclick="changeForce(0.5)">gravity with repulsion</button>
+  </div>
+  <script src="../source/d3.js"></script>
+  <script>
+    const w = 1280, h = 800;
+    const force = d3.forceSimulation().force('charge', d3.forceManyBody().strength(0));
+    const svg = d3.select('body').append('svg').attr('width', w).attr('height', h);
+
+    force.on('tick', function(){ // 模拟力的每一tick触发;
+      svg.selectAll('circle').attr('cx', d => d.x).attr('cy', d => d.y);
+    });
+    
+    svg.on('mousemove', function(event){
+      const point = d3.pointer(event);
+      const node = { x: point[0], y: point[1] };
+      svg.append('circle').data([node])
+        .attr('class', 'node')
+        .attr('cx', d => d.x)
+        .attr('cy', d => d.y)
+        .attr('r', 1e-6)
+        .transition()
+        .attr('r', 4.5)
+        .transition()
+        .delay(7000)
+        .attr('r', 1e-6)
+        .each() // 这不知道咋写了~each的callback总是引起死循环
+        .remove();
+      force.nodes().push(node);
+      force.restart();
+    });
+  
+    function changeForce(gravity){
+      force.force('charge', d3.forceManyBody().strength(gravity));
+    }
+  </script>
+</body>
+</html>
