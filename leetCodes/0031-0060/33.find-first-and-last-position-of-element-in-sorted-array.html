@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*
+      给定一个按照升序排列的整数数组 nums，和一个目标值 target。找出给定目标值在数组中的开始位置和结束位置。
+      如果数组中不存在目标值 target，返回 [-1, -1]。
+
+      进阶：
+      你可以设计并实现时间复杂度为 O(log n) 的算法解决此问题吗？
+
+      示例 1：输入：nums = [5,7,7,8,8,10], target = 8 输出：[3,4]
+      示例 2：输入：nums = [5,7,7,8,8,10], target = 6 输出：[-1,-1]
+      示例 3：输入：nums = [], target = 0 输出：[-1,-1]
+       
+      提示：
+      0 <= nums.length <= 105
+      -109 <= nums[i] <= 109
+      nums 是一个非递减数组
+      -109 <= target <= 109
+    */
+    var searchRange = function(nums, target) {
+      // 步骤一: nums中找到第一个target索引index, 和匹配到索引以前最接近的left, 和right;
+      // 步骤二: nums[0 -> index]中找到最左边第一个===target的索引startIndex
+      // 步骤三: nums[index + 1 -> nums.length - 1]中找到最后一个===target索引endIndex
+      const len = nums.length;
+      if(len === 0) {
+        return [-1, -1];
+      } else if (len === 1){
+        return nums[0] === target ? [0, 0] : [-1, -1];
+      }
+      let res = findeTargetInNums(nums, target);
+      if(res){
+        let [index, left, right] = res || [];
+        const startIndex = findFirstTarget(nums, target, left, index);
+        const endIndex = findLastTarget(nums, target, index, right);
+        return [startIndex, endIndex];
+      } 
+      return [-1, -1];
+    };
+    function findFirstTarget(nums, target, left, index){ // 从left => index段的第一个target
+      let startIndex = index;
+      while(index >= left){
+        let mid = parseInt((index + left) / 2);
+        if(nums[mid] === target){
+          startIndex = mid;
+          index = mid - 1;
+        } else {
+          left = mid + 1;
+        }
+      }
+      return startIndex;
+    }
+    function findLastTarget(nums, target, index, right){ // 从index => right间的第一个target
+      let endIndex = index;
+      while(index <= right){
+        let mid = parseInt((index + right) / 2);
+        if(nums[mid] === target){
+          endIndex = mid;
+          index = mid + 1;
+        } else {
+          right = mid - 1;
+        }
+      }
+      return endIndex;
+    }
+    function findeTargetInNums(nums, target){
+      const len = nums.length;
+      let left = 0, right = len - 1;
+      while(left <= right){
+        let mid = parseInt((left + right) / 2);
+        if(nums[mid] === target){
+          return [mid, left, right];
+        } else if(nums[mid] > target) {
+          right = mid - 1;
+        } else {
+          left = mid + 1;
+        }
+      }
+      return;
+    }
+
+    // 二分查找优化: 找到第一个与target相等的startIndex; 找到第一个大于target的endIndex,则 [startIndex, endIndex - 1]为所需 
+  </script>
+</body>
+</html>
