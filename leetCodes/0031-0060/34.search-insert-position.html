@@ -18,7 +18,28 @@
     */
 
     var searchInsert = function(nums, target) {
-
+      const len = nums.length;
+      if(len === 0){
+        return 0;
+      } else if (len === 1) {
+        return nums[0] >= target ? 0 : 1;
+      }
+      let left = 0; right = len - 1;
+      while(left < right){
+        let mid = parseInt((left + right) / 2);
+        if(nums[mid] === target) {
+          return mid;
+        }
+        if(nums[mid] > target) {
+          right = mid - 1;
+        } else {
+          left = mid + 1;
+        }
+      }
+      if(target > nums[left]){
+        return left + 1;
+      }
+      return left;
     };
   </script>
 </body>
