@@ -45,8 +45,75 @@
         给定数独永远是 9x9 形式的。
     */
     var isValidSudoku = function(board) {
-
+      const len = board.length;
+      let verticalArr = [];
+      let blockArr = [];
+      for(let h = 0; h < len; h++){
+        let horizArr = board[h];
+        for(let v = 0; v < len; v++){
+          if(verticalArr[v] === undefined){
+            verticalArr[v] = [];
+          }
+          verticalArr[v][h] = horizArr[v];
+          const blockIndex = parseInt(h / 3) * 3 + parseInt(v / 3);
+          if(blockArr[blockIndex] === undefined){
+            blockArr[blockIndex] = [];
+          }
+          blockArr[blockIndex].push(horizArr[v]);
+        }
+      }
+      for(let h = 0; h < len; h++){
+        const eachIsNumSingle = isNumSingle(board[h]) && isNumSingle(verticalArr[h]) && isNumSingle(blockArr[h]);
+        if(!eachIsNumSingle){
+          return false;
+        }
+      }
+      return true;
     };
+    function isNumSingle(arr){ // arr数组各元素是否唯一(除.)
+      const hash = {};
+      for(let i = 0; i < arr.length; i++){
+        if(hash[arr[i]] && arr[i] !== '.'){
+          return false;
+        } else {
+          hash[arr[i]] = true;
+        }
+      }
+      return true;
+    }
+    // leetcode解: 创建3个数组, 各为hash列表[row1Hash, rou2Hash, ...] + [col1Hash, col2Hash, ...] + [block1Hash, block2Hash, ...]; 1次遍历; 填入各对应hash, 有重复即返回false即可;
+
+    var isValidSudoku = function(board){
+      let rowArr = [], colArr = [], blockArr = [];
+      const len = board.length;
+      for(let h = 0; h < len; h++){
+        rowArr.push({});
+        colArr.push({});
+        blockArr.push({});
+      }
+      for(let h = 0; h < len; h++){
+        for(let v = 0; v < len; v++){
+          const val = board[h][v];
+          const blockIndex = parseInt(h / 3) * 3 + parseInt(v / 3);
+          if(val === '.'){ continue; }
+          if(rowArr[h][val] || colArr[v][val] || blockArr[blockIndex][val]){
+            return false;
+          }
+          if(!rowArr[h][val]){
+            rowArr[h][val] = true;
+          }
+          if(!colArr[v][val]){
+            colArr[v][val] = true;
+          }
+          
+          if(!blockArr[blockIndex][val]){
+            blockArr[blockIndex][val] = true;
+          }
+
+        }
+      }
+      return true;
+    }
   </script>
 </body>
 </html>
