@@ -33,6 +33,62 @@
     // 1 <= candidates[i] <= 200
     // candidate 中的每个元素都是独一无二的。
     // 1 <= target <= 500
+    var combinationSum = function(candidates, target) {
+      const len = candidates.length;
+      if(len === 0) {
+        return false;
+      }
+      const fir = candidates[0];
+      if(len === 1){
+        const lim = target / fir;
+        if(lim !== parseInt(lim)){
+          return false;
+        }
+        return [new Array(lim).fill(fir)];
+      }
+      const las = candidates[len - 1];
+      let base = 0;
+      const rest = candidates.slice(0, len - 1);
+      let result = [];
+      while(las * base <= target ){
+        if(target > 0 && las * base === target){
+          result.push(new Array(base).fill(las));
+          break;
+        }
+        const partResult = combinationSum(rest, target - las * base);
+        if(partResult){
+          const baseArr = new Array(base).fill(las);
+          partResult.forEach(e => {
+            result.push([...e, ...baseArr])
+          })
+        }
+        base++;
+      }
+      return result;
+    };
+
+    // 以下为leetcode算法解答: 回溯: 
+    var combinationSum = function(candidates, target) {
+      const ans = [];
+      const dfs = (target, combine, idx) => { // target 目标数, combine 已组合数组, idx 当前数组索引
+        if (idx === candidates.length) {
+          return;
+        }
+        if (target === 0) {
+          ans.push(combine);
+          return;
+        }
+        // 直接跳过
+        dfs(target, combine, idx + 1);
+        // 选择当前数
+        if (target - candidates[idx] >= 0) {
+          dfs(target - candidates[idx], [...combine, candidates[idx]], idx);
+        }
+      }
+
+      dfs(target, [], 0);
+      return ans;
+    };
 
   </script>
 </body>
