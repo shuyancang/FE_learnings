@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+
+
+
+company_id: 1
+
+"authorityMenuLists格式": {
+    "id": "6",
+    "hideMenu": "首页"
+  },
+
+
+    // 给你一个未排序的整数数组 nums ，请你找出其中没有出现的最小的正整数。
+    // 进阶：你可以实现时间复杂度为 O(n) 并且只使用常数级别额外空间的解决方案吗？
+
+    // 示例 1： 输入：nums = [1,2,0] 输出：3
+    // 示例 2： 输入：nums = [3,4,-1,1] 输出：2
+    // 示例 3： 输入：nums = [7,8,9,11,12] 输出：1
+    //  
+    // 提示：
+    // 0 <= nums.length <= 300
+    // -2 ** 31 <= nums[i] <= 2 ** 31 - 1
+
+    // 题解思路1: 排序 => 再循环一次, 完事儿~ O(nlogn)
+    // 题解思路2: 第一次循环去除掉 <= 0的数, 将其余数存入hash: {num:num}且记录最大值; 基于最大值进行第二次循环, 找到第一个无信息的值即可O(n)
+    // 题解思路3: nums数组长度len; 最小正整数必定 <= len + 1;
+    var firstMissingPositive = function(nums) { // 空间复杂度未达要求;
+      const len = nums.length;
+      const max = len + 1;
+      const tmp = new Array(len).fill(0);
+      for(let i = 0; i < len; i++){
+        if(nums[i] < max && nums[i] > 0){
+          tmp[nums[i] - 1] = nums[i];
+        }
+      }
+      console.log(tmp);
+      for(let i = 0; i < len; i++){
+        if(tmp[i] === 0){
+          return i + 1;
+        }
+      }
+      return max;
+    };
+
+    // leet code ： 抽屉原地修改数组, 考虑将数值放到对应的索引上, 对应的将值交换过来, 交换过来的值为了防止漏掉, 对这个值进行继续交换; 最后遍历数组找到缺失值即可
+  var firstMissingPositive = function(nums) {
+    const len = nums.length;
+    for(let i = 0; i < len; i++){
+      const curNum = nums[i];
+      while(curNum !== i + 1 && nums[curNum - 1] !== curNum){ // 当前值需交换, 待交换位数值不等于当前值 => 交换
+        const tmp = nums[curNum - 1];
+        nums[curNum - 1] = curNum;
+        nums[i] = tmp; // 交换完成;
+        if(tmp === i + 1 || tmp <= 0 || tmp >= len){ // 换过来的值符合要求(tmp === i + 1), 或 无效(>0 && <len), 直接跳出;
+          break;
+        }
+        curNum = tmp; // 如果交换过来的值有效但不处于正确的位置, 继续进行交换;
+      }
+    }
+    for(let i = 0; i < len; i++){
+      if(nums[i] !== i + 1){
+        return i + 1;
+      }
+    }
+    return len + 1;
+  };
+
+  </script>
+</body>
+</html>
