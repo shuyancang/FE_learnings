@@ -114,9 +114,7 @@ function defineRefPropWarningGetter(props, displayName) {
  */
 var ReactElement = function(type, key, ref, self, source, owner, props) {
   var element = {
-    // This tag allow us to uniquely identify this as a React Element
-    $$typeof: REACT_ELEMENT_TYPE,
-
+    $$typeof: REACT_ELEMENT_TYPE, // 标识为react-element-type
     // Built-in properties that belong on the element
     type: type,
     key: key,
@@ -172,7 +170,7 @@ var ReactElement = function(type, key, ref, self, source, owner, props) {
  * Create and return a new ReactElement of the given type.
  * See https://reactjs.org/docs/react-api.html#createelement
  */
-export function createElement(type, config, children) {
+export function createElement(type, config, children) { // 生成一个react 元素
   var propName;
 
   // Reserved names are extracted
@@ -366,7 +364,8 @@ export function cloneElement(element, config, children) {
  * @return {boolean} True if `object` is a valid component.
  * @final
  */
-export function isValidElement(object) {
+
+export function isValidElement(object) { // 校核是否有效的react元素
   return (
     typeof object === 'object' &&
     object !== null &&
