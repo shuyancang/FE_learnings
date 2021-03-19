@@ -32,11 +32,11 @@
     // 初步想法: 直接回溯递归求解，然后去重
     // 数组先提前排序, 后进行回溯递归求解, 跳过同样条件;
     // [a, a, a, b, b, c, ...]: 有若干个a + 没有a;
-    var combinationSum2 = function(candidates, target) {
-      const sortedArr = candidates.sort(); // 先从小到大排序
-      const res = calcTool(sortedArr, target)
-      return res;
-    };
+    // var combinationSum2 = function(candidates, target) {
+    //   const sortedArr = candidates.sort(); // 先从小到大排序
+    //   const res = calcTool(sortedArr, target)
+    //   return res;
+    // };
 
     // function calcTool(sortedArr, target){
     //   const res = [];
@@ -60,10 +60,53 @@
     //   return res;
     // }
 
-    function calcTool(sortedArr, target){
+    // function calcTool(sortedArr, target){
+    //   const res = [];
+    //   function calcHelper(list, sum, idx){
+    //     if(sum === target){ // 找到了符合预期的结果
+    //       res.push(...list)
+    //       return true;
+    //     }
+    //     if(sum > target){ // 不符合要求
+    //       return false;
+    //     }
+    //     const curNum = sortedArr[idx];
+    //     list.push(curNum);
+    //     calcHelper(list, sum + curNum, idx+1);
+    //     list.pop();
+    //     while(sortedArr[idx] === sortedArr[idx + 1]){
+    //       idx++;
+    //     }
+    //     calcHelper(list, sum, idx);
+    //   }
+    //   calcHelper([], 0, 0);
+    // }
+
+    const combinationSum2 = (candidates, target) => {
+      candidates.sort((a,b) => a - b ); // 升序排序
       const res = [];
-      // function is
-    }
+
+      const dfs = (start, temp, sum) => { // start是索引 当前选择范围的第一个
+        if (sum >= target) {        // 爆掉了，不用继续选了
+          if (sum == target) {      // 满足条件，加入解集
+            res.push(temp.slice()); // temp是引用，所指向的内存后续还要操作，所以拷贝一份
+          }
+          return;                   // 结束当前递归
+        }
+        for (let i = start; i < candidates.length; i++) {             // 枚举出当前的选择
+          if (i - 1 >= start && candidates[i - 1] == candidates[i]) { // 当前选项和左邻选项一样，跳过
+            continue;
+          }
+          temp.push(candidates[i]);              // 作出选择
+          dfs(i + 1, temp, sum + candidates[i]); // 基于该选择，继续选择，递归
+          temp.pop();               // 上面的递归结束，撤销选择，回到选择前的状态，切入另一分支
+        }
+      };
+
+      dfs(0, [], 0);
+      return res;
+    };
+
 
   </script>
 </body>
