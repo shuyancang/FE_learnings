@@ -1,26 +1,14 @@
-/**
- * Copyright (c) 2014-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
 
-/**
- * ReactElementValidator provides a wrapper around a element factory
- * which validates the props passed to the element. This is intended to be
- * used only in DEV and could be replaced by a static type checker for languages
- * that support it.
- */
 
-import lowPriorityWarning from 'shared/lowPriorityWarning';
-import describeComponentFrame from 'shared/describeComponentFrame';
-import getComponentName from 'shared/getComponentName';
-import checkPropTypes from 'prop-types/checkPropTypes';
-import warning from 'fbjs/lib/warning';
+import lowPriorityWarning from 'shared/lowPriorityWarning'; // 开发环境下的警告输出
+import describeComponentFrame from 'shared/describeComponentFrame'; // 组件所属信息描述
+import getComponentName from 'shared/getComponentName'; // 获取组件名称
+import checkPropTypes from 'prop-types/checkPropTypes'; // 对prop-types属性的检查
+import warning from 'fbjs/lib/warning'; // 警告提示
 
-import ReactCurrentOwner from './ReactCurrentOwner';
-import {isValidElement, createElement, cloneElement} from './ReactElement';
-import ReactDebugCurrentFrame from './ReactDebugCurrentFrame';
+import ReactCurrentOwner from './ReactCurrentOwner'; // 组件所属
+import {isValidElement, createElement, cloneElement} from './ReactElement'; // 引入react元素相关基础生成方法
+import ReactDebugCurrentFrame from './ReactDebugCurrentFrame'; // 当前组件调用栈信息
 
 if (__DEV__) {
   var currentlyValidatingElement = null;
@@ -240,7 +228,7 @@ function validatePropTypes(element) {
  * Given a fragment, validate that it can only be provided with fragment props
  * @param {ReactElement} fragment
  */
-function validateFragmentProps(fragment) {
+function  (fragment) {
   currentlyValidatingElement = fragment;
 
   for (const key of Object.keys(fragment.props)) {

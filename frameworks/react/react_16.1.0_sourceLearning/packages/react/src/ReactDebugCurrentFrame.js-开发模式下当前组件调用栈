@@ -1,16 +1,8 @@
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- * @flow
- */
+
 
 const ReactDebugCurrentFrame = {};
 
-if (__DEV__) {
-  // Component that is being worked on
+if (__DEV__) { // 开发模式下-获取正常调用当前组件的调用栈
   ReactDebugCurrentFrame.getCurrentStack = (null: null | (() => string | null));
 
   ReactDebugCurrentFrame.getStackAddendum = function(): string | null {
