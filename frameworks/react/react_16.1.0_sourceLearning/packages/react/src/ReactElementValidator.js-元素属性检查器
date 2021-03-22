@@ -133,33 +133,25 @@ function validateExplicitKey(element, parentType) { // 元素须有key, 否则wa
   currentlyValidatingElement = null; // 回收
 }
 
-/**
- * Ensure that every element either is passed in a static location, in an
- * array with an explicit keys property defined, or in an object literal
- * with valid key property.
- */
-function validateChildKeys(node, parentType) {
+function validateChildKeys(node, parentType) { // 确保child节点有key属性
   if (typeof node !== 'object') {
     return;
   }
-  if (Array.isArray(node)) {
+  if (Array.isArray(node)) { // 数组 child
     for (var i = 0; i < node.length; i++) {
       var child = node[i];
       if (isValidElement(child)) {
         validateExplicitKey(child, parentType);
       }
     }
-  } else if (isValidElement(node)) {
-    // This element was passed in a valid location.
+  } else if (isValidElement(node)) { // 非数组
     if (node._store) {
       node._store.validated = true;
     }
-  } else if (node) {
+  } else if (node) { // node可迭代
     var iteratorFn =
       (ITERATOR_SYMBOL && node[ITERATOR_SYMBOL]) || node[FAUX_ITERATOR_SYMBOL];
     if (typeof iteratorFn === 'function') {
-      // Entry iterators used to provide implicit keys,
-      // but now we print a separate warning for them later.
       if (iteratorFn !== node.entries) {
         var iterator = iteratorFn.call(node);
         var step;
@@ -173,13 +165,7 @@ function validateChildKeys(node, parentType) {
   }
 }
 
-/**
- * Given an element, validate that its props follow the propTypes definition,
- * provided by the type.
- *
- * @param {ReactElement} element
- */
-function validatePropTypes(element) {
+function validatePropTypes(element) { // 检查元素的prop type是否吻合
   var componentClass = element.type;
   if (typeof componentClass !== 'function') {
     return;
@@ -189,7 +175,7 @@ function validatePropTypes(element) {
 
   if (propTypes) {
     currentlyValidatingElement = element;
-    checkPropTypes(propTypes, element.props, 'prop', name, getStackAddendum);
+    checkPropTypes(propTypes, element.props, 'prop', name, getStackAddendum); // 检测types
     currentlyValidatingElement = null;
   }
   if (typeof componentClass.getDefaultProps === 'function') {
@@ -201,13 +187,8 @@ function validatePropTypes(element) {
   }
 }
 
-/**
- * Given a fragment, validate that it can only be provided with fragment props
- * @param {ReactElement} fragment
- */
-function  (fragment) {
+function validateFragmentProps(fragment) { // 对React Fragment检测props是否吴川
   currentlyValidatingElement = fragment;
-
   for (const key of Object.keys(fragment.props)) {
     if (!VALID_FRAGMENT_PROPS.has(key)) {
       warning(
@@ -232,14 +213,12 @@ function  (fragment) {
   currentlyValidatingElement = null;
 }
 
-export function createElementWithValidation(type, props, children) {
+export function createElementWithValidation(type, props, children) { // 创建通过验证的的react元素
   var validType =
     typeof type === 'string' ||
     typeof type === 'function' ||
     typeof type === 'symbol' ||
     typeof type === 'number';
-  // We warn in this case but don't throw. We expect the element creation to
-  // succeed and there will likely be errors in render.
   if (!validType) {
     var info = '';
     if (
@@ -274,27 +253,19 @@ export function createElementWithValidation(type, props, children) {
 
   var element = createElement.apply(this, arguments);
 
-  // The result can be nullish if a mock or a custom function is used.
-  // TODO: Drop this when these are no longer allowed as the type argument.
   if (element == null) {
     return element;
   }
-
-  // Skip key warning if the type isn't valid since our key validation logic
-  // doesn't expect a non-string/function type and can throw confusing errors.
-  // We don't want exception behavior to differ between dev and prod.
-  // (Rendering will throw with a helpful message and as soon as the type is
-  // fixed, the key warnings will appear.)
-  if (validType) {
+  if (validType) { // 检测children
     for (var i = 2; i < arguments.length; i++) {
       validateChildKeys(arguments[i], type);
     }
   }
 
   if (typeof type === 'symbol' && type === REACT_FRAGMENT_TYPE) {
-    validateFragmentProps(element);
+    validateFragmentProps(element); // 检测fragment props
   } else {
-    validatePropTypes(element);
+    validatePropTypes(element); // 检测proptypes
   }
 
   return element;
