@@ -271,9 +271,8 @@ export function createElementWithValidation(type, props, children) { // 创建�
   return element;
 }
 
-export function createFactoryWithValidation(type) {
+export function createFactoryWithValidation(type) { // 指定type的工厂检测
   var validatedFactory = createElementWithValidation.bind(null, type);
-  // Legacy hook TODO: Warn if this is accessed
   validatedFactory.type = type;
 
   if (__DEV__) {
@@ -296,11 +295,11 @@ export function createFactoryWithValidation(type) {
   return validatedFactory;
 }
 
-export function cloneElementWithValidation(element, props, children) {
+export function cloneElementWithValidation(element, props, children) { // 克隆元素时检测;
   var newElement = cloneElement.apply(this, arguments);
-  for (var i = 2; i < arguments.length; i++) {
+  for (var i = 2; i < arguments.length; i++) { // children检测
     validateChildKeys(arguments[i], newElement.type);
   }
-  validatePropTypes(newElement);
+  validatePropTypes(newElement); // 检测新元素
   return newElement;
 }
