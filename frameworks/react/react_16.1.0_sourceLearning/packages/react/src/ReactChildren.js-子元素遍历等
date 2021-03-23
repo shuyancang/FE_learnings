@@ -1,11 +1,6 @@
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
 
-import emptyFunction from 'fbjs/lib/emptyFunction';
+
+import emptyFunction from 'fbjs/lib/emptyFunction'; // 不同类型的空函数~
 import invariant from 'fbjs/lib/invariant';
 import warning from 'fbjs/lib/warning';
 
@@ -14,8 +9,7 @@ import ReactDebugCurrentFrame from './ReactDebugCurrentFrame';
 
 var ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
 var FAUX_ITERATOR_SYMBOL = '@@iterator'; // Before Symbol spec.
-// The Symbol used to tag the ReactElement type. If there is no native Symbol
-// nor polyfill, then a plain number is used for performance.
+
 var REACT_ELEMENT_TYPE =
   (typeof Symbol === 'function' && Symbol.for && Symbol.for('react.element')) ||
   0xeac7;
@@ -25,13 +19,7 @@ const REACT_PORTAL_TYPE =
 var SEPARATOR = '.';
 var SUBSEPARATOR = ':';
 
-/**
- * Escape and wrap key so it is safe to use as a reactid
- *
- * @param {string} key to be escaped.
- * @return {string} the escaped key.
- */
-function escape(key) {
+function escape(key) { // key字符串替换 => 确保私有
   var escapeRegex = /[=:]/g;
   var escaperLookup = {
     '=': '=0',
@@ -44,11 +32,6 @@ function escape(key) {
   return '$' + escapedString;
 }
 
-/**
- * TODO: Test that a single child and an array with one item have the same key
- * pattern.
- */
-
 var didWarnAboutMaps = false;
 
 var userProvidedKeyEscapeRegex = /\/+/g;
@@ -58,13 +41,13 @@ function escapeUserProvidedKey(text) {
 
 var POOL_SIZE = 10;
 var traverseContextPool = [];
-function getPooledTraverseContext(
+function getPooledTraverseContext( // 获取context池 => 栈
   mapResult,
   keyPrefix,
   mapFunction,
   mapContext,
 ) {
-  if (traverseContextPool.length) {
+  if (traverseContextPool.length) { // 栈顶设置属性 弹出返回
     var traverseContext = traverseContextPool.pop();
     traverseContext.result = mapResult;
     traverseContext.keyPrefix = keyPrefix;
@@ -72,7 +55,7 @@ function getPooledTraverseContext(
     traverseContext.context = mapContext;
     traverseContext.count = 0;
     return traverseContext;
-  } else {
+  } else { // 空栈, 返回设置属性值的对象
     return {
       result: mapResult,
       keyPrefix: keyPrefix,
@@ -83,7 +66,7 @@ function getPooledTraverseContext(
   }
 }
 
-function releaseTraverseContext(traverseContext) {
+function releaseTraverseContext(traverseContext) { // 栈内推一个空context对象
   traverseContext.result = null;
   traverseContext.keyPrefix = null;
   traverseContext.func = null;
@@ -94,41 +77,29 @@ function releaseTraverseContext(traverseContext) {
   }
 }
 
-/**
- * @param {?*} children Children tree container.
- * @param {!string} nameSoFar Name of the key path so far.
- * @param {!function} callback Callback to invoke with each child found.
- * @param {?*} traverseContext Used to pass information throughout the traversal
- * process.
- * @return {!number} The number of children in this subtree.
- */
-function traverseAllChildrenImpl(
+function traverseAllChildrenImpl( // 对children的遍历 => 递归遍历 + 摊平树形children
   children,
   nameSoFar,
   callback,
   traverseContext,
 ) {
+  // key会一层层传递且用;
   var type = typeof children;
 
   if (type === 'undefined' || type === 'boolean') {
-    // All of the above are perceived as null.
     children = null;
   }
 
-  if (
+  if ( // 单children
     children === null ||
     type === 'string' ||
     type === 'number' ||
-    // The following is inlined from ReactElement. This means we can optimize
-    // some checks. React Fiber also inlines this logic for similar purposes.
     (type === 'object' && children.$$typeof === REACT_ELEMENT_TYPE) ||
     (type === 'object' && children.$$typeof === REACT_PORTAL_TYPE)
   ) {
     callback(
       traverseContext,
       children,
-      // If it's the only child, treat the name as if it was wrapped in an array
-      // so that it's consistent if the number of children grows.
       nameSoFar === '' ? SEPARATOR + getComponentKey(children, 0) : nameSoFar,
     );
     return 1;
@@ -136,27 +107,26 @@ function traverseAllChildrenImpl(
 
   var child;
   var nextName;
-  var subtreeCount = 0; // Count of children found in the current subtree.
+  var subtreeCount = 0; // 子计数
   var nextNamePrefix = nameSoFar === '' ? SEPARATOR : nameSoFar + SUBSEPARATOR;
 
-  if (Array.isArray(children)) {
+  if (Array.isArray(children)) { // 多个子;
     for (var i = 0; i < children.length; i++) {
       child = children[i];
       nextName = nextNamePrefix + getComponentKey(child, i);
-      subtreeCount += traverseAllChildrenImpl(
+      subtreeCount += traverseAllChildrenImpl( // 递归 获取子 数量
         child,
         nextName,
         callback,
         traverseContext,
       );
     }
-  } else {
+  } else { // 可遍历的子对象;
     var iteratorFn =
       (ITERATOR_SYMBOL && children[ITERATOR_SYMBOL]) ||
       children[FAUX_ITERATOR_SYMBOL];
     if (typeof iteratorFn === 'function') {
       if (__DEV__) {
-        // Warn about using Maps as children
         if (iteratorFn === children.entries) {
           warning(
             didWarnAboutMaps,
@@ -172,7 +142,7 @@ function traverseAllChildrenImpl(
       var iterator = iteratorFn.call(children);
       var step;
       var ii = 0;
-      while (!(step = iterator.next()).done) {
+      while (!(step = iterator.next()).done) { // 利用生成器进行迭代, 进行遍历 递归操作
         child = step.value;
         nextName = nextNamePrefix + getComponentKey(child, ii++);
         subtreeCount += traverseAllChildrenImpl(
@@ -182,7 +152,7 @@ function traverseAllChildrenImpl(
           traverseContext,
         );
       }
-    } else if (type === 'object') {
+    } else if (type === 'object') { // 子为对象
       var addendum = '';
       if (__DEV__) {
         addendum =
@@ -205,49 +175,21 @@ function traverseAllChildrenImpl(
   return subtreeCount;
 }
 
-/**
- * Traverses children that are typically specified as `props.children`, but
- * might also be specified through attributes:
- *
- * - `traverseAllChildren(this.props.children, ...)`
- * - `traverseAllChildren(this.props.leftPanelChildren, ...)`
- *
- * The `traverseContext` is an optional argument that is passed through the
- * entire traversal. It can be used to store accumulations or anything else that
- * the callback might find relevant.
- *
- * @param {?*} children Children tree object.
- * @param {!function} callback To invoke upon traversing each child.
- * @param {?*} traverseContext Context for traversal.
- * @return {!number} The number of children in this subtree.
- */
-function traverseAllChildren(children, callback, traverseContext) {
+function traverseAllChildren(children, callback, traverseContext) { // 通常用于props.children
   if (children == null) {
     return 0;
   }
-
   return traverseAllChildrenImpl(children, '', callback, traverseContext);
 }
 
-/**
- * Generate a key string that identifies a component within a set.
- *
- * @param {*} component A component that could contain a manual key.
- * @param {number} index Index that is used if a manual key is not provided.
- * @return {string}
- */
-function getComponentKey(component, index) {
-  // Do some typechecking here since we call this blindly. We want to ensure
-  // that we don't block potential future ES APIs.
+function getComponentKey(component, index) { // 获取元素key, 否则使用index
   if (
     typeof component === 'object' &&
     component !== null &&
     component.key != null
   ) {
-    // Explicit key
     return escape(component.key);
   }
-  // Implicit key determined by the index in the set
   return index.toString(36);
 }
 
@@ -256,33 +198,21 @@ function forEachSingleChild(bookKeeping, child, name) {
   func.call(context, child, bookKeeping.count++);
 }
 
-/**
- * Iterates through children that are typically specified as `props.children`.
- *
- * See https://reactjs.org/docs/react-api.html#react.children.foreach
- *
- * The provided forEachFunc(child, index) will be called for each
- * leaf child.
- *
- * @param {?*} children Children tree container.
- * @param {function(*, int)} forEachFunc
- * @param {*} forEachContext Context for forEachContext.
- */
-function forEachChildren(children, forEachFunc, forEachContext) {
+function forEachChildren(children, forEachFunc, forEachContext) { // children的遍历:https://reactjs.org/docs/react-api.html#react.children.foreach
   if (children == null) {
     return children;
   }
-  var traverseContext = getPooledTraverseContext(
+  var traverseContext = getPooledTraverseContext( // 取出
     null,
     null,
     forEachFunc,
     forEachContext,
   );
-  traverseAllChildren(children, forEachSingleChild, traverseContext);
-  releaseTraverseContext(traverseContext);
+  traverseAllChildren(children, forEachSingleChild, traverseContext); // 执行
+  releaseTraverseContext(traverseContext); // 释放
 }
 
-function mapSingleChildIntoContext(bookKeeping, child, childKey) {
+function mapSingleChildIntoContext(bookKeeping, child, childKey) { // 对某个子元素执行的func
   var {result, keyPrefix, func, context} = bookKeeping;
 
   var mappedChild = func.call(context, child, bookKeeping.count++);
@@ -297,8 +227,6 @@ function mapSingleChildIntoContext(bookKeeping, child, childKey) {
     if (isValidElement(mappedChild)) {
       mappedChild = cloneAndReplaceKey(
         mappedChild,
-        // Keep both the (mapped) and old keys if they differ, just as
-        // traverseAllChildren used to do for objects as children
         keyPrefix +
           (mappedChild.key && (!child || child.key !== mappedChild.key)
             ? escapeUserProvidedKey(mappedChild.key) + '/'
@@ -311,6 +239,7 @@ function mapSingleChildIntoContext(bookKeeping, child, childKey) {
 }
 
 function mapIntoWithKeyPrefixInternal(children, array, prefix, func, context) {
+  // 将children完全遍历, 节点全部存入array中, 是react节点会更改key后再放到array
   var escapedPrefix = '';
   if (prefix != null) {
     escapedPrefix = escapeUserProvidedKey(prefix) + '/';
@@ -325,20 +254,7 @@ function mapIntoWithKeyPrefixInternal(children, array, prefix, func, context) {
   releaseTraverseContext(traverseContext);
 }
 
-/**
- * Maps children that are typically specified as `props.children`.
- *
- * See https://reactjs.org/docs/react-api.html#react.children.map
- *
- * The provided mapFunction(child, key, index) will be called for each
- * leaf child.
- *
- * @param {?*} children Children tree container.
- * @param {function(*, int)} func The map function.
- * @param {*} context Context for mapFunction.
- * @return {object} Object containing the ordered map of results.
- */
-function mapChildren(children, func, context) {
+function mapChildren(children, func, context) { // props.children的maphttps://reactjs.org/docs/react-api.html#react.children.map => React.Children.map(children, func, context)
   if (children == null) {
     return children;
   }
@@ -347,26 +263,11 @@ function mapChildren(children, func, context) {
   return result;
 }
 
-/**
- * Count the number of children that are typically specified as
- * `props.children`.
- *
- * See https://reactjs.org/docs/react-api.html#react.children.count
- *
- * @param {?*} children Children tree container.
- * @return {number} The number of children.
- */
-function countChildren(children, context) {
+function countChildren(children, context) { // count计数https://reactjs.org/docs/react-api.html#react.children.count
   return traverseAllChildren(children, emptyFunction.thatReturnsNull, null);
 }
 
-/**
- * Flatten a children object (typically specified as `props.children`) and
- * return an array with appropriately re-keyed children.
- *
- * See https://reactjs.org/docs/react-api.html#react.children.toarray
- */
-function toArray(children) {
+function toArray(children) { // obj-child变数组 https://reactjs.org/docs/react-api.html#react.children.toarray
   var result = [];
   mapIntoWithKeyPrefixInternal(
     children,
@@ -377,21 +278,7 @@ function toArray(children) {
   return result;
 }
 
-/**
- * Returns the first child in a collection of children and verifies that there
- * is only one child in the collection.
- *
- * See https://reactjs.org/docs/react-api.html#react.children.only
- *
- * The current implementation of this function assumes that a single child gets
- * passed without a wrapper, but the purpose of this helper function is to
- * abstract away the particular structure of children.
- *
- * @param {?object} children Child collection structure.
- * @return {ReactElement} The first and only `ReactElement` contained in the
- * structure.
- */
-function onlyChild(children) {
+function onlyChild(children) { // 单个children https://reactjs.org/docs/react-api.html#react.children.only
   invariant(
     isValidElement(children),
     'React.Children.only expected to receive a single React element child.',

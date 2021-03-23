@@ -1,15 +1,8 @@
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- * @flow
- */
+
 
 export type TypeOfWork = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
-export const IndeterminateComponent = 0; // Before we know whether it is functional or class
+export const IndeterminateComponent = 0; // 不明确的组件
 export const FunctionalComponent = 1;
 export const ClassComponent = 2;
 export const HostRoot = 3; // Root of a host tree. Could be nested inside another node.
