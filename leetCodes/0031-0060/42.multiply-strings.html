@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> 字符串相乘</title>
+</head>
+<body>
+  <script>
+    // 给定两个以字符串形式表示的非负整数 num1 和 num2，返回 num1 和 num2 的乘积，它们的乘积也表示为字符串形式。
+
+    // 示例 1: 输入: num1 = "2", num2 = "3"  输出: "6"
+    // 示例 2: 输入: num1 = "123", num2 = "456"  输出: "56088"
+    // 说明：
+    // num1 和 num2 的长度小于110。
+    // num1 和 num2 只包含数字 0-9。
+    // num1 和 num2 均不以零开头，除非是数字 0 本身。
+    // 不能使用任何标准库的大数类型（比如 BigInteger）或直接将输入转换为整数来处理。
+    var multiply = function(num1, num2) {
+      let res = '0';
+      if(num1 === '0' || num2 === '0') {
+        return '0'
+      }
+      for(let i = 0; i < num2.length; i++){
+        const ele = num2[num2.length - 1 - i];
+        let base = '';
+        if(ele === '0'){
+          continue
+        }
+        for(let k = 0; k < i; k++){
+          base += '0';
+        }
+        const eachSum = singleSum(num1, ele) + base;
+        res = strSum(res, eachSum);
+      }
+      return res;
+    };
+
+    var singleSum = function(num1, times){ // leetcode中对单数乘法，利用竖式乘法进行计算, 从末尾开始乘，计算进位 
+      let res = num1;
+      for(let i = 1; i < times; i++){
+        res = strSum(res, num1);
+      }
+      return res;
+    }
+
+    var strSum = function(num1, num2){ // 两个字符串相加
+      let index = 0;
+      let config = 0;
+      let res = '';
+      while(num1[num1.length - 1 - index] || num2[num2.length - 1 - index]){
+        let baseA = num1[num1.length - 1 - index] || '0';
+        let baseB = num2[num2.length - 1 - index] || '0';
+        let sum = config + parseInt(baseA) + parseInt(baseB);
+        if (sum >= 10) {
+          config = 1;
+          sum = sum - 10;
+        } else {
+          config = 0;
+        }
+        res = sum + res;
+        index++;
+      }
+      if(config === 1){
+        res = '1' + res;
+      }
+      return res;
+    }
+
+    // leetcode 最简写法
+    var multiply = function(num1, num2) {
+        if (num1 === '0' || num2 === '0') {
+            return '0'
+        }
+        var l1 = num1.length, l2 = num2.length, p = new Array(l1 + l2).fill(0)
+        for (var i = l1; i--;) { // i--为条件时, 返回值为0后停止
+            for (var j = l2; j--;) {
+                var tmp = num1[i] * num2[j] + p[i + j + 1]
+                p[i + j + 1] = tmp % 10
+                p[i + j] += 0 | tmp / 10
+            } 
+        }
+        while(p[0] === 0) {
+            p.shift()
+        }
+        return p.join('')
+    };
+  </script>
+</body>
+</html>

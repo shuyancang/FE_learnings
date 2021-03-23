@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>接雨水</title>
+</head>
+<body>
+  <script>
+    // 给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
+    // 示例 1： 输入：height = [0,1,0,2,1,0,1,3,2,1,2,1]  输出：6
+    // 示例 2： 输入：height = [4,2,0,3,2,5] 输出：9
+
+    // 提示：n == height.length
+    // 0 <= n <= 3 * 104
+    // 0 <= height[i] <= 105
+
+    // 思路 实际上是把height中某个数值进行增加, 最终形成一个升序 || 降序 || 先升后降数组;
+    var trap = function(height) {
+      const len = height.length;
+      if(len <= 2) {
+        return 0;
+      }
+      const res = [...height];
+      let left = 0, right = len - 1;
+      let l = height[left], r = height[right];
+      while(left < right - 1){
+        if(l <= r){ // 左柱 < 右柱 => 看左柱子下一位
+          const next = height[left + 1];
+          if(next <= l){
+            res[left + 1] = l;
+          // } else if (next > l && next <= r) {
+          //   res[left + 1] = next;
+          //   l = next;
+          } else { // next > r
+            res[left + 1] = next;
+            l = next;
+          }
+          left++;
+        } else { // 左柱数值 > 右柱 => 右柱下一位
+          const next = height[right - 1];
+          if(next <= r){
+            res[right - 1] = r;
+          // } else if (next > r && next <= l) {
+          //   res[right - 1] = next;
+          //   r = next;
+          } else {
+            res[right - 1] = next;
+            r = next
+          }
+          right--;
+        }
+      }
+      let sum = 0;
+      for(let i = 0; i < len; i++){
+        sum += (res[i] - height[i])
+      }
+      return sum;
+    };
+    
+    // leetcode解法: 动态编程: 对于任意i索引的元素, 都有一个往左的最大值和往右的最大值, 两次扫描后分别缓存入两个数组, 再对于任意i都有结果求和即可
+
+    // leetcode解法-栈: 对js而言，性能更差诶~记录当前一个临时储存值, 循环中, 下一个值不大于栈末值, 入栈- 大于末值小于临时值则前面出栈, 大于临时值则所有出栈; => 直到最后 (和双指针挺像昂·边界条件要根据栈是否空来恒定)
+  </script>
+</body>
+</html>
