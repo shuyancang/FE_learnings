@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>通配符匹配</title>
+</head>
+<body>
+  <script>
+    // 给定一个字符串 (s) 和一个字符模式 (p) ，实现一个支持 '?' 和 '*' 的通配符匹配。
+    // '?' 可以匹配任何单个字符。'*' 可以匹配任意字符串（包括空字符串）。两个字符串完全匹配才算匹配成功。
+    // 说明:
+    // s 可能为空，且只包含从 a-z 的小写字母。
+    // p 可能为空，且只包含从 a-z 的小写字母，以及字符 ? 和 *
+
+    // 示例 1: 输入: s = "aa" p = "a" 输出: false
+    // 解释: "a" 无法匹配 "aa" 整个字符串。
+
+    // 示例 2: 输入: s = "aa" p = "*" 输出: true
+    // 解释: '*' 可以匹配任意字符串。
+
+    // 示例 3: 输入: s = "cb" p = "?a" 输出: false
+    // 解释: '?' 可以匹配 'c', 但第二个 'a' 无法匹配 'b'。
+    
+    // 示例 4: 输入: s = "adceb" p = "*a*b" 输出: true
+    // 解释: 第一个 '*' 可以匹配空字符串, 第二个 '*' 可以匹配字符串 "dce".
+    
+    // 示例 5: 输入: s = "acdcb" p = "a*c?b" 输出: false
+
+    // 思路: 去掉*, 都好办. => p分为有*, 无*;
+    // 先将p内的*去掉并记录*的位置, 验证p是否s的顺序子集, 然后基于匹配的位置, 还原*
+    // var isMatch = function(s, p) {
+    //   let partLetters = [];
+    //   for(let i = 0; i < p.length; i++){
+    //     if(p[i] === '*'){
+    //       partLetters.push('*');
+    //     } else {
+    //       partLetters[partLetters.length - 1] = (partLetters[partLetters.length - 1] + p[i]);
+    //     }
+    //   }
+    // };
+
+    // var matchWithoutQ = function(s, p){ // 没有'*' 的字符串匹配;
+    //   if(s.length !== p.length){
+    //     return false;
+    //   }
+    //   if(s === p){
+    //     return true;
+    //   }
+    //   let i = 0;
+    //   while(s[i]){
+    //     if(s[i] !== p[i] && p[i] !== '?') {
+    //       return false;
+    //     }
+    //     i++;
+    //   }
+    //   return true;
+    // }
+
+    // leetcode 动态规划: f(m, n): p模板从0到m位置, 能否与s从0到n位置匹配(1/0)
+    var isMatch = function(s, p){
+      const sLen = s.length; pLen = p.length;
+      if(sLen === 0 && pLen === 0){
+        return true;
+      }
+      const n = sLen + 1, m = pLen + 1;
+      const f = [];
+      for(let i = 0; i < m; i++){
+        f.push([]);
+        for(let j = 0; j < n; j++){
+          if(i === 0 && j === 0) {
+            f[i][j] = true
+          } else if (j === 0) {
+            f[i][j] = f[i - 1][j] && p[i - 1] === '*'
+          } else {
+            f[i][j] = false;
+          }
+        }
+      }
+      console.log(f);
+      for(let i = 1; i < m; i++){
+        for(let j = 1; j < n; j++){
+          const curPattern = p[i - 1];
+          const curLetter = s[j - 1];
+          if(curPattern === '?'){
+            f[i][j] = f[i - 1][j - 1]
+          } else if (curPattern === '*') {
+            f[i][j] = f[i][j - 1] || f[i - 1][j]
+          } else {
+            f[i][j] = f[i - 1][j - 1] && curPattern === curLetter
+          }
+        }
+      }
+      console.log(f);
+      return f[m - 1][n - 1];
+    }
+
+  </script>
+</body>
+</html>
