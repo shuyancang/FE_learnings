@@ -14,6 +14,52 @@
 
     // 示例: 输入: [2,3,1,1,4] 输出: 2
     // 解释: 跳到最后一个位置的最小跳跃数是 2。 从下标为 0 跳到下标为 1 的位置，跳 1 步，然后跳 3 步到达数组的最后一个位置。
+
+    // 贪心: 找到当前步数内可拓展最大步数; 往后扫描
+    var jump = function(nums) {
+      const len = nums.length;
+      if(len === 0){
+        return 0;
+      }
+      if(len === 1 || len === 2){
+        return 1;
+      }
+      let count = 0;
+      const getMaxStep = function(index){ // index位置 对应此后nums[index]后面位置内,最大的步数 
+        const curRadius = nums[index];
+        if(index + curRadius >= len - 1){
+          count++;
+          return true;
+        }
+        let maxIndex = index + 1; let maxSum = maxIndex + nums[maxIndex];
+        for(let i = 1; i <= curRadius; i++){
+          if(maxSum < nums[index + i] + index + i){
+            maxSum = nums[index + i] + index + i;
+            maxIndex = index + i
+          }
+        }
+        count++;
+        getMaxStep(maxIndex); 
+      }
+      getMaxStep(0);
+      return count;
+    };
+    
+    // leetcode贪心更加简洁
+    var jump = function(nums){
+      const len = nums.length;
+      let end = 0;
+      let maxPos = 0;
+      let steps = 0;
+      for(let i = 0; i < len - 1; i++){
+        maxPos = Math.max(maxPos, i + nums[i]);
+        if(i === end){
+          end = maxPos;
+          steps++;
+        }
+      }
+      return step;
+    }
   </script>
 </body>
 </html>
