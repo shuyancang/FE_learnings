@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 给定一个可包含重复数字的序列 nums ，按任意顺序 返回所有不重复的全排列。
+
+    // 示例 1：输入：nums = [1,1,2] 输出： [[1,1,2], [1,2,1], [2,1,1]]
+    // 示例 2：输入：nums = [1,2,3] 输出：[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+
+    // 思路: 回溯哈
+    var permuteUnique = function(nums) {
+      nums.sort();
+      let result = [];
+      const dfs = function(used, rest){
+        if(rest.length === 0){
+          result.push([...used]);
+          return true;
+        }
+        for(let i = 0; i < rest.length; i++){
+          const cur = rest[i]
+          if(cur === rest[i - 1]){
+            continue;
+          }
+          used.push(cur);
+          rest.splice(i, 1);
+          dfs(used, rest);
+          used.pop();
+          rest.splice(i, 0, cur);
+        }
+      }
+      dfs([], nums);
+      return result;
+    };
+
+    // leetcode解法
+    var permuteUnique = function(nums) {
+
+    };
+  </script>
+</body>
+</html>
