@@ -19,7 +19,22 @@
     //     [3,2,1]
     //   ]
       var permute = function(nums) {
-
+        if(nums.length === 0){
+          return [];
+        } else if (nums.length === 1){
+          return [[nums[0]]];
+        }
+        let res = [];
+        for(let i = 0; i < nums.length; i++){
+          const rest = [...nums]; // 实质上是一种回溯: 每次循环代表当前数组结果中的可能的最后一个数值, 每一次循环重新获取另一种可能的最后值;
+          rest.splice(i, 1);
+          const resPermute = permute(rest);
+          for(let j = 0; j < resPermute.length; j++){
+            resPermute[j].push(nums[i]);
+            res.push(resPermute[j]);
+          }
+        }
+        return res;
       };
   </script>
 </body>
