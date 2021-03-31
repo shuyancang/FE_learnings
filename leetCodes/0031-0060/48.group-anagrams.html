@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>字母异位词分组</title>
+</head>
+<body>
+  <script>
+    // 给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+    // 示例: 输入: ["eat", "tea", "tan", "ate", "nat", "bat"]
+    // 输出:
+    // [
+    //   ["ate","eat","tea"],
+    //   ["nat","tan"],
+    //   ["bat"]
+    // ]
+    // 说明： 所有输入均为小写字母。 不考虑答案输出的顺序。
+
+
+    // 1. 思路一: 对字符串数组中的字符串进行排序(nlogn) * m, 排序后的字符串 === 比较, 创建hash记录即可;
+    // 2. 思路二: 能否考虑将数组中的每个字符串生成一个独特的描述字符串(n * m), 再进行比较;
+    var groupAnagrams = function(strs) {
+      const enumArr = 'abcdefghijklmnopqrstuvwxyz';
+      const len = strs.length;
+      const transList = [];
+      for(let i = 0; i < len; i++){
+        transList.push(strHelper(enumArr, strs[i]));
+      }
+      const hash = {}
+      for(let i = 0; i < len; i++){
+        if(hash[transList[i]]){
+          hash[transList[i]].push(strs[i]);
+        } else {
+          hash[transList[i]] = [strs[i]];
+        }
+      }
+      return Object.values(hash);
+    };
+    
+    const strHelper = function (template, str) { // o(n) => 将字符串变为a2b1c1这种排序好且独特的字符串, 再进行字符串比较;
+      let res = '';
+      if(!str){
+        return res;
+      }
+      const strHash = {};
+      for(let i = 0; i < str.length; i++){
+        if(strHash[str[i]]){
+          strHash[str[i]] = strHash[str[i]] + 1;
+        } else {
+          strHash[str[i]] = 1;
+        }
+      }
+      for(let i = 0; i < template.length; i++){
+        if(strHash[template[i]]){
+          res += `${template[i]}${strHash[template[i]]}`;
+        }
+      }
+      return res;
+    }
+
+    // 思路一: 解法 
+    var groupAnagrams = function(strs){
+      const transList = [];
+      for(let i = 0; i < len; i++){
+        transList.push(strSorter(strs[i]));
+      }
+      const hash = {}
+      for(let i = 0; i < len; i++){
+        if(hash[transList[i]]){
+          hash[transList[i]].push(strs[i]);
+        } else {
+          hash[transList[i]] = [strs[i]];
+        }
+      }
+      return Object.values(hash);
+    }
+
+    const strSorter = (str) => str.split('').sort().join('');
+  </script>
+</body>
+</html>
