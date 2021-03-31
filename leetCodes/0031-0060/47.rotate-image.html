@@ -26,46 +26,40 @@
     //   -1000 <= matrix[i][j] <= 1000
     
     // 思路如果不考虑直接修改, 创建新矩阵, 记录对i, j 和matrix.length的映射关系是个非常简单的实现方式(计算元素处于第几圈, 然后两个对原矩阵的for循环, 然后索引计算填入即可);
+    // matrix第i行j列的数值 移动到 第j行倒数第i列 即 matrix[j][n - 1 - i] = matrix[i][j];
+    // 或某个matrix[i][j]的目标值, 是由原来matrix[n - 1 - j][i]
     
-    // 如果考虑直接修改: 假设 matrix.length = n;
-    // 1: n = 2m， 则n² = 4m² 能被4整除; 
-    // 2. n = 2m + 1则 n2 = 4m2 + 4m + 1 = 4（m² + m）+ 1；即实际上任意一个矩阵, 可由四个部分围绕某个中心旋转90实现;
-
-    // 围绕部分为倒梯形: 顶宽n - 1, 梯形高 (n - 1) / 2 向上取整;
-    // var rotate = function(matrix) {
-    //   const len = matrix.length;
-    //   if(len === 0 || len === 1){ // 0或1不必旋转;
-    //     return matrix;
-    //   }
-    //   const topNum = len - 1; // 倒梯形的顶边宽
-    //   const depNum = Math.ceil(i / 2); // 倒梯形的深度
-    //   for(let d = 1; d <= depNum; d++){
-    //     for(let t = d; t <= topNum - d; t++){
-    //       const cur = 
-    //     }
-    //   }
-    //   // for(let i = 0; i < len; i++){
-    //   //   for(let j = 0; j < len; j++){
-    //   //     // const cur = matrix[i][j];
-    //   //     // matrix[i][j] = '';
-    //   //   }
-    //   // }
-    // };
-    // 利用一个辅助函数tool(i, j, matrix): 将位于矩阵(i, j)位置的数据, 90°旋转后的目标位置, 并进行4次数值缓存和替换;
-    function tool(i, j, matrix){
-      const tmp = matrix[i][j];
+    var rotate = function(matrix) {
       const len = matrix.length;
-      for(let k = 0; k < 4; k++){
-        // 左转上, 上转右, 右转下, 下转左;
-        // targetI = ;
-        // targetJ = ;
-        if(i <= j) {
-
-        } else {
-
+      if(len === 0 || len === 1){ // 0或1不必旋转;
+        return matrix;
+      }
+      let width, height;
+      if(len % 2 === 0){ // 偶数行列矩阵: n = 2m =>则旋转1/4, w = h = n/2 
+        height = width = len / 2;
+      } else { // 奇数行列矩阵n = 2m + 1 => 旋转 n² = 4m² + 4m + 1 = 4(m² + m) + 1;
+        // (n + 1) / 2 * (n - 1) / 2 * 4 + 1 = n²
+        width = (len + 1) / 2;
+        height = width - 1;
+      }
+      // 若n为奇数(2m + 1):  n² = (n + 1) * (n - 1) + 1 = 4m(m + 1) + 1，n² - 1能被4整除;
+      // 若n为偶数:(2m)  n² = 4m²能被4整除
+      // 所以，任意平方矩阵，必存在一个奇点，可以使得矩阵平均分布在四个象限中;
+      for(let i = 0; i < width; i++){
+        for(let j = 0; j < height; j++){
+          const tmp = matrix[i][j]; // 缓存该位置数值
+          matrix[i][j] = matrix[len - 1 - j][i];
+          matrix[len - 1 - j][i] = matrix[len - 1 - i][len - 1 - j];
+          matrix[len - 1 - i][len - 1 - j] = matrix[j][len - 1 - i];
+          matrix[j][len - 1 - i] = tmp;
         }
       }
-    }
+      return matrix;
+    };
+    // leetcode方案: 
+    // 翻转法: 旋转90实质上是进行一次水平方向翻转(i = n - 1 - i), 再进行一次对角线翻转(i = j)
+    // 1. 遍历一半的元素, 水平交换
+    // 2. 再遍历一半的元素, 对角线互换;
   </script>
 
 </body>
