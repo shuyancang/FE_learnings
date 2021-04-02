@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>最大子序和</title>
+</head>
+<body>
+  <script>
+    // 给定一个整数数组 nums ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+    // 示例 1： 输入：nums = [-2,1,-3,4,-1,2,1,-5,4] 输出：6
+    //   解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
+    // 示例 2： 输入：nums = [1] 输出：1
+    // 示例 3： 输入：nums = [0] 输出：0
+    // 示例 4： 输入：nums = [-1] 输出：-1
+    // 示例 5： 输入：nums = [-100000] 输出：-100000
+
+    // 提示： 1 <= nums.length <= 3 * 104 -105 <= nums[i] <= 105
+    // 进阶：如果你已经实现复杂度为 O(n) 的解法，尝试使用更为精妙的 分治法 求解。
+
+    // 思路一: 先将nums转为正-负-正-负...数组; => 贪心算法计算和的几个极值(如果数组全为负=> 一次遍历最大值即可)
+
+    // 思路二: 直接贪心: res; lastMax记录遍历过程中的最大值;
+    var maxSubArray = function(nums) {
+      let res = nums[0];
+      let index = 1, lastMax = nums[0]; // 上一节的最大连续和;
+      while(nums[index] !== undefined){
+        let cur = nums[index];
+        lastMax = (lastMax < 0) ? cur : (cur + lastMax);
+        if(lastMax > res){
+          res = lastMax;
+        }
+        index++;
+      }
+      return res;
+    };
+
+    // leetcode思路: 动态规划: f(i)实际上是max(f(i-1) + num(i) 或 num(i))
+    var maxSubArray = function(nums) {
+      let res = nums[0];
+      let index = 1, lastMax = nums[0]; // 上一节的最大连续和;
+      while(nums[index] !== undefined){
+        lastMax = Math.max(nums[index], lastMax + nums[index]);
+        res = Math.max(lastMax, res)
+        index++;
+      }
+      return res;
+    };
+
+    // 思路三: 分治·····emmmm, 这玩意儿怎么分治? 
+    // leetcode: get(a, l, r)查询a序列[l, r]区间的最大子段和;
+    // [l, r]区间内, 取m = (l + r) / 2分为左右区间
+    // lSum表示[l,r]内以l为左端点的最大子段和 => max(左区间lSum, 左区间lSum + 右区间lSum) 
+    // rSum-r为右端点的最大子段和 => max(左区间rSum, 左区间rSum + 右区间rSum)
+    // mSum-[l,r]的最大子段和 => max(左区间mSum, 右区间mSum, 左区间rSum + 右区间lSum)
+    // iSum-[l, r]的区间和 => 左区间iSum + 右区间iSum;
+
+    maxSubArray([-2,1,-3,4,-1,2,1,-5,4])
+    maxSubArray([4,-1,2,1])
+    maxSubArray([1])
+    maxSubArray([0])
+    maxSubArray([-1])
+    maxSubArray([-100000])
+    maxSubArray([5,4,-1,7,8])
+    
+  </script>
+</body>
+</html>
