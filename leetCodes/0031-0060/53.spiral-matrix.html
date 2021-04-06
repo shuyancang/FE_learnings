@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 给你一个 m 行 n 列的矩阵 matrix ，请按照 顺时针螺旋顺序 ，返回矩阵中的所有元素。
+    //   示例 1：输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
+    //     输出：[1,2,3,6,9,8,7,4,5]
+
+    //   示例 2：输入：matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
+    //     输出：[1,2,3,4,8,12,11,10,9,5,6,7]
+
+    //   提示：
+    //     m == matrix.length
+    //     n == matrix[i].length
+    //     1 <= m, n <= 10
+    //     -100 <= matrix[i][j] <= 100
+
+    // 思路: 记录当前点的移动方向=> 当碰撞(已走过路径, 或超出len)，方向顺时针转90°;
+      // 记录方向direction, 当前position(i, j), 已走过的位置记录(minI, maxI, minJ, maxJ)
+    var spiralOrder = function(matrix) {
+      // 移动方向toR, toLeft, toBottom, toTop;
+      if(matrix.length === 0) {
+        return [];
+      }
+      let minI = minJ = -1;
+      let maxI = matrix.length;
+      let maxJ = matrix[0].length;
+      let i = 0, j = 0;
+      let direction = 'toRight';
+      const res = [];
+      const resLength = maxI * maxJ;
+      while(true){
+        res.push(matrix[i][j]);
+        if(res.length === resLength) { return res; }
+        if(direction === 'toRight'){
+          if(j === maxJ - 1){
+            minI = i;
+            i++;
+            direction = 'toBottom';
+          } else {
+            j++;
+          }
+        } else if(direction === 'toBottom') {
+          if(i === maxI - 1){
+            maxJ = j;
+            j--;
+            direction = 'toLeft';
+          } else {
+            i++;
+          }
+        } else if (direction === 'toLeft') {
+          if(j === minJ + 1){
+            maxI = i;
+            i--;
+            direction = 'toTop';
+          } else {
+            j--;
+          }
+        } else if (direction === 'toTop') { 
+          if(i === minI + 1){
+            minJ = j;
+            j++;
+            direction = 'toRight';
+          } else {
+            i--;
+          }
+        }
+      }
+    };
+
+    spiralOrder([[1,2,3],[4,5,6],[7,8,9]]); // [1,2,3,6,9,8,7,4,5]
+    spiralOrder([[1,2,3,4],[5,6,7,8],[9,10,11,12]]); // [1,2,3,4,8,12,11,10,9,5,6,7]
+
+    // leetcode 思路: 
+      // 思路一: 创建一个矩阵copy自matrix, 元素全部设置为false，用于记录已访问的位置 => 按路径/方向遍历, 并记录入数组, 当路径访问出界或已记录位置时, 调整位置继续遍历;
+
+      // 思路二: 洋葱剥离, 一圈一圈的从外向内循环遍历, 记录每一圈的上下左右(minI, minJ, maxI, maxJ)确定遍历路径, 依次往内遍历输出;
+  </script>
+</body>
+</html>
