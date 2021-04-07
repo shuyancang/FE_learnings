@@ -18,15 +18,31 @@
     //   1 <= intervals.length <= 104
     //   intervals[i].length == 2
     //   0 <= starti <= endi <= 104
+
+    // 思路: 对intervals第一项排序, 而后一次遍历即可~nlogn + n;
     var merge = function(intervals) {
-      // 思路: 对intervals第一项排序, 而后一次遍历即可~nlogn + n;
       const len = intervals.length;
       if(len < 2) {
         return intervals;
       }
       const newArr = intervals.sort((a, b) => (a[0] - b[0]))
-      // for()
+      const stack = [newArr[0]]
+      for(let i = 1; i < len; i++){ // 用一个栈处理最末位进行弹出比较储存即可
+        const [lastLeft, lastRight] = stack.pop();
+        const [curLeft, curRight] = intervals[i];
+        if(lastRight < curLeft) {
+          stack.push([lastLeft, lastRight]);
+          stack.push([curLeft, curRight]);
+        } else if (lastRight <= curRight) {
+          stack.push([lastLeft, curRight]);
+        } else {
+          stack.push([lastLeft, lastRight]);
+        }
+      }
+      return stack;
     };
+
+    // leetcode思路: 一样, 但如果不使用栈, 使用直接索引获取最后一个位置元素, 效率高很多
   </script>
 </body>
 </html>
