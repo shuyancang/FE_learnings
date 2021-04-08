@@ -56,6 +56,38 @@
     }
 
     // leetcode剪枝: 我们能够明确的知道, n项对应的排列是n!, 因此如果可以进行回溯剪枝;
+    const getPermutation = (n, k) => {
+      const used = new Set();
+
+      let groupNum = 1; // 全排列数量: n的阶乘;
+      for (let i = 1; i <= n; i++) {
+        groupNum = groupNum * i;
+      }
+
+      const helper = (temp) => {      // temp是当前已选的数字数组
+        const progress = temp.length; // progress表示当前已选了几个数字
+
+        if (progress == n) {          // 因为是空降到正确的组，选够了n个即可返回
+          return temp.join('');
+        }
+
+        groupNum = groupNum / (n - progress); // 一个分组有多少个
+
+        for (let i = 1; i <= n; i++) {
+          if (used.has(i)) continue;
+
+          if (k > groupNum) { // k大于一组的个数
+            k = k - groupNum; // 更新k，
+            continue;         // 跳过这一组，即跳过当前的数字i
+          }
+          temp.push(i);        // 刚刚好满足k 不大于 groupNum的时候, 选择i
+          used.add(i);         // 记录选择
+          return helper(temp); // 进度+1 继续选
+        }
+      };
+
+      return helper([]);
+    };
 
   </script>
 </body>
