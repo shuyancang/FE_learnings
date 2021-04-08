@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>permutation-sequence</title>
+</head>
+<body>
+  <script>
+    // 给出集合 [1,2,3,...,n]，其所有元素共有 n! 种排列。
+    // 按大小顺序列出所有排列情况，并一一标记，当 n = 3 时, 所有排列如下：
+    // "123"
+    // "132"
+    // "213"
+    // "231"
+    // "312"
+    // "321"
+    // 给定 n 和 k，返回第 k 个排列。
+
+    // 示例 1： 输入：n = 3, k = 3  输出："213"
+    // 示例 2： 输入：n = 4, k = 9  输出："2314"
+    // 示例 3： 输入：n = 3, k = 1  输出："123"
+    //  
+    // 提示：1 <= n <= 9 1 <= k <= n!
+
+    // 纯数学方法: 明确的知道k 的排序是怎么来的: 第一位数, 是k / (n - 1)! 对应升序数值的整数 => 第二尾数是余下部分/(n - 2)!的整数....
+    var getPermutation = function(n, k) {
+      if(n === 1) {
+        return '1';
+      }
+      let list = [];
+      for(let i = 0; i < n; i++){
+        list.push(i + 1);
+      }
+      let varctorialNum = vactorialTool(n - 1); // 所有的排列组合
+      let res = '';
+      let i = n - 1;
+      k--;
+      while(i >= 0) {
+        const eachLevNum = parseInt(k / varctorialNum);
+        k = k - eachLevNum * varctorialNum;
+        varctorialNum = varctorialNum / i;
+        res = res + list[eachLevNum];
+        list = list.filter((e, i) => i !== eachLevNum)
+        i--;
+      }
+      return res;
+    };
+
+    var vactorialTool = function(num){ // 得到num的阶乘
+      if( num <= 1) {
+        return 1;
+      }
+      return num * vactorialTool(num - 1)
+    }
+
+    // leetcode剪枝: 我们能够明确的知道, n项对应的排列是n!, 因此如果可以进行回溯剪枝;
+
+  </script>
+</body>
+</html>
