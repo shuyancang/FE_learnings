@@ -44,18 +44,22 @@
       if (len === 0) {
         return [newInterval];
       }
+      let [l, r] = newInterval;
+      let i = 0;
       const res = [];
-      const [l, r] = newInterval;
-      for(let i = 0; i < len; i++){
-        const [curLeft, curRight] = intervals[i];
-        if(curRight < l || curLeft > r) {
-          res.push([curLeft, curRight]);
-        } else if (l <= curRight) {
-          res.push([Math.min(l, curLeft), Math.max(r, curRight)]);
-        }
-        if(i === len - 1 && curRight < l) {
-          res.push(newInterval)
-        }
+      while(i < len && intervals[i][1] < l) {
+        res.push(intervals[i]);
+        i++;
+      }
+      while(i < len && intervals[i][0] <= r) {
+        l = Math.min(l, intervals[i][0]);
+        r = Math.max(r, intervals[i][1]);
+        i++;
+      }
+      res.push([l, r]);
+      while(i < len){
+        res.push(intervals[i]);
+        i++;
       }
       return res;
     };

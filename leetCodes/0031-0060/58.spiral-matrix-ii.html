@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 给你一个正整数 n ，生成一个包含 1 到 n2 所有元素，且元素按顺时针顺序螺旋排列的 n x n 正方形矩阵 matrix 。
+
+    // 示例 1：输入：n = 3 输出：[[1,2,3],[8,9,4],[7,6,5]]
+    // 示例 2：输入：n = 1 输出：[[1]]
+    // 提示：1 <= n <= 20
+
+    // 思路-一层层往里旋转
+    var generateMatrix = function(n) {
+      const res = [];
+      for(let i = 0;  i < n; i++){
+        res.push(new Array(n).fill(0))
+      }
+      let left = 0, top = 0, right = n - 1, bottom = n - 1;
+      let num = 1;
+      while(left < right && top < bottom){
+        for(let i = left; i < right; i++){ // 顶 => 右
+          res[top][i] = (num++);
+        }
+        for(let i = top; i < bottom; i++){ // 右 => 下
+          res[i][right] = (num++);
+        }
+        for(let i = right; i > left; i--){ // 底 => 左
+          res[bottom][i] = (num++)
+        }
+        for(let i = bottom; i > top; i--){ // 左 => 上
+          res[i][left] = (num++)
+        }
+        left++;
+        right--;
+        top++;
+        bottom--;
+      }
+      if(left === right && top === bottom){
+        res[left][top] = num;
+      }
+      return res;
+    };
+  </script>
+</body>
+</html>
