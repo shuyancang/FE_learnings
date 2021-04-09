@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>有效的数字</title>
+</head>
+<body>
+  <script>
+    // 有效数字（按顺序）可以分成以下几个部分：
+    //   1. 一个 小数 或者 整数
+    //   2. （可选）一个 'e' 或 'E' ，后面跟着一个 整数
+
+    // 小数（按顺序）可以分成以下几个部分：
+
+      // 1. （可选）一个符号字符（'+' 或 '-'）
+      // 2. 下述格式之一：
+      //   1. 至少一位数字，后面跟着一个点 '.'
+      //   2. 至少一位数字，后面跟着一个点 '.' ，后面再跟着至少一位数字
+      //   3. 一个点 '.' ，后面跟着至少一位数字
+
+    // 整数（按顺序）可以分成以下几个部分：
+      //   1. （可选）一个符号字符（'+' 或 '-'）
+      //   2. 至少一位数字
+
+    // 部分有效数字列举如下：
+    // ["2", "0089", "-0.1", "+3.14", "4.", "-.9", "2e10", "-90E3", "3e+7", "+6e-1", "53.5e93", "-123.456e789"]
+
+    // 部分无效数字列举如下：
+    // ["abc", "1a", "1e", "e3", "99e2.5", "--6", "-+3", "95a54e53"]
+    // 给你一个字符串 s ，如果 s 是一个 有效数字 ，请返回 true 。
+
+    // 示例 1：输入：s = "0" 输出：true
+    // 示例 2：输入：s = "e" 输出：false
+    // 示例 3：输入：s = "." 输出：false
+    // 示例 4：输入：s = ".1" 输出：true
+    //  
+    // 提示：
+    // 1 <= s.length <= 20
+    // s 仅含英文字母（大写和小写），数字（0-9），加号 '+' ，减号 '-' ，或者点 '.' 。
+
+    // 典型的取巧···字符串转数字的规则~
+    var isNumber = function(s) {
+      return s !== "Infinity" && s !== "-Infinity" && s !== "+Infinity" && s * 1 === s * 1;
+    };
+
+    var isNumber = function(s) {
+      if(!s){ return false; }
+      const len = s.length;
+      let eIndex;
+      for(let i = 0; i < len; i++){
+        if(s[i] === 'e' || s[i] === 'E'){
+          eIndex = i;
+          break;
+        }
+      }
+      if(eIndex === 0 || eIndex === len - 1){
+        return false;
+      } else if (eIndex > 0) {
+        const leftStr = s.substring(0, eIndex);
+        const rightStr = s.substring(eIndex + 1, len);
+        return (isInt(leftStr) || isDemical(leftStr)) && isInt(rightStr);
+      } else { // 没有e, 直接判断是否小数, 整数即可
+        return isInt(s) || isDemical(s);
+      }
+    };
+
+    function isInt(str){ // 字符串是否整。
+      if(!str){ return false; }
+      const len = str.length;
+      if(str[0] === '+' || str[0] === '-'){
+        return isStrictInt(str.substring(1, len));
+      }
+      return isStrictInt(str);
+    }
+
+    function isDemical(str){ // 字符串是否小数;
+      if(!str){ return false; }
+      const len = str.length;
+      if(str[0] === '+' || str[0] === '-'){
+        return isStrictDemical(str.substring(1, len));
+      }
+      return isStrictDemical(str);
+    }
+    
+    function isStrictInt(str){ // 是否纯粹的整数(无+-)
+      if(!str){ return false; }
+      for(let i = 0; i < str.length; i++){
+        if(str[i] >= 0){
+          continue;
+        } else {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function isStrictDemical(str){ // 是否纯粹小数(无+-)
+      if(!str){ return false; }
+      const len = str.length;
+      const pointIndex = str.indexOf('.');
+      if(pointIndex === -1) { // .不存在, 判断是否纯粹整数即可
+        return isStrictInt(str);
+      } else if (pointIndex === 0) { // .后必须是纯粹的整数
+        return isStrictInt(str.substring(1, len));
+      } else if (pointIndex === len - 1) { // .是最后一位, 去掉. 前面是纯粹整数
+        return isInt(str.substring(0, pointIndex))
+      } else { // .在字符串中央，分前后两部分, 都需是纯粹的整数
+        return isStrictInt(str.substring(0, pointIndex)) && isStrictInt(str.substring(pointIndex + 1, len));
+      }
+    }
+
+    isNumber('2');
+    isNumber('0089');
+    isNumber('-0.1');
+    isNumber('+3.14');
+    isNumber('4.');
+    isNumber('-.9');
+    isNumber('2e10');
+    isNumber('-90E3');
+    isNumber('+6e-1');
+    isNumber('53.5e93');
+    isNumber('-123.456e789');
+
+    isNumber('abc');
+    isNumber('1a');
+    isNumber('1e');
+    isNumber('e3');
+    isNumber('99e2.5');
+    isNumber('--6');
+    isNumber('-+3');
+    isNumber('95a54e53');
+
+    // leetcode => 有限状态自动机····卧槽啥玩意儿，完全没听说过····
+    // 一种计算模型, 包含一系列状态: 一个初始状态, 一系列接受状态
+    // 起初初始状态顺序读取每个字符串, 根据状态和读入字符按照约定好的转移规则转移到下一个状态, 继续下去 => 读取完成是如果处于某个接受状态(被接受); 否则被拒绝; 转移中如果不存在对应规则=> 直接被拒绝;
+    // 可以被看作一种暴力枚举的延伸 => 穷尽了任何一种情况下对应任何的输出; 在工程领域是正则表达式的基础;
+
+    // 以上包含相关格式:
+    // 符号位: + , -
+    // 整数部分, 若干0-9字符串构成
+    // 小数点
+    // 小数部分-同整数部分
+    // 指数部分: e + 可选的符号位 + 整数部分
+
+    // 所有状态: 
+    // 0. 当前部分; 
+    // 1. 整数部分
+    // 3. 左侧有整数的小数点
+    // 4. 左侧无整数的小数点
+    // 5. 小数部分
+    // 6. 字符e
+    // 7. 指数部分符号位
+    // 8. 指数部分整数
+
+    /**
+ * @param {string} s
+ * @return {boolean}
+ */
+var isNumber = function (s) {
+    const STATE_INITIAL = 'STATE_INITIAL', // 初始状态
+        STATE_INT_SIGN = 'STATE_INT_SIGN', // 符号位
+        STATE_INTEGER = 'STATE_INTEGER', // 整数部分
+        STATE_POINT = 'STATE_POINT', // 小数点，有左侧整数的。
+        STATE_POINT_WITHOUT_INT = 'STATE_POINT_WITHOUT_INT', // 小数点，没有左侧整数的那种
+        STATE_FRACTION = 'STATE_FRACTION', // 小数部分，左边没整数的
+        STATE_EXP = 'STATE_EXP', // 指数部分 的 e
+        STATE_EXP_SIGN = 'STATE_EXP_SIGN', // 指数部分的 符号位
+        STATE_EXP_NUMBER = 'STATE_EXP_NUMBER', // 指数部分的 整数
+        STATE_END = 'STATE_END'; // 结束
+
+    const CHAR_NUMBER = 'CHAR_NUMBER', // 数字 字符
+        CHAR_EXP = 'CHAR_EXP', //指数 字符
+        CHAR_POINT = 'CHAR_POINT', // 小数点 字符
+        CHAR_SIGN = 'CHAR_SIGN', // 符号 字符
+        CHAR_ILLEGAL = 'CHAR_ILLEGAL'; // 非法 字符
+    const getCharType = (ch) => {
+        switch (ch) {
+            case '+':
+            case '-':
+                return CHAR_SIGN;
+            case '.':
+                return CHAR_POINT;
+            case 'e':
+            case 'E':
+                return CHAR_EXP;
+            default:
+                let code = ch.charCodeAt();
+                if (code >= 48 && code <= 57) {
+                    return CHAR_NUMBER;
+                } else {
+                    return CHAR_ILLEGAL;
+                }
+        }
+    };
+
+    // 状态转移规则
+    const transfer = {
+        // 初始状态时，下一个字符类型可以是：数字，小数点(左侧无整数)，符号位，
+        STATE_INITIAL: {
+            CHAR_NUMBER: STATE_INTEGER,
+            CHAR_POINT: STATE_POINT_WITHOUT_INT,
+            CHAR_SIGN: STATE_INT_SIGN,
+        },
+        // 当前是符号位时，下一个字符类型可以是：数字，小数点
+        STATE_INT_SIGN: {
+            CHAR_NUMBER: STATE_INTEGER,
+            CHAR_POINT: STATE_POINT_WITHOUT_INT,
+        },
+        // 当前是数字状态时，下一个字符类型：整数，小数点，指数 e
+        STATE_INTEGER: {
+            CHAR_NUMBER: STATE_INTEGER,
+            CHAR_POINT: STATE_POINT,
+            CHAR_EXP: STATE_EXP,
+        },
+        // 当前状态小数点，下个字符类型：整数(小数的整数)，指数 e
+        STATE_POINT: {
+            CHAR_NUMBER: STATE_FRACTION,
+            CHAR_EXP: STATE_EXP,
+        },
+        // 当前状态小数点(左侧无整数)，下个字符类型：整数(小数的整数)
+        STATE_POINT_WITHOUT_INT: {
+            CHAR_NUMBER: STATE_FRACTION,
+        },
+        // 当前状态小数部分(小数的整数)，下个字符类型：整数(小数的整数)，指数 e
+        STATE_FRACTION: {
+            CHAR_NUMBER: STATE_FRACTION,
+            CHAR_EXP: STATE_EXP,
+        },
+        // 当前状态指数 e，下个字符类型：指数的符号，指数的整数，
+        STATE_EXP: {
+            CHAR_SIGN: STATE_EXP_SIGN,
+            CHAR_NUMBER: STATE_EXP_NUMBER,
+        },
+        // 当前状态指数e的符号，下个字符类型：指数的整数部分
+        STATE_EXP_SIGN: {
+            CHAR_NUMBER: STATE_EXP_NUMBER,
+        },
+        // 当前状态指数e的整数，下个字符类型：指数的整数部分
+        STATE_EXP_NUMBER: {
+            CHAR_NUMBER: STATE_EXP_NUMBER,
+        },
+    };
+
+    // st是记录参数字符的状态情况。
+    let st = STATE_INITIAL;
+
+    for (let i = 0; i < s.length; i++) {
+        const charType = getCharType(s[i]);
+        // 如果当前字符，是非法字符，或者不符合状态转移规则，则直接return false，结束遍历。
+        if (charType === CHAR_ILLEGAL || !transfer[st][charType]) {
+            return false;
+        } else {
+            st = transfer[st][charType];
+        }
+    }
+
+    // 符合规则的结束情况。
+    const finals = [
+        STATE_INTEGER,
+        STATE_POINT,
+        STATE_FRACTION,
+        STATE_EXP_NUMBER,
+        STATE_END,
+    ];
+    return finals.includes(st);
+};
+
+  </script>
+</body>
+</html>
