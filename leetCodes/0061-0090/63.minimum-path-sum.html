@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 给定一个包含非负整数的 m x n 网格 grid ，请找出一条从左上角到右下角的路径，使得路径上的数字总和为最小。
+    // 说明：每次只能向下或者向右移动一步。
+
+    // 示例 1：
+    //   输入：grid = [[1,3,1],[1,5,1],[4,2,1]]
+    //   输出：7
+    //   解释：因为路径 1→3→1→1→1 的总和最小。
+
+    // 示例 2：
+    //   输入：grid = [[1,2,3],[4,5,6]]
+    //   输出：12
+
+    // 提示：
+    //   m == grid.length
+    //   n == grid[i].length
+    //   1 <= m, n <= 200
+    //   0 <= grid[i][j] <= 100
+
+    var minPathSum = function(grid) {
+      const rows = grid.length;
+      const cols = grid[0].length;
+      const dp = Array(cols).fill(0); // 记录当前行每个位置的最小和 
+      for(let j = 0; j < cols; j++){ // 第一行单独遍历: 基准;
+        dp[j] = j === 0 ? grid[0][j] : dp[j - 1] + grid[0][j];
+      }
+      for(let i = 1; i < rows; i++){ // 第二行基于第一行的基准进行动态规划
+        for(let j = 0; j < cols; j++){
+          if (j === 0) {
+            dp[j] = dp[j] + grid[i][j]
+          } else {
+            dp[j] = Math.min(dp[j], dp[j-1]) + grid[i][j];
+          }
+        }
+      }
+      return dp[cols - 1];
+    };
+
+    minPathSum([[1,3,1],[1,5,1],[4,2,1]]); // 7
+    minPathSum([[1,2,3],[4,5,6]]); // 12
+
+  </script>
+</body>
+</html>
