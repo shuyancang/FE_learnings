@@ -25,19 +25,65 @@
       if(n <= 2){
         return n;
       }
-      return climbStairs(n - 1) + climbStairs(n - 2)
+      return climbStairs(n - 1) + climbStairs(n - 2);
     };
 
-    // var climbStairs = function(n) { // 动态规划
-    //   const board = new Array(n).fill(() => new Array(n).map(e => 0));
-    //   // board[i][j]代表
-    //   for (let i = 0; i < n; i++) {
-    //     for(let j = 0; j < n; j++) {
+    var climbStairs = function(n) { // 每一步 选择走1 或者 2; 走完记录; => 超出事件记录···擦;
+      if(n <= 2){
+        return n;
+      }
+      let count = 0;
+      const stepTool = function(rest){
+        if(rest === 0 || rest === 1) {
+          count++;
+          return true;
+        }
+        stepTool(rest - 1);
+        stepTool(rest - 2);
+      }
+      stepTool(n);
+      return count;
+    };
+    
+    var climbStairs = function(n) { // 数学方法n = 2x + y有多少个解; 每一个解(走x + y步, 选择x为两步, y为步)有多少种组合方案;
+      if(n <= 2){
+        return n;
+      }
+      let stepList = []
+      for(let i = 0; i <= n / 2; i++) {
+        stepList.push([i, n - i * 2]); // [x, y]对应[2阶, 1阶];
+      }
+      function countCalc(x, y){
+        const max = x + y;
+        const smallNum = x > y ? y : x;
+        let a = 1, b = 1;
+        for(let i = 0; i < smallNum; i++){
+          a *= (max - i);
+          b *= (smallNum - i);
+        }
+        return a / b;
+      }
+      let sum = 0;
+      for(let i = 0; i < stepList.length; i++ ){
+        const ele = stepList[i];
+        sum += countCalc(ele[0], ele[1]);
+      }
+      return sum;
+    };
 
-    //     }
-    //   }
-    //   return board[n - 1][n - 1];
-    // };
+
+    // leetcode的动态规划: 
+    var climbStairs = function(n) {
+        let p = 0, q = 0, r = 1; // p第一项, q第二项, r第三项 = p+q; 每往后一级实际上是让第三项变为前两项和, 滚动
+        for (let i = 1; i <= n; ++i) {
+            p = q;
+            q = r;
+            r = p + q;
+        }
+        return r;
+    };
+
+    // 还有快速幂矩阵， 通项公式求解···略。
   </script>
 
 </body>
