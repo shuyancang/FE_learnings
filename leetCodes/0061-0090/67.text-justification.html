@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文本左右对齐</title>
+</head>
+<body>
+  <script>
+    // 给定一个单词数组和一个长度 maxWidth，重新排版单词，使其成为每行恰好有 maxWidth 个字符，且左右两端对齐的文本。
+    // 你应该使用“贪心算法”来放置给定的单词；也就是说，尽可能多地往每行中放置单词。必要时可用空格 ' ' 填充，使得每行恰好有 maxWidth 个字符。
+    // 要求尽可能均匀分配单词间的空格数量。如果某一行单词间的空格不能均匀分配，则左侧放置的空格数要多于右侧的空格数。  
+    // 文本的最后一行应为左对齐，且单词之间不插入额外的空格。
+
+    // 说明:
+    // 单词是指由非空格字符组成的字符序列。
+    // 每个单词的长度大于 0，小于等于 maxWidth。
+    // 输入单词数组 words 至少包含一个单词。
+
+    // 示例1:
+    //   输入:
+    //     words = ["This", "is", "an", "example", "of", "text", "justification."]
+    //     maxWidth = 16
+    //   输出:
+    //     [
+    //        "This    is    an",
+    //        "example  of text",
+    //        "justification.  "
+    //     ]
+    // 示例 2:
+
+    //   输入:
+    //     words = ["What","must","be","acknowledgment","shall","be"]
+    //     maxWidth = 16
+    //   输出:
+    //     [
+    //       "What   must   be",
+    //       "acknowledgment  ",
+    //       "shall be        "
+    //     ]
+    //   解释: 注意最后一行的格式应为 "shall be    " 而不是 "shall     be",
+    //        因为最后一行应为左对齐，而不是左右两端对齐。       
+    //       第二行同样为左对齐，这是因为这行只包含一个单词。
+
+    // 示例 3:
+    //   输入:
+    //     words = ["Science","is","what","we","understand","well","enough","to","explain",
+    //              "to","a","computer.","Art","is","everything","else","we","do"]
+    //     maxWidth = 20
+    //   输出:
+    //     [
+    //       "Science  is  what we",
+    //       "understand      well",
+    //       "enough to explain to",
+    //       "a  computer.  Art is",
+    //       "everything  else  we",
+    //       "do                  "
+    //     ]
+
+    // 思路先拆解数组, 得到每行的字符串集合, 再处理每一项的字符串拼接;
+    var fullJustify = function(words, maxWidth) {
+      const len = words.length;
+      const res = [[words[0]]];
+      let restLen = maxWidth - words[0].length;
+      for(let i = 1; i < len; i++){ // 先贪心得到res每一项对应words的集合结果res
+        if(restLen > words[i].length){
+          res[res.length - 1].push(words[i]);
+          restLen -= (words[i].length + 1); // 保留单词之间 1 空格的余量;
+        } else {
+          res.push([words[i]]);
+          restLen = maxWidth - words[i].length;
+        }
+      }
+      // 对res的每一项进行空格填充。
+      for(let i = 0; i < res.length; i++){
+        let str = '';
+        if(i === res.length - 1){
+          str = modifyLastStrArr(res[i], maxWidth);
+        } else {
+          str = modifyStrArr(res[i], maxWidth);
+        }
+        res[i] = str;
+      }
+      return res;
+    };
+
+    function modifyStrArr(words, maxWidth){ // 处理除最后一排外, 其他字符串行样式
+      const len = words.length;
+      const wordsLen = words.join('').length;
+      const resLen = maxWidth - wordsLen;
+      if(len <= 1) {
+        return words + new Array(resLen).fill(' ').join('');
+      }
+      const spaceNum = parseInt(resLen / (len - 1)); // 每个字符串之间的空格数
+      let spaceRemainNum = resLen % (len - 1);
+      let res = '';
+      let spaceBase = new Array(spaceNum).fill(' ').join('');
+      for(let i = 0; i < len - 1; i++){
+        let moreSpaceStr = '';
+        if(spaceRemainNum > 0){
+          moreSpaceStr = ' ';
+          spaceRemainNum--;
+        }
+        res = res + words[i] + spaceBase + moreSpaceStr;
+      }
+      return res + words[len - 1];
+    }
+
+    function modifyLastStrArr(words, maxWidth){ // 最后一排字符串, 居左;
+      const wordStr = words.join(' ');
+      const resLen = maxWidth - wordStr.length;
+      return wordStr + new Array(resLen).fill(' ').join('');
+    }
+
+    fullJustify(["This", "is", "an", "example", "of", "text", "justification."], 16);
+    fullJustify(["What","must","be","acknowledgment","shall","be"], 16);
+    fullJustify(["Science","is","what","we","understand","well","enough","to","explain", "to","a","computer.","Art","is","everything","else","we","do"], 20);
+    
+        // 说明:
+    // 单词是指由非空格字符组成的字符序列。
+    // 每个单词的长度大于 0，小于等于 maxWidth。
+    // 输入单词数组 words 至少包含一个单词。
+  </script>
+</body>
+</html>

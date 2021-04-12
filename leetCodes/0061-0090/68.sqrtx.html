@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>x的平方根</title>
+</head>
+<body>
+  <script>
+    // 实现 int sqrt(int x) 函数。
+    // 计算并返回 x 的平方根，其中 x 是非负整数。
+    // 由于返回类型是整数，结果只保留整数的部分，小数部分将被舍去。
+
+    // 示例 1: 输入: 4 输出: 2
+    // 示例 2: 输入: 8 输出: 2
+
+    // 说明: 8 的平方根是 2.82842..., 
+    //      由于返回类型是整数，小数部分将被舍去。
+
+    var mySqrt = function(x) { //分支可以咩·
+      if(x === 0 || x === 1) {
+        return 0;
+      }
+      let left = x, right = 0;
+      while (left > right + 1) {
+        const mid = parseInt((left + right) / 2);
+        const prod = mid * mid;
+        if(prod === x) {
+          return mid;
+        }
+        if (prod > x) {
+          left = mid;
+        } else {
+          right = mid;
+        }
+      }
+      return right;
+    };
+
+
+    // 牛顿迭代····嚯，根据y = x² - C的零点来确定 虽然不知道是什么感觉很厉害的样子。
+    
+    var mySqrt = function(x) {
+      // 解法二 数学方法 牛顿迭代 公式 r = ( r + x / r ) / 2
+      let r = x
+      while (r ** 2 > x) {
+        r = ((r + x / r) / 2) | 0
+      } 
+      return r;
+    };
+
+  </script>
+</body>
+</html>

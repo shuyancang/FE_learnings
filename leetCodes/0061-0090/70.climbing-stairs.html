@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>爬楼梯</title>
+</head>
+<body>
+  <script>
+    // 假设你正在爬楼梯。需要 n 阶你才能到达楼顶。
+    // 每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？
+    // 注意：给定 n 是一个正整数。
+
+    // 示例 1： 输入： 2 输出： 2
+    //   解释： 有两种方法可以爬到楼顶。
+    //     1.  1 阶 + 1 阶
+    //     2.  2 阶
+    // 示例 2：输入： 3 输出： 3
+    //   解释： 有三种方法可以爬到楼顶。
+    //     1.  1 阶 + 1 阶 + 1 阶
+    //     2.  1 阶 + 2 阶
+    //     3.  2 阶 + 1 阶
+    var climbStairs = function(n) { // 直接递归不就完了么···· => 超出时间限制···擦。
+      if(n <= 2){
+        return n;
+      }
+      return climbStairs(n - 1) + climbStairs(n - 2)
+    };
+
+    // var climbStairs = function(n) { // 动态规划
+    //   const board = new Array(n).fill(() => new Array(n).map(e => 0));
+    //   // board[i][j]代表
+    //   for (let i = 0; i < n; i++) {
+    //     for(let j = 0; j < n; j++) {
+
+    //     }
+    //   }
+    //   return board[n - 1][n - 1];
+    // };
+  </script>
+
+</body>
+</html>
