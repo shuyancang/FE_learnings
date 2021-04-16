@@ -31,7 +31,7 @@
     //   n == nums.length
     //   1 <= n <= 300
     //   nums[i] 为 0、1 或 2
-    var sortColors = function(nums) { // 双指针: 
+    var sortColors = function(nums) { // 双向遍历: 2次遍历
       const len = nums.length;
       let start = 0, end = len - 1; // start: 记录0应该放的位置, end: 记录2应该放的位置
       while(nums[start] === 0) {
@@ -42,26 +42,68 @@
       }
       let index = start;
       while(index < end) {
-        const cur = nums[index];
-        if(cur === 1) {
+        if(nums[index] === 2) {
+          const tmp = nums[end];
+          nums[end] = 2;
+          nums[index] = tmp;
+          end--;
+        } else {
+          index++;
+        }
+      }
+      while (index > start) {
+        if (nums[index] === 0) {
+          const tmp = nums[start];
+          nums[start] = 0;
+          nums[index] = tmp;
+          start++;
+        } else {
+          index--;
+        }
+      }
+    };
+
+    var sortColors = function(nums) { // 双指针, 单次遍历
+      const len = nums.length;
+      let start = 0, end = len - 1; // start: 记录0应该放的位置, end: 记录2应该放的位置
+      let index = 0;
+      while (index <= end) {
+        let cur = nums[index];
+        // console.log(nums);
+        if (cur === 2) { // 放到end;
+          nums[index] = nums[end];
+          nums[end] = 2; // 遇到2就放到最后去;
+          end--;
+        } else if (cur === 0) { // 0 放到头部, 更新start应该放的位置
+          if(index === start) {
+            index++;
+            start++;
+            continue;
+          }
+          nums[index] = nums[start];
+          nums[start] = 0;
+          start++;
+        } else { // cur === 1
           index++;
           continue;
         }
-        // if (cur === 2) {
-        //   const tmp = nums[end];
-        //   nums[end] = cur;
-        //   end--;
-        //   if(tmp === 0) {
-        //     left++;
-        //   }
-        //   index++;
-        // } else { // 0
-        //   const tmp = nums[start];
-        //   nums[start] = cur;
-        // }
       }
       return nums;
     };
+
+    // Leetcode 更简洁
+    // var sortColors = function(nums) {
+    //     let p0 = 0, p2 = nums.length - 1;
+    //     for (let i = 0; i <= p2; i++) {
+    //         while (i <= p2 && nums[i] === 2) swap(nums, i, p2--);
+    //         if (nums[i] === 0) swap(nums, i, p0++);
+    //     }
+    // };
+    // const swap = (nums, i, j) => {
+    //     const tmp = nums[i];
+    //     nums[i] = nums[j];
+    //     nums[j] = tmp;
+    // }
 
     sortColors([2,0,2,1,1,0]); // [0,0,1,1,2,2]
     sortColors([2,0,1]); // [0,1,2]
