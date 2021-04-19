@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>组合</title>
+</head>
+<body>
+  <script>
+    // 给定两个整数 n 和 k，返回 1 ... n 中所有可能的 k 个数的组合。
+    // 示例:
+    //   输入: n = 4, k = 2
+    //   输出:
+    //   [
+    //     [2,4],
+    //     [3,4],
+    //     [2,3],
+    //     [1,2],
+    //     [1,3],
+    //     [1,4],
+    //   ]
+    var combine = function(n, k) { // 直接递归, 最是直观~~~
+      // 1 - (n-1)个数组合的 k结合;
+      let res = [];
+      if(n < k || k <= 0) {
+        return res;
+      } else if (n === k) {
+        let tmp = [];
+        for(let i = 1; i <= n; i++){
+          tmp.push(i);
+        }
+        res.push(tmp);
+        return res;
+      } else if (k === 1) {
+        for(let i = 1; i <= n; i++){
+          res.push([i])
+        }
+        return res;
+      }
+      // 1 ... n - 1 中所有可能的 k 个数的组合 或者 1 ... n - 1中,k-1个数的结合 + k
+      return combine(n - 1, k).concat(combine(n - 1, k - 1).map(e => e.concat(n)));
+    };
+
+    // 方法二: 回溯; 返回 1 ... n 中所有可能的 k 个数的组合。
+    var combine = function(n, k) {
+      const res = [];
+      function combineTool(cur, end, temp){
+        if(temp.length + (end - cur + 1) < k) { // 剪枝: 不可能构造出足够长度的数据
+          return false;
+        }
+        if (temp.length === k) { // 记录
+          res.push(temp);
+          return true;
+        }
+        combineTool(cur + 1, end, [...temp, cur]);
+        combineTool(cur + 1, end, temp);
+      }
+      combineTool(1, n, []);
+      return res;
+    }
+  </script>
+</body>
+</html>
