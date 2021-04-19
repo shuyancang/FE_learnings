@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>最小覆盖子串</title>
+</head>
+<body>
+  <script>
+    // 给你一个字符串 s 、一个字符串 t 。返回 s 中涵盖 t 所有字符的最小子串。如果 s 中不存在涵盖 t 所有字符的子串，则返回空字符串 "" 。
+    // 注意：如果 s 中存在这样的子串，我们保证它是唯一的答案。
+
+    // 示例 1：输入：s = "ADOBECODEBANC", t = "ABC" 输出："BANC"
+
+    // 示例 2：输入：s = "a", t = "a" 输出："a"
+
+    // 提示：
+    //   1 <= s.length, t.length <= 105
+    //   s 和 t 由英文字母组成
+
+    // 进阶：你能设计一个在 o(n) 时间内解决此问题的算法吗？
+
+    // 第一想法就是f(i)(j)代表长度为i的s字符串子串, 对应长度为j的, 其最长的字符串子串
+    // 那么f(i)(j) =Math.min(f(i - 1)(j), f(i)(j去掉对应i字符的长度)), 如果某个值不存在, 则不需; => 复杂度有点高昂~~~
+
+    // 第二想法: 双指针;
+    var minWindow = function(s, t) {
+      if (!s || !t) {
+        return ''
+      }
+      const hash = {}; // 记录需要子串结构
+      let count = t.length;
+      for(let i = 0; i < t.length; i++){ // 拆解子串hash
+        hash[t[i]] = hash[t[i]] ? (hash[t[i]] + 1) : 1;
+      }
+      let left = 0, right = 0, index = 0;
+      while (s[index]) { // 找到第一个满足要求的子串, 对应left, 和right
+        const cur = s[index];
+        if(!hash[curStr] && left === 0) { // 首部无用剔除
+          continue;
+        } else if (hash[curStr] && left === 0) { // 第一个匹配的字符;
+          left = index;
+        }
+        if (hash[curStr] > 0) {
+          hash[curStr] -= 1;
+          count--;
+        }
+        if (count === 0) { // 找到第一个子串;
+          right = index;
+        }
+        index++;
+      }
+      if (count > 0) { // 连一个子串都没有;
+        return ''
+      }
+      // 在left以后逐渐搜索 => 似乎复杂度也挺高的昂····
+    };
+
+    // leet code: 滑动窗口: 两个指针;
+    var minWindow = function(s, t) {
+      let left = 0, right = 0, resIndex = -1, resLen = -1;
+      if (!s || !t) {
+        return '';
+      }
+      const tHash = getHash(t);
+      let resHash = {};
+      // debugger;
+      while(right < s.length){
+        const curStr = s[right];
+        resHash[curStr] = resHash[curStr] ? (resHash[curStr] + 1) : 1;
+        while (checkStr(resHash, tHash) && left <= right) {
+          if(resLen < 0 || resLen > (right - left)){ // 找到一个结果, 比较/记录;
+            resLen = right - left;
+            resIndex = left;
+          }
+          resHash[s[left]] = resHash[s[left]] - 1;
+          left++;
+        }
+        right++;
+      }
+      return s.substr(resIndex, resLen + 1);
+    }
+
+    function getHash(str){ // 工具函数生产str对应的hash;
+      let hash = {};
+      for(let i = 0; i < str.length; i++){
+        hash[str[i]] = hash[str[i]] ? (hash[str[i]] + 1) : 1;
+      }
+      return hash; 
+    }
+
+    function checkStr(resHash, tHash){
+      const tKeys = Object.keys(tHash);
+      for(let key of tKeys){
+        if  (!resHash[key] || resHash[key] < tHash[key]) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+
+    // leetcode优化解法:
+    const minWindow = (s, t) => {
+      let minLen = s.length + 1;
+      let start = s.length;     // 结果子串的起始位置
+      let map = {};             // 存储目标字符和对应的缺失个数
+      let missingType = 0;      // 当前缺失的字符种类数
+      for (const c of t) {      // t为baac的话，map为{a:2,b:1,c:1}
+        if (!map[c]) {
+          missingType++;        // 需要找齐的种类数 +1
+          map[c] = 1;
+        } else {
+          map[c]++;
+        }
+      }
+      let l = 0, r = 0;                // 左右指针
+      for (; r < s.length; r++) {      // 主旋律扩张窗口，超出s串就结束
+        let rightChar = s[r];          // 获取right指向的新字符
+        if (map[rightChar] !== undefined) map[rightChar]--; // 是目标字符，它的缺失个数-1
+        if (map[rightChar] == 0) missingType--;   // 它的缺失个数新变为0，缺失的种类数就-1
+        while (missingType == 0) {                // 当前窗口包含所有字符的前提下，尽量收缩窗口
+          if (r - l + 1 < minLen) {    // 窗口宽度如果比minLen小，就更新minLen
+            minLen = r - l + 1;
+            start = l;                 // 更新最小窗口的起点
+          }
+          let leftChar = s[l];          // 左指针要右移，左指针指向的字符要被丢弃
+          if (map[leftChar] !== undefined) map[leftChar]++; // 被舍弃的是目标字符，缺失个数+1
+          if (map[leftChar] > 0) missingType++;      // 如果缺失个数新变为>0，缺失的种类+1
+          l++;                          // 左指针要右移 收缩窗口
+        }
+      }
+      if (start == s.length) return "";
+      return s.substring(start, start + minLen); // 根据起点和minLen截取子串
+    };
+
+    minWindow("ADOBECODEBANC", "ABC");
+    minWindow("a", "a");
+    minWindow("ADOBECODEBANC", "GEP");
+        // 示例 1：输入：s = "ADOBECODEBANC", t = "ABC" 输出："BANC"
+
+    // 示例 2：输入：s = "a", t = "a" 输出："a"
+  </script>
+</body>
+</html>
