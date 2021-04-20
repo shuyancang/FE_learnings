@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> 删除排序链表中的重复元素 II</title>
+</head>
+<body>
+  <script>
+    // 存在一个按升序排列的链表，给你这个链表的头节点 head ，请你删除链表中所有存在数字重复情况的节点，只保留原始链表中 没有重复出现 的数字。
+    // 返回同样按升序排列的结果链表。
+
+    // 示例 1：
+    //   输入：head = [1,2,3,3,4,4,5] 输出：[1,2,5]
+    // 示例 2：
+    //   输入：head = [1,1,1,2,3] 输出：[2,3]
+    //  
+    // 提示：
+    //   链表中节点数目在范围 [0, 300] 内
+    //   -100 <= Node.val <= 100
+    //   题目数据保证链表已经按升序排列
+
+    // 思路； 
+    // 1. 需随时持有前一有效节点(或第一个哑结点)(前一节点val必定不等于当前节点)
+    // 2. 对当前节点进行遍历, 若下一节点有效(val不等于的当前,  存储), 否则继续next直到找到下一个有效节点
+    var deleteDuplicates = function(head) { 
+      const firstNode = new ListNode();
+      firstNode.next = head;
+      let preNode = firstNode;
+      let cur = head;
+      while (cur && cur.next) {
+        let nextNode = cur.next;
+        if (nextNode && nextNode.val === cur.val) { // 找到相同的无效节点 => pass
+          while(nextNode && nextNode.val === cur.val){
+            nextNode = nextNode.next;
+          }
+          cur = nextNode;
+          preNode.next = cur;
+        } else { // 有效节点
+          preNode = cur;
+          cur = cur.next
+        }
+      }
+      return firstNode.next;
+    };
+
+    // leetcode方法: 更显简洁: 存储next.val判定后续的val是否相同 => 内空间复杂度比我那个好, 时间复杂度略差;
+    var deleteDuplicates = function(head) {
+        if (!head) {
+            return head;
+        }
+
+        const dummy = new ListNode(0, head);
+
+        let cur = dummy;
+        while (cur.next && cur.next.next) { // cur持有的是当前节点, 判定是否有后续两个节点 => 判定后续两个节点的数据是否相同, 对val进行循环
+            if (cur.next.val === cur.next.next.val) {
+                const x = cur.next.val;
+                while (cur.next && cur.next.val === x) {
+                    cur.next = cur.next.next;
+                } 
+            } else {
+                cur = cur.next;
+            }
+        }
+        return dummy.next;
+    };
+
+  </script>
+</body>
+</html>
