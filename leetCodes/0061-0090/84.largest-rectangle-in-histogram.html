@@ -15,11 +15,85 @@
 
     // 示例: 输入: [2,1,5,6,2,3] 输出: 10
 
-    var largestRectangleArea = function(heights) {
+    // 思路一: 暴力: 两个for循环标识起-终，期间记录最小值 * 跨度;枚举出来会超时~
+    // emmmm, f(n)和f(n - 1)找不到明显的关系啊·动态规划似乎也不好用了。贪心也没有规律
 
+    // 以下思路参考leetcode: 
+    // 思路二: 单调栈: 在一维数组中找到第一个满足某种条件的数
+    // 实现目的: 找到heights里面，每一个索引index对应的左右第一个比自己"矮"的索引(left, right); 则这个索引对应所能得到的最大面积是(right - left) * heights[index]
+    // 左往右遍历: 获取index对应左侧第一个比自己矮的索引; => 单调栈stack
+    // 从右往左遍历: 获取index对应右侧第一个比自己矮的索引
+    // 遍历计算结果 得到最大值
+    var largestRectangleArea = function(heights) {
+      const len = heights.length;
+      if(len === 0) {
+        return 0;
+      } else if (len === 1) {
+        return heights[0];
+      }
+      let stack = [0]; // 索引为0初始时, 左侧数值手动初始化;
+      const leftList = [-1];
+      for (let i = 1; i < len; i++) { // heighs中各个元素中第一个比自己小(严格)的位置, (相等的要囊括~)
+        while(heights[stack[stack.length - 1]] >= heights[i]) {
+          stack.pop();
+        }
+        leftList.push(stack.length > 0 ? stack[stack.length - 1] : -1);
+        stack.push(i);
+      }
+      // console.log(leftList);
+      stack = [len - 1];
+      const rightList = new Array(len).fill(len);
+      for (let i = len - 2; i >= 0; i--) {
+        while(heights[stack[stack.length - 1]] >= heights[i]) {
+          stack.pop();
+        }
+        rightList[i] = stack.length > 0 ? stack[stack.length - 1] : len;
+        stack.push(i);
+      }
+      let res = 0;
+      // console.log(rightList)
+      for (let i = 0; i < len; i++) {
+        const areaSize = heights[i] * (rightList[i] - leftList[i] - 1);
+        if(areaSize > res) {
+          res = areaSize;
+        }
+      }
+      return res;
+    };
+
+    // 基于思路二的优化:
+    // 实际上在从左往右寻找每个索引对应的左边第一个比自己小的元素时候:  如果单调栈有弹出, 那么弹出的这个索引对应的右侧第一个小索引正是当前i;
+    var largestRectangleArea = function(heights) {
+      const len = heights.length;
+      if(len === 0) {
+        return 0;
+      } else if (len === 1) {
+        return heights[0];
+      }
+      let stack = [0]; // 索引为0初始时, 左侧数值手动初始化;
+      const leftList = [-1];
+      const rightList = new Array(len).fill(len);
+      for (let i = 1; i < len; i++) { // heighs中各个元素中第一个比自己小(严格)的位置, (相等的要囊括~)
+        while(heights[stack[stack.length - 1]] >= heights[i]) {
+          rightList[stack[stack.length - 1]] = i;
+          stack.pop();
+        }
+        leftList.push(stack.length > 0 ? stack[stack.length - 1] : -1);
+        stack.push(i);
+      }
+      let res = 0;
+      for (let i = 0; i < len; i++) {
+        const areaSize = heights[i] * (rightList[i] - leftList[i] - 1);
+        if(areaSize > res) {
+          res = areaSize;
+        }
+      }
+      return res;
     };
 
     largestRectangleArea([2,1,5,6,2,3]); // 10
+    largestRectangleArea([4, 2]); // 4
+
   </script>
 </body>
 </html>
