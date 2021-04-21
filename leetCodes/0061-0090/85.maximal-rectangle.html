@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>最大矩形</title>
+</head>
+<body>
+  <script>
+  //   给定一个仅包含 0 和 1 、大小为 rows x cols 的二维二进制矩阵，找出只包含 1 的最大矩形，并返回其面积。
+  //   示例 1：
+  //     输入：matrix = [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]
+  //     输出：6
+
+  //   示例 2：
+  //     输入：matrix = []
+  //     输出：0
+
+  //   示例 3：
+  //     输入：matrix = [["0"]]
+  //     输出：0
+
+  //   示例 4：
+  //     输入：matrix = [["1"]]
+  //     输出：1
+
+  //   示例 5：
+  //     输入：matrix = [["0","0"]]
+  //     输出：0
+  //  
+  //   提示：
+  //     rows == matrix.length
+  //     cols == matrix[0].length
+  //     0 <= row, cols <= 200
+  //     matrix[i][j] 为 '0' 或 '1'
+
+    // 思路一: 以每一个位置为起点, 查询其在矩阵中可能的最大矩阵~~~复杂度, 有点高啊~~最高可能是O(mn * mn)````
+    var maximalRectangle = function(matrix) {
+      const row = matrix.length;
+      if(row === 0) {
+        return 0;
+      }
+      const col = matrix.length;
+    };
+
+    function getPosMatrix(pos, matrix){ // pos[行, 列]左上角, 在matrix中的最大矩阵 => 横优先, 纵优先, 两种可能;
+      let i = pos[0], j = pos[1];
+      let maxSize = 0;
+      if(matrix[i][j] === '0') { // 起始点不符合要求;
+        return maxSize;
+      }
+      for(;i < matrix.length; i++){ // 列优先方式
+        for(; j < matrix[0].length; j++) {
+          const cur = matrix[i][j]
+        }
+      }
+      
+    }
+
+    // 思路二
+  </script>
+</body>
+</html>
