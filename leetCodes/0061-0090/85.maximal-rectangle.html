@@ -36,29 +36,139 @@
   //     matrix[i][j] 为 '0' 或 '1'
 
     // 思路一: 以每一个位置为起点, 查询其在矩阵中可能的最大矩阵~~~复杂度, 有点高啊~~最高可能是O(mn * mn)````
+    // var maximalRectangle = function(matrix) {
+    //   const row = matrix.length;
+    //   if(row === 0) {
+    //     return 0;
+    //   }
+    //   const col = matrix[0].length;
+    //   let resSize = 0;
+    //   for(let i = 0; i < row; i++){
+    //     for(let j = 0; j < col; j++){
+    //       const tmpSize = getPosMatrix([i, j], matrix);
+    //       resSize = resSize > tmpSize ? resSize : tmpSize;
+    //     }
+    //   }
+    //   return resSize;
+    // };
+
+    // function getPosMatrix(pos, matrix){ // pos[行, 列]左上角, 在matrix中的最大矩阵 => 横优先, 纵优先, 两种可能;
+    //   if(matrix[pos[0]][pos[1]] === '0') { // 起始点不符合要求;
+    //     return 0;
+    //   }
+    //   let endJ;
+    //   for(let j = pos[1]; j < matrix[0].length; j++){ // 列优先
+    //     if(matrix[pos[0]][j] === '0'){
+    //       endJ = j;
+    //     }
+    //   }
+    //   endJ === undefined && (endJ = matrix[0].length);
+    //   let endJSize = 1;
+    //   let isBreak = false;
+    //   for (let i = pos[0]; i < matrix.length; i++) {
+    //     for(let j = pos[1]; j < endJ; j++){
+    //       if(matrix[i][j] === '0') { // 矩阵中断
+    //         isBreak = true;
+    //         break;
+    //       }
+    //       if (matrix[i][j] === '1' && j === endJ - 1) { // 这一行满足
+    //         endJSize = (endJ - pos[1]) * (i - pos[0] + 1);
+    //       }
+    //     }
+    //     if(isBreak){
+    //       break;
+    //     }
+    //   }
+    //   let endI;
+    //   let endISize = 1;
+    //   for(let i = pos[0]; i < matrix.length; i++){ // 行优先
+    //     if(matrix[i][pos[1]] === '0'){
+    //       endI = i;
+    //     }
+    //   }
+    //   endI === undefined && (endI = matrix.length);
+    //   isBreak = false;
+    //   for(let j = pos[1]; j < matrix[0].length; j++){
+    //     for(let i = pos[0]; i < endI; i++){
+    //       if (matrix[i][j] === '0') {
+    //         isBreak = true;
+    //         break;
+    //       }
+    //       if (matrix[i][j] === '1' && i === endI - 1) { // 这一列满足
+    //         endISize = (endI - pos[0]) * (j - pos[1] + 1);
+    //       }
+    //     }
+    //     if(isBreak){
+    //       break;
+    //     }
+    //   }
+    //   if(Math.max(endISize, endJSize) >= 20) {
+    //     console.log(pos, endI, endJ, endISize, endJSize);
+    //   }
+    //   return Math.max(endISize, endJSize);
+    // }
+
+    // 思路二： 参看leetcode
+    // 实际上我们可以组合一个matrix, 其f(m)(n)记录的是matrix(m)(n)位置及左的连续1数量;
+    // 那么, 对于f(m)(n)而言其最大矩阵, 实际上是对n这一列的左侧柱状图最大面积！
+    // 那么我们可以转化为: matrix矩阵, 记录连续1数量后, 直接基于最底部行, 对应求取每一列的最左侧最大面积即可···
+    // 单调栈解法可参看84
+
     var maximalRectangle = function(matrix) {
-      const row = matrix.length;
-      if(row === 0) {
-        return 0;
-      }
-      const col = matrix.length;
+        const m = matrix.length;
+        if (m === 0) {
+            return 0;
+        }
+        const n = matrix[0].length;
+        const left = new Array(m).fill(0).map(() => new Array(n).fill(0));
+
+        for (let i = 0; i < m; i++) {
+            for (let j = 0; j < n; j++) {
+                if (matrix[i][j] === '1') {
+                    left[i][j] = (j === 0 ? 0 : left[i][j - 1]) + 1;
+                }
+            }
+        }
+
+        let ret = 0;
+        for (let j = 0; j < n; j++) { // 对于每一列，使用基于柱状图的方法
+            const up = new Array(m).fill(0);
+            const down = new Array(m).fill(0);
+
+            let stack = new Array();
+            for (let i = 0; i < m; i++) {
+                while (stack.length && left[stack[stack.length - 1]][j] >= left[i][j]) {
+                    stack.pop();
+                }
+                up[i] = stack.length === 0 ? -1 : stack[stack.length - 1];
+                stack.push(i);
+            }
+            stack = [];
+            for (let i = m - 1; i >= 0; i--) {
+                while (stack.length && left[stack[stack.length - 1]][j] >= left[i][j]) {
+                    stack.pop();
+                }
+                down[i] = stack.length === 0 ? m : stack[stack.length - 1];
+                stack.push(i);
+            }
+
+            for (let i = 0; i < m; i++) {
+                const height = down[i] - up[i] - 1;
+                const area = height * left[i][j];
+                ret = Math.max(ret, area);
+            }
+        }
+        return ret;
     };
 
-    function getPosMatrix(pos, matrix){ // pos[行, 列]左上角, 在matrix中的最大矩阵 => 横优先, 纵优先, 两种可能;
-      let i = pos[0], j = pos[1];
-      let maxSize = 0;
-      if(matrix[i][j] === '0') { // 起始点不符合要求;
-        return maxSize;
-      }
-      for(;i < matrix.length; i++){ // 列优先方式
-        for(; j < matrix[0].length; j++) {
-          const cur = matrix[i][j]
-        }
-      }
-      
-    }
 
-    // 思路二
+    maximalRectangle([["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]); // 6 
+    maximalRectangle([]); // 0
+    maximalRectangle([["0"]]); // 0
+    maximalRectangle([["1"]]); // 1
+    maximalRectangle([["0","0"]]); // 0
+    maximalRectangle([["1","1","1","1","1","1","1","1"],["1","1","1","1","1","1","1","0"],["1","1","1","1","1","1","1","0"],["1","1","1","1","1","0","0","0"],["0","1","1","1","1","0","0","0"]]); // 21
+
   </script>
 </body>
 </html>

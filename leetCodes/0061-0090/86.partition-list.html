@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>分隔链表</title>
+</head>
+<body>
+  <script>
+    // 给你一个链表的头节点 head 和一个特定值 x ，请你对链表进行分隔，使得所有 小于 x 的节点都出现在 大于或等于 x 的节点之前。
+    // 你应当 保留 两个分区中每个节点的初始相对位置。
+
+    // 示例 1：
+    //   输入：head = [1,4,3,2,5,2], x = 3
+    //   输出：[1,2,2,4,3,5]
+    // 示例 2：
+
+    //   输入：head = [2,1], x = 2
+    //   输出：[1,2]
+
+    // 提示：
+    //   链表中节点的数目在范围 [0, 200] 内
+    //   -100 <= Node.val <= 100
+    //   -200 <= x <= 200
+
+    // 思路: 生成一个新链表, 用于维护所有小于x的节点链, 原链表只要有小于x都断开, 最后将新链表尾部指向老链表头部即可；
+    var partition = function(head, x) {
+      // let oldNode = new ListNode();
+      // oldNode.next = head;
+      let oldNode = head;
+      let firsNode = new ListNode();
+      let newNode = new ListNode();
+      fir
+      while(oldNode.val < x){
+        newNode.next = oldNode;
+        newNode = newNode.next;
+        oldNode = oldNode.next;
+      }
+      
+    };
+  </script>
+</body>
+</html>
