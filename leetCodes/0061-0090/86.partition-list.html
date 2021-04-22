@@ -26,18 +26,27 @@
 
     // 思路: 生成一个新链表, 用于维护所有小于x的节点链, 原链表只要有小于x都断开, 最后将新链表尾部指向老链表头部即可；
     var partition = function(head, x) {
-      // let oldNode = new ListNode();
-      // oldNode.next = head;
-      let oldNode = head;
-      let firsNode = new ListNode();
-      let newNode = new ListNode();
-      fir
-      while(oldNode.val < x){
-        newNode.next = oldNode;
-        newNode = newNode.next;
-        oldNode = oldNode.next;
+      if(!head){
+        return head;
       }
-      
+      // let newNode = new ListNode();
+      // 首先, 需要找到第一个val >= x的node: biggerStartNode;
+      // 其次, 需要保存最后一个val < x的node: smallerLast; (一般有: smallerLast.next = biggerStartNode)
+      // 然后, 需要维护一个val >= x的biggerLastNode, 判定其后续的.next.val
+      const dummy = new ListNode();
+      dummy.next = head;
+      let smallerLast = dummy;
+      let biggerStartNode;
+      while (head) { // 先直接顺序遍历, 找到第一个 val >= x的点
+        if(head.val >= x){
+          biggerStartNode = head;
+          break;
+        } else {
+          smallerLast = smallerLast.next;
+          head = head.next;
+        }
+      }
+      return dummy.next;
     };
   </script>
 </body>
