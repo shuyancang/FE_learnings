@@ -29,25 +29,38 @@
       if(!head){
         return head;
       }
-      // let newNode = new ListNode();
-      // 首先, 需要找到第一个val >= x的node: biggerStartNode;
-      // 其次, 需要保存最后一个val < x的node: smallerLast; (一般有: smallerLast.next = biggerStartNode)
-      // 然后, 需要维护一个val >= x的biggerLastNode, 判定其后续的.next.val
+      // 1. 需要一个头部哑结点dummy => return dummy.next;
+      // 2. 需要记录最后一个val小于x的节点lastSmallNode, 用于.next = 断开点; 初始化时dummy的拷贝;
+      // 3. 需要记录第一个val大于等于x的节点firstBigNode, 用于断开点的next;
+      // 4. head为正在遍历的节点 => 当.next.val > x时, 需要将.next和.next.next进行切割;
       const dummy = new ListNode();
       dummy.next = head;
-      let smallerLast = dummy;
-      let biggerStartNode;
-      while (head) { // 先直接顺序遍历, 找到第一个 val >= x的点
+      let smallerLast = dummy; // 最后一个val小于x的节点
+      let firstBigNode;
+      while (head) { // 先直接顺序遍历, 找到第一个 val >= x的点 => 作为firstBigNode
         if(head.val >= x){
-          biggerStartNode = head;
+          firstBigNode = head;
           break;
         } else {
           smallerLast = smallerLast.next;
           head = head.next;
         }
       }
+      while(head && head.next) { // 循环开始: 此时head.val 必定 >= x
+        if (head.next.val >= x) { // 不用切断往后继续遍历;
+          head = head.next
+        } else { // 切断开头和后续节点 重新连接
+          let singleNode = head.next; // 记录要切断的这个节点;
+          head.next = head.next.next; // 后续节点直接连接过去;
+          smallerLast.next = singleNode;
+          smallerLast = smallerLast.next; // 延长最后x节点
+          smallerLast.next = firstBigNode; // 重新连接第一个>x节点
+        }
+      }
       return dummy.next;
     };
+
+    // 解法二：直接模拟数组的拆分合并，新建两个链表再合并完事儿~
   </script>
 </body>
 </html>
