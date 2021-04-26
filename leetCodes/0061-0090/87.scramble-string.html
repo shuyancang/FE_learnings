@@ -46,25 +46,137 @@
     //   s1 和 s2 由小写英文字母组成
 
 
-    var isScramble = function(s1, s2) {
+    var isScramble = function(s1, s2) { // 递归 + 遍历 => 暴力输出可能的所有扰乱字符串 => 匹配~~~昂超时；
       const len = s1.length;
       if(len <= 1) {
         return s1 === s2;
+      } else if (s1 === s2) {
+        return true;
       }
-
+      const allMayStrs = subTool(s1);
+      return allMayStrs.includes(s2);
     };
 
-    function subTool(str){ // 返回一个字符串拆分的可能结果: 'abc' => [['a', 'bc'], ['ab', 'c']] 
+    function subTool(str){ // 返回一个字符串拆分的可能结果: 'abc' => [''] 
       const len = str.length;
       if (len <= 1) {
         return [str];
       }
       let res = [];
-      for(let i = 0; i < len - 1; i++){
-        
+      for(let i = 1; i < len; i++){ // 
+        const letfStrList = subTool(str.substring(0, i));
+        const rightStrList = subTool(str.substring(i, len));
+        for(let m = 0; m < letfStrList.length; m++){
+          for(let n = 0; n < rightStrList.length; n++){
+            res.push(letfStrList[m] + rightStrList[n]);
+            res.push(rightStrList[n] + letfStrList[m]);
+          }
+        }
       }
       return res;
     }
+    
+    // 思路2 如果s2是s1的扰乱, 那必定互为扰乱, 存在互转; => 动态规划(f(s1, s2) => ) => 昂没思路~下抄leetcode思路解决:
+    // 假定s1 与 s2 为扰乱, 则必定有
+    //  1. 不交换: s1(0, left)与s2(0, left)互为扰乱且s1(left, len) 与s2(left, len)互为扰乱
+    //  2. 交换: s1(0, left)与s2(len - left, len)互为扰乱 且s1(left, len)与s2(0, left)互为扰乱;
+    // 需要创建第一个分割点O(n)遍历可能的情况; 然后使用状态方程f(i1, i2, length)表示: 从s1字符串i1开始length长的子串与s2的i2开始length长度子串是否互为子串;
+    var isScramble = function(s1, s2) { // 这也要超时啊/....
+      const len = s1.length;
+      const board = new Array(len).fill(0).map(
+        () => new Array(len).fill(0).map(
+          // () => new Array(len + 1).fill(0)
+          () => new Array(len).fill(0)
+        )
+      );
+      return dfs(0, 0, len, s1, s2, board);
+    }
+
+    const dfs = function(i1, i2, len, s1, s2, board){
+      // if (board[i1][i2][len] !== 0) {
+      //   return board[i1][i2][len] === 1;
+      // }
+
+      if(s1.substring(i1, i1 + len) === s2.substring(i2, i2 + len)) {
+        board[i1][i2][len] === 1;
+        return true;
+      }
+      if (!calcLetter(i1, i2, len, s1, s2)) {
+        board[i1][i2][len] === -1;
+        return false;
+      }
+      for(let i = 1; i < len; i++){ // 指定可能的继续分割点
+        if(dfs(i1, i2, i, s1, s2, board) && dfs(i1 + i, i2 + i, len - i, s1, s2, board)) { // 不交换
+          board[i1][i2][len] === 1;
+          return true;
+        } else if (dfs(i1, i2 + len - i, i, s1, s2, board) && dfs(i1 + i, i2, len - i, s1, s2, board)) { // 交换位置
+          board[i1][i2][len] === 1;
+          return true;
+        }
+      }
+      board[i1][i2][len] === -1;
+      return false;
+    }
+
+    const calcLetter = function(i1, i2, len, s1, s2) { // 比较两端字符串是否存在不对应的字母
+      let hash = {};
+      for(let i = 0; i < len; i++){
+        const cur = s1[i1 + i];
+        hash[cur] = hash[cur] ? hash[cur] + 1 : 1;
+      }
+      for(let i = 0; i < len; i++){
+        const cur = s2[i2 + i];
+        if(!hash[cur]){
+          return false;
+        }
+        hash[cur] = hash[cur] - 1;
+      }
+      return !Object.values(hash).some(e => e !== 0);
+    }
+
+
+    // 方法3: 
+    var isScramble = function(s1, s2) { // 这个解法思路其实是和方法1 一样的，只不过换成了map，
+	    let map = {};
+      function dfs(l, r) { // l, r分别为左右index
+        if (l == r) {
+          return [];
+        }
+        if (r - l == 1) { // 只有一个字母;
+          return [s1[l]];
+        }
+        if (map[l] !== undefined && map[l][r] !== undefined) {
+          return map[l][r];
+        }
+        let ret = [];
+        for (let i = l + 1; i <= r - 1; i++) { // 遍历分割点;
+          let left = dfs(l, i); // 从l  => r 的字符串, 左侧可能的集合
+          let right = dfs(i, r); // 右侧可能的集合;
+          for (let j = 0; j < left.length; j++) {
+            for (let k = 0; k < right.length; k++) {
+              let tmp = left[j] + right[k]; // 不交换
+              if (!ret.includes(tmp) && s2.indexOf(tmp) !== -1) {
+                ret.push(tmp);
+              }
+              tmp = right[k] + left[j]; // 交换
+              if (!ret.includes(tmp) && s2.indexOf(tmp) !== -1) {
+                ret.push(tmp);
+              }
+            }
+          }
+        }
+        map[l] = map[l] || [];
+        map[l][r] = ret;
+        return map[l][r];
+      }
+
+      let total = dfs(0, s1.length);
+      return total.includes(s2);
+    };
+
+    isScramble("great", "rgeat"); // true;
+    isScramble("abcde", "caebd"); // false;
+    isScramble("a", "a"); // true;
   </script>
 </body>
 </html>
