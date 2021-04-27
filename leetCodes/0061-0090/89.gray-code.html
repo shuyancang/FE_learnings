@@ -31,11 +31,27 @@
     //   输入: 0
     //   输出: [0]
     //   解释: 我们定义格雷编码序列必须以 0 开头。
-    //        给定编码总位数为 n 的格雷编码序列，其长度为 2n。当 n = 0 时，长度为 20 = 1。
+    //        给定编码总位数为 n 的格雷编码序列，其长度为 2 ^ n。当 n = 0 时，长度为 20 = 1。
     //        因此，当 n = 0 时，其格雷编码序列为 [0]。
-    var grayCode = function(n) {
-
+    var grayCode = function(n) { // 递归 f(n) => f(n - 1)在头部间隔插入0 1即可 => 复杂度 2 ^ n 估摸着要超时
+      if(n === 0) {
+        return [0];
+      } else if (n === 1) {
+        return [0, 1];
+      }
+      const num = 2 ** (n - 1);
+      const restList = grayCode(n - 1);
+      const res = [];
+      for (let i = 0; i < restList.length; i++) {
+        const cur = restList[i];
+        const curBig = cur + num;
+        res.push(i % 2 === 0 ? cur : curBig);
+        res.push(i % 2 === 0 ? curBig : cur);
+      }
+      return res;
     };
+
+    // leetcode方法: 镜像对称: f(n)的结果进行镜像对称, 然后在末尾依次添加0, 1即可；
   </script>
 </body>
 </html>
