@@ -68,25 +68,92 @@
       return count;
     };
 
-    // f(n) 代表0 => n长度的字符串可以被解析的方法; 则f(n + 1)是f(n) + lastletter;
-    // letter不为0; letter为0; l
-    // var numDecodings = function (s) { // 递归似乎是最简单的~只需要判定最后末尾数 + 新数 即可哈？
-    //   if(!s || s === '0') {
-    //     return 0;
-    //   } else if (s.length === 1) {
-    //     return 1;
-    //   }
-    //   const len = s.length;
-    //   const hash = getHashMap();
-    //   const lastLetter = s[len - 1];
-    //   const restLetter = s.substring(0, len - 1);
-    //   if (lastLetter === '0') {
-    //     const tempRight = hash[s[len - 2] + '0'] ? true : false;
-    //     return tempRight ? numDecodings(restLetter) + tempRight;
-    //   } else {
+    // 简化为走楼梯: 字符串拆分为1-2-1.. 的构造, 在拆分过程中, 如果出现任何不符合的字符串即可抛弃; 完成到最后即可收集；
+    var numDecodings = function (s) { // 递归似乎是最简单的~只需要判定最后每一步 然后继续递归 即可哈？ => 超时~~~~昂
+      if(!s || s[0] === '0') {
+        return 0;
+      }
+      const len = s.length;
+      const hash = getHashMap();
+      if(len === 1 && hash[s]) {
+        return 1;
+      } else if (len === 2) {
+        if(hash[s[0] + s[1]] && hash[s[0]] && hash[s[1]]) {
+          return 2;
+        } else if (hash[s[0]] && hash[s[1]]) {
+          return 1;
+        } else if (hash[s[0] + s[1]]) {
+          return 1;
+        }
+        return 0;
+      }
+      let sigleDecode = 0, doubleDecode = 0;
+      if(hash[s[0]] && hash[s[0] + s[1]]){
+        return numDecodings(s.substring(1, len)) + numDecodings(s.substring(2, len));
+      } else if (!hash[s[0] + s[1]]) {
+        return numDecodings(s.substring(1, len));
+      }
+      return 0;
+    }
 
-    //   }
-    // }
+    var numDecodings = function(s){ // 动态规划: 假定s(0 => n)长度的可以解码出f(n)种情况, 则f(n + 1) = f(n - 1) && hash[last2] + f(n) && hash(last); 
+      const len = s.length;
+      const hash = getHashMap();
+      if(!s || s[0] === '0') {
+        return 0;
+      } else if (len === 1) {
+        return hash[s] ? 1 : 0;
+      }
+      let arr = new Array(len).fill(0);
+      arr[0] = hash[s[0]] ? 1 : 0;
+      let initSingle = hash[s[0]] && hash[s[1]] ? 1 : 0;
+      let initDouble = hash[s[0] + s[1]] ? 1 : 0;
+      arr[1] = initSingle + initDouble;
+      for(let i = 2; i < len; i++){
+        let tmpSingle = hash[s[i]] ? arr[i - 1] : 0;
+        let tmpDouble = hash[s[i - 1] + s[i]] ? arr[i - 2] : 0;
+        arr[i] = tmpSingle + tmpDouble;
+        if(arr[i] === 0) {
+          return 0;
+        }
+      }
+      // console.log(arr)
+      return arr[len - 1];
+    }
+
+    // leetcode的动态规划:  => 看起来简洁多了嘞~
+    var numDecodings = function(s) {
+        const n = s.length;
+        const f = new Array(n + 1).fill(0);
+        f[0] = 1;
+        for (let i = 1; i <= n; ++i) {
+            if (s[i - 1] !== '0') {
+                f[i] += f[i - 1];
+            }
+            if (i > 1 && s[i - 2] != '0' && ((s[i - 2] - '0') * 10 + (s[i - 1] - '0') <= 26)) {
+                f[i] += f[i - 2];
+            }
+        }
+        return f[n];
+    };
+
+    var numDecodings = function(s) { // 只用常量的空间~更是优秀！
+        const n = s.length;
+        // a = f[i-2], b = f[i-1], c = f[i]
+        let a = 0, b = 1, c = 0;
+        for (let i = 1; i <= n; ++i) {
+            c = 0;
+            if (s[i - 1] !== '0') {
+                c += b;
+            }
+            if (i > 1 && s[i - 2] != '0' && ((s[i - 2] - '0') * 10 + (s[i - 1] - '0') <= 26)) {
+                c += a;
+            }
+            a = b;
+            b = c;
+        }
+        return c;
+    };
 
     function getHashMap() { // 生成{1 : A, 2: B ...}的映射;
       let hash = {};
@@ -101,6 +168,7 @@
     numDecodings("226"); // 3
     numDecodings("0"); // 0
     numDecodings("06"); // 0
+    numDecodings("2101"); // 1
   </script>
 </body>
 </html>
