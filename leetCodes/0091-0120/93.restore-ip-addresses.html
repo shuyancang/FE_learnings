@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>复原IP地址</title>
+</head>
+<body>
+  <script>
+    // 给定一个只包含数字的字符串，用以表示一个 IP 地址，返回所有可能从 s 获得的 有效 IP 地址 。你可以按任何顺序返回答案。
+    // 有效 IP 地址 正好由四个整数（每个整数位于 0 到 255 之间组成，且不能含有前导 0），整数之间用 '.' 分隔。
+    // 例如："0.1.2.201" 和 "192.168.1.1" 是 有效 IP 地址，但是 "0.011.255.245"、"192.168.1.312" 和 "192.168@1.1" 是 无效 IP 地址。
+
+    // 示例 1：
+    //   输入：s = "25525511135"
+    //   输出：["255.255.11.135","255.255.111.35"]
+    // 示例 2：
+    //   输入：s = "0000"
+    //   输出：["0.0.0.0"]
+    // 示例 3：
+    //   输入：s = "1111"
+    //   输出：["1.1.1.1"]
+    // 示例 4：
+    //   输入：s = "010010"
+    //   输出：["0.10.0.10","0.100.1.0"]
+    // 示例 5：
+    //   输入：s = "101023"
+    //   输出：["1.0.10.23","1.0.102.3","10.1.0.23","10.10.2.3","101.0.2.3"]
+
+    // 提示：
+    //   0 <= s.length <= 3000
+    //   s 仅由数字组成
+
+    var restoreIpAddresses = function(s) { // 第一想法就是回溯;~
+      const len = s.length;
+      if(!s || len < 4 || len > 12) {
+        return [];
+      }
+      const res = [];
+      const dfs = (start, temp) => {
+        const tmpL = temp.length;
+        if(tmpL === 3){
+          const lastStr = s.substring(start, len);
+          if(checkNum(lastStr)) {
+            res.push([...temp, lastStr]);
+            return true;
+          }
+          return false;
+        }
+        for(let i = 1; i <= 3; i++) { // 适当剪枝降低遍历次数
+          const cur = s.substring(start, start + i);
+          if(checkNum(cur)){
+            temp.push(cur);
+            dfs(start + i, temp);
+            temp.pop();
+          }
+        }
+      }
+      dfs(0, []);
+      return res.map(e => e.join('.'));
+    };
+
+    function checkNum(str) { // 检查字符串是否合规;
+      if(str.length > 1 && str[0] === '0') {
+        return false;
+      }
+      const num = parseInt(str).toString();
+      // for(let i = 0; i <str.length; i++) {
+      //   if(str[i] >= 0 && str <= 9){
+      //     continue;
+      //   }
+      //   return false;
+      // }
+      return num === str && num >= 0 && num <= 255; // 这样判定简单点哈~
+    }
+
+    // 思路二: 动态规划是否能够实现? f(n) 是 4个集合,可否f(n - m)三个集合顺序推
+    // 走1-3距离, 四步到末尾, 有多少种走法, 每一步对应的数值范围[0 - 255]; ? 这么递归似乎复杂度更高~~~?算了···还要超时~
+    var restoreIpAddresses = function(s) {
+
+    }
+
+    var calcTypes = function(len, steps){ // 对于总长度为len的字符串, 要steps步走完, 的组合
+
+    }
+
+    restoreIpAddresses("25525511135"); // ["255.255.11.135","255.255.111.35"]
+    restoreIpAddresses("0000"); // ["0.0.0.0"]
+    restoreIpAddresses("1111"); // ["1.1.1.1"]
+    restoreIpAddresses("010010"); // ["0.10.0.10","0.100.1.0"]
+    restoreIpAddresses("101023"); // ["1.0.10.23","1.0.102.3","10.1.0.23","10.10.2.3","101.0.2.3"]
+  </script>
+</body>
+</html>
