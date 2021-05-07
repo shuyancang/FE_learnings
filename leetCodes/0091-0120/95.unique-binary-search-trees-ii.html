@@ -39,22 +39,29 @@
     // 二叉搜索树换句话说就是他的中序遍历, 值是升序的;
     var generateTrees = function(n) { // 第一想法: 回溯~~~哈哈
       const initList = [];
-      const res = [];
-      for(let i = 1; i <= n; i++){
-        initList.push(i);
-      }
-      const binaryTool = function(numRest, tree, treeRoot, max, min){ // 在treeRoot节点下构建一个子二叉搜索树;
-        if (numRest.length === 0) {
-          res.push(tree);
+      function buildTree(start, end){ // 起始-终止数, 代表生成一个从start => 的二叉搜索树; 
+        const res = [];
+        if(start > end) {
+          return [null];
         }
-        if (!treeRoot.left) { // 左不存在, 需要小于当前根节点, 且
-          // const minList = 
+        for(let i = start; i <= end; i++){
+          const leftList = buildTree(start, i - 1);
+          const rightList = buildTree(i + 1, end);
+          for(leftTree of leftList){
+            for(rightTree of rightList){
+              const tree = new TreeNode(i);
+              tree.left = leftTree;
+              tree.right = rightTree;
+              res.push(tree);
+            }
+          }
         }
+        return res;
       }
-      for(let i = 1; i <= n; i++){
-        let curTree = new TreeNode(i);
-        binaryTool(initList, curTree, curTree, null, null);
+      if(n === 0){
+        return [];
       }
+      return buildTree(1, n);
     };
   </script>
 </body>
