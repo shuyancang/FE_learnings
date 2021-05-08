@@ -33,17 +33,31 @@
     //        根节点的值为 5 ，但是其右子节点值为 4 。
 
     var isValidBST = function(root) { // 递归，且记录上一个根节点作为min, max
-      if(!root || (root.left === null && root.right === null) ) {
-        return true;
+      function bstTool(tree, min, max){ // min是tree中每个数必须大于min, max是每个数必须小于max
+        if(!tree){
+          return true;
+        }
+        const curVal = tree.val;
+        if(min !== null && curVal <= min){
+          return false;
+        }
+        if(max !== null && curVal >= max){
+          return false;
+        }
+        return bstTool(tree.left, min, tree.val) && isValidBST(tree.right, tree.val, max);
       }
-      if(root.left !== null && root.left.val >= root.val){
-        return false;
-      }
-      if(root.right !== null && root.right.val <= root.val){
-        return false;
-      }
-      return isValidBST(root.left) && isValidBST(root.right);
+      return bstTool(root, null, null);
     };
+      // 更容易的理解: bstTool(tree, min, max)代表的是tree节点所有值都在min - max之间, 
+      // 所以可以赋值min初始为-infinity~ max为infinity, 递归判断左右子树;
+
+    // leetcode题解: 可以对树进行中序遍历, 输出遍历后的数, 如果中序遍历得到的是一个升序数组, 则是二叉搜索树, 否则false
+    var isValidBST = function(root){
+      // 对root进行中序遍历: 使用迭代 (栈存储) 方式
+      while(root){
+        
+      }
+    }
   </script>
 </body>
 </html>
