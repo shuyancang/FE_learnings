@@ -35,34 +35,49 @@
       return binaryTool(1, n);
     };
 
-    // 第二想法动态规划: f(m)(n)为从m => n(m < n)的数量, 则f(m)(n)~也要反复迭代不能直接出来啊~得斜着迭代且 要再次遍历叠加~
-    
-    // 第三基于第一种方法数学归纳即可显然f(n)只取决于n, 直接循环出结果; f(0) = 0, f(1) = 1
+    // 第三基于第一种方法数学归纳(动态规划)即可显然f(n)只取决于n, 直接循环出结果; f(0) = 0, f(1) = 1
     var numTrees = function(n) {
       if(n === 0 || n === 1){
         return n;
       }
       let res = [1, 1];
-      for(let i = 0; i < n; i++){
+      for(let i = 2; i <= n; i++){ // i从2到f(n)的值依次存入res;
         let count = 0;
-        // for(let mid = ){
-          // count += 
-        // }
+        for(let rootNum = 1; rootNum <= i; rootNum++){ // 明确根节点值(遍历,每个数都可能是根节点)
+          count += res[rootNum - 1] * res[i - rootNum]; // 根节点明确后, 分别统计左右可能的情况;
+        }
+        res[i] = count;
       }
-      // let res = [1]; // 差值为0(m = n = 1)的树只有一种
-      // for(let i = 1; i <= n; i++){ // i指代差值, 最小是0, 最大差值可达n - 1;
-      //   let count = 0;
-      //   for(let mid = 0; mid <= i; mid++){
-      //     count += res[mid] * res[i - mid];
-      //   }
-      //   res[i] = count;
-      // }
-      return res;
-      // return res[n - 1];
+      return res[n - 1];
     }
 
+    // leetcode思路: 动态规划: G(n)是长度为n的能够成不同二叉树的个数函数;
+    // F(i, n)为以i为根, 长度为n 的二叉树个数: 显然G(n)是F(i, n)的i 从 1 到 n的和;且G(0) = 0; G(1) = 1;
+    // 显然F(i, n) = G(i - 1) * G(n - i); // i为根, 左右分别二叉搜索树的可能的乘积~跟上面思路完全一样，但似乎说的清点儿~
+    var numTrees = function(n){
+      const res = new Array(n + 1).fill(0);
+      res[1] = 1;
+      for(let i = 2; i <= n; i++){
+        for(let j = 1; j <= i; j++){
+          res[i] += res[j - 1] * res[i - j];
+        }
+      }
+      return res[n];
+    }
+
+    // 纯粹数学方法~： G(n)G(n)函数的值在数学上被称为卡塔兰数~ 其通项公式~~~~直接计算：
+    var numTrees = function(n) {
+      let C = 1;
+      for (let i = 0; i < n; ++i) {
+          C = C * 2 * (2 * i + 1) / (i + 2);
+      }
+      return C;
+    };
 
 
+    numTrees(0); // 0
+    numTrees(1); // 1
+    numTrees(3); // 5
 
   </script>
 </body>
