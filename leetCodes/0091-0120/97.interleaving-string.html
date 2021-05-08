@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>交错字符串</title>
+</head>
+<body>
+  <script>
+    // 给定三个字符串 s1、s2、s3，请你帮忙验证 s3 是否是由 s1 和 s2 交错 组成的。
+    // 两个字符串 s 和 t 交错 的定义与过程如下，其中每个字符串都会被分割成若干 非空 子字符串：
+
+    // s = s1 + s2 + ... + sn
+    // t = t1 + t2 + ... + tm
+    // |n - m| <= 1
+    // 交错 是 s1 + t1 + s2 + t2 + s3 + t3 + ... 或者 t1 + s1 + t2 + s2 + t3 + s3 + ...
+    // 提示：a + b 意味着字符串 a 和 b 连接。
+
+    // 示例 1：
+    //   输入：s1 = "aabcc", s2 = "dbbca", s3 = "aadbbcbcac" 输出：true
+
+    // 示例 2：
+    //   输入：s1 = "aabcc", s2 = "dbbca", s3 = "aadbbbaccc" 输出：false
+
+    // 示例 3：
+    //   输入：s1 = "", s2 = "", s3 = "" 输出：true
+
+    // 提示：
+    //   0 <= s1.length, s2.length <= 100
+    //   0 <= s3.length <= 200
+    //   s1、s2、和 s3 都由小写英文字母组成
+
+    // 第一想法动态规划哈~ 从字符串末尾后序遍历; 
+    // 创建一个函数F(s1, right1, s2, right2, s3);代表s1(0 => right1)与s2(0 => right2)是否是s3(0 => right1 + right2)的交错字符串;
+    var isInterleave = function(s1, s2, s3) {
+      const len1 = s1.length;
+      const len2 = s2.length;
+      if(len1 + len2 !== s3.length){
+        return false;
+      }
+      interTool = function(str1, rIndex1, str2, rIndex2, str){
+        const strIndex = rIndex2 + rIndex1 + 1;
+        if(rIndex1 === -1 && rIndex2 === -1){ // 到头了还一样那就确认眼神了~
+          return true;
+        }
+        if(str1[rIndex1] !== str[strIndex] && str2[rIndex2] !== str[strIndex]){ // 没有 => 显然 
+          return false;
+        }
+        if(str1[rIndex1] === str[strIndex] && interTool(str1, rIndex1 - 1, str2, rIndex2, str)){ // 到这里每一个字符串都有可能有两个分支 => 复杂度运气差了会到2 ^ n·····昂，会超时吧？似乎写的不对。
+          return true;
+        } else if(str2[rIndex2] === str[strIndex] && interTool(str1, rIndex1, str2, rIndex2 - 1, str)){
+          return true;
+        }
+        return false;
+      }
+      return interTool(s1, len1 - 1, s2, len2 - 1, s3);
+    };
+
+    var isInterleave = function(s1, s2, s3) { // 第二种考虑怎么搞嘞····。
+      // F(m, n)代表s1长度为m的字符串与s2长度n的字符串, 是否是长度为(m + n - 1)s3字符串的交错
+      // 则: F(m, n) = (F(m - 1, n) && s1[m] === s3[m + n - 1]) || (F(m, n - 1) && s2[n] === s3[m + n - 1]);
+      const len1 = s1.length;
+      const len2 = s2.length;
+      if(len1 + len2 !== s3.length){
+        return false;
+      }
+      let dp = new Array(len1 + 1).fill(false).map(e => new Array(len2 + 1).fill(false));
+      dp[0][0] = true;
+      for(let j = 1; j <= len2; j++){ // m = 0(s1长度为0时)
+        dp[0][j] = dp[0][j - 1] && s2[j - 1] === s3[j - 1];
+      }
+      for(let i = 1; i <= len1; i++){ // j = 0(s2长度为0时)
+        dp[i][0] = dp[i - 1][0] && s1[i - 1] === s3[i - 1];
+      }
+      for(let i = 1; i <= len1; i++){
+        for(let j = 1; j <= len2; j++){
+          dp[i][j] = (s1[i - 1] === s3[i + j - 1] && dp[i - 1][j]) || (s2[j - 1] === s3[i + j - 1] && dp[i][j - 1]);
+        }
+      }
+      return dp[len1][len2];
+    }
+
+    var isInterleave = function(s1, s2, s3) { // 实际上, 以上解法, 用滚动数组进行空间复杂度的优化，更节省
+      const len1 = s1.length;
+      const len2 = s2.length;
+      if(len1 + len2 !== s3.length){
+        return false;
+      }
+      let dp = new Array(len1 + 1).fill(false);
+      dp[0] = true;
+      for(let j = 1; j <= len2; j++){ // m = 0(s1长度为0时)
+        dp[j] = dp[j - 1] && s2[j - 1] === s3[j - 1];
+      }
+      for(let i = 1; i <= len1; i++){
+        for(let j = 0; j <= len2; j++){
+          // dp[i][j] = (s1[i - 1] === s3[i + j - 1] && dp[i - 1][j]) || (s2[j - 1] === s3[i + j - 1] && dp[i][j - 1]);
+          dp[j] = (s1[i - 1] === s3[i + j - 1] && dp[j]) || (s2[j - 1] === s3[i + j - 1] && dp[j - 1]);
+        }
+      }
+      return dp[len2];
+    }
+
+    isInterleave("a", "b", "ab");
+    isInterleave("aabcc", "dbbca", "aadbbcbcac"); // true
+    isInterleave("aabcc", "dbbca", "aadbbbaccc"); // false
+    isInterleave("", "", ""); // true
+
+  </script>
+</body>
+</html>
