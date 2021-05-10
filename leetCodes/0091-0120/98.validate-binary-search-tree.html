@@ -52,11 +52,25 @@
       // 所以可以赋值min初始为-infinity~ max为infinity, 递归判断左右子树;
 
     // leetcode题解: 可以对树进行中序遍历, 输出遍历后的数, 如果中序遍历得到的是一个升序数组, 则是二叉搜索树, 否则false
-    var isValidBST = function(root){
-      // 对root进行中序遍历: 使用迭代 (栈存储) 方式
-      while(root){
-        
+    var isValidBST = function(root){ // 对root进行中序遍历: 使用迭代 (栈存储) 方式
+      if(!root){
+        return true;
       }
+      const stack = [];
+      let num;
+      while(root || stack.length > 0) {
+        while(root){
+          stack.push(root);
+          root = root.left;
+        }
+        root = stack.pop();
+        if(root.val <= num){
+          return false;
+        }
+        num = root.val;
+        root = root.right;
+      }
+      return true;
     }
   </script>
 </body>
