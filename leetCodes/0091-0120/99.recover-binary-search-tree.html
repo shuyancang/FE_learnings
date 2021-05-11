@@ -37,7 +37,92 @@
       
     }
 
-    // leetcode解法: 对于一个升序数组如果有任意节点交换位置, 
+    // leetcode解法: 对于一个升序数组如果有任意节点交换位置, 中序遍历, 找到两个/一个node.val > node.next.val的节点(x, y), 
+    // 如果两个点则x, 和 y.next.val交换, 如果只有一个, 交换x, y即可;
+    var recoverTree = function(root){
+      const stack = [];
+      let x = null, y = null ,pre = null;
+      while(stack.length > 0 || root){
+        while(root){
+          stack.push(root);
+          root = root.left;
+        }
+        root = stack.pop();
+        if(pre !== null && root.val < pre.val){
+          if(x === null){ // 第一个错位节点
+            x = pre;
+          }
+          y = root; // 如果有第二个错位节点, 会替换掉; 如果没有就是
+        }
+        pre = root;
+        root = root.right;
+      }
+      const tmp = x.val;
+      x.val = y.val;
+      y.val = tmp;
+    }
+
+    // morris中序遍历
+    // 思路与算法
+    //   方法二中我们不再显示的用数组存储中序遍历的值序列，但是我们会发现我们仍需要 O(H)O(H) 的栈空间，无法满足题目的进阶要求，那么该怎么办呢？这里向大家介绍一种不同于平常递归或迭代的遍历二叉树的方法：Morris 遍历算法，该算法能将非递归的中序遍历空间复杂度降为 O(1)O(1)。
+
+    //   Morris 遍历算法整体步骤如下（假设当前遍历到的节点为 xx）：
+
+    //   如果 xx 无左孩子，则访问 xx 的右孩子，即 x = x.\textit{right}x=x.right。
+    //   如果 xx 有左孩子，则找到 xx 左子树上最右的节点（即左子树中序遍历的最后一个节点，xx 在中序遍历中的前驱节点），我们记为 \textit{predecessor}predecessor。根据 \textit{predecessor}predecessor 的右孩子是否为空，进行如下操作。
+    //   如果 \textit{predecessor}predecessor 的右孩子为空，则将其右孩子指向 xx，然后访问 xx 的左孩子，即 x = x.\textit{left}x=x.left。
+    //   如果 \textit{predecessor}predecessor 的右孩子不为空，则此时其右孩子指向 xx，说明我们已经遍历完 xx 的左子树，我们将 \textit{predecessor}predecessor 的右孩子置空，然后访问 xx 的右孩子，即 x = x.\textit{right}x=x.right。
+    //   重复上述操作，直至访问完整棵树。
+    //   其实整个过程我们就多做一步：将当前节点左子树中最右边的节点指向它，这样在左子树遍历完成后我们通过这个指向走回了 xx，且能再通过这个知晓我们已经遍历完成了左子树，而不用再通过栈来维护，省去了栈的空间复杂度。
+
+    //   了解完这个算法以后，其他地方与方法二并无不同，我们同样也是维护一个 \textit{pred}pred 变量去比较即可，具体实现可以看下面的代码，这里不再赘述。
+    var recoverTree = function(root) {
+    let x = null, y = null, pred = null, predecessor = null;
+
+    while (root !== null) {
+      if (root.left !== null) {
+        // predecessor 节点就是当前 root 节点向左走一步，然后一直向右走至无法走为止
+        predecessor = root.left;
+        while (predecessor.right !== null && predecessor.right !== root)
+          predecessor = predecessor.right;
+
+        // 让 predecessor 的右指针指向 root，继续遍历左子树
+        if (predecessor.right === null) {
+          predecessor.right = root;
+          root = root.left;
+        }
+        // 说明左子树已经访问完了，我们需要断开链接
+        else {
+          if (pred !== null && root.val < pred.val) {
+            y = root;
+            if (x === null) {
+                x = pred;
+            }
+          }
+          pred = root;
+
+          predecessor.right = null;
+          root = root.right;
+        }
+      }
+      // 如果没有左孩子，则直接访问右孩子
+      else {
+        if (pred !== null && root.val < pred.val) {
+            y = root;
+            if (x === null) {
+                x = pred;
+            }
+        }
+        pred = root;
+
+        root = root.right;
+      }
+    }
+         const tmp = x.val;
+      x.val = y.val;
+      y.val = tmp;
+};
+
   </script>
 </body>
 </html>
