@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>对称二叉树</title>
+</head>
+<body>
+  <script>
+    // 给定一个二叉树，检查它是否是镜像对称的。
+    // 例如，二叉树 [1,2,2,3,4,4,3] 是对称的。
+    //     1
+    //   / \
+    //   2   2
+    // / \ / \
+    // 3  4 4  3
+    // 但是下面这个 [1,2,2,null,3,null,3] 则不是镜像对称的:
+    //     1
+    //   / \
+    //   2   2
+    //   \   \
+    //   3    3
+    // 进阶：
+    //   你可以运用递归和迭代两种方法解决这个问题吗？
+    
+    // 显然, 进行中序遍历, 得到的数组进行对称判定;
+    var isSymmetric = function(root) { // 实际上就是对称判断子树是否对称而已。
+      if(!root || (root.left === null && root.right === null)){
+        return true;
+      }
+      function isSubSym(p, q){
+        if(p === null && q === null){
+          return true;
+        } else if ((p === null || q === null) || (p.val !== q.val)) {
+          return false;
+        }
+        return isSubSym(p.left, q.right) && isSubSym(p.right, q.left);
+      }
+      return isSubSym(root.left, root.right);
+    };
+
+    var isSymmetric = function(root){ // 迭代该咋写嘞···emmm, 思路相似, 验证两个 树是否对称
+      if(!root || (root.left === null && root.right === null)){
+        return true;
+      }
+      function isSubSym(p, q){
+        if(p === null && q === null){
+          return true;
+        } else if ((p === null || q === null) || (p.val !== q.val)) {
+          return false;
+        }
+        // 对p进行前序遍历, q进行对应的镜像遍历(所有的left变成right)
+        // while(p.left)
+      }
+    }
+
+    // leetcode的迭代方法: 
+// 「方法一」中我们用递归的方法实现了对称性的判断，那么如何用迭代的方法实现呢？首先我们引入一个队列，这是把递归程序改写成迭代程序的常用方法。初始化时我们把根节点入队两次。每次提取两个结点并比较它们的值（队列中每两个连续的结点应该是相等的，而且它们的子树互为镜像），然后将两个结点的左右子结点按相反的顺序插入队列中。当队列为空时，或者我们检测到树不对称（即从队列中取出两个不相等的连续结点）时，该算法结束。
+
+// const check = (u: TreeNode | null, v: TreeNode | null): boolean => {
+//     const q: (TreeNode | null)[] = [];
+//     q.push(u),q.push(v);
+
+//     while (q.length) {
+//         u = q.shift()!;
+//         v = q.shift()!;
+
+//         if (!u && !v) continue;
+//         if ((!u || !v) || (u.val !== v.val)) return false;
+
+//         q.push(u.left); 
+//         q.push(v.right);
+
+//         q.push(u.right); 
+//         q.push(v.left);
+//     }
+//     return true;
+// }
+// var isSymmetric = function(root: TreeNode | null): boolean {
+//     return check(root, root);
+// };
+// 复杂度分析
+
+// 时间复杂度：O(n)O(n)，同「方法一」。
+// 空间复杂度：这里需要用一个队列来维护节点，每个节点最多进队一次，出队一次，队列中最多不会超过 nn 个点，故渐进空间复杂度为 O(n)O(n)。
+
+  </script>
+</body>
+</html>
