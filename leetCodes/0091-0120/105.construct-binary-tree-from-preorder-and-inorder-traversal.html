@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>前序中序遍历序列构造二叉树</title>
+</head>
+<body>
+  <script>
+    // 根据一棵树的前序遍历与中序遍历构造二叉树。
+    //   注意:
+    //   你可以假设树中没有重复的元素。
+
+    //   例如，给出
+
+    //   前序遍历 preorder = [3,9,20,15,7]
+    //   中序遍历 inorder = [9,3,15,20,7]
+    //   返回如下的二叉树：
+
+    //       3
+    //     / \
+    //     9  20
+    //       /  \
+    //     15   7
+    var buildTree = function(preorder, inorder) { // 递归完事儿.
+      // preorder的第一项必定是root; root对应在inorder位置的左边集合必定是左子树, 右边集合必定是右子树, 
+      // 将inorder拆分, 一一返回对应拆分后的preorder, 则对应后的preorder两个部分, 也分别是这两个子树的前序遍历; => 递归执行
+      // ......才击败5%... 不行啊。
+      if(!preorder || preorder.length === 0) {
+        return null;
+      } else if (preorder.length === 1) {
+        return new TreeNode(preorder[0]);
+      }
+      const len = preorder.length;
+      const curNode = new TreeNode(preorder[0]);
+      const nodeIndex = inorder.indexOf(preorder[0]);
+      const leftOrder = [], rightOrder = [];
+      let leftPreOrder = new Array(len).fill(null), rightPreOrder = new Array(len).fill(null);
+      for(let i = 0; i < inorder.length; i++){
+        const preOrderIndex = preorder.indexOf(inorder[i]);
+        if(i < nodeIndex){
+          leftOrder.push(inorder[i]);
+          leftPreOrder[preOrderIndex] = inorder[i];
+        }
+        if(i > nodeIndex){
+          rightOrder.push(inorder[i]);
+          rightPreOrder[preOrderIndex] = inorder[i];
+        }
+      }
+      leftPreOrder = leftPreOrder.filter(e => e !== null);
+      rightPreOrder = rightPreOrder.filter(e => e !== null);
+      curNode.left = buildTree(leftPreOrder, leftOrder);
+      curNode.right = buildTree(rightPreOrder, rightOrder);
+      return curNode;
+    };
+
+    function TreeNode(val, left, right) {
+      this.val = (val===undefined ? 0 : val)
+      this.left = (left===undefined ? null : left)
+      this.right = (right===undefined ? null : right)
+    }
+
+    var buildTree = function(preorder, inorder) { // 第二想法: 咋搞~？leetcode: 利用hash, 然后对应推入;
+      const len = preorder.length;
+      const hash = {};
+      for(let i = 0; i < len; i++){ // hash降低寻找索引的复杂度
+        hash[inorder[i]] = i;
+      }
+      return buildSubtree(preorder, 0, len - 1, inorder, 0, len - 1, hash);
+    }
+
+    // https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/solution/javascript-ti-jie-105-cong-qian-xu-yu-zhong-xu-bia/
+
+    function buildSubtree(preorder, preLeft, preRight, inorder, inLeft, inRight, hash) {
+      // 从preLeft => preRight的前序遍历preorder 到 inLeft => inRight的中序遍历, 生成的tree;
+        if(preLeft > preRight || inLeft > inRight) { // 越过边界, 无节点
+            return null;
+        }
+        const treeNode = new TreeNode(preorder[preLeft]); // 该节点node => 去找该值在中序遍历的根节点对应的索引
+        const inRootIndex = hash[preorder[preLeft]]; // 中序遍历该根节点往左有节点数: inRootIndex - inLeft
+        // 前序遍历，左子树的最后一位索引值 x
+        // x - (preLeft + 1) === (inRootIndex - 1) - inLeft => x = inRootIndex + preLeft - inLeft
+        const x = inRootIndex + preLeft - inLeft;
+        treeNode.left = buildSubtree(preorder, preLeft + 1, x, inorder, inLeft, inRootIndex - 1, map );
+        treeNode.right = buildSubtree(preorder, x + 1, preRight, inorder,  inRootIndex + 1, inRight, map);
+        return treeNode;
+    }
+
+    
+    buildTree([3,9,20,15,7], [9,3,15,20,7]);
+    //       3
+    //     / \
+    //     9  20
+    //       /  \
+    //     15   7
+  </script>
+</body>
+</html>
