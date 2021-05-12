@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>二叉树锯齿形层序遍历</title>
+</head>
+<body>
+  <script>
+    // 给定一个二叉树，返回其节点值的锯齿形层序遍历。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。
+    //   例如：
+    //   给定二叉树 [3,9,20,null,null,15,7],
+
+    //       3
+    //     / \
+    //     9  20
+    //       /  \
+    //     15   7
+    //   返回锯齿形层序遍历如下：
+
+    //   [
+    //     [3],
+    //     [20,9],
+    //     [15,7]
+    //   ]
+    var zigzagLevelOrder = function(root) { // 这个和层序遍历~没有啥区别啊。走个区分即可 => 注意翻转镜像的时机
+      if(!root){
+        return [];
+      }
+      const res = [];
+      let nodeList = [root];
+      let index = 0;
+      while(nodeList.length > 0) {
+        let tmpList = [];
+        res[index] = [];
+        for(let i = 0; i < nodeList.length; i++){
+          const curNode = nodeList[i];
+          res[index].push(curNode.val);
+          curNode.left && tmpList.push(curNode.left);
+          curNode.right && tmpList.push(curNode.right);
+        }
+        let nextList = [];
+        if(tmpList.length > 0){
+          res[index + 1] = [];
+          for(let i = tmpList.length - 1; i >= 0; i--){ // 反向遍历;
+            const curNode = tmpList[i];
+            res[index + 1].push(curNode.val);
+            curNode.right && nextList.push(curNode.right);
+            curNode.left && nextList.push(curNode.left);
+          }
+          nextList = nextList.reverse();
+        }
+        index += 2;
+        nodeList = nextList;
+      }
+      return res;
+    };
+
+    // leetcode使用双端队列, 基于遍历层数(lev)记录应该从哪端插入
+    var zigzagLevelOrder = function(root) {
+    if (!root) {
+        return [];
+    }
+
+    const ans = [];
+    const nodeQueue = [root];
+    let isOrderLeft = true;
+    while (nodeQueue.length) {
+        let levelList = [];
+        const size = nodeQueue.length;
+        for (let i = 0; i < size; ++i) {
+            const node = nodeQueue.shift();
+            if (isOrderLeft) {
+                levelList.push(node.val);
+            } else {
+                levelList.unshift(node.val);
+            }
+            if (node.left !== null) {
+                nodeQueue.push(node.left);
+            }
+            if (node.right !== null) {
+                nodeQueue.push(node.right);
+            }
+        }            
+        ans.push(levelList);
+        isOrderLeft = !isOrderLeft;
+    }
+
+    return ans;
+};
+
+  </script>
+</body>
+</html>
