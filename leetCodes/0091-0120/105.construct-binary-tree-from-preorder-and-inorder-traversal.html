@@ -71,20 +71,21 @@
     }
 
     // https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/solution/javascript-ti-jie-105-cong-qian-xu-yu-zhong-xu-bia/
-
+    // 前序遍历: [ 根节点, [左子树的前序遍历结果], [右子树的前序遍历结果] ]
+    // 中序遍历: [ [左子树的中序遍历结果], 根节点, [右子树的中序遍历结果] ] 
     function buildSubtree(preorder, preLeft, preRight, inorder, inLeft, inRight, hash) {
       // 从preLeft => preRight的前序遍历preorder 到 inLeft => inRight的中序遍历, 生成的tree;
-        if(preLeft > preRight || inLeft > inRight) { // 越过边界, 无节点
-            return null;
-        }
-        const treeNode = new TreeNode(preorder[preLeft]); // 该节点node => 去找该值在中序遍历的根节点对应的索引
-        const inRootIndex = hash[preorder[preLeft]]; // 中序遍历该根节点往左有节点数: inRootIndex - inLeft
-        // 前序遍历，左子树的最后一位索引值 x
-        // x - (preLeft + 1) === (inRootIndex - 1) - inLeft => x = inRootIndex + preLeft - inLeft
-        const x = inRootIndex + preLeft - inLeft;
-        treeNode.left = buildSubtree(preorder, preLeft + 1, x, inorder, inLeft, inRootIndex - 1, map );
-        treeNode.right = buildSubtree(preorder, x + 1, preRight, inorder,  inRootIndex + 1, inRight, map);
-        return treeNode;
+      if(preLeft > preRight || inLeft > inRight) { // 越过边界, 无节点
+          return null;
+      }
+      const treeNode = new TreeNode(preorder[preLeft]); // 该节点node => 去找该值在中序遍历的根节点对应的索引
+      const inRootIndex = hash[preorder[preLeft]]; // 中序遍历该根节点往左有节点数: inRootIndex - inLeft
+      // inRootIndex 到 inLeft是左子树(左子树的节点个数是: inRootIndex - inLeft + 1个), 到inRight是右子树(右子树节点个数: inRight);
+      // 相应的对应前序左子树索引: preLeft + inRootIndex - inLeft;
+      const x = preLeft + inRootIndex - inLeft;
+      treeNode.left = buildSubtree(preorder, preLeft + 1, x, inorder, inLeft, inRootIndex - 1, hash );
+      treeNode.right = buildSubtree(preorder, x + 1, preRight, inorder,  inRootIndex + 1, inRight, hash);
+      return treeNode;
     }
 
     
