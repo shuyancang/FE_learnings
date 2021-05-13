@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>从中序后续遍历构造二叉树</title>
+</head>
+<body>
+  <script>
+    // 根据一棵树的中序遍历与后序遍历构造二叉树。
+
+    // 注意:
+    //   你可以假设树中没有重复的元素。
+
+    //   例如，给出
+
+    //   中序遍历 inorder = [9,3,15,20,7]
+    //   后序遍历 postorder = [9,15,7,20,3]
+    //   返回如下的二叉树：
+
+    //     3
+    //   / \
+    //   9  20
+    //     /  \
+    //   15   7
+
+    // 中序: [[左子树中序], 根, [右子树中序]]
+    // 后续: [[左子树后序], [右子树后续], 根]
+    var buildTree = function(inorder, postorder) {
+      const hash = {};
+      for(let i = 0; i < inorder.length; i++){
+        hash[inorder[i]] = i;
+      }
+      return buildTool(inorder, 0, inorder.length - 1, postorder, 0, postorder.length - 1, hash);
+    };
+
+    function TreeNode(val, left, right) {
+      this.val = (val===undefined ? 0 : val)
+      this.left = (left===undefined ? null : left)
+      this.right = (right===undefined ? null : right)
+    }
+
+    function buildTool(inOrder, inLeft, inRight, postOrder, postLeft, postRight, hash){
+      // debugger;
+      if(inLeft > inRight || postLeft > postRight){
+        return null;
+      }
+      const rootVal = postOrder[postRight];
+      const root = new TreeNode(rootVal);
+      const inIndex = hash[rootVal]; // 左子树节点数个: inIndex - inLeft
+      const newPostIndex = postLeft + (inIndex - inLeft);
+      root.left = buildTool(inOrder, inLeft, inIndex - 1, postOrder, postLeft, newPostIndex - 1, hash);
+      root.right = buildTool(inOrder, inIndex + 1, inRight, postOrder, newPostIndex, postRight - 1, hash);
+      return root;
+    }
+
+    buildTree([9,3,15,20,7], [9,15,7,20,3]);
+
+  </script>
+</body>
+</html>
