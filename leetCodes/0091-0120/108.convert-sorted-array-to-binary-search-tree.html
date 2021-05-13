@@ -33,23 +33,25 @@
       this.right = (right===undefined ? null : right)
     }
 
-    // 可以先把上层铺满(1 => 2 => 4 => 8), 先得到基础高度(depth); 则最后一层任意配几个位置 => 再进行前序遍历输入val;
     var sortedArrayToBST = function(nums) { // 直接选择nums中间节点作为根节点, 左右继续搭建递归即可
       if(!nums || !(nums.length > 0)) {
         return null
       }
+      const len = nums.length;
       function bstTool(arr, left, right){
-        if(left > right){
+        if(left > right) {
           return null;
         }
         const mid = parseInt((left + right) / 2);
-        const curNode = new TreeNode(arr[mid]);
-        curNode.left = bstTool(left, mid - 1);
-        curNode.right = bstTool(mid + 1, right);
-        return curNode;
+        const val = arr[mid];
+        const node = new TreeNode(val);
+        node.left = bstTool(arr, left, mid - 1);
+        node.right = bstTool(arr, mid + 1, right);
+        return node;
       }
-      return bstTool(nums, 0, nums.length - 1);
+      return bstTool(nums, 0, len - 1);
     };
+
     sortedArrayToBST([-10,-3,0,5,9]);
     sortedArrayToBST([1, 3]);
   </script>
