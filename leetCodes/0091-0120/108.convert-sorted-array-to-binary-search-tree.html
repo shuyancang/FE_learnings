@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>将有序数组转换为二叉搜索树</title>
+</head>
+<body>
+  <script>
+    // 给你一个整数数组 nums ，其中元素已经按 升序 排列，请你将其转换为一棵 高度平衡 二叉搜索树。
+    // 高度平衡 二叉树是一棵满足「每个节点的左右两个子树的高度差的绝对值不超过 1 」的二叉树。
+
+    // 示例 1：
+    //   输入：nums = [-10,-3,0,5,9]
+    //   输出：[0,-3,9,-10,null,5]
+    //   解释：[0,-10,5,null,-3,null,9] 也将被视为正确答案：
+
+    // 示例 2：
+    //   输入：nums = [1,3]
+    //   输出：[3,1]
+    //   解释：[1,3] 和 [3,1] 都是高度平衡二叉搜索树。
+    //  
+
+    // 提示：
+    //   1 <= nums.length <= 104
+    //   -104 <= nums[i] <= 104
+    //   nums 按 严格递增 顺序排列
+    
+    function TreeNode(val, left, right) {
+      this.val = (val===undefined ? 0 : val)
+      this.left = (left===undefined ? null : left)
+      this.right = (right===undefined ? null : right)
+    }
+
+    // 可以先把上层铺满(1 => 2 => 4 => 8), 先得到基础高度(depth); 则最后一层任意配几个位置 => 再进行前序遍历输入val;
+    var sortedArrayToBST = function(nums) { // 直接选择nums中间节点作为根节点, 左右继续搭建递归即可
+      if(!nums || !(nums.length > 0)) {
+        return null
+      }
+      function bstTool(arr, left, right){
+        if(left > right){
+          return null;
+        }
+        const mid = parseInt((left + right) / 2);
+        const curNode = new TreeNode(arr[mid]);
+        curNode.left = bstTool(left, mid - 1);
+        curNode.right = bstTool(mid + 1, right);
+        return curNode;
+      }
+      return bstTool(nums, 0, nums.length - 1);
+    };
+    sortedArrayToBST([-10,-3,0,5,9]);
+    sortedArrayToBST([1, 3]);
+  </script>
+</body>
+</html>

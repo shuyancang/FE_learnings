@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>二叉树层序遍历II</title>
+</head>
+<body>
+  <script>
+    // 给定一个二叉树，返回其节点值自底向上的层序遍历。 （即按从叶子节点所在层到根节点所在的层，逐层从左向右遍历）
+
+    // 例如：
+    // 给定二叉树 [3,9,20,null,null,15,7],
+
+    //     3
+    //   / \
+    //   9  20
+    //     /  \
+    //   15   7
+    // 返回其自底向上的层序遍历为：
+
+    // [
+    //   [15,7],
+    //   [9,20],
+    //   [3]
+    // ]
+    var levelOrderBottom = function(root) {
+      const res = [];
+      if(!root){
+        return res;
+      }
+      let nodeList = [root], depth = 0;
+      while(nodeList.length > 0){
+        let nextList = [];
+        res[depth] = [];
+        for(let i = 0; i < nodeList.length; i++){
+          const cur = nodeList[i];
+          res[depth].push(cur.val);
+          cur.left && nextList.push(cur.left);
+          cur.right && nextList.push(cur.right);
+        }
+        depth++;
+        nodeList = nextList;
+      }
+      return res.reverse();
+    };
+    // levelOrderBottom()
+  </script>
+</body>
+</html>
