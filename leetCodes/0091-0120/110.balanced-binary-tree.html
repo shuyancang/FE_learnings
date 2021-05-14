@@ -24,13 +24,42 @@
     // 提示：
     //   树中的节点数在范围 [0, 5000] 内
     //   -104 <= Node.val <= 104
-    var isBalanced = function(root) {
-      if(!root || (root.left === null && root.right === null)){
-        return true
+
+    // root且左右树高度不超过1, 左右节点高度差同样不超过1~
+    var isBalanced = function(root) { // 对于每个节点都需要去递归获取其子节点的高度/是否平衡, 是n²
+      if(!root){
+        return true;
       }
-      
-      return true;
+      const leftDepth = balanceTool(root.left);
+      const rightDepth = balanceTool(root.right);
+      if(Math.abs(leftDepth - rightDepth) > 1){
+        return false;
+      }
+      return isBalanced(root.left) && isBalanced(root.right);
     };
+    function balanceTool(node){ // 获取某个根节点的高度
+      if(!node){
+        return 0;
+      }
+      return Math.max(balanceTool(node.left), balanceTool(node.right)) + 1;
+    }
+
+
+    var isBalanced = function(root) { // 后序遍历方式, 获取每个节点; 前面节点只要是平衡的, 获得其高度; 不平衡直接返回(-1);有-1就跳出循环
+      return getNodeHeight(root) !== -1;
+    }
+
+    function getNodeHeight(root){ // 获取到node的高度, (不平衡时返回-1)
+      if(!root){
+        return 0;
+      }
+      const leftHeight = getNodeHeight(root.left);
+      const rightHeight = getNodeHeight(root.right);
+      if(leftHeight === -1 || rightHeight === -1 || Math.abs(leftHeight - rightHeight) > 1){
+        return -1;
+      }
+      return Math.max(leftHeight, rightHeight) + 1;
+    }
   </script>
 </body>
 </html>
