@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>有序链表转换二叉搜索树</title>
+</head>
+<body>
+  <script>
+    // 给定一个单链表，其中的元素按升序排序，将其转换为高度平衡的二叉搜索树。
+    // 本题中，一个高度平衡二叉树是指一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过 1。
+
+    // 示例:
+    //   给定的有序链表： [-10, -3, 0, 5, 9],
+    //   一个可能的答案是：[0, -3, 9, -10, null, 5], 它可以表示下面这个高度平衡二叉搜索树：
+
+    //         0
+    //       / \
+    //     -3   9
+    //     /   /
+    //   -10  5
+    
+    var sortedListToBST = function(head) { // 这个和108并没有什么不同呀····head遍历成为升序数组就行了 => 如果只能用head的话, 需要记录size进行链表的分割
+      if(!head){
+        return null;
+      }
+      const arr = [];
+      while(head){
+        arr.push(head.val);
+        head = head.next;
+      }
+      function bstTool(nums, left, right){
+        if(left > right) {
+          return null;
+        }
+        const index = parseInt((left + right) / 2);
+        const node = new TreeNode(nums[index]);
+        node.left = bstTool(nums, left, index - 1);
+        node.right = bstTool(nums, index + 1, right);
+        return node;
+      }
+      return bstTool(arr, 0, arr.length - 1);
+    };
+
+    // leetcode:快慢指针, 快指针链表两步, 慢指针一步, 这样链表到头时记录对应慢指针的node, 链表断开为两部分, 进行递归处理
+    var sortedListToBST = function(head){
+      if(!head){
+        return null;
+      }
+      let size = 0, linkLists = head;
+      while(linkLists){
+        size++;
+        linkLists = linkLists.next;
+      }
+      function bstTool(start, end){
+        if(start > end){
+          return null;
+        }
+        const mid = parseInt((start + end) / 2);
+        // 模拟中序遍历, 直接先构建左子树
+        const leftNode = bstTool(start, mid - 1);
+        const node = new TreeNode(head.val);
+        head = head.next;
+        node.left = leftNode;
+        const rightNode = bstTool(mid + 1, end);
+        node.right = rightNode;
+        return node;
+      }
+      return bstTool(0, size - 1);
+    }
+  </script>
+</body>
+</html>
