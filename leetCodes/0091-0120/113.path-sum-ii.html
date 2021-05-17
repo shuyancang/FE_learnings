@@ -25,9 +25,32 @@
     //   -1000 <= Node.val <= 1000
     //   -1000 <= targetSum <= 1000
 
-    // 深度遍历+回溯哈~
+    // 深度遍历 收集所有节点和~: 记录满足的条件
     var pathSum = function(root, targetSum) {
-      
+      if(!root){
+        return [];
+      }
+      const res = [];
+      function dps(node, list, num){
+        if(!node.left && !node.right && node.val === num){
+          res.push([...list, node.val]);
+          return true;
+        } else if (!node.left && !node.right && node.val !== num) {
+          return false;
+        }
+        if(node.left){
+          list.push(node.val);
+          dps(node.left, list, num - node.val);
+          list.pop();
+        }
+        if(node.right){
+          list.push(node.val);
+          dps(node.right, list, num - node.val);
+          list.pop();
+        }
+      }
+      dps(root, [], targetSum);
+      return res;
     };
   </script>
 </body>
