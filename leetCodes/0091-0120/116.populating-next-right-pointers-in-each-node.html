@@ -33,9 +33,48 @@
 
     // 第一想法是层序遍历然后基于层创建一个list进行next指向~~~但这样使用额外空间O(n)~pass
     
+    // 然后是下一个方法: 对于任意两个节点: 有node.left.next = node.right; 而node.right.next = node.next.left;
     var connect = function(root) {
-      
+      let res = root;
+      if(!root){
+        return null;
+      }
+      root.next = null;
+      while(root){
+        const nextHeadNode = root.left;
+        while(root){
+          if(root.left && root.right){
+            root.left.next = root.right;
+          }
+          if(root.next && root.right){
+            root.right.next = root.next.left;
+          }
+          root = root.next;
+        }
+        root = nextHeadNode;
+      }
+      return res;
     };
+
+    var connect = function(root) { // Leetcode解法 ，思路完全同上
+        if (root === null) {
+            return root;
+        }
+        let leftmost = root;
+        while (leftmost.left !== null) {
+            let head = leftmost;
+            while (head !== null) {
+                head.left.next = head.right;
+                if (head.next != null) {
+                    head.right.next = head.next.left;
+                }
+                head = head.next;
+            }
+            leftmost = leftmost.left;
+        }
+        return root;
+    };
+
   </script>
 </body>
 </html>
