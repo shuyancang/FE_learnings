@@ -30,16 +30,70 @@
     //   -100 <= node.val <= 100
 
     // 依然是第一想法层序遍历~
-    // var connect = function(root) {
-    //   if(!root){
-    //     return null;
-    //   }
-    //   let head = root;
-    //   while(head !== null){
 
-    //   }
-    //   return root;
-    // };
+    // 第二: 对于每一层, 节点next指向下一个node, 则通过遍历这一层, 可以顺序关联下一层的节点; 
+    var connect = function(root) {
+      if(!root){
+        return null;
+      }
+      let head = root;
+      head.next = null;
+      while(head !== null){
+        let nextHead = null;
+        let preNode = null;
+        while(head){
+          if(preNode === null){
+            nextHead = head.left || head.right;
+            preNode = head.left || head.right;
+          } else {
+            preNode.next = head.left || head.right;
+          }
+          if(head.left && head.right){
+            head.left.next = head.right;
+            preNode = head.right;
+          } else if (preNode && preNode.next) {
+            preNode = preNode.next;
+          }
+          head = head.next;
+        }
+        head = nextHead
+      }
+      return root;
+    };
+
+    // Leetcode解法.
+    let last = null, nextStart = null;
+    const handle = (p) => {
+        if (last !== null) {
+            last.next = p;
+        } 
+        if (nextStart === null) {
+            nextStart = p;
+        }
+        last = p;
+    }
+    var connect = function(root) {
+        if (root === null) {
+            return null;
+        }
+        let start = root;
+        while (start != null) {
+            last = null;
+            nextStart = null;
+            for (let p = start; p !== null; p = p.next) {
+                if (p.left !== null) {
+                    handle(p.left);
+                }
+                if (p.right !== null) {
+                    handle(p.right);
+                }
+            }
+            start = nextStart;
+        }
+        return root;
+    };
+
+    
   </script>
 </body>
 </html>
