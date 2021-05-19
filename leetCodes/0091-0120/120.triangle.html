@@ -33,7 +33,7 @@
     // 进阶：
     //   你可以只使用 O(n) 的额外空间（n 为三角形的总行数）来解决这个问题吗？
 
-    // 回溯昂~
+    // 回溯昂~但这个每一一个节点会有两个选择会导致2n的复杂度. 优先不考虑
     // var minimumTotal = function(triangle) {
     //   let min;
     //   const len = triangle.length;
@@ -50,7 +50,36 @@
     //   dps(2, 0, triangle[0][0]);
     //   return min;
     // };
-    // minimumTotal([[2],[3,4],[6,5,7],[4,1,8,3]])
+
+    // 动态规划: F(depth, triangle): 总层数为triangle的三角中第depth层, 每个节点的最小值
+    // F(1, triangle) = [triangle[0][0]]
+    // F(depth, triangle)数组res长度为depth;
+    // 边界1: res[0] = F(depth - 1, triangle)[0] + triangle[depth - 1][0]
+    // 边界2: res[lastIndex] = F(depth - 1, triangle)[lastIndex] + triangle[depth - 1][lastIndex]
+    // 转移方程: res[index] = Math.min(F(depth - 1, triangle)[index], F(depth - 1, triangle)[index - 1]) + triangle[depth - 1][lastIndex]
+    var minimumTotal = function(triangle){
+      const len = triangle.length;
+      let res = [triangle[0][0]];
+      for(let i = 1; i < len; i++){ // 层数
+        const resLen = triangle[i].length;
+        for(let j = resLen - 1; j >= 0; j--){
+          const curNum = triangle[i][j]; // 该节点值;
+          const upperNum = res[j] === undefined ? Infinity : res[j]; // 防止最后一个点
+          const upperBeforeNum = res[j - 1] === undefined ? Infinity : res[j - 1]; // 防止第一个点
+          res[j] = Math.min(upperNum, upperBeforeNum) + curNum;
+        }
+      }
+      let min = Infinity;
+      for(let i = 0; i < res.length; i++){
+        if(min > res[i]){
+          min = res[i]
+        }
+      }
+      return min;
+    }
+    // minimumTotal([[2],[3,4],[6,5,7],[4,1,8,3]]); // 11
+    // minimumTotal([[-10]]); // -10
+    
   </script>
 </body>
 </html>
