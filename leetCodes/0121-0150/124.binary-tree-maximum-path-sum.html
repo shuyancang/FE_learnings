@@ -25,8 +25,23 @@
     // 树中节点数目范围是 [1, 3 * 104]
     // -1000 <= Node.val <= 1000
 
+    // 递归: 简化函数maxGain(node)计算二叉树中node节点的最大贡献值: 以该节点为起点的一条路径使得改路径节点值最大
+    // maxGain(null) = 0
+    // 非空节点最大贡献值(必定是一条路近上来的): 为子节点中大的树(>0)与自己val的和
+    // 非空节点 对应二叉树的最大路径和: 其左右两个子节点的最大贡献值(或0)与自己val的和;
     var maxPathSum = function(root) {
-
+      let res = -Infinity;
+      function maxGain(node){
+        if(!node){
+          return 0;
+        }
+        const leftGain = Math.max(maxGain(node.left), 0);
+        const rightGain = Math.max(maxGain(node.right), 0);
+        res = Math.max(res, leftGain + rightGain + node.val);
+        return Math.max(leftGain, rightGain) + node.val; 
+      }
+      maxGain(root);
+      return res;
     };
   </script>
 </body>
