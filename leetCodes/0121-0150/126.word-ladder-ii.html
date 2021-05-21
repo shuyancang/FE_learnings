@@ -106,68 +106,70 @@
 
     findLadders("hit", "cog", ["hot","dot","dog","lot","log","cog"]);
 
-    function createWordHash(beginWord, wordList){ // 创建字典hash
-      let hash = {}
-      for(let i = 0; i < wordList.length; i++){
-        hash[wordList[i]] = -1; // 先假定字典中每个字符串位于-1层;
-      }
-      hash[beginWord] = 0; // 显然开始单词位于0level
-      return hash;
-    }
-    function createUnits(){ // 生成小写字母数组
-      const res = [];
-      for(let i = 97; i <= 122; i++){
-        res.push(String.fromCharCode(i));
-      }
-      return res;
-    }
+    // function createWordHash(beginWord, wordList){ // 创建字典hash
+    //   let hash = {}
+    //   for(let i = 0; i < wordList.length; i++){
+    //     hash[wordList[i]] = -1; // 先假定字典中每个字符串位于-1层;
+    //   }
+    //   hash[beginWord] = 0; // 显然开始单词位于0level
+    //   return hash;
+    // }
+    // function createUnits(){ // 生成小写字母数组
+    //   const res = [];
+    //   for(let i = 97; i <= 122; i++){
+    //     res.push(String.fromCharCode(i));
+    //   }
+    //   return res;
+    // }
 
-    function createWordMap(beginWord, endWord, wordList, wordHash){ // 创建图
-      const wordMap = {};  // wordMap{lev: 0, lists: [下一层的words]}
-      const queue = [beginWord];
-      const units = createUnits();
-      let hashRes = false;
-      while(queue.length > 0){ // 广度遍历
-        const curWord = queue.shift(); // 取出当前单词;=> 去wordList中匹配只有一个字符不同的字符串
-        if(curWord === endWord){ // 有符合条件的了。
-          hashRes = true;
-          continue;
-        }
-        for(let i = 0; i < curWord.length; i++){
-          const curUnit = curWord[i]; // 当前选中单词的每个字母
-          for(let j = 0; j < units.length; j++){ // 替换成其他字母
-            if(units[j] !== curUnit){ // 不能等同
-              const newWord = curWord.slice(0, i) + units[j] + curWord.slice(i + 1); // 其他的所有可能单词
-              if(wordHash[newWord] === -1){ // 这个单词需要在hash中 且未被访问(-1)
-                if(wordMap[curWord]){
-                  wordMap[curWord].push(newWord)
-                } else {
-                  wordMap[curWord] = [newWord];
-                }
-                wordHash[newWord] = wordHash[curWord] + 1; // 层数 + 1, 
-                queue.push(newWord)
-              }
-            }
-          }
-        }
-      }
-      return hashRes ? wordMap : null;
-    }
+    // function createWordMap(beginWord, endWord, wordList, wordHash){ // 创建图
+    //   const wordMap = {};  // wordMap{lev: 0, lists: [下一层的words]}
+    //   const queue = [beginWord];
+    //   const units = createUnits();
+    //   let hashRes = false; // 是否最终找到了对应的endWord
+    //   let depth = 0;
+    //   while(queue.length > 0){ // 广度遍历
+    //     const queueLen = queue.length;
+    //     for(let i = 0; i < queueLen; i++){ // 一次遍历 层数+1
+    //       const curWord = queue.shift(); // 取出当前单词 => 去wordList中匹配只有一个字符不同的字符串
+    //       if(curWord === endWord){ // 有符合条件的了。
+    //         return wordMap;
+    //       }
+    //       depth++;
+    //       for(let m = 0; m < curWord.length; m++){ // 对当前单词的每个位次进行选择
+    //         const curUnit = curWord[m];
+    //         for(let n = 0; n < units.length; n++) { // 这个位次的单词换成其他
+    //           const newWord = curWord.slice(0, m) + units[n] + curWord.slice(m + 1); // 所有可能的单词
+    //           if(wordHash[newWord] === depth || wordHash[newWord] === -1){ // 新单词在字典表中存在
+    //             if(wordMap[curWord]){
+    //               wordMap[curWord].push(newWord)
+    //             } else {
+    //               wordMap[curWord] = [newWord]
+    //             }
+    //             wordHash[newWord] = depth;
+    //             queue.push(newWord)
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    //   console.log(wordMap, wordHash)
+    //   return null;
+    // }
 
-    var findLadders = function (beginWord, endWord, wordList){
-      const wordHash = createWordHash(beginWord, wordList);
-      if(wordHash[endWord] === undefined || beginWord.length !== endWord.length){
-        return [];
-      }
-      const wordMap = createWordMap(beginWord, endWord, wordList, wordHash);
-      console.log(wordMap, wordHash)
-      if(!wordMap){
-        return [];
-      }
-      if(beginWord === endWord){
-        return [beginWord];
-      }
-    }
+    // var findLadders = function (beginWord, endWord, wordList){
+    //   const wordHash = createWordHash(beginWord, wordList);
+    //   if(wordHash[endWord] === undefined || beginWord.length !== endWord.length){
+    //     return [];
+    //   }
+    //   const wordMap = createWordMap(beginWord, endWord, wordList, wordHash);
+    //   if(!wordMap){
+    //     return [];
+    //   }
+    //   if(beginWord === endWord){
+    //     return [beginWord];
+    //   }
+    // }
   </script>
 </body>
 </html>
