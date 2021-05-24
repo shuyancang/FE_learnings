@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>被围绕的区域</title>
+</head>
+<body>
+  <script>
+    // 给你一个 m x n 的矩阵 board ，由若干字符 'X' 和 'O' ，找到所有被 'X' 围绕的区域，并将这些区域里所有的 'O' 用 'X' 填充。
+
+    // 示例 1：
+    //   输入：board = [["X","X","X","X"],["X","O","O","X"],["X","X","O","X"],["X","O","X","X"]]
+    //   输出：[["X","X","X","X"],["X","X","X","X"],["X","X","X","X"],["X","O","X","X"]]
+    //   解释：被围绕的区间不会存在于边界上，换句话说，任何边界上的 'O' 都不会被填充为 'X'。 任何不在边界上，或不与边界上的 'O' 相连的 'O' 最终都会被填充为 'X'。如果两个元素在水平或垂直方向相邻，则称它们是“相连”的。
+
+    // 示例 2：
+    //   输入：board = [["X"]]
+    //   输出：[["X"]]
+
+    // 提示：
+    //   m == board.length
+    //   n == board[i].length
+    //   1 <= m, n <= 200
+    //   board[i][j] 为 'X' 或 'O'
+
+    // 首先, 获取所有的O[m, n]列表totalO
+    // 其次, 获取最外圈的O[m, n]列表, 基于O[m, n]广度遍历其周边, 获取相关联O[m, n]列表 => 逐步广度遍历直至没有, 每一个被遍历的关联O记录为visitedList
+    // 将不属于visitedList的O 转为 X
+    var solve = function(board) { // 写着发现直接选择似乎更好哈~
+      const restList = new Map();
+      const visitedList = [];
+      for(let m = 0; m < board.length; m++){
+        for(let n = 0; n < board[0].length; n++){
+          const curUnit = board[m][n];
+          if(curUnit === 'O'){
+            if(m === 0 || m === board.length - 1 || n === 0 || n === board[0].length - 1) { // 边缘
+              visitedList.push([m, n])
+            } else {
+              restList.set(`${m}_${n}`, [m, n])
+            }
+          }
+        }
+      }
+      while(visitedList.length > 0){
+        const [row, col] = visitedList.pop();
+        for(let rest of restList){
+          const [nextRow, nextCol] = rest;
+          if((row === nextRow && Math.abs(nextCol - col) === 1) || (col === nextCol && Math.abs(row - nextRow) === 1)){ // 相邻
+            visitedList.push([nextRow, nextCol]);
+            restList.delete(`${nextRow}_${nextCol}`);
+          }
+        }
+      }
+    };
+  </script>
+    
+</body>
+</html>
