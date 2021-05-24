@@ -105,6 +105,7 @@
     };
 
     findLadders("hit", "cog", ["hot","dot","dog","lot","log","cog"]);
+    findLadders("qa", "sq", ["si","go","se","cm","so","ph","mt","db","mb","sb","kr","ln","tm","le","av","sm","ar","ci","ca","br","ti","ba","to","ra","fa","yo","ow","sn","ya","cr","po","fe","ho","ma","re","or","rn","au","ur","rh","sr","tc","lt","lo","as","fr","nb","yb","if","pb","ge","th","pm","rb","sh","co","ga","li","ha","hz","no","bi","di","hi","qa","pi","os","uh","wm","an","me","mo","na","la","st","er","sc","ne","mn","mi","am","ex","pt","io","be","fm","ta","tb","ni","mr","pa","he","lr","sq","ye"]);
 
     function createWordHash(beginWord, wordList){ // 创建字典hash, hash值代表字典表中每个单词所在层
       let hash = {}
@@ -166,34 +167,28 @@
       if(!wordMap){
         return []
       }
+      console.log(wordMap)
       const res = [];
-      const dfs = function(path){
-        if(beginWord){
-          res.push([beginWord, ...path]);
+      const dfs = function(path, word){
+        if(word === endWord){
+          res.push([...path, word]);
           return true;
         }
-      }
-      dfs()
-      return res;
-
-      const res = [];
-      const dfs = (path, beginWord, word) => {
-        if (word == beginWord) {          // 当前遍历的word，和起始词相同
-          res.push([beginWord, ...path]); // 将当前路径推入res数组，加上起始词
-          return;                        
-        }
-        path.unshift(word);        // 将当前单词加入到path数组的开头
-        if (wordMap.get(word)) {   // 当前单词有对应的“父单词”们
-          for (const parent of wordMap.get(word)) { // 遍历“父单词”们
-            if (levelMap.get(parent) + 1 == levelMap.get(word)) { // 满足要求的
-              dfs(path, beginWord, parent);                       // 递归dfs
+        const nextWords = wordMap[word]; // 沿着wordmap进行dfs
+        const preWordLev = wordHash[word]
+        path.push(word);
+        if(nextWords){
+          for(let newWord of nextWords){
+            const newWordLev = wordHash[newWord]
+            if(preWordLev + 1 === newWordLev){
+              dfs(path, newWord);
             }
           }
         }
-        path.shift(); // 回溯，撤销选择，将path数组开头的单词弹出
+        path.pop();
       }
-
-      dfs([], beginWord, endWord); // dfs的入口
+      dfs([], beginWord);
+      return res;
     }
   </script>
 </body>
