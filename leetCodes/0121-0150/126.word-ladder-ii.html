@@ -106,70 +106,95 @@
 
     findLadders("hit", "cog", ["hot","dot","dog","lot","log","cog"]);
 
-    // function createWordHash(beginWord, wordList){ // 创建字典hash
-    //   let hash = {}
-    //   for(let i = 0; i < wordList.length; i++){
-    //     hash[wordList[i]] = -1; // 先假定字典中每个字符串位于-1层;
-    //   }
-    //   hash[beginWord] = 0; // 显然开始单词位于0level
-    //   return hash;
-    // }
-    // function createUnits(){ // 生成小写字母数组
-    //   const res = [];
-    //   for(let i = 97; i <= 122; i++){
-    //     res.push(String.fromCharCode(i));
-    //   }
-    //   return res;
-    // }
+    function createWordHash(beginWord, wordList){ // 创建字典hash, hash值代表字典表中每个单词所在层
+      let hash = {}
+      for(let i = 0; i < wordList.length; i++){
+        hash[wordList[i]] = -1; // 先假定字典中每个字符串位于-1层;
+      }
+      return hash;
+    }
 
-    // function createWordMap(beginWord, endWord, wordList, wordHash){ // 创建图
-    //   const wordMap = {};  // wordMap{lev: 0, lists: [下一层的words]}
-    //   const queue = [beginWord];
-    //   const units = createUnits();
-    //   let hashRes = false; // 是否最终找到了对应的endWord
-    //   let depth = 0;
-    //   while(queue.length > 0){ // 广度遍历
-    //     const queueLen = queue.length;
-    //     for(let i = 0; i < queueLen; i++){ // 一次遍历 层数+1
-    //       const curWord = queue.shift(); // 取出当前单词 => 去wordList中匹配只有一个字符不同的字符串
-    //       if(curWord === endWord){ // 有符合条件的了。
-    //         return wordMap;
-    //       }
-    //       depth++;
-    //       for(let m = 0; m < curWord.length; m++){ // 对当前单词的每个位次进行选择
-    //         const curUnit = curWord[m];
-    //         for(let n = 0; n < units.length; n++) { // 这个位次的单词换成其他
-    //           const newWord = curWord.slice(0, m) + units[n] + curWord.slice(m + 1); // 所有可能的单词
-    //           if(wordHash[newWord] === depth || wordHash[newWord] === -1){ // 新单词在字典表中存在
-    //             if(wordMap[curWord]){
-    //               wordMap[curWord].push(newWord)
-    //             } else {
-    //               wordMap[curWord] = [newWord]
-    //             }
-    //             wordHash[newWord] = depth;
-    //             queue.push(newWord)
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    //   console.log(wordMap, wordHash)
-    //   return null;
-    // }
+    function createUnits(){ // 生成小写字母数组
+      const res = [];
+      for(let i = 97; i <= 122; i++){
+        res.push(String.fromCharCode(i));
+      }
+      return res;
+    }
 
-    // var findLadders = function (beginWord, endWord, wordList){
-    //   const wordHash = createWordHash(beginWord, wordList);
-    //   if(wordHash[endWord] === undefined || beginWord.length !== endWord.length){
-    //     return [];
-    //   }
-    //   const wordMap = createWordMap(beginWord, endWord, wordList, wordHash);
-    //   if(!wordMap){
-    //     return [];
-    //   }
-    //   if(beginWord === endWord){
-    //     return [beginWord];
-    //   }
-    // }
+    function createWordMap(beginWord, endWord, wordList, wordHash){ // 基于wordList创建一个以begin开始, end结束的图
+      const wordMap = {}; // {[word]: [关联的下一层可用words数组]}
+      const queue = [beginWord];
+      const units = createUnits();
+      let lev = 0;
+      while(queue.length > 0) { // 每次循环代表层 + 1, 遍历当前单词, 放入下层单词;
+        const len = queue.length;
+        lev++;
+        console.log(queue)
+        for(let i = 0; i < len; i++){
+          const curWord = queue.shift();
+          wordHash[curWord] = (wordHash[curWord] === -1 || curWord === beginWord) ? lev : wordHash[curWord]; // 当前单词所在层更新
+          wordMap[curWord] = new Set();
+          if(curWord === endWord){
+            return wordMap
+          }
+          for(let m = 0; m < curWord.length; m++){
+            const curUnit = curWord[m];
+            for(let n = 0; n < units.length; n++){
+              const tmpUnit = units[n];
+              if(tmpUnit === curUnit){ // 不匹配自己
+                continue;
+              }
+              const newWord = curWord.slice(0, m) + units[n] + curWord.slice(m + 1); // 所有可能的单词
+              if(wordHash[newWord] === -1){ // 新单词存在于字典表中 => 追加进入map
+                wordMap[curWord].add(newWord)
+                queue.push(newWord);
+              }
+            }
+          }
+        }
+      }
+      return null;
+    }
+
+    var findLadders = function (beginWord, endWord, wordList){
+      const wordHash = createWordHash(beginWord, wordList);
+      if(wordHash[endWord] === undefined){
+        return [];
+      }
+      const wordMap = createWordMap(beginWord, endWord, wordList, wordHash);
+      if(!wordMap){
+        return []
+      }
+      const res = [];
+      const dfs = function(path){
+        if(beginWord){
+          res.push([beginWord, ...path]);
+          return true;
+        }
+      }
+      dfs()
+      return res;
+
+      const res = [];
+      const dfs = (path, beginWord, word) => {
+        if (word == beginWord) {          // 当前遍历的word，和起始词相同
+          res.push([beginWord, ...path]); // 将当前路径推入res数组，加上起始词
+          return;                        
+        }
+        path.unshift(word);        // 将当前单词加入到path数组的开头
+        if (wordMap.get(word)) {   // 当前单词有对应的“父单词”们
+          for (const parent of wordMap.get(word)) { // 遍历“父单词”们
+            if (levelMap.get(parent) + 1 == levelMap.get(word)) { // 满足要求的
+              dfs(path, beginWord, parent);                       // 递归dfs
+            }
+          }
+        }
+        path.shift(); // 回溯，撤销选择，将path数组开头的单词弹出
+      }
+
+      dfs([], beginWord, endWord); // dfs的入口
+    }
   </script>
 </body>
 </html>
