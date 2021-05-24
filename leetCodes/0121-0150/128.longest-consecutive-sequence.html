@@ -31,16 +31,69 @@
 
     // 创建一个对于每一项的num - hash, num: len
     var longestConsecutive = function(nums) {
+      if(nums.length === 0) {
+        return 0
+      }
       const hash = {}
-      const max = 1;
+      const visited = {};
+      let max = 1;
+      for(let i = 0; i < nums.length; i++){
+        hash[nums[i]] = nums[i]
+      }
       for(let i = 0; i < nums.length; i++){
         const curNum = nums[i];
-        const preNum = curNum - 1;
-        const nextNum = curNum + 1;
-        // if(max < )
+        if(visited[curNum]){
+          continue;
+        }
+        let leftNum = curNum - 1;
+        let rightNum = curNum + 1;
+        let numCount = 1;
+        while(hash[leftNum] !== undefined){
+          visited[leftNum] = true;
+          numCount++;
+          leftNum--;
+        }
+        while(hash[rightNum] !== undefined){
+          visited[rightNum] = true;
+          numCount++;
+          rightNum++;
+        }
+        if(max < numCount){
+          max = numCount;
+        }
       }
-
+      return max;
     };
+
+    longestConsecutive([100,4,200,1,3,2]); // 4
+    longestConsecutive([0,3,7,2,5,8,4,6,0,1]); // 9
+
+    // leetcode解法: 使用hash存储mum, 依次获取每个值, 且再次遍历从小数往后进行判定, 记录最大
+    // var longestConsecutive = function(nums: number[]): number {
+    //     let num_set: Set<number> = new Set();
+    //     for (const num of nums) {
+    //         num_set.add(num);
+    //     }
+
+    //     let longestStreak = 0;
+
+    //     for (const num of num_set) {
+    //         if (!num_set.has(num - 1)) {
+    //             let currentNum = num;
+    //             let currentStreak = 1;
+
+    //             while (num_set.has(currentNum + 1)) {
+    //                 currentNum += 1;
+    //                 currentStreak += 1;
+    //             }
+
+    //             longestStreak = Math.max(longestStreak, currentStreak);
+    //         }
+    //     }
+
+    //     return longestStreak;   
+    // };
+
   </script>
 </body>
 </html>
