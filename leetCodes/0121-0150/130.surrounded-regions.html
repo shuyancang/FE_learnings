@@ -28,32 +28,123 @@
     // 首先, 获取所有的O[m, n]列表totalO
     // 其次, 获取最外圈的O[m, n]列表, 基于O[m, n]广度遍历其周边, 获取相关联O[m, n]列表 => 逐步广度遍历直至没有, 每一个被遍历的关联O记录为visitedList
     // 将不属于visitedList的O 转为 X
-    var solve = function(board) { // 写着发现直接选择似乎更好哈~
-      const restList = new Map();
-      const visitedList = [];
+    var solve = function(board) { // 写着发现直接选择似乎更好哈~ ===> 才击败5%``````尴尬了。
+      const restMap = new Map();
+      let visitedMap = new Map();
       for(let m = 0; m < board.length; m++){
         for(let n = 0; n < board[0].length; n++){
           const curUnit = board[m][n];
           if(curUnit === 'O'){
+            const key = `${m}_${n}`; // 作为id好了~
             if(m === 0 || m === board.length - 1 || n === 0 || n === board[0].length - 1) { // 边缘
-              visitedList.push([m, n])
-            } else {
-              restList.set(`${m}_${n}`, [m, n])
+              visitedMap.set(key, [m, n]);
+            } else { // 其他中间的O
+              restMap.set(key, [m, n]);
             }
           }
         }
       }
-      while(visitedList.length > 0){
-        const [row, col] = visitedList.pop();
-        for(let rest of restList){
-          const [nextRow, nextCol] = rest;
-          if((row === nextRow && Math.abs(nextCol - col) === 1) || (col === nextCol && Math.abs(row - nextRow) === 1)){ // 相邻
-            visitedList.push([nextRow, nextCol]);
-            restList.delete(`${nextRow}_${nextCol}`);
+      while(visitedMap.size > 0){ // 广度遍历
+        for (let item of visitedMap) { // 找到rest中与边缘连接的点, 推送到下一轮的visited中, 同事从rest中移除
+          const [key, val] = item;
+          const [row, col] = val || [];
+          maybeKeyList = [`${row - 1}_${col}`, `${row + 1}_${col}`, `${row}_${col - 1}`, `${row}_${col + 1}`].filter(e => !visitedMap.has(e));
+          for(let maybeKey of maybeKeyList){
+            if(restMap.has(maybeKey)){
+              visitedMap.delete(key);
+              visitedMap.set(maybeKey, restMap.get(maybeKey))
+              restMap.delete(maybeKey);
+            }
           }
         }
       }
+      for(let item of restMap){
+        const [key, val] = item;
+        const [row, col] = val;
+        board[row][col] = 'X'
+      }
     };
+
+    // leetcode深度优先, 广度优先
+    // 深度优先: 分别找到四条边的每一个O, dfs(board, x, y)判断其各个方向的延伸, 需要更改的变为A, 最后替换A => X
+    var solve = function(board){
+      const row = board.length;
+      const col = board[0].length;
+      const dfs = function(x, y){
+        if (x < 0 || x >= row || y < 0 || y >= col || board[x][y] !== 'O') {
+          return;
+        }
+        board[x][y] = 'A';
+        dfs(x - 1, y);
+        dfs(x + 1, y);
+        dfs(x, y - 1);
+        dfs(x, y + 1);
+      }
+      for(let i = 0; i < row; i++){
+        dfs(i, 0);
+        dfs(i, col - 1);
+      }
+      for(let i = 0; i < col; i++){
+        dfs(0, i);
+        dfs(row - 1, i);
+      }
+      for(let m = 0; m < row; m++){
+        for(let n = 0; n < col; n++){
+          if(board[m][n] === 'O') {
+            board[m][n] = 'X';
+          } else if (board[m][n] === 'A') {
+            board[m][n] = 'O';
+          }
+        }
+      }
+    }
+    // 广度优先: 将一圈的每个O放入队列, 按变为A, 队列内的A依次寻找隔壁的O并改为A, 直至队列清空, 最后替换O => X
+    var solve = function(board){
+      const row = board.length;
+      const col = board[0].length;
+      const queue = [];
+      for(let i = 0; i < row; i++){
+        if(board[i][0] === 'O'){
+          queue.push([i, 0])
+        }
+        if(board[i][col - 1] === 'O'){
+          queue.push([i, col - 1]);
+        }
+      }
+      for(let i = 1; i < col - 1; i++){
+        if(board[0][i] === 'O'){
+          queue.push([0, i]);
+        }
+        if(board[row - 1][i] === 'O'){
+          queue.push([row - 1, i]);
+        }
+      }
+      const dm = [0, 0, 1, -1];
+      const dn = [1, -1, 0, 0];
+      while(queue.length > 0){
+        const [m, n] = queue.pop();
+        board[m][n] = 'A';
+        for(let s = 0; s < 4; s++){
+          const nextM = m + dm[s];
+          const nextN = n + dn[s];
+          if (nextM < 0 || nextN < 0 || nextM >= row || nextN >= col || board[nextM][nextN] !== 'O') {
+            continue;
+          }
+          queue.push([nextM, nextN]);
+        }
+      }
+      for(let m = 0; m < row; m++){
+        for(let n = 0; n < col; n++){
+          if(board[m][n] === 'A') {
+            board[m][n] = 'O'
+          } else if (board[m][n] = 'O') {
+            board[m][n] = 'X'
+          }
+        }
+      }
+    }
+    solve([["X","X","X","X"],["X","O","O","X"],["X","X","O","X"],["X","O","X","X"]]);
+    solve([["X"]]);
   </script>
     
 </body>
