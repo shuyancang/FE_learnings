@@ -24,17 +24,28 @@
 
     // f(m)是0 => index = m 的 s字符串的结果集合; 则f(m + 1) = s[m + 1]为末字符的所有可能(对应leftIndex) 与 对应的(f(leftIndex + 1))的集合
 
-    var partition = function(s) {
-      const resList = {};
+    var partition = function(s) { // 感觉要超时···· => 竟然过了，哈哈哈 24%+
+      const resList = [];
       if(s.length === 0) {
         return [[]];
       }
       resList[0] = [[s[0]]];
-      for(let i = 1; i < s.length; i++){
-        
+      for(let i = 1; i < s.length; i++){ //
+        const tmpPartList = [];
+        for(let j = i; j >= 0; j--){ // 检测s[j] => s[i]是否回文串
+          if(isPalin(s, j, i)){
+            const tmpStr = s.substring(j, i + 1);
+            if (j === 0) {
+              tmpPartList.push([tmpStr]);
+            } else {
+              tmpPartList.push(...resList[j - 1].map(e => [...e, tmpStr]));
+            }
+          }
+        }
+        resList[i] = tmpPartList;
       }
+      return resList[s.length - 1];
       // 优化: 记录上一次的最大回文, 下一个字符串加进去的时候, 直接判断这个是不是回文 + 在前一个字符是不是回文。 否:上一个字符串的左边缘往右去进行判定。
-      
     };
 
     function isPalin(s, left ,right){ // 验证一个s的子字符串是否回文
@@ -53,6 +64,51 @@
       }
       return true;
     }
+
+    partition('aab')
+    partition('a')
+
+    // leetcode解法:
+    // 1. 可以使用动态规划, 预处理f(i, j)标识f(i, j)是否回文 f(i, j) = f(i + 1, j - 1) && s[i] === s[j]
+    // 2. 回溯: 从i 开始 枚举至j, [0, i]已经分割得到ans, 则只要s[i, j]是回文就能入ans中, 且j => i, 继续枚举j;继续回溯;
+
+    var partition = function(s) {
+    const dfs = (i) => {
+        if (i === n) {
+            ret.push(ans.slice());
+            return;
+        }
+        for (let j = i; j < n; ++j) {
+            if (isPalindrome(i, j) === 1) {
+                ans.push(s.slice(i, j + 1));
+                dfs(j + 1);
+                ans.pop();
+            }
+        }
+    }
+
+    // 记忆化搜索中，f[i][j] = 0 表示未搜索，1 表示是回文串，-1 表示不是回文串
+    const isPalindrome = (i, j) => {
+        if (f[i][j] !== 0) {
+            return f[i][j];
+        }
+        if (i >= j) {
+            f[i][j] = 1;
+        } else if (s[i] === s[j]) {
+            f[i][j] = isPalindrome(i + 1, j - 1);
+        } else {
+            f[i][j] = -1;
+        }
+        return f[i][j];
+    }
+
+    const n = s.length;
+    const ret = [], ans = [];
+    const f = new Array(n).fill(0).map(() => new Array(n).fill(0));
+
+    dfs(0);
+    return ret;
+};
   </script>
 </body>
 </html>
