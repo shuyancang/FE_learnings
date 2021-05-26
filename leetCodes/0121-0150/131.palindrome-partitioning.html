@@ -21,9 +21,38 @@
     // 提示：
     //   1 <= s.length <= 16
     //   s 仅由小写英文字母组成
-    var partition = function(s) {
 
+    // f(m)是0 => index = m 的 s字符串的结果集合; 则f(m + 1) = s[m + 1]为末字符的所有可能(对应leftIndex) 与 对应的(f(leftIndex + 1))的集合
+
+    var partition = function(s) {
+      const resList = {};
+      if(s.length === 0) {
+        return [[]];
+      }
+      resList[0] = [[s[0]]];
+      for(let i = 1; i < s.length; i++){
+        
+      }
+      // 优化: 记录上一次的最大回文, 下一个字符串加进去的时候, 直接判断这个是不是回文 + 在前一个字符是不是回文。 否:上一个字符串的左边缘往右去进行判定。
+      
     };
+
+    function isPalin(s, left ,right){ // 验证一个s的子字符串是否回文
+      if(left > right || !s){
+        return false;
+      }
+      if(left === right){
+        return true;
+      }
+      let index = left;
+      while(index <= (left + right) / 2) {
+        if(s[index] !== s[right + left - index]){
+          return false;
+        }
+        index++;
+      }
+      return true;
+    }
   </script>
 </body>
 </html>
