@@ -56,7 +56,49 @@
      * @return {Node}
      */
     var cloneGraph = function(node) {
-      
+      if(!node){
+        return null
+      }
+      // 分两步先遍历图创建生成所有的节点nodeList, 再次遍历构建所有的节点关联
+      const queue = [node];
+      const nodeList = [];
+      const visitedNodes = {};
+      // while(queue.length > 0){
+      //   const curNode = queue.pop();
+      //   const curVal = curNode.val;
+      //   if(visitedNodes[curVal]){
+      //     continue;
+      //   }
+      //   nodeList.push(new Node(curVal));
+      //   const nodeNeighbors = curNode.neighbors;
+      //   for(let i = 0; i < nodeNeighbors.length; i++){
+      //     const neighborNode = nodeNeighbors[i];
+      //     const neighborVal = neighborNode.val;
+      //     if(!visitedNodes[neighborVal]){
+      //       queue.push(neighborNode);
+      //     }
+      //   }
+      //   visitedNodes[curVal] = true;
+      // }
+
+      while(queue.length > 0){ // 图应该也是深度广度遍历吧？
+        const curNode = queue.pop();
+        const curVal = curNode.val;
+        if(visitedNodes[curVal]){
+          continue;
+        }
+        nodeList.push(new Node(curVal));
+        const nodeNeighbors = curNode.neighbors;
+        for(let i = 0; i < nodeNeighbors.length; i++){
+          const neighborNode = nodeNeighbors[i];
+          const neighborVal = neighborNode.val;
+          if(!visitedNodes[neighborVal]){
+            queue.push(neighborNode);
+          }
+        }
+        visitedNodes[curVal] = true;
+      }
+
     };
   </script>
 </body>
