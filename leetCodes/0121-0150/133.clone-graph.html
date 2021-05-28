@@ -62,44 +62,64 @@
       // 分两步先遍历图创建生成所有的节点nodeList, 再次遍历构建所有的节点关联
       const queue = [node];
       const nodeList = [];
-      const visitedNodes = {};
-      // while(queue.length > 0){
-      //   const curNode = queue.pop();
-      //   const curVal = curNode.val;
-      //   if(visitedNodes[curVal]){
-      //     continue;
-      //   }
-      //   nodeList.push(new Node(curVal));
-      //   const nodeNeighbors = curNode.neighbors;
-      //   for(let i = 0; i < nodeNeighbors.length; i++){
-      //     const neighborNode = nodeNeighbors[i];
-      //     const neighborVal = neighborNode.val;
-      //     if(!visitedNodes[neighborVal]){
-      //       queue.push(neighborNode);
-      //     }
-      //   }
-      //   visitedNodes[curVal] = true;
-      // }
-
-      while(queue.length > 0){ // 图应该也是深度广度遍历吧？
-        const curNode = queue.pop();
+      const startNode = new Node(node.val);
+      const visitedNodes = { [node.val]: startNode };
+      while(queue.length > 0){
+        const curNode = queue.shift();
         const curVal = curNode.val;
-        if(visitedNodes[curVal]){
-          continue;
-        }
-        nodeList.push(new Node(curVal));
+      //   nodeList.push(new Node(curVal));
         const nodeNeighbors = curNode.neighbors;
         for(let i = 0; i < nodeNeighbors.length; i++){
           const neighborNode = nodeNeighbors[i];
           const neighborVal = neighborNode.val;
           if(!visitedNodes[neighborVal]){
             queue.push(neighborNode);
+            visitedNodes[neighborVal] = new Node(neighborVal);
           }
+          visitedNodes[curVal].neighbors.push(visitedNodes[neighborVal]);
         }
-        visitedNodes[curVal] = true;
       }
-
+      return startNode;
+      // while (queue.length > 0) {
+      //   const curNode = queue.pop();
+      //   const curVal = curNode.val;
+      //   if (visitedNodes[curVal]) {
+      //     continue;
+      //   }
+      //   nodeList.push(new Node(curVal));
+      //   const nodeNeighbors = curNode.neighbors;
+      //   for (let i = 0; i < nodeNeighbors.length; i++) {
+      //     const neighborNode = nodeNeighbors[i];
+      //     const neighborVal = neighborNode.val;
+      //     if (!visitedNodes[neighborVal]) {
+      //       queue.push(neighborNode);
+      //     }
+      //   }
+      //   visitedNodes[curVal] = true;
+      // }
     };
+
+    // 深度遍历不会写~clone leetcode如下
+    const cloneGraph = (startNode) => {
+      const visited = new Map();
+
+      const clone = (node) => {
+        if (node == null) return null;
+        if (visited.has(node.val)) return visited.get(node.val);
+
+        const clonedNode = new Node(node.val, []);
+        visited.set(node.val, clonedNode);
+
+        for (const neighborNode of node.neighbors) {
+          const clonedNeighborNode = clone(neighborNode);
+          clonedNode.neighbors.push(clonedNeighborNode);
+        }
+        return clonedNode;
+      };
+
+      return clone(startNode);
+    };
+
   </script>
 </body>
 </html>
