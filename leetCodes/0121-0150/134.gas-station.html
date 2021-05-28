@@ -37,8 +37,46 @@
     //     你无法返回 2 号加油站，因为返程需要消耗 4 升汽油，但是你的油箱只有 3 升汽油。
     //     因此，无论怎样，你都不可能绕环路行驶一周。
     var canCompleteCircuit = function(gas, cost) {
+      const tmpList = [];
+      let sum = 0;
+      for(let i = 0; i < gas.length; i++){
+        const diff = gas[i] - cost[i];
+        sum += diff;
+        tmpList.push(diff);
+      }
+      if(sum < 0){ // 总和小于0, 走不了一圈;
+        return -1;
+      }
+      // tmpList一个索引开始, 要保证他往后加到底时sum一直为+;
+      // for(let i = 0; i < tmpList.length; i++){
+      //   if (tmpList[i] < 0) { // 不用考虑起点就小于0~
+      //     continue;
+      //   }
+      //   let tmpSum = tmpList[i];
+      //   for(let n = i + 1; n < i + tmpList.length; n++){
+      //     tmpSum += (n >= tmpList.length) ? tmpList[n - tmpList.length] : tmpList[n];
+      //     if (tmpSum < 0) {
+      //       break;
+      //     }
+      //   }
+      //   if(tmpSum >= 0) {
+      //     return i;
+      //   }
+      // }
 
+      // 第二种思路: 从任一节点开始(0); 开始看他最长能走多长(count, 如果count === len; 则返回正确答案); 如果不能继续从count + 1 寻找;
+      // let startIndex = 0;
+      // let count = 0;
+      // while(count < len) {
+      //   let tmpSum = 0;
+
+      // }
+      // if (count === len) {
+      //   return startIndex;
+      // }
     };
+    canCompleteCircuit([1,2,3,4,5], [3,4,5,1,2]); // 3
+    canCompleteCircuit([2,3,4], [3,4,3]); // -1
   </script>
 </body>
 </html>
