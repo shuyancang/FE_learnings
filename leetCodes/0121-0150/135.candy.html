@@ -23,9 +23,72 @@
     //   输出：4
     //     解释：你可以分别给这三个孩子分发 1、2、1 颗糖果。
     //       第三个孩子只得到 1 颗糖果，这已满足上述两个条件。
-    var candy = function(ratings) {
 
+    // 先从左往后按照规则: rating[i] > rating[i - 1]则left[i] = left[i - 1] + 1;
+    // 再从右往左: rating[i] > rating[i + 1]则right[i] = right[i + 1] + 1;
+    // 两个数组取Math.max(right[i], left[i])即可;
+    var candy = function(ratings){
+      const len = ratings.length;
+      const left = [], right = [];
+      for(let i = 0; i < len; i++){
+        if (ratings[i] > ratings[i - 1]) {
+          left[i] = left[i - 1] + 1
+        } else {
+          left[i] = 1
+        }
+      }
+      for(let i = len - 1; i >= 0; i--){
+        if(ratings[i] > ratings[i + 1]) {
+          right[i] = right[i + 1] + 1;
+        } else {
+          right[i] = 1
+        }
+      }
+      let sum = 0;
+      for(let i = 0; i < len; i++){
+        sum += Math.max(left[i], right[i]);
+      }
+      return sum;
+    }
+
+    // leetcode 以上解法, 使用常数空间同样可以
+
+    // 我们从左到右枚举每一个同学，记前一个同学分得的糖果数量为 \textit{pre}pre：
+    // 如果当前同学比上一个同学评分高，说明我们就在最近的递增序列中，直接分配给该同学 \textit{pre} + 1pre+1 个糖果即可。
+    // 否则我们就在一个递减序列中，我们直接分配给当前同学一个糖果，并把该同学所在的递减序列中所有的同学都再多分配一个糖果，以保证糖果数量还是满足条件(不用关注是否对应, 逐步递减的序列其实是倒过来的递增3 - 2 - 1 分别分配1 - 2 - 3糖果, 虽然不对应但和是必定相同的)。
+    // 我们无需显式地额外分配糖果，只需要记录当前的递减序列长度，即可知道需要额外分配的糖果数量。
+    // 同时注意当当前的递减序列长度和上一个递增序列等长时，需要把最近的递增序列的最后一个同学也并进递减序列中。
+    // 这样，我们只要记录当前递减序列的长度 \textit{dec}dec，最近的递增序列的长度 \textit{inc}inc 和前一个同学分得的糖果数量 \textit{pre}pre 即可。
+
+    var candy = function(ratings) {
+        const n = ratings.length;
+        let ret = 1;
+        let inc = 1, dec = 0, pre = 1;
+
+        for (let i = 1; i < n; i++) {
+            if (ratings[i] >= ratings[i - 1]) {
+                dec = 0;
+                if (ratings[i] === ratings[i - 1]) pre = 1;
+                else pre++;
+                ret += pre;
+                inc = pre;
+            } else {
+                dec++;
+                if (dec === inc) {
+                    dec++;
+                }
+                ret += dec;
+                pre = 1;
+            }
+        }
+        return ret;
     };
+
+    candy([1,0,2]); // 2、1、2 => 5
+    candy([1,2,2]); // 1、2、1 => 4
+    candy([1,3,2,2,1]); // 7
+    candy([1,2,87,87,87,2,1]); // 13
+
   </script>
 </body>
 </html>
