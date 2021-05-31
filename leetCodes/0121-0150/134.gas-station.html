@@ -47,36 +47,54 @@
       if(sum < 0){ // 总和小于0, 走不了一圈;
         return -1;
       }
-      // tmpList一个索引开始, 要保证他往后加到底时sum一直为+;
-      // for(let i = 0; i < tmpList.length; i++){
-      //   if (tmpList[i] < 0) { // 不用考虑起点就小于0~
-      //     continue;
-      //   }
-      //   let tmpSum = tmpList[i];
-      //   for(let n = i + 1; n < i + tmpList.length; n++){
-      //     tmpSum += (n >= tmpList.length) ? tmpList[n - tmpList.length] : tmpList[n];
-      //     if (tmpSum < 0) {
-      //       break;
-      //     }
-      //   }
-      //   if(tmpSum >= 0) {
-      //     return i;
-      //   }
-      // }
-
-      // 第二种思路: 从任一节点开始(0); 开始看他最长能走多长(count, 如果count === len; 则返回正确答案); 如果不能继续从count + 1 寻找;
-      // let startIndex = 0;
-      // let count = 0;
-      // while(count < len) {
-      //   let tmpSum = 0;
-
-      // }
-      // if (count === len) {
-      //   return startIndex;
-      // }
-
-      // 用栈来记载累加和分别头尾加减,似乎更简单
+      for(let i = 0; i < tmpList.length; i++){ // tmpList一个索引开始, 要保证他往后加到底时sum一直为+;
+        if (tmpList[i] < 0) { // 不用考虑起点就小于0~
+          continue;
+        }
+        let tmpSum = tmpList[i];
+        for(let n = i + 1; n < i + tmpList.length; n++){
+          tmpSum += (n >= tmpList.length) ? tmpList[n - tmpList.length] : tmpList[n];
+          if (tmpSum < 0) {
+            break;
+          }
+        }
+        if(tmpSum >= 0) {
+          return i;
+        }
+      }
     };
+
+    // 第二思路其实一圈拉开=> 一个数组复制后连接在后面, 根据可到达的len来判定更直观
+
+    // 第三思路: 
+    var canCompleteCircuit = function(gas, cost) {
+      // 1. 假定从0 开始 往后走, 最远能到m(m不满足一圈), 则0 => m中的任意一个点往后走都只能到m; 
+      // 2. 从m + 1开始继续往后走直到找到能走一圈的数
+      // 3. 如果m + 1 === length - 1依然不满足, 则没有能走一圈的
+      let start = 0;
+      const len = gas.length;
+      while (start <= len - 1) {
+        let sum = 0;
+        let step = 0;
+        while (step < len) {
+          const tmpIndex = (step + start) % len;
+          sum += (gas[tmpIndex] - cost[tmpIndex]);
+          if (sum < 0) { // 到不了下一位置 => 跳出重置
+            break;
+          }
+          step++;
+        }
+        if (step === len) { // 走完了一圈
+          return start;
+        } else if (start + step >= len - 1) { // 越过了len - 1
+          return -1;
+        } else {
+          start += (step + 1);
+        }
+      }
+      return -1;
+    }
+         
     canCompleteCircuit([1,2,3,4,5], [3,4,5,1,2]); // 3
     canCompleteCircuit([2,3,4], [3,4,3]); // -1
   </script>
