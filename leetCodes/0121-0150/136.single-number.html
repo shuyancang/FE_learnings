@@ -13,8 +13,15 @@
 
     // 示例 1:输入: [2,2,1] 输出: 1
     // 示例 2: 输入: [4,1,2,1,2] 输出: 4
-    var singleNumber = function(nums) {
 
+    // 直接使用hash可以瞬间得出答案, 但不适用额外空间····emmm=~不会····
+    // leetcode: 位运算(异或): 任何数与0异或仍是原数, 任何数与自身异或结果是0, 异或满足交换律和结合律; => 所以数组内的数全做一次异或, 结果就是
+    var singleNumber = function(nums) {
+      let res = 0;
+      for(let i = 0; i < nums.length; i++){
+        res = res ^ nums[i];
+      }
+      return res;
     };
   </script>
 </body>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>只出现一次的数II</title>
+</head>
+<body>
+  <script>
+    // 给你一个整数数组 nums ，除某个元素仅出现 一次 外，其余每个元素都恰出现 三次 。请你找出并返回那个只出现了一次的元素。
+
+    //   示例 1： 输入：nums = [2,2,3,2] 输出：3
+    //   示例 2： 输入：nums = [0,1,0,1,0,1,99] 输出：99
+
+    //   提示：
+    //     1 <= nums.length <= 3 * 104
+    //     -231 <= nums[i] <= 231 - 1
+    
+    //   nums 中，除某个元素仅出现 一次 外，其余每个元素都恰出现 三次
+    //   进阶：你的算法应该具有线性时间复杂度。 你可以不使用额外空间来实现吗？
+
+    // 同样二进制位运算: 每一个二进制位, 都是0 和 1, 三次的话, 其和必定是3的倍数, 剩下的余数即结果的二进制值, 再组合
+    var singleNumber = function(nums) {
+      let res = 0;
+      for (let i = 0; i < 32; i++) { // 32位
+        let total = 0;
+        for(let j = 0; j < nums.length; j++){
+          total += (nums[j] >> i) & 1;
+        }
+        if(total % 3 !== 0) {
+          ans |= (1 << i);
+        }
+      }
+      return res;
+    };
+
+    // leetcode状态的转移：有一个循环 ~ 看不懂看不懂
+    // 首先明确对任意二进制位, 所有的1的个数存在3种状态: 对三余数0, 1, 2(设立两个二进制数来进行记录: a, b(两个二进制数标识三种状态))
+    // 显然ab状态初始为00 => 01 => 10 => 00 ....
+    // 则对于任何二进制位的输入(n)推算b的结果有: 
+    // a === 0 && n === 0 则 b = b; a === 0 && n === 1 => b = ~b; 即a === 0 则 b = b ^ n;(0 ^ x = x; 1 ^ x = ~x)
+    // a === 1 => b = 0; 
+    // 以上归纳为: b = b ^ n & ~a;(x & 0 = 0; x & 1 = x);
+    // 同理可以归纳: a = a ^ n & ~b;
+    
+    var singleNumber = function(nums) {
+        let a = 0, b = 0;
+        for (const num of nums) {
+            b = ~a & (b ^ num);
+            a = ~b & (a ^ num);
+        }
+        return b;
+    };
+
+  </script>
+</body>
+</html>
