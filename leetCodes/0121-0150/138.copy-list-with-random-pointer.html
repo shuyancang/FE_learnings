@@ -43,12 +43,57 @@
    * };
    */
 
-    var copyRandomList = function(head) {
+    // 一次遍历head新建所有节点, 并创建所有节点的map, 再次遍历输出;
+    var copyRandomList = function(head) { // 感觉没问题，但不知为何错误~~~~
       if(!head){
         return null;
       }
-      
+      let nodesMap = new Map();
+      let copyHead = head;
+      while (copyHead) {
+        const newNode = new Node(copyHead.val);
+        nodesMap.set(copyHead, newNode);
+        copyHead = copyHead.next;
+      }
+      const resDummy = new Node();
+      let resNode = new Node(head.val);
+      if (head.random) {
+        resNode.random = nodesMap.get(head.random);
+      }
+      resDummy.next = resNode;
+      while (head.next) {
+        resNode.next = nodesMap.get(head.next.val);
+        if(head.next.random){
+          resNode.next.random = nodesMap.get(head.next.random);
+        }
+        head = head.next;
+        resNode = resNode.next;
+      }
+      return resDummy.next;
     };
+
+    var copyRandomList = function (head) {
+      if (!head) return head;
+      let cur = head;
+      const map = new Map();
+      while (cur) {// 第一次遍历，生成一个具有val属性的链表；
+        map.set(cur, new Node(cur.val))
+        cur = cur.next
+      }
+      cur = head; //第二次遍历，根据map映射关系，将random和next指针指向对应的节点或者null;
+      while (cur) {
+        map.get(cur).next = map.get(cur.next) || null
+        map.get(cur).random = map.get(cur.random) || null
+        cur = cur.next
+      }
+      return map.get(head);
+    };
+
+    // leetcode解决方法1: 回溯-将链表想象为一张图, 每个节点有两个指针(边) 顺序调用并使用hash标记是否visited即可
+    // 解决方法2: 迭代
+    // https://leetcode-cn.com/problems/copy-list-with-random-pointer/solution/fu-zhi-dai-sui-ji-zhi-zhen-de-lian-biao-by-leetcod/
+
+    // 解决方法3: O(1)空间的迭代: 扭曲原链表将每个拷贝节点放在原来对应节点的旁边-创建新旧交替节点进行插入的链表; 然后进行迭代, 旧节点的random指针对应新节点的指针指向 + next; 然后正确的抽离出新的链表;
   </script>
 </body>
 </html>
