@@ -28,12 +28,80 @@
     //   -105 <= Node.val <= 105
     //   pos 的值为 -1 或者链表中的一个有效索引
 
-    // 快慢指针: 快指针fast(head.next)走两步, 慢指针slow(head)走一步; 如果不发生碰撞(指针指向null, 无环)
-    // 第一次碰撞假定慢指针已走m个节点, 第二次碰撞假定走n个节点, 则环内节点数为n - m个
-    // 第一次碰撞时, 快指针已经走过2m个节点, 则: 分支前节点数n + m = 2m + (n - m)*Int
+    // 最简单的还是使用hash:
     var detectCycle = function(head) {
-        
+      const hash = new Map();
+      let step = 0;
+      while(head){
+        if(hash.has(head)){
+          return head;
+        }
+        hash.set(head, step++);
+        head = head.next;
+      }
+      return null;
     };
+
+    var detectCycle = function(head) {
+        const visited = new Set();
+        while (head !== null) {
+            if (visited.has(head)) {
+                return head;
+            }
+            visited.add(head);
+            head = head.next;
+        }
+        return null;
+    };
+
+  
+    // 快慢指针: 快指针fast(head.next)走两步, 慢指针slow(head)走一步; 如果不发生碰撞(指针指向null, 无环)
+    // 假定第一次碰撞慢指针走过m个节点, 快指针到2m + 1个节点, 则m + 1必定是环形节点数的整数倍!
+    // 假定第二次碰撞慢指针走过n个节点, 则快指针走到2n + 1个节点, 则
+    // 第一次碰撞假定慢指针已走m个节点, 第二次碰撞假定走n个节点, 则环内节点数为n - m个
+    // 第一次碰撞时, 快指针已经走过2m个节点, 快指针多走的这m + 1个节点够走 parseInt(m + 1 / n - m) 圈, 则: 
+    // leetcode题解: 
+    // 我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。
+
+    // 如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc。
+
+    // 根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有
+
+    // a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)
+    // a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)
+
+    // 有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。
+
+    // 因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。
+
+    // 作者：LeetCode-Solution
+    // 链接：https://leetcode-cn.com/problems/linked-list-cycle-ii/solution/huan-xing-lian-biao-ii-by-leetcode-solution/
+    // 来源：力扣（LeetCode）
+    // 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+    var detectCycle = function(head) {
+        if (head === null) {
+            return null;
+        }
+        let slow = head, fast = head;
+        while (fast !== null) {
+            slow = slow.next;
+            if (fast.next !== null) {
+                fast = fast.next.next;
+            } else {
+                return null;
+            }
+            if (fast === slow) {
+                let ptr = head;
+                while (ptr !== slow) {
+                    ptr = ptr.next;
+                    slow = slow.next;
+                }
+                return ptr;
+            }
+        }
+        return null;
+    };
+
   </script>
 </body>
 </html>
