@@ -23,9 +23,76 @@
     //   输入: s = "catsandog", wordDict = ["cats", "dog", "sand", "and", "cat"]
     //   输出: false
 
+    // 1. 创建一个list, 对应wordDict每个单词在s可以放置的索引list的索引是对应的索引;
+    // 2. 对map进行dfs回溯, 找到一个即可true; 找不到false ====> 正确但超时
     var wordBreak = function(s, wordDict) {
-
+      const indexList = new Array(s.length).fill(0).map(e => []);
+      for(let i = 0; i < wordDict.length; i++){
+        const poses = getWordMayIndex(s, wordDict[i]);
+        for(let pos of poses){
+          indexList[pos].push(wordDict[i]);
+        }
+      }
+      let res = false;
+      const dfs = (start) => {
+        const mayList = indexList[start];
+        for(let eachWord of mayList){
+          if(start + eachWord.length === s.length){
+            res = true;
+            return true;
+          }
+          dfs(start + eachWord.length);
+        }
+      }
+      dfs(0);
+      return res;
     };
+    function getWordMayIndex(s, str){ // 获取str可以作为s子串的所有可能索引
+      let res = [];
+      for(let i = 0; i < s.length; i++){
+        if(s.substring(i, i + str.length) === str){
+          res.push(i);
+        }
+      }
+      return res;
+    }
+
+    // 最直观的应该是直接递归了吧~~~~这个复杂度，咳咳，有点凶~ ====> 也是超时，昂~
+    var wordBreak = function(s, wordDict) {
+      if(wordDict.includes(s)){
+        return true;
+      }
+      for(let i = 1; i < s.length - 1; i++){
+        const left = s.substring(0, i);
+        const right = s.substring(i);
+        if (wordBreak(left, wordDict) && wordBreak(right, wordDict))  {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    // 动态规划或者回溯, 应该是解决问题的好方法吧？好好想想昂~ 
+    // f(i)标识i长度的子串, 是否可以由字典构成, 则对于i + 1需要判断是否存在某个索引j是的f(j) && substring(j, i)位于wordDict
+    var wordBreak = function(s, wordDict){
+      const dp = new Array(s.length + 1).fill(false);
+      const dicSet = new Set(wordDict);
+      dp[0] = true;
+      for (let i = 1; i <= s.length; i++) { // i为字符串长度
+        for(let j = 0; j < i; j++){
+          if(dp[j] && dicSet.has(s.substring(j, i))){
+            dp[i] = true;
+            break;
+          }
+        }
+      }
+      return dp[s.length];
+    }
+
+
+    wordBreak("leetcode", ["leet", "code"]); // true
+    wordBreak("applepenapple", ["apple", "pen"]); // true
+    wordBreak("catsandog", ["cats", "dog", "sand", "and", "cat"]); // false
   </script>
 </body>
 </html>
