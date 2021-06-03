@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>二叉树的后续遍历</title>
+</head>
+<body>
+  <script>
+    // 给定一个二叉树，返回它的 后序 遍历。
+    // 示例:
+    //   输入: [1,null,2,3]  
+    //     1
+    //       \
+    //       2
+    //       /
+    //     3 
+    //   输出: [3,2,1]
+    //   进阶: 递归算法很简单，你可以通过迭代算法完成吗？
+
+    var postorderTraversal = function(root) { // 后序遍历: 左右根
+      const list = [];
+      const dfs = (node) => {
+        if(!node){
+          return;
+        }
+        dfs(node.left);
+        dfs(node.right);
+        list.push(node.val);
+      }
+      dfs(root);
+      return list;
+    };
+
+    var postorderTraversal = function(root) { // 迭代遍历;
+      const list = [];
+      if(!root){
+        return root;
+      }
+      const stack = [root];
+      while(stack.length > 0){
+        const node = stack.pop();
+        if(node.left){
+          stack.push(node.left);
+        }
+        if(node.right){
+          stack.push(node.right);
+        }
+        list.push(node.val)
+      }
+      return list.reverse();
+    };
+  </script>
+</body>
+</html>
