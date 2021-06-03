@@ -74,10 +74,7 @@
 
     // 因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。
 
-    // 作者：LeetCode-Solution
-    // 链接：https://leetcode-cn.com/problems/linked-list-cycle-ii/solution/huan-xing-lian-biao-ii-by-leetcode-solution/
-    // 来源：力扣（LeetCode）
-    // 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+    // a=c+(n−1)(b+c)即: 当处于相遇点, 则快慢相遇点走到环形入口 + 若干圈(n - 1) 总会第一时间和head走过来的pre相遇(pre === slow) 
     var detectCycle = function(head) {
         if (head === null) {
             return null;
@@ -90,7 +87,7 @@
             } else {
                 return null;
             }
-            if (fast === slow) {
+            if (fast === slow) { // 相遇点时, 从相遇点一步步往后走, 同时head往后走, 他们必定相遇, 且相遇点必定就是环形入口
                 let ptr = head;
                 while (ptr !== slow) {
                     ptr = ptr.next;

@@ -18,11 +18,110 @@
     // 示例 2:
     // 给定链表 1->2->3->4->5, 重新排列为 1->5->2->4->3.
 
-    var reorderList = function(head) { // 果然将节点关系切断, 缓存然后遍历是最好的方法....
+    var reorderList = function(head) { // 果然将节点关系切断, 缓存然后遍历是最好的方法.... ~但题目提示了不能有返回值只能head直接修改head~昂。
+      if(!head || !head.next){
+        return head;
+      }
+      let list = [];
+      while(head){
+        list.push(head);
+        head = head.next;
+      }
+      let left = 0, right = list.length - 1;
+      while(left < right){
+        list[left].next = list[right];
+        left++;
+        if(left === right){
+          break;
+        }
+        list[right].next = list[left];
+        right--;
+      }
+      list[left].next = null;
+    }; 
 
-    };
 
     // 如果要用空间复杂度为O(1)的该怎么搞嘞~需要随时持有一个: pre, 一个 next, 然后到这个链表的结尾找到lastNode插入到pre和next中; 然后往后推一个位置; 如此循环直到next = null;
+    var reorderList = function(head) {
+      if(!head || head.next === null){
+        return;
+      }
+      let preHead = head; // 尾节点插入该位置之后
+      let insertHead = head.next; // 尾节点插入该节点之前
+      while(insertHead && insertHead.next){ // 只要该节点不是尾节点, 那么链表的尾节点就需要链接到这个以前
+        let preCur = insertHead;
+        let cur = insertHead.next;
+        while(cur){
+          if(cur.next === null){ // 是尾节点了~ 切断尾节点前一个节点, 且将尾节点添加到合适位置 
+        //   console.log(cur, preHead, insertHead)
+            preCur.next = null;
+            preHead.next = cur;
+            cur.next = insertHead;
+            preHead = insertHead;
+            insertHead = insertHead.next;
+            // console.log(head)
+            break;
+          }
+          preCur = preCur.next;
+          cur = cur.next;
+        }
+      }
+    };
+
+    // 方法三~Leetcode: 不写了不写了~
+    // 先找到链表中点(快慢指针)分割成为左链表 + 右链表
+    // 右链表翻转
+    // 左右链表依次合并
+    class Solution {
+    public void reorderList(ListNode head) {
+        if (head == null) {
+            return;
+        }
+        ListNode mid = middleNode(head);
+        ListNode l1 = head;
+        ListNode l2 = mid.next;
+        mid.next = null;
+        l2 = reverseList(l2);
+        mergeList(l1, l2);
+    }
+
+    public ListNode middleNode(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode nextTemp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nextTemp;
+        }
+        return prev;
+    }
+
+    public void mergeList(ListNode l1, ListNode l2) {
+        ListNode l1_tmp;
+        ListNode l2_tmp;
+        while (l1 != null && l2 != null) {
+            l1_tmp = l1.next;
+            l2_tmp = l2.next;
+
+            l1.next = l2;
+            l1 = l1_tmp;
+
+            l2.next = l1;
+            l2 = l2_tmp;
+        }
+    }
+}
 
   </script>
 </body>
