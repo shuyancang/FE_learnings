@@ -44,11 +44,11 @@
  */
 // 最简单的是维护一个队列记录key优先级, 一个hash维护key-value => 读写操作会让key-value优先级变化 => O(n)
 
-// O(1)咋搞嘞~？节点双向链表, 进行链接即可！其他方法嘞?
+// O(1)咋搞嘞~？节点双向链表, 进行链接即可！js的话, 可以创建一个map(map节点keys()为可遍历结构)
+
 var LRUCache = function(capacity) {
   this.capacity = capacity;
   this.cacheMap = new Map();
-  // this.cacheRank = ;
 };
 
 /** 
@@ -56,10 +56,13 @@ var LRUCache = function(capacity) {
  * @return {number}
  */
 LRUCache.prototype.get = function(key) {
+  let value = -1;
   if(this.cacheMap.has(key)){
-    // this. // 优先级放到最低
-    return this.cacheQueue.get(key);
+    value = this.cacheMap.get(key);
+    this.cacheMap.delete(key)
+    this.cacheMap.set(key, value);
   }
+  return value;
 };
 
 /** 
@@ -68,14 +71,13 @@ LRUCache.prototype.get = function(key) {
  * @return {void}
  */
 LRUCache.prototype.put = function(key, value) {
-  const size = this.cacheMap.size();
-  if(size === this.capacity){ // 容量已满, 优先出队的
-    this.cacheMap.set(key, value);
+  if(this.cacheMap.has(key)){
+    this.cacheMap.delete(key);
   }
   this.cacheMap.set(key, value);
-  this.cacheMap.set(key, value);
-  // 如果超出容量, 
-  // key优先级放到最高
+  if(this.capacity < this.cacheMap.size ){
+    this.cacheMap.delete(this.cacheMap.keys().next().value);
+  }
 };
 
 /**
