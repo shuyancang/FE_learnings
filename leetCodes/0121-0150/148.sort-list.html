@@ -26,73 +26,52 @@
     // 提示：
     // 链表中节点的数目在范围 [0, 5 * 104] 内
     // -105 <= Node.val <= 105
-    const merge = (head1, head2) => {
-      const dummyHead = new ListNode(0);
-      let temp = dummyHead, temp1 = head1, temp2 = head2;
-      while (temp1 !== null && temp2 !== null) {
-          if (temp1.val <= temp2.val) {
-              temp.next = temp1;
-              temp1 = temp1.next;
-          } else {
-              temp.next = temp2;
-              temp2 = temp2.next;
-          }
-          temp = temp.next;
-      }
-      if (temp1 !== null) {
-          temp.next = temp1;
-      } else if (temp2 !== null) {
-          temp.next = temp2;
-      }
-      return dummyHead.next;
-  }
 
-const toSortList = (head, tail) => {
-    if (head === null) {
-        return head;
-    }
-    if (head.next === tail) {
-        head.next = null;
-        return head;
-    }
-    let slow = head, fast = head;
-    while (fast !== tail) {
-        slow = slow.next;
-        fast = fast.next;
-        if (fast !== tail) {
-            fast = fast.next;
-        }
-    }
-    const mid = slow;
-    return merge(toSortList(head, mid), toSortList(mid, tail));
-}
+		var sortList = function (head) {
+			return devideLink(head, null);
+		}
 
-var sortList = function(head) {
-    return toSortList(head, null);
-};
+		function mergeLink (headOne, headTwo) { // 合并两个已排序链表
+			const dummy = new ListNode(-Infinity);
+			let tmpDummy = dummy, tmpOne = headOne, tmpTwo = headTwo;
+			while(tmpOne && tmpTwo){
+				if(tmpOne.val <= tmpTwo.val){
+					tmpDummy.next = tmpOne;
+					tmpOne = tmpOne.next;
+				} else {
+					tmpDummy.next = tmpTwo;
+					tmpTwo = tmpTwo.next;
+				}
+				tmpDummy = tmpDummy.next;
+			}
+			tmpDummy.next = tmpOne ? tmpOne : tmpTwo;
+			return dummy.next;
+		}
 
+		function devideLink(start, end){ // 对起止节点进行递归的分治排序
+			if(!start){
+				return null;
+			}
+			if(start.next === end){ // 只有一个元素, 切断
+				start.next = null;
+				return start;
+			}
+			let slow = start, fast = start; // 快慢指针;
+			while(fast !== end){
+				slow = slow.next;
+				fast = fast.next;
+				if(fast !== end){
+					fast = fast.next;
+				}
+			}
+			const mid = slow;
+			return mergeLink(devideLink(start, mid), devideLink(mid, end));
+		}
 
-// 方法2： 归并排序的改变版: => 自底而上
-const merge = (head1, head2) => {
-    const dummyHead = new ListNode(0);
-    let temp = dummyHead, temp1 = head1, temp2 = head2;
-    while (temp1 !== null && temp2 !== null) {
-        if (temp1.val <= temp2.val) {
-            temp.next = temp1;
-            temp1 = temp1.next;
-        } else {
-            temp.next = temp2;
-            temp2 = temp2.next;
-        }
-        temp = temp.next;
-    }
-    if (temp1 !== null) {
-        temp.next = temp1;
-    } else if (temp2 !== null) {
-        temp.next = temp2;
-    }
-    return dummyHead.next;
-}
+// 方法2： 归并排序的改变版: => 自底而上 参看leetcode, 设置归并的边界方法;
+// 1. 用 subLength 表示每次需要排序的子链表的长度，初始时 subLength=1。
+// 2. 将链表拆分成为若干个长度为subLength长度的子链表, 两两合并
+// 3. 将subLength加倍, 继续合并 => 直至subLength >= 链表长度
 
 var sortList = function(head) {
     if (head === null) {
@@ -111,21 +90,21 @@ var sortList = function(head) {
             let head1 = curr;
             for (let i = 1; i < subLength && curr.next !== null; i++) {
                 curr = curr.next;
-            }
+            } // 得到上链
             let head2 = curr.next;
-            curr.next = null;
+            curr.next = null; // 切断
             curr = head2;
             for (let i = 1; i < subLength && curr != null && curr.next !== null; i++) {
                 curr = curr.next;
-            }
+            } // 得到下链
             let next = null;
             if (curr !== null) {
                 next = curr.next;
                 curr.next = null;
-            }
-            const merged = merge(head1, head2);
-            prev.next = merged;
-            while (prev.next !== null) {
+            } // 记录要链接的下一个位置;
+            const merged = merge(head1, head2); // 合并两个切断的链表
+            prev.next = merged; // 重新链接回来
+            while (prev.next !== null) { // 下一轮的头节点;
                 prev = prev.next;
             }
             curr = next;
@@ -134,10 +113,6 @@ var sortList = function(head) {
     return dummyHead.next;
 };
 
-作者：LeetCode-Solution
-链接：https://leetcode-cn.com/problems/sort-list/solution/pai-xu-lian-biao-by-leetcode-solution/
-来源：力扣（LeetCode）
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
   </script>
 </body>
 </html>
