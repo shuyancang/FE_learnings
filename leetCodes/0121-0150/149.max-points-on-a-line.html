@@ -34,7 +34,15 @@
     //   0  1  2  3  4  5  6
 
       var maxPoints = function(points) {
-        // 假定f(n)为n个点生成的线 + 
+        // 直线公式y = ax + b, 当points(x, y)满足公式时, 点位于线上
+        // 对于两点间斜率a = (x1 - x2) / (y1 - y2) 可能会存在0, (+ | -)Infinity, 普通数值三种情况;
+        // 将斜率记为(c1 / c2)的字符串进行记录, 计算时再拆开: hash: {'c1/c2/b': count(>=2)}
+        for(let i = 0; i < points.length; i++){
+          for(let j = i + 1; j < points.length; j++){
+            const [x1, y1] = points[i];
+            const [x2, y2] = points[j];
+          }
+        }
       };
   </script>
 </body>
