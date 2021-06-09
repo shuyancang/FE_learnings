@@ -33,17 +33,37 @@
     //   +------------------->
     //   0  1  2  3  4  5  6
 
+     // 如果要考虑斜率超限, 需要将斜率进行转换; (a / b = c / d => a * d === b * c)
+     // 如果要考虑重复点, 需提前map设定对应的重合点个数进行标记处理;
       var maxPoints = function(points) {
-        // 直线公式y = ax + b, 当points(x, y)满足公式时, 点位于线上
-        // 对于两点间斜率a = (x1 - x2) / (y1 - y2) 可能会存在0, (+ | -)Infinity, 普通数值三种情况;
-        // 将斜率记为(c1 / c2)的字符串进行记录, 计算时再拆开: hash: {'c1/c2/b': count(>=2)}
+        // 不考虑斜率超限情况: 对任意一个点, 后续点与他构建的直线, 不用考虑(y = ax + b)b, 只要斜率一致, 则共线 
+        let maxCount = 0;
+        const lineHash = {};
         for(let i = 0; i < points.length; i++){
+          const [x1, y1] = points[i];
+          let slopeMap = {}; // 
           for(let j = i + 1; j < points.length; j++){
-            const [x1, y1] = points[i];
             const [x2, y2] = points[j];
+            const slope = getSlope(points[i], points[j]); // 两点间斜率
+            slopeMap[slope] = slopeMap[slope] === undefined ? 2 : slopeMap[slope] + 1;
+            if(slopeMap[slope] > maxCount){
+              maxCount = slopeMap[slope];
+            }
           }
         }
+        return maxCount;
       };
+
+      function getSlope(point1, point2){ // 首先两不是同一个点 => 计算得到两点间直线: '0_2', 'Infinity_3';
+        const [x1, y1] = point1;
+        const [x2, y2] = point2;
+        if(x1 === x2){ // x轴相同 => x = b;
+          return 'Infinity';
+        } else if (y1 === y2) { // y轴相同 => y = b;
+          return '0'
+        }
+        return (y2 - y1) / (x2 - x1);
+      } 
   </script>
 </body>
 </html>
