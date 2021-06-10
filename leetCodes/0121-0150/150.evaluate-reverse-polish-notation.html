@@ -47,14 +47,34 @@
       if (!tokens || tokens.length === 0) {
         return;
       }
+      const calcStr = new Set(['+', '-', '*', '/']); // 计算符
       const len = tokens.length;
-      let res = tokens[0];
-      let queue = [tokens[0]]
-      for(let i = 1; i < len; i++){
-
+      const stack = [];
+      for(let i = 0; i < len; i++){
+        if(calcStr.has(tokens[i])) {
+          const lastFir = stack.pop();
+          const lastSec = stack.pop();
+          stack.push(calcTool(tokens[i], lastSec, lastFir));
+        } else {
+          stack.push(tokens[i]);
+        }
       }
-      return res;
+      return stack[0];
     };
+
+    function calcTool(type, str1, str2){
+      const num1 = parseInt(str1);
+      const num2 = parseInt(str2);
+      if(type === '+') {
+        return num1 + num2;
+      } else if (type === '-') {
+        return num1 - num2;
+      } else if (type === '*') {
+        return num1 * num2;
+      } else {
+        return parseInt(num1 / num2);
+      }
+    }
   </script>
 </body>
 </html>
