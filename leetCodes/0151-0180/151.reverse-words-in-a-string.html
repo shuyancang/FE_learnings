@@ -36,37 +36,19 @@
     // 常规思路1: 字符串基于空格切割为数组, 翻转后, 再用空格链接;
     // 常规思路2: 从末尾开始遍历, 维护一个栈, 遇到空格就推送之前的入栈, 最后使用空格链接
     
-    var reverseWords = function(s) { // 普通解法: 从末尾开始遍历, 维护一个栈
-      if(!s){
-        return s;
-      }
-      const len = s.length;
-      let index = len - 1;
-      let stack = [];
-      let wordEnd = wordStart = len - 1;
-      while(index >= 0){
-        while(s[index] === ' ') {
-          index--;
-        }
-        if(index === 0){
-          return stack.join(' ');
-        }
-        wordEnd = index; // 某个单词的结尾index
-        while(index > 0 && s[index - 1] !== ' ') {
-          index--;
-        }
-        wordStart = index; // 该单词的头部index;
-        stack.push(s.substring(wordStart, wordEnd + 1));
-        index--;
-      }
-      return stack.join(' ')
+    
+    var reverseWords = function(s) { // 普通解法: 最极简写法~
+      return s.split(' ').filter(e => !!e).reverse().join(' ');
     };
 
-    reverseWords("the sky is blue")
-    reverseWords("  hello world  ")
-    reverseWords("a good   example")
-    reverseWords("  Bob    Loves  Alice   ")
-    reverseWords("Alice does not even like bob")
+    // 原地思路1~?字符串哪有什么原地···?莫不是str += somesubstringword来实现? ===> 题解是基于某些语言字符串可变来当成数组处理的。。。emmmjs无解哈哈。
+
+
+    reverseWords("the sky is blue");
+    reverseWords("  hello world  ");
+    reverseWords("a good   example");
+    reverseWords("  Bob    Loves  Alice   ");
+    reverseWords("Alice does not even like bob");
   </script>
 </body>
 </html>

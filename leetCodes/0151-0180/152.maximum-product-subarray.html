@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>乘积最大子数组</title>
+</head>
+<body>
+  <script>
+    // 给你一个整数数组 nums ，请你找出数组中乘积最大的连续子数组（该子数组中至少包含一个数字），并返回该子数组所对应的乘积。
+    // 示例 1:   输入: [2,3,-2,4]  输出: 6
+    //   解释: 子数组 [2,3] 有最大乘积 6。
+    // 示例 2:   输入: [-2,0,-1]   输出: 0
+    //   解释: 结果不能为 2, 因为 [-2,-1] 不是子数组。
+
+    var maxProduct = function(nums) { // 从左往右再从右往左, 必有最大(遇0断开)
+      if(!nums || nums.length === 0) {
+        return null;
+      }
+      const len = nums.length;
+      let maxRes = nums[0];
+      let tmpNum = 1; index = 0;
+      while(index < len){
+        if (nums[index] === 0) {
+          index++;
+          maxRes = maxRes < 0 ? 0 : maxRes;
+          tmpNum = 1; // 重置
+          continue;
+        }
+        tmpNum *= nums[index];
+        if(tmpNum > maxRes){
+          maxRes = tmpNum;
+        }
+        index++;
+      }
+      index = len - 1;
+      while(index >= 0){
+        if (nums[index] === 0) {
+          index--;
+          maxRes = maxRes < 0 ? 0 : maxRes;
+          tmpNum = 1; // 重置
+          continue;
+        }
+        tmpNum *= nums[index];
+        if(tmpNum > maxRes){
+          maxRes = tmpNum;
+        }
+        index--;
+      }
+      return maxRes;
+    };
+
+    // 动态规划 f(n)乘积最大连续子数组代表长度为 0 => n的最大连续乘积; 则: 
+    // f(n) = Math.max(f(n - 1) * a[n], a[n]); => 根据正负进行分别区分记录
+    var maxProduct = function(nums){
+      const len = nums.length;
+      let maxList = [], minList = [];
+      maxList[0] = minList[0] = nums[0];
+      for(let i = 1; i < len; i++){
+        maxList[i] = Math.max(maxList[i - 1] * nums[i], minList[i - 1] * nums[i], nums[i]);
+        minList[i] = Math.min(minList[i - 1] * nums[i], maxList[i - 1] * nums[i], nums[i]);
+      }
+      let maxRes = -Infinity;
+      for(let i = 0; i < len; i++){
+        maxRes = Math.max(maxList[i], minList[i], maxRes);
+      }
+      return maxRes;
+    }
+
+    // 滚动数组进行继续优化 - 只需要使用O(1的空间复杂度且只需要循环遍历一次)
+    var maxProduct = function(nums){
+      const len = nums.length;
+      let res = max = min = nums[0];
+      for(let i = 1; i < len; i++){
+        let tmpMax = max, tmpMin = min;
+        max = Math.max(tmpMax * nums[i], tmpMin * nums[i], nums[i]);
+        min = Math.min(tmpMin * nums[i], tmpMax * nums[i], nums[i]);
+        res = Math.max(max, min, res);
+      }
+      return res;
+    }
+
+    maxProduct([2,3,-2,4]); // 6
+    maxProduct([-2,0,-1]); // 0
+
+  </script>
+</body>
+</html>
