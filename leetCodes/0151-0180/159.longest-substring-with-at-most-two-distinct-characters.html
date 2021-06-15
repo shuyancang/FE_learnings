@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>至多包含两个不同字符的最长子串</title>
+</head>
+<body>
+  <script>
+    // 给定一个字符串 s ，找出 至多 包含两个不同字符的最长子串 t ，并返回该子串的长度。
+    // 示例 1: 输入: "eceba" 输出: 3
+    //   解释: t 是 "ece"，长度为3。
+    // 示例 2: 输入: "ccaabbb" 输出: 5
+    //   解释: t 是 "aabbb"，长度为5。
+
+    var lengthOfLongestSubstringTwoDistinct = function(s) { // 滑动窗口left, end
+      if(!s || s.length === 0){
+        return 0;
+      }
+      const len = s.length;
+      let hashMap = new Map();
+      let index = 0, left = 0, right = 0;
+      let res = 0, tmp = 0;
+      while(right < len){
+        const unit = s[right];
+        if (hashMap.size < 2 || hashMap.has(unit)) { // 长度不足, 或重复字母 加入
+          hashMap.set(unit, hashMap.get(unit) ? (hashMap.get(unit) + 1) : 1);
+          tmp++;
+          res = Math.max(tmp, res);
+          right++;
+        } else { // 有第三个字母; 移除头部字母 ==> 直至还剩一个字母为止再推送当前right字符
+          while (hashMap.size === 2) {
+            const delUnit = s[left];
+            if (hashMap.get(delUnit) === 1) {
+              hashMap.delete(delUnit);
+            } else {
+              hashMap.set(delUnit, hashMap.get(delUnit) - 1);
+            }
+            left++;
+            tmp--;
+          }
+          hashMap.set(unit, 1);
+          right++;
+          tmp++;
+        }
+      }
+      return res;
+    };
+
+    lengthOfLongestSubstringTwoDistinct("eceba"); // 3
+    lengthOfLongestSubstringTwoDistinct("ccaabbb"); // 5
+  </script>
+</body>
+</html>
