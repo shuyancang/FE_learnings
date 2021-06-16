@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>相隔1的编辑距离</title>
+</head>
+<body>
+  <script>
+    // 给定两个字符串 s 和 t，判断他们的编辑距离是否为 1。
+    // 注意：
+    //   满足编辑距离等于 1 有三种可能的情形：
+    //     往 s 中插入一个字符得到 t
+    //     从 s 中删除一个字符得到 t
+    //     在 s 中替换一个字符得到 t
+    // 示例 1：
+    //   输入: s = "ab", t = "acb"  输出: true
+    //     解释: 可以将 'c' 插入字符串 s 来得到 t。
+    // 示例 2:
+    //   输入: s = "cab", t = "ad"  输出: false
+    //     解释: 无法通过 1 步操作使 s 变为 t。
+    // 示例 3:
+    //   输入: s = "1203", t = "1213"  输出: true
+    //     解释: 可以将字符串 s 中的 '0' 替换为 '1' 来得到 t。
+
+    var isOneEditDistance = function(s, t) { // 删除和添加等价, 顺序相比较只有一个不同;
+      // 1. s, t长度比较不同只可能是删除/添加; 2. 长度相同只可能是编辑
+      const sLen = s.length, tLen = t.length;
+      if(Math.abs(sLen - tLen) > 2){ // 长度差超过1肯定false;
+        return false;
+      }
+      if(sLen === tLen){
+        return isEdit(s, t);
+      } else {
+        let longStr = sLen > tLen ? s : t;
+        let shortStr = sLen > tLen ? t : s;
+        return isAdd(longStr, shortStr);
+      }
+    };
+    function isEdit(s, t){ // 两个长度相同的字符串是否只有一个字符的差距; - 编辑
+      const len = s.length;
+      let diffCount = 0, index = 0;
+      while (index < len) {
+        if(s[index] !== t[index]){
+          diffCount++;
+        }
+        if(diffCount > 1) {
+          return false;
+        }
+        index++;
+      }
+      return diffCount === 1;
+    }
+
+    function isAdd(longStr, shortStr){ // 两个长度差距1的字符串是否只有一个字符差距;
+      let longIndex = 0, shortIndex = 0;
+      let diff = 0;
+      while(longIndex < longStr.length){
+        if(longStr[longIndex] === shortStr[shortIndex]){
+          longIndex++;
+          shortIndex++;
+        } else {
+          diff++;
+          if(diff > 1){
+            return false;
+          }
+          longIndex++;
+        }
+      }
+      return diff === 1;
+    }
+  </script>
+</body>
+</html>
