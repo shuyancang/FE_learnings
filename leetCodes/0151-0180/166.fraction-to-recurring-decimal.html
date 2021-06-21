@@ -27,37 +27,70 @@
       // 1. 遍历即可
       // 2. 每次numerator进行记录入hash, denominator重复或denominator = 0
       // 3. denominator重复用(), 为0则能够整除;
+      const fig = numerator / denominator < 0 ? '-' : '';
+      numerator = Math.abs(numerator);
+      denominator = Math.abs(denominator)
       const intPart = parseInt(numerator / denominator); // 整数部分;
-      const demPart = numerator % denominator; // 余数部分;
-      const hash = {};
-      let demList = [];
-      let overIndex = -1;
-      const dfs = (res, list) => {
-        if (res === 0) {
-          demList = list;
-          return true; // 整除啦！
-        }
-        if(hash[res]){ // 哪里开始重复的标志！
-          demList = list;
-          return false;
-        }
-        const intNum = parseInt((res * 10) / denominator);
-        const demNum = (res * 10) % denominator;
-        hash[res] = true;
-        list.push(intNum);
-        dfs(demNum, list);
+      let restPart = numerator % denominator; // 余数部分;
+      const demList = []; // 小数列表
+      const demHash = {};
+      while (restPart !== 0 && demHash[restPart] === undefined) {
+        const newDevide = parseInt(restPart * 10 / denominator);
+        const newRest = restPart * 10 % denominator;
+        demList.push(newDevide);
+        demHash[restPart] = demList.length - 1;
+        restPart = newRest;
       }
-      dfs(demPart, []);
-      if (isOver) { // 整除
-        return `${intPart}${demList.length > 0 ? `.${demList.join('')}` : ''}`;
+      if (restPart === 0) { // 除尽
+        return `${fig}${intPart}${demList.length > 0 ? `.${demList.join('')}` : ''}`;
       }
-      return `${intPart}.(${demList.join('')})`;
+      const endlessPos = demHash[restPart]; // 除不尽
+      demList[endlessPos] = `(${demList[endlessPos]}`;
+      demList[demList.length - 1] = `${demList[demList.length - 1]})`;
+      return `${fig}${intPart}.${demList.join('')}`;
     };
     fractionToDecimal(1, 2); // 0.5
     fractionToDecimal(2, 1); // 2
     fractionToDecimal(2, 3); // 0.(6)
     fractionToDecimal(4, 333); // 0.(012)
     fractionToDecimal(1, 5); // 0.2
+    fractionToDecimal(1, 214748364); // 出现4.656612890424627e-9
+
+    var fractionToDecimal = function(numerator, denominator) {
+      const fig = (numerator / Math.abs(numerator)) * (denominator / Math.abs(denominator)) === -1 ? '-' : '';
+      numerator = Math.abs(numerator);
+      denominator = Math.abs(denominator);
+      let intPart = 0, restPart = numerator;
+      if(numerator >= denominator){
+        intPart = parseInt(numerator / denominator);
+        restPart = numerator % denominator;
+      }
+      const demList = [];
+      const demHash = {};
+      while(restPart < denominator){
+        // debugger;
+        if(restPart === 0){ // 除尽了。
+          return `${fig}${intPart}${demList.length > 0 ? `.${demList.join('')}` : ''}`;
+        } else if (demHash[restPart] !== undefined) {
+          const pos = demHash[restPart];
+          demList[pos] = `(${demList[pos]}`;
+          demList.push(')')
+          return `${fig}${intPart}.${demList.join('')}`;
+        }
+        let num = restPart * 10;
+        if(num < denominator){
+          demList.push(0);
+          demHash[restPart] = demList.length - 1;
+          restPart = num;
+          continue;
+        }
+        const rest = (num % denominator);
+        const intRes = parseInt(num / denominator);
+        demList.push(intRes);
+        demHash[restPart] = demList.length - 1;
+        restPart = rest;
+      }
+    }
   </script>
 </body>
 </html>
