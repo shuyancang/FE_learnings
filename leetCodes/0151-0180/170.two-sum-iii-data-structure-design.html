@@ -38,7 +38,7 @@
      * Initialize your data structure here.
      */
     var TwoSum = function() {
-      // this.
+      this.numbers = [];
     };
 
     /**
@@ -47,7 +47,7 @@
      * @return {void}
      */
     TwoSum.prototype.add = function(number) {
-
+      this.numbers.push(number);
     };
 
     /**
@@ -56,7 +56,14 @@
      * @return {boolean}
      */
     TwoSum.prototype.find = function(value) {
-
+      let hash = {};
+      for(let i = 0; i < this.numbers.length; i++){
+        if(hash[this.numbers[i]]){
+          return true;
+        }
+        hash[value - this.numbers[i]] = true;
+      }
+      return false;
     };
 
     /**
