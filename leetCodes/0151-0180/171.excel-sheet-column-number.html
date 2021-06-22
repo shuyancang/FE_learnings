@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>excel表序列号</title>
+</head>
+<body>
+  <script>
+    // 给定一个Excel表格中的列名称，返回其相应的列序号。
+    // 例如， 
+    //   A -> 1 B -> 2 C -> 3
+    //   ...
+    //   Z -> 26 AA -> 27 AB -> 28 
+    //     ...
+
+    // 示例 1: 输入: "A" 输出: 1
+    // 示例 2: 输入: "AB" 输出: 28
+    // 示例 3: 输入: "ZY" 输出: 701
+
+    var titleToNumber = function(columnTitle) {
+      const len = columnTitle.length;
+      let res = 0;
+      for(let i = len - 1; i >= 0; i--){
+        const pos = columnTitle[i].charCodeAt();
+        res += (pos - 64) * (26 ** (len - 1 - i));
+      }
+      return res;
+    };
+  </script>
+</body>
+</html>

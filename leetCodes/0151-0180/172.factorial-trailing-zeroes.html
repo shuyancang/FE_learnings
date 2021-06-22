@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>阶乘后0</title>
+</head>
+<body>
+  <script>
+    // 给定一个整数 n，返回 n! 结果尾数中零的数量。
+    // 示例 1: 输入: 3 输出: 0
+    //   解释: 3! = 6, 尾数中没有零。
+    // 示例 2: 输入: 5 输出: 1
+    //   解释: 5! = 120, 尾数中有 1 个零.
+
+    // 说明: 你算法的时间复杂度应为 O(log n)。
+
+    // 笨方法是真的去求阶乘~
+    // 方法二:  0只有可能是5, O(n)统计5相关数据, 并累加;
+    // O(log(n))数量级统计: n = a * 5^m + b * 5^(n - 1) + ... y * 5^1 + z * 5^0; 反复除以5计算即可
+    var trailingZeroes = function(n) {
+      let res = 0;
+      while(n > 0){ // 5为1个0, 25为2个0, ...每一次循环/5,对应的0多一个。
+        const intNum = parseInt(n / 5);
+        res += intNum;
+        n = intNum;
+      }
+      return res;
+    };
+  </script>
+</body>
+</html>
