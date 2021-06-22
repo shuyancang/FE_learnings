@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>多数元素</title>
+</head>
+<body>
+  <script>
+    // 给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数 大于 ⌊ n/2 ⌋ 的元素。
+    // 你可以假设数组是非空的，并且给定的数组总是存在多数元素。
+
+    // 示例 1： 输入：[3,2,3] 输出：3
+    // 示例 2： 输入：[2,2,1,1,1,2,2] 输出：2
+    //  
+    // 进阶： 尝试设计时间复杂度为 O(n)、空间复杂度为 O(1) 的算法解决此问题。
+
+    var majorityElement = function(nums) { // 最简单的思路 hash, 空间复杂度O(n)
+      const hash = {};
+      for(let i = 0; i < nums.length; i++){
+        if (hash[nums[i]] === undefined) {
+          hash[nums[i]] = 1;
+        } else {
+          hash[nums[i]] = hash[nums[i]] + 1;
+        }
+        if(hash[nums[i]] > nums.length / 2) {
+          return hash[nums[i]]
+        }
+      }
+      return null;
+    };
+
+    // 时间复杂度O(n), 空间复杂度O(1)的奇妙的投票算法:
+    var majorityElement = function(nums){
+      let count = 0; // count为候选人投票数
+      let res = null; 
+      for(let i = 0;i < nums.length; i++){ // 投票过程中, 假定任意数为候选人, 投票目标不同, 则票数-1, 相同+1, 到0则更换候选人, 多数元素必定是最后的候选人;
+        if(count === 0){
+          res = nums[i];
+        }
+        count = (nums[i] === res ? 1 : -1) + count;
+      }
+      return count;
+    }
+  </script>
+</body>
+</html>
