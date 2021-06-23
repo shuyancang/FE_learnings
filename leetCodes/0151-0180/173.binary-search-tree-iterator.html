@@ -15,7 +15,6 @@
     // 注意，指针初始化为一个不存在于 BST 中的数字，所以对 next() 的首次调用将返回 BST 中的最小元素。
 
     // 你可以假设 next() 调用总是有效的，也就是说，当调用 next() 时，BST 的中序遍历中至少存在一个下一个数字。
-
     // 示例：
     //   输入
     //     ["BSTIterator", "next", "next", "hasNext", "next", "hasNext", "next", "hasNext", "next", "hasNext"]
@@ -36,41 +35,39 @@
 
     // 提示：
     //   树中节点的数目在范围 [1, 105] 内
-    //   0 <= Node.val <= 106
-    //   最多调用 105 次 hasNext 和 next 操作
-    //    
+    //   0 <= Node.val <= 10^6
+    //   最多调用 10^5 次 hasNext 和 next 操作
 
     // 进阶：
     //   你可以设计一个满足下述条件的解决方案吗？next() 和 hasNext() 操作均摊时间复杂度为 O(1) ，并使用 O(h) 内存。其中 h 是树的高度。
 
-    /**
-     * Definition for a binary tree node.
-     * function TreeNode(val, left, right) {
-     *     this.val = (val===undefined ? 0 : val)
-     *     this.left = (left===undefined ? null : left)
-     *     this.right = (right===undefined ? null : right)
-     * }
-     */
-    /**
-     * @param {TreeNode} root
-     */
     var BSTIterator = function(root) {
       let copy = root;
       this.nodeList = []; // 将中序遍历的节点, 直接加入数组, curindex++进行下一个的取值;
       this.curNodeIndex = -1;
+      const dfs = (node) => {
+        if(!node){
+          return null;
+        }
+        if(node.left){
+          dfs(node.left);
+        }
+        this.nodeList.push(node);
+        if(node.right){
+          dfs(node.right);
+        }
+      }
+      dfs(root);
     };
 
-    /**
-     * @return {number}
-     */
     BSTIterator.prototype.next = function() {
       this.curNodeIndex++;
-      return this.nodeList[this.curNodeIndex] || null;
+      if(this.nodeList[this.curNodeIndex]){
+        return this.nodeList[this.curNodeIndex].val;
+      }
+      return null;
     };
 
-    /**
-     * @return {boolean}
-     */
     BSTIterator.prototype.hasNext = function() {
       return !!this.nodeList[this.curNodeIndex + 1];
     };
@@ -81,6 +78,27 @@
      * var param_1 = obj.next()
      * var param_2 = obj.hasNext()
      */
+
+     // 方法二, 在next的时候调用stack进行处理, 每次调用时候再进行遍历弹出;
+    var BSTIterator = function (root) {
+      this.cur = root;
+      this.stack = [];
+    }
+
+    BSTIterator.prototype.next = function(){
+      while(this.cur){
+        this.stack.push(this.cur);
+        this.cur = this.cur.left;
+      }
+      this.cur = this.stack.pop();
+      const res = this.cur.val;
+      this.cur = this.cur.right;
+      return res;
+    }
+
+    BSTIterator.prototype.hasNext = function(){
+      return this.cur !== null || this.stack.length;
+    }
   </script>
 </body>
 </html>
