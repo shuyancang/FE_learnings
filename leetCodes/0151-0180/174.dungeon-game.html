@@ -28,12 +28,17 @@
     //   骑士的健康点数没有上限。
     //   任何房间都可能对骑士的健康点数造成威胁，也可能增加骑士的健康点数，包括骑士进入的左上角房间以及公主被监禁的右下角房间。
 
-    // 求到某个节点的路径上的最小累加和;
+    // 1. 从出发点到(m, n)和应该尽可能的大; 2. 从出发点到当前点所需要的最小初始值尽可能的小; 
+    // 从右下往左上进行动态规划: 假定dp(i, j)为到达(m, n)的最小初始值, 则dp(i, j)往右或往下有(dp(i + 1, j), dp(i, j + 1))
+    // dp(i, j) 需要大于等于: Math.min(dp(i + 1, j), dp(i, j + 1)) - dungeon(i, j) 且 >= 1
+    // dp(i, j) = Math.max(Math.min(dp(i + 1, j), dp(i, j + 1)), 1);
     var calculateMinimumHP = function(dungeon) { // 显然动态规划?
       const m = dungeon.length; // 行数
       const n = dungeon[0].length; // 列数
-      const board = new Array(n).fill(0);
-      // 需要记录路径对应过程的最值!
+      const board = new Array(m + 1).fill(0).map(e => new Array(n + 1).fill(0));
+      for(let i = 0; i < m + 1; i++){
+        
+      }
     };
   </script>
 </body>
