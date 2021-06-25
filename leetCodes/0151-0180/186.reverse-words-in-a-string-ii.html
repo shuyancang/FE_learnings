@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>翻转字符串单词II</title>
+</head>
+<body>
+  <script>
+    // 给定一个字符串，逐个翻转字符串中的每个单词。
+
+    // 示例：
+    //   输入: ["t","h","e"," ","s","k","y"," ","i","s"," ","b","l","u","e"]
+    //   输出: ["b","l","u","e"," ","i","s"," ","s","k","y"," ","t","h","e"]
+    // 注意：
+    //   单词的定义是不包含空格的一系列字符
+    //   输入字符串中不会包含前置或尾随的空格
+    //   单词与单词之间永远是以单个空格隔开的
+    // 进阶：使用 O(1) 额外空间复杂度的原地解法。
+
+    var reverseWords = function(s) { // 先翻转每个单词, 然后整体翻转
+      const len = s.length;
+      let left = right = 0;
+      for(let i = 0; i <= len; i++){
+        const unit = s[i];
+        if(unit === ' ' || i === len){ // 遇到left, right了, 翻转
+          while(left < right){
+            const tmp = s[right];
+            s[right] = s[left];
+            s[left] = tmp;
+            left++;
+            right--;
+          }
+          left = right = i + 1; // 下一个位置
+        } else {
+          right = i;
+        }
+      }
+      left = 0;
+      right = len - 1;
+      while(left < right){
+        const tmp = s[right];
+        s[right] = s[left];
+        s[left] = tmp;
+        left++;
+        right--;
+      }
+    };
+  </script>
+</body>
+</html>
