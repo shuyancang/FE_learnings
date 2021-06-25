@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>重复DNA</title>
+</head>
+<body>
+  <script>
+    // 所有 DNA 都由一系列缩写为 'A'，'C'，'G' 和 'T' 的核苷酸组成，例如："ACGAATTCCG"。在研究 DNA 时，识别 DNA 中的重复序列有时会对研究非常有帮助。
+    // 编写一个函数来找出所有目标子串，目标子串的长度为 10，且在 DNA 字符串 s 中出现次数超过一次。
+
+    // 示例 1：
+    //   输入：s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"
+    //   输出：["AAAAACCCCC","CCCCCAAAAA"]
+    // 示例 2：
+    //   输入：s = "AAAAAAAAAAAAA"
+    //   输出：["AAAAAAAAAA"]
+    //  
+    // 提示：
+    //   0 <= s.length <= 105
+    //   s[i] 为 'A'、'C'、'G' 或 'T'
+
+      var findRepeatedDnaSequences = function(s) { // 显然，超时~
+        if(!s || s.length <= 10) {
+          return [];
+        }
+        const len = s.length;
+        const dnaCountSet = new Set();
+        const resSet = new Set();
+        let left = 0, right = 9; // 滑动窗口
+        while(right < s.length){
+          const partStr = s.substring(left, right + 1);
+          if(dnaCountSet.has(partStr)){
+            resSet.add(partStr);
+          }
+          dnaCountSet.add(partStr);
+        }
+        return [...resSet];
+      };
+
+      var findRepeatedDnaSequences = function(s){ // leetcode 方法有意思: 将ACGT分别换为0123, 则任一10位字符串都对应一个独一无二的数值
+        // 所以相等的唯一可能就是两个数值相等, 且滑动过程中实际上是去掉首位，后续进一位 + 最后末尾数, 所以可以使用计算方法常数时间数量级的进行判定!
+        // 所需的仅仅是进制转换
+        var findRepeatedDnaSequences = function (s) {
+          if (s.length <= 10) return [];
+          const charMap = {
+            A: 0,
+            C: 1,
+            G: 2,
+            T: 3,
+          };
+
+          const result = [];
+          const map = new Map();
+          let sum = 0;
+          for (let i = 0; i < 10; i++) {
+            sum = sum * 4 + charMap[s[i]];
+          } // 前10个字符组成的子串之和
+          map.set(sum, 1);
+          for (let i = 1; i <= s.length - 10; i++) {
+            // 以s[i]开头的10个字符对应的数值满足[一共20bit，需要与0xfffff相与]
+            // sum[i] = ((sum[i-1] << 2) & 0xfffff) + charMap[s[i+9]]
+            sum = ((sum << 2) & 0xfffff) + charMap[s[i + 9]];
+            if (map.get(sum) === 1) {
+              result.push(s.slice(i, i + 10));
+            }
+            map.set(sum, map.has(sum) ? map.get(sum) + 1 : 1);
+          }
+          return result;
+
+      }
+  </script>
+</body>
+</html>
