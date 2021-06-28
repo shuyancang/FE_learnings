@@ -25,10 +25,105 @@
     // 0 <= prices.length <= 1000
     // 0 <= prices[i] <= 1000
 
-    // 买入, 卖出两种状态, 收益为res;
+    // 一系列变量存储买入状态, 一系列变量存储卖出状态;(i)为对应prices位置索引
+    // buy[i][j]: 进行j笔交易, 且手上有一只股票时的最大利润
+    // sell[i][j]: 进行j笔交易, 手上不持有股票的最大利润
+    // buy[i][j] = Math.max(buy[i - 1][j], sell[i-1][j] - price[i]); i买入则buy对应sell, 不买入则对应buy-1
+    // sell[i][j] = Math.max(sell[i-1][j], buy[i-1][j - 1] + price[i]); 同上
+    // buy[0][j]: j = 0时为-prices[0]; j > 0时为-Infinity
+    // sell[0][j]: j = 0时为0; j > 0时为-Infinity
+    // 显然, prices.length / 2取整是最大的交易次数; 因此sell, 和buy数组长度可再次对半;
     var maxProfit = function(k, prices) {
+    const buy = new Array(n).fill(0).map(() => new Array(k + 1).fill(0));
+    const sell = new Array(n).fill(0).map(() => new Array(k + 1).fill(0));
 
+    for (let i = 1; i <= k; ++i) {
+        buy[0][i] = sell[0][i] = -Number.MAX_VALUE;
+    }
+
+    for (let i = 1; i < n; ++i) {
+        buy[i][0] = Math.max(buy[i - 1][0], sell[i - 1][0] - prices[i]);
+        for (let j = 1; j <= k; ++j) {
+            buy[i][j] = Math.max(buy[i - 1][j], sell[i - 1][j] - prices[i]);
+            sell[i][j] = Math.max(sell[i - 1][j], buy[i - 1][j - 1] + prices[i]);   
+        }
+    }
+    return Math.max(...sell[n - 1]);
+};
+
+    var maxProfit = function(k, prices) {
+      if(!prices || !prices.length) {
+        return 0;
+      }
+      const n = prices.length;
+      k = Math.min(k, parseInt(n / 2));
+      const buy = new Array(n).fill(0).map(e => new Array(k + 1).fill(0));
+      const sell = new Array(n).fill(0).map(e => new Array(k + 1).fill(0));
+      buy[0][0] = -prices[0];
+      sell[0][0] = 0;
+      let res = 0;
+      for (let i = 1; i <= k; ++i) {
+        buy[0][i] = sell[0][i] = -Infinity;
+      }
+      for(let i = 1; i < n; i++){
+        buy[i][0] = Math.max(buy[i - 1][0], sell[i - 1][0] - prices[i]);
+        for(let j = 1; j <= k; j++){
+          buy[i][j] = Math.max(buy[i - 1][j], sell[i - 1][j] - prices[i]);
+          sell[i][j] = Math.max(sell[i - 1][j], buy[i - 1][j - 1] + prices[i]);
+          if(i === n - 1){
+            res = Math.max(sell[i][j], res);
+          }
+        }
+      }
+      return res;
     };
+
+    // 更简洁的空间复杂度: 因为依赖之前的操作, 可以进行进一步的简化
+    // 这样的状态转移方程会因为状态的覆盖而变得不同。例如如果我们先计算 \textit{b}b 而后计算 ss，那么在计算到 s[j]s[j] 时，其状态转移方程中包含的 b[j-1]b[j−1] 这一项的值已经被覆盖了，即本来应当是从二维表示中的 \textit{buy}[i-1][j-1]buy[i−1][j−1] 转移而来，而现在却变成了 \textit{buy}[i][j-1]buy[i][j−1]。
+
+    //   但其仍然是正确的。我们考虑 \textit{buy}[i][j-1]buy[i][j−1] 的状态转移方程：
+
+    //   b[j-1] \leftarrow \textit{buy}[i][j-1] = \max \big\{ \textit{buy}[i-1][j-1], \textit{sell}[i-1][j-1] - \textit{price}[i] \big\}
+    //   b[j−1]←buy[i][j−1]=max{buy[i−1][j−1],sell[i−1][j−1]−price[i]}
+
+    //   那么 s[j]s[j] 的状态转移方程实际上为：
+
+    //   s[j] \leftarrow \max \big\{ s[j], \textit{buy}[i-1][j-1] + \textit{prices}[i], \textit{sell}[i-1][j-1] \big\}
+    //   s[j]←max{s[j],buy[i−1][j−1]+prices[i],sell[i−1][j−1]}
+
+    //   为什么 s[j]s[j] 的状态转移方程中会出现 \textit{sell}[i-1][j-1]sell[i−1][j−1] 这一项？实际上，我们是把「在第 ii 天以 \textit{prices}[i]prices[i] 的价格买入，并在同一天以 \textit{prices}[i]prices[i] 的价格卖出」看成了一笔交易，这样对应的收益即为：
+
+    //   \textit{sell}[i-1][j-1] - \textit{prices}[i] + \textit{prices}[i]
+    //   sell[i−1][j−1]−prices[i]+prices[i]
+
+    //   也就是 \textit{sell}[i-1][j-1]sell[i−1][j−1] 本身。这种在同一天之内进行一笔交易的情况，收益为零，它并不会带来额外的收益，因此对最终的答案并不会产生影响，状态转移方程在本质上仍然是正确的。
+
+    var maxProfit = function(k, prices) {
+        if (!prices.length) {
+            return 0;
+        }
+
+        const n = prices.length;
+        k = Math.min(k, Math.floor(n / 2));
+        const buy = new Array(k + 1).fill(0);
+        const sell = new Array(k + 1).fill(0);
+
+        [buy[0], sell[0]] = [-prices[0], 0]
+        for (let i = 1; i < k + 1; ++i) {
+            buy[i] = sell[i] = -Number.MAX_VALUE;
+        }
+
+        for (let i = 1; i < n; ++i) {
+            buy[0] = Math.max(buy[0], sell[0] - prices[i]);
+            for (let j = 1; j < k + 1; ++j) {
+                buy[j] = Math.max(buy[j], sell[j] - prices[i]);
+                sell[j] = Math.max(sell[j], buy[j - 1] + prices[i]); 
+            }
+        }
+
+        return Math.max(...sell)
+    };
+
   </script>
 </body>
 </html>
