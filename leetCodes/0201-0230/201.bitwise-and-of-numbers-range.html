@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数字范围按位与</title>
+</head>
+<body>
+  <script>
+    // 给你两个整数 left 和 right ，表示区间 [left, right] ，返回此区间内所有数字 按位与 的结果（包含 left 、right 端点）。
+
+    // 示例 1：  输入：left = 5, right = 7   输出：4
+    // 示例 2：  输入：left = 0, right = 0   输出：0
+    // 示例 3：  输入：left = 1, right = 2147483647  输出：0
+
+    // 提示：
+    //   0 <= left <= right <= 231 - 1
+
+  var rangeBitwiseAnd = function(left, right) { // 最简单的遍历~
+    let res = left;
+    for(let i = left + 1; i <= right; i++){
+      res = res & i;
+    }
+    return res;
+  };
+
+  var rangeBitwiseAnd = function(left, right) { // 找到left => right的相同的前面的二进制位, 后续补0 => 字符串方式~
+    const rightStr = right.toString(2);
+    const len = rightStr.length;
+    const leftStr = left.toString(2).padStart(len, '0');
+    let index = 0;
+    let res = '';
+    while(index < len){
+      if(rightStr[index] === leftStr[index]){
+        res = res + rightStr[index];
+      } else {
+        return parseInt(res.padEnd(len, '0'), 2);
+      }
+      index++;
+    }
+    return parseInt(res, 2);
+  };
+
+  // 位移方式呢？先找到right的最高有效位; 然后从高往低填充位移, res左移并添加对应数值;
+  var rangeBitwiseAnd = function(left, right){
+    let topBit = 0;
+    let res = 0;
+    for(let i = 1; i < 32; i++){
+      if (right >> i === 1) {
+        topBit = i;
+        break;
+      }
+    }
+    for(let i = topBit; i >= 0; i--){
+      if(left >> i === right >> i) {
+        res = left >> i | res << 1;
+      } else {
+        return (res << i + 1);
+      }
+    }
+    return res;
+  }
+
+  // leetcode：实际上, 可以将两个数右移直到相等, 再将右移的位次还回来即可！哇卡，简单多了！
+  var rangeBitwiseAnd = function(m, n) {
+      let shift = 0;
+      // 找到公共前缀
+      while (m < n) {
+          m >>= 1;
+          n >>= 1;
+          ++shift;
+      }
+      return m << shift;
+  };
+
+  // 因为n & n - 1 会抹去最右边的1, 因此可以迭代的利用n & n - 1直接快速获得两个数的公共部分! !!!!这才是真牛逼！
+  var rangeBitwiseAnd = function(m, n) {
+      while (m < n) {
+          // 抹去最右边的 1
+          n = n & (n - 1);
+      }
+      return n;
+  };
+
+  </script>
+</body>
+</html>

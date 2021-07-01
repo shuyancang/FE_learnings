@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>岛屿数量</title>
+</head>
+<body>
+  <script>
+    // 给你一个由 '1'（陆地）和 '0'（水）组成的的二维网格，请你计算网格中岛屿的数量。
+    // 岛屿总是被水包围，并且每座岛屿只能由水平方向和/或竖直方向上相邻的陆地连接形成。
+    // 此外，你可以假设该网格的四条边均被水包围。
+
+    // 示例 1： 输入：grid = [
+    //     ["1","1","1","1","0"],
+    //     ["1","1","0","1","0"],
+    //     ["1","1","0","0","0"],
+    //     ["0","0","0","0","0"]
+    //   ]
+    //   输出：1
+    // 示例 2： 输入：grid = [
+    //     ["1","1","0","0","0"],
+    //     ["1","1","0","0","0"],
+    //     ["0","0","1","0","0"],
+    //     ["0","0","0","1","1"]
+    //   ]
+    //   输出：3
+    //  
+    // 提示：
+    //   m == grid.length
+    //   n == grid[i].length
+    //   1 <= m, n <= 300
+    //   grid[i][j] 的值为 '0' 或 '1'
+
+    var numIslands = function(grid) {
+      let count = 0;
+      if(!grid || !(grid.length > 0) || !(grid[0].length > 0)){
+        return count;
+      }
+      const row = grid.length;
+      const col = grid[0].length;
+      const visited = new Array(row).fill(0).map(e => new Array(col).fill(false));
+      for(let i = 0; i < row; i++){
+        for(let j = 0; j < col; j++){
+          if(visited[i][j] === true){
+            continue;
+          }
+          let cur = grid[i][j];
+          visited[i][j] = true;
+          if (cur === '1') { // 找到海岛 延伸并标记;
+            count++;
+            let islandStack = [[i, j]];
+            while(islandStack.length > 0){
+              const [targetI, targetJ] = islandStack.pop();
+              // 上下左右: visited=false且值为1;
+              if(targetI > 0 && grid[targetI - 1][targetJ] === '1' && visited[targetI - 1][targetJ] === false){
+                visited[targetI - 1][targetJ] = true;
+                islandStack.push([targetI - 1, targetJ]);
+              }
+              if(targetI < row - 1 && grid[targetI + 1][targetJ] === '1' && visited[targetI + 1][targetJ] === false){
+                visited[targetI + 1][targetJ] = true;
+                islandStack.push([targetI + 1, targetJ]);
+              }
+              if(targetJ < col - 1 && grid[targetI][targetJ + 1] === '1' && visited[targetI][targetJ + 1] === false){
+                visited[targetI][targetJ + 1] = true;
+                islandStack.push([targetI, targetJ + 1]);
+              }
+              if(targetJ > 0 && grid[targetI][targetJ - 1] === '1' && visited[targetI][targetJ - 1] === false){
+                visited[targetI][targetJ - 1] = true;
+                islandStack.push([targetI, targetJ - 1]);
+              }
+            }
+          }
+        }
+      }
+      return count;
+    };
+
+    // leetcode解法: 
+    // 深度优先搜索: 遍历过程中, 找到任意一个位置的1开始将周围1改为0, 并同时count++;
+    // 广度优先搜索: 遍历过程中, 遇到的1和其附近的数加入队列进行广度搜索, 直到队列为空;
+    // 并查集: 遍历过程中, 如果一个位置为1, 将相邻的1进行合并, 最终岛屿数量是并查集中的连通分量的数目。
+  </script>
+</body>
+</html>
