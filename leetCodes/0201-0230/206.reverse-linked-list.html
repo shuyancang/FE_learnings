@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>反链表</title>
+</head>
+<body>
+  <script>
+    // 给你单链表的头节点 head ，请你反转链表，并返回反转后的链表。
+
+    // 示例 1：  输入：head = [1,2,3,4,5]  输出：[5,4,3,2,1]
+    // 示例 2：  输入：head = [1,2]        输出：[2,1]
+    // 示例 3：  输入：head = []           输出：[]
+    //  
+    // 提示：
+    //   链表中节点的数目范围是 [0, 5000]
+    //   -5000 <= Node.val <= 5000
+
+    // 进阶：链表ListNode可以选用迭代或递归方式完成反转。你能否用两种方法解决这道题？
+    var reverseList = function(head) { // 递归: 翻转head.next 同时 ,将head.next链尾指向head;
+      if(!head || !head.next){
+        return head;
+      }
+      const dummy = new ListNode();
+      let nextNodes = head.next;
+      head.next = null; // 断开head的连接;
+      let reversedNodes = reverseList(nextNodes); // 翻转head后续的所有元素;
+      dummy.next = reversedNodes;
+      while(reversedNodes.next){
+        reversedNodes = reversedNodes.next;
+      }
+      reversedNodes.next = head; // 末尾将断开的head元素进行添加
+      return dummy.next;
+    };
+
+    var reverseList = function(head){ // 迭代
+      if(!head || !head.next){
+        return head;
+      }
+      const dummy = new ListNode();
+      dummy.next = head;
+      let preNode = dummy; // 领头 => 后街插入点
+      let nextNode = head; // 结尾 => 前接插入点
+      while(nextNode.next){ // 结尾后面还有node说明结尾后面的值还没清空完, 还需要继续往前搬运;
+        let lastSecNode = nextNode; // 最后节点的前置节点;
+        let lastNode = nextNode.next // 最后一个节点; 将最后一个节点取出, 放到preNode之后, nextNode之前, 再继续找链表最后一个节点;
+        while(lastNode.next){ // 说明必然没到结尾
+          lastNode = lastNode.next;
+          lastSecNode = lastSecNode.next;
+        }
+        lastSecNode.next = null;
+        preNode.next = lastNode;
+        lastNode.next = nextNode;
+        preNode = preNode.next;
+      }
+      return dummy.next;
+    }
+
+    // 啊傻了傻了, 直接反向引用不就完了么~？
+    var reverseList = function(head){
+      let preNode = null;
+      let curNode = head;
+      while(curNode){
+        let nextNode = curNode.next;
+        curNode.next = preNode;
+        preNode = curNode;
+        curNode = nextNode;
+      }
+      return preNode;
+    }
+
+    // 递归简化: 
+    var reverseList = function(head) {
+      if (!head || !head.next) {
+        return head;
+      }
+      const newHead = reverseList(head.next);
+      head.next.next = head; // 环形
+      head.next = null; // 切开环形, 形成翻转
+      return newHead;
+    };
+  </script>
+</body>
+</html>
