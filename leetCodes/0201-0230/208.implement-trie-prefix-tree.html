@@ -42,43 +42,65 @@
      * Initialize your data structure here.
      */
     var Trie = function() {
-
+      this.wordSet = new Set();
     };
 
-    /**
-     * Inserts a word into the trie. 
-     * @param {string} word
-     * @return {void}
-     */
     Trie.prototype.insert = function(word) {
-
+      this.wordSet.add(word);
     };
 
-    /**
-     * Returns if the word is in the trie. 
-     * @param {string} word
-     * @return {boolean}
-     */
     Trie.prototype.search = function(word) {
-
+      return this.wordSet.has(word);
     };
 
-    /**
-     * Returns if there is any word in the trie that starts with the given prefix. 
-     * @param {string} prefix
-     * @return {boolean}
-     */
     Trie.prototype.startsWith = function(prefix) {
-
+      if(!prefix){
+        return false;
+      }
+      for(let word of this.wordSet){
+        if (prefix && word.indexOf(prefix) === 0) {
+          return true;
+        }
+      }
+      return false;
+    };
+    // 咳咳以上解法正确，但跟前缀树毛关系都没有~前缀树实际上是生成一个单词拆分后的树~~~~
+    var Trie = function() {
+      this.nodes = {};
     };
 
-    /**
-     * Your Trie object will be instantiated and called as such:
-     * var obj = new Trie()
-     * obj.insert(word)
-     * var param_2 = obj.search(word)
-     * var param_3 = obj.startsWith(prefix)
-     */
+    Trie.prototype.insert = function(word) {
+      let nodes = this.nodes;
+      for(let unit of word){ // 取出每一个单词
+        if(!nodes[unit]){
+          nodes[unit] = {};
+        }
+        nodes = nodes.unit; // 深度遍历储存;
+      }
+      nodes.isEnd = true; // search时候精准匹配
+    };
+
+    Trie.prototype.search = function(word) {
+      let nodes = this.nodes;
+      for(let unit of word){ // 取出每一个单词
+        if(!nodes[unit]){
+          return false;
+        }
+        nodes = nodes.unit; // 深度遍历储存;
+      }
+      return !!nodes && !!nodes.isEnd;
+    };
+
+    Trie.prototype.startsWith = function(prefix) {
+      let nodes = this.nodes;
+      for(let unit of word){ // 取出每一个单词
+        if(!nodes[unit]){
+          return false;
+        }
+        nodes = nodes.unit; // 深度遍历储存;
+      }
+      return !!nodes;
+    };
   </script>
 </body>
 </html>

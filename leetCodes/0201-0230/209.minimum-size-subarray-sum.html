@@ -24,8 +24,11 @@
     // 进阶：
     // 如果你已经实现 O(n) 时间复杂度的解法, 请尝试设计一个 O(n log(n)) 时间复杂度的解法。
 
-    var minSubArrayLen = function(target, nums) {
-
+    var minSubArrayLen = function(target, nums) { // 移动窗口left, right移动应该是最直观的方法;
+      // right右移, 当left => right长度达到时候, 记录下此时长度, 
+      // 然后判定left左移是否依然满足 => 直到不满足为止, 
+      // 继续right右移 => 循环直到right === len
+      
     };
   </script>
 </body>
