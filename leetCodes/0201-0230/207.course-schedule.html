@@ -27,9 +27,90 @@
     //   0 <= ai, bi < numCourses
     //   prerequisites[i] 中的所有课程对 互不相同
 
-    var canFinish = function(numCourses, prerequisites) { // 判断是否会生成环即可~ 即替换判断最后是否有[[1, 1]]这种。
-
+    var canFinish = function(numCourses, prerequisites) {
+      // 反过来考虑, 某个课可以不循环依赖学完, 则这个课就可以学, 从数组中去掉, 直到最后prerequisites的长度为零或不可再变;
+      const courseMap = new Map(); // 记录学习每个课程, 需要的前置课程集合{a: [b,c]}; 要学习a, 需要先学习b
+      const relayMap = new Map(); // 记录每个课程, 是哪些课程的依赖: {b: [a, c]}; 课程b学习以后, 才能学习a, c;
+      const len = prerequisites.length;
+      if(len === 0) {
+          return true;
+      }
+      for(let i = 0;i < numCourses; i++){
+        courseMap.set(i, new Set()); // 课程i 的学习, 需要哪些课程;
+        relayMap.set(i, new Set()); // 课程i, 是哪些课程的前置课程;
+      }
+      for(let i = 0; i < len; i++){
+        const [course, relay] = prerequisites[i];
+        courseMap.set(course, courseMap.get(course).add(relay));
+        relayMap.set(relay, relayMap.get(relay).add(course));
+      }
+      let canFinishSet = new Set(); // 用一个Set来储存可以学完的课程列表;
+      for(let [course, courseRelay] of courseMap){
+        if(courseRelay.size === 0) {
+          canFinishSet.add(course); // 这些课程不需要任何依赖;
+        }
+      }
+      if(canFinishSet.size >= numCourses){ // 每个课程都有依赖 => 必定无法完成;
+        return false;
+      }
+      while(canFinishSet.size > 0){
+        let tmpFinishSet = new Set();
+        for(let course of canFinishSet){ // 每个可以完成的课程
+          const relayList = relayMap.get(course); // 这些课程依赖它; => 去这些课程里删course, 是不是依赖变成了[], 如果是, 记录放到下一个循环里面
+          for(let item of relayList){
+            courseMap.get(item).delete(course);
+            if(courseMap.get(item).size === 0){
+              tmpFinishSet.add(item);
+            }
+          }
+        }
+        canFinishSet = tmpFinishSet;
+      }
+      for(let [course, relay] of courseMap) {// 每一项都是空, 可以学~
+        if(relay.size > 0){
+          return false;
+        }
+      }
+      return true;
     };
+
+    // leetcode的图算法 => 这个还是很不熟悉的啊。拓扑图排序.
+    // 标识: 0未搜索, 1搜索中, 2完成搜索; 最初visited全为0; 
+    var canFinish = function(numCourses, prerequisites){
+      const visitedCourses = new Array(numCourses).fill(0); // 一开始, 所有的节点都未搜索;
+      const courseMap = new Map();
+      for(let i = 0; i < numCourses; i++){
+        courseMap.set(i, new Set());
+      }
+      const len = prerequisites.length;
+      for(let i = 0; i < len; i++){
+        const [courseKey, courseVal] = prerequisites[i];
+        courseMap.set(courseKey, courseMap.get(courseKey).add(courseVal)); // 每一门课的依赖课程数组数据结构调整。
+      }
+      for(let i = 0; i < numCourses; i++){
+        if(visitedCourses[i] === 0 && !(dfs(i))){ // 依次搜索每个节点, 深度遍历, 只要发现环形退出 => return false;
+          return false;
+        }
+      }
+      const dfs = (course) => { // 开始对每一门课进行深度遍历
+        visitedCourses[course] = 1; // 访问中;
+        const edges = courseMap.get(course); // 这门课所需的课程列表
+        for(let eachEdg of edges){ // 对他的每一个边进行继续深度遍历
+          if(visitedCourses[eachEdg] === 2) {
+            continue;
+          } else if (visitedCourses[eachEdg] === 1) { // 旁边的边正在搜索中, 出现循环边 => false;
+            return false;
+          } else if (!dfs(eachEdg)) { // 旁边的边还没开始搜索 => 进行搜索;
+            return false;
+          }
+        }
+        visitedCourses[course] = 2; // 执行到这里还没有退出, 说明这门课的周边都可以学习完成, 所以这一门课也可以, 访问完成标记为2;
+        return true; // 这一门课程可以学习完成;
+      }
+      return true;
+    }
+
+    // 同理，有广度优先搜索, 先找到依赖最少的节点，依次切割, 直到最后验证是否所有节点能够完成切割. 方法类似上面1
   </script>
 </body>
 </html>
