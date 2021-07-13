@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>单词搜索</title>
+</head>
+<body>
+  <script>
+    // 给定一个 m x n 二维字符网格 board 和一个单词（字符串）列表 words，找出所有同时在二维网格和字典中出现的单词。
+    // 单词必须按照字母顺序，通过 相邻的单元格 内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母在一个单词中不允许被重复使用。
+
+    // 示例 1：
+    //   输入：board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], words = ["oath","pea","eat","rain"]
+    //   输出：["eat","oath"]
+    // 示例 2：
+    //   输入：board = [["a","b"],["c","d"]], words = ["abcb"]
+    //   输出：[]
+    // 提示：
+    //   m == board.length
+    //   n == board[i].length
+    //   1 <= m, n <= 12
+    //   board[i][j] 是一个小写英文字母
+    //   1 <= words.length <= 3 * 104
+    //   1 <= words[i].length <= 10
+    //   words[i] 由小写英文字母组成
+    //   words 中的所有字符串互不相同
+
+    // leetcode答案: 使用words构建一个前缀树, 然后在board中进行搜索. // 略。这个题更倾向于综合运用。
+    var findWords = function(board, words) {
+      return words.filter(e => isWordInBoard(e));
+    };
+
+    // 在board中找一个单词是否存在;
+    function isWordInBoard(board, word){ // dfs
+      const m = board.length;
+      const n = board[0].length;
+      const visited = new Array(m).fill(0).map(e => new Array(n).fill(false));
+    }
+  </script>
+</body>
+</html>
