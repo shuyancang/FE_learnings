@@ -65,25 +65,27 @@
       this.nodes = {};
     };
 
-    WordDictionary.prototype.addWord = function(word) {
-      let list = [this.nodes];
+    WordDictionary.prototype.addWord = function(word) { // 昂也超出时间限制了啊~看来不能将.直接存进去。=> 应该等search的时候在判断.
+      let nodes = [this.nodes];
       for(let i = 0; i < word.length; i++){
         const letter = word[i];
-        let nextList = [];
-        for(let j = 0; j < list.length; j++){
-          const node = list[j];
+        let nextNodes = [];
+        for(let j = 0; j < nodes.length; j++){
+          const node = nodes[j];
           if(!node[letter]){
-            node[letter] = {}
+            node[letter] = {};
           }
-          nextList.push(node[letter]);
           if(!node['.']){
-            node['.'] = {}
+            node['.'] = {};
           }
-          nextList.push(node['.']);
-          list = nextList;
+          nextNodes.push(node[letter]);
+          nextNodes.push(node['.']);
         }
+        nodes = nextNodes;
       }
-      list.forEach(e => e.end = true);
+      for(let i = 0; i < nodes.length; i++){
+        nodes[i].isEnd = true;
+      }
     };
 
     WordDictionary.prototype.search = function(word){
@@ -94,7 +96,38 @@
         }
         nodeTree = nodeTree[word[i]];
       }
-      return !!nodeTree && nodeTree.end
+      return !!nodeTree && nodeTree.isEnd
+    }
+
+    var WordDictionary = function() { // 应该是考虑使用前缀树进行处理; => 应该是标准做法了~~~~3.0
+      this.nodes = {};
+    };
+
+    WordDictionary.prototype.addWord = function(word) { // 昂也超出时间限制了啊~看来不能将.直接存进去。=> 应该等search的时候在判断.
+      let nodes = this.nodes;
+      for(let letter of word){
+        if(!nodes[letter]){
+          nodes[letter] = {}
+        }
+        nodes = nodes[letter];
+      }
+      nodes.isEnd = true;
+    };
+
+    WordDictionary.prototype.search = function(word){
+      let list = [this.nodes];
+      for(let letter of word){
+        let tmpList = [];
+        for(let node of list){
+          if(letter !== '.') { // list中找到符合条件的子集
+            node[letter] && (tmpList.push(node[letter]));
+          } else { // letter为.则将list所有子集放入.
+            tmpList.push(...Object.keys(node).map(e => node[e]));
+          }
+        }
+        list = tmpList;
+      }
+      return list.some(e => !!e && e.isEnd === true);
     }
   </script>
 </body>
