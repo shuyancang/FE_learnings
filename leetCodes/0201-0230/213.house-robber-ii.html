@@ -21,9 +21,64 @@
     //   1 <= nums.length <= 100
     //   0 <= nums[i] <= 1000
 
-    var rob = function(nums) {
-
+    var rob = function(nums) { // 第一想法是记录是否选中了第一家 => 然后进行迭代;
+      
     };
+    // 第二想法, 既然不可能同时偷第一个和最后一个, 那么可以把nums第一个数改为0, 求出答案, 再把第一个数放回最后一个数改为0求出答案, 比较大值。
+    var rob = function(nums){
+      const len = nums.length;
+      if(len < 2){
+        return nums[0];
+      }
+      const numsOne = [...nums];
+      numsOne[0] = 0;
+      const numsTwo = [...nums];
+      numsTwo[len - 1] = 0;
+      let index = 1;
+      let sumBuy = numsOne[0], sumNone = 0; // 不偷首位 到某个位置时, 保存的上一个位置偷或不偷的最大值
+      while(index < len){
+        const tmp = sumBuy;
+        const money = numsOne[index];
+        sumBuy = sumNone + money;
+        sumNone = Math.max(tmp, sumNone);
+        index++;
+      }
+      let resOne = Math.max(sumBuy, sumNone);
+      index = 1;
+      sumBuy = numsTwo[0], sumNone = 0; // 不偷末尾 到某个位置时, 保存的上一个位置偷或不偷的最大值
+      while(index < len){
+        const tmp = sumBuy;
+        const money = numsTwo[index];
+        sumBuy = sumNone + money;
+        sumNone = Math.max(tmp, sumNone);
+        index++;
+      }
+      let resTwo = Math.max(sumBuy, sumNone);
+      return Math.max(resOne, resTwo);
+    }
+
+
+    // leetcode的动态规划；
+    var rob = function(nums) {
+        const length = nums.length;
+        if (length === 1) {
+            return nums[0];
+        } else if (length === 2) {
+            return Math.max(nums[0], nums[1]);
+        }
+        return Math.max(robRange(nums, 0, length - 2), robRange(nums, 1, length - 1));
+    };
+
+    const robRange = (nums, start, end) => { // 直接使用下标进行动态规划，比我那种方式的空间复杂度更好些~
+        let first = nums[start], second = Math.max(nums[start], nums[start + 1]);
+        for (let i = start + 2; i <= end; i++) {
+            const temp = second;
+            second = Math.max(first + nums[i], second);
+            first = temp;
+        }
+        return second;
+    }
+
   </script>
 </body>
 </html>
