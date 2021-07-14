@@ -146,7 +146,7 @@ function warnIfStringRefCannotBeAutoConverted(config) {
 const ReactElement = function(type, key, ref, self, source, owner, props) {
   const element = {
     // This tag allows us to uniquely identify this as a React Element
-    $$typeof: REACT_ELEMENT_TYPE,
+    $$typeof: REACT_ELEMENT_TYPE, // react用于标识 react元素的独有标识. 是一个安全策略-(唯一且无法字符串化)规避xss攻击;
 
     // Built-in properties that belong on the element
     type: type,
@@ -345,7 +345,8 @@ export function jsxDEV(type, config, maybeKey, source, self) {
  * Create and return a new ReactElement of the given type.
  * See https://reactjs.org/docs/react-api.html#createelement
  */
-export function createElement(type, config, children) {
+// 取出key,ref; 取出children数组; 创建reactElement
+export function createElement(type, config, children) { // 创建react元素的工厂函数
   let propName;
 
   // Reserved names are extracted
@@ -356,7 +357,7 @@ export function createElement(type, config, children) {
   let self = null;
   let source = null;
 
-  if (config != null) {
+  if (config != null) { // config属性类集合, 有key和ref两个特殊属性;
     if (hasValidRef(config)) {
       ref = config.ref;
 
@@ -383,7 +384,7 @@ export function createElement(type, config, children) {
 
   // Children can be more than one argument, and those are transferred onto
   // the newly allocated props object.
-  const childrenLength = arguments.length - 2;
+  const childrenLength = arguments.length - 2; // 真实的子元素的个数;
   if (childrenLength === 1) {
     props.children = children;
   } else if (childrenLength > 1) {
@@ -422,7 +423,7 @@ export function createElement(type, config, children) {
       }
     }
   }
-  return ReactElement(
+  return ReactElement( // 生成react元素
     type,
     key,
     ref,
