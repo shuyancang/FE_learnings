@@ -89,6 +89,93 @@ var findWords = function(board, words) {
   return res;
 }
 
+
+// leetcode简化代码版本
+var findWords = function(board, words) {
+  const trie = {};
+  const res = [];
+  
+  for(const word of words){ // 构造trie
+    //注意这里 原作者用了 for(let var 去声明branch 是可以的)
+    //如果用let的话，就不能在下面的for loop里，不然branch.word = word 的时候branch是undefined
+    let branch = trie
+    for(let i = 0; i < word.length; i++){
+      if(!branch[word[i]]){
+        branch[word[i]] = Object.create(null);
+      }
+      branch = branch[word[i]]
+    }
+    branch.word = word
+  }
+
+  //搜寻
+  var dfsSearch = function(i,j, node){
+    //这里是条件判断语句，如果有board[i]， initialChar的值就是board[i][j]
+    let initialChar = board[i] && board[i][j] 
+    if(!initialChar || !node[initialChar]) return;
+    node = node[initialChar]
+    if(node.word){
+      res.push(node.word) // 此处记录结果
+      node.word = '' //此处避免重复记录结果
+    }
+    board[i][j] = ''
+    dfsSearch(i - 1, j, node), dfsSearch(i + 1, j, node), dfsSearch(i, j - 1, node), dfsSearch(i, j + 1, node)
+    board[i][j] = initialChar     
+  }
+
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[0].length; j++) {
+      dfsSearch(i, j, trie)
+    }
+  }
+  return res;
+}
+
+    // 自我开发版本: ====>诶嘿嘿嘿黑，超过了90+
+    var findWords = function(board, words){
+      const trie = createTrie(words); // 基于words创建前缀树;
+      const res = [];
+      for(let i = 0; i < board.length; i++){
+        for(let j = 0; j < board[0].length; j++){
+          findPosWord(board, i, j, trie, res); // 基于i, j做起点的搜索
+        }
+      }
+      return res;
+    }
+
+    function createTrie(words){
+      let trie = Object.create(null);
+      for(let word of words){ // 每个单词
+        let trieBranch = trie;
+        for(let i = 0; i < word.length; i++){
+          const letter = word[i];
+          if(!trieBranch[letter]){
+            trieBranch[letter] = Object.create(null);
+          }
+          trieBranch = trieBranch[letter];
+        }
+        trieBranch.isEnd = word; // 记录完成匹配的单词
+      }
+      return trie;
+    }
+    
+    function findPosWord(board, i, j, trie, res){
+      const letter = board[i][j];
+      if(!trie[letter]){
+        return;
+      }
+      trie = trie[letter];
+      if(trie.isEnd){
+        res.push(trie.isEnd)
+        delete trie.isEnd;
+      }
+      board[i][j] = '';
+      i > 0 && findPosWord(board, i - 1, j, trie, res);
+      j > 0 && findPosWord(board, i, j - 1, trie, res);
+      i < board.length - 1 && findPosWord(board, i + 1, j, trie, res);
+      j < board[0].length && findPosWord(board, i, j + 1, trie, res);
+      board[i][j] = letter;
+    }
   </script>
 </body>
 </html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>最短回文</title>
+</head>
+<body>
+  <script>
+    // 给定一个字符串 s，你可以通过在字符串前面添加字符将其转换为回文串。找到并返回可以用这种方式转换的最短回文串。
+
+    // 示例 1：
+    //   输入：s = "aacecaaa"  输出："aaacecaaa"
+    // 示例 2：
+    //   输入：s = "abcd"  输出："dcbabcd"
+
+    // 提示：
+    //   0 <= s.length <= 5 * 104
+    //   s 仅由小写英文字母组成
+    
+    // 想法1: 找到字符串从0开始到right的回文长度 => 然后补全后面部分做映射即可
+    var shortestPalindrome = function(s) {
+      const len = s.length;
+      if(len < 2){
+        return s;
+      }
+      let start = 0, end = 0;
+      for(let i = len - 1; i > 0; i--){ // 找到第一个回文即可
+        if(isPalidrome(s, start, i)){
+          end = i;
+          break;
+        }
+      }
+      let pre = ''; // 需要添加到前面去的字符串
+      for(let i = end + 1; i < len; i++){ // 依次处理。
+        const letter = s[i];
+        pre = `${letter}${pre}`;
+      }
+      return `${pre}${s}`;
+    };
+    function isPalidrome(str, left, right){ // 某个字符串是否回文串
+      if(right - left < 1){
+        return true;
+      }
+      while(left < right){
+        if(str[left] !== str[right]){
+          return false;
+        }
+        left++;
+        right--;
+      }
+      return true;
+    }
+
+    shortestPalindrome("aacecaaa"); // "aaacecaaa"
+    shortestPalindrome("abcd"); // "dcbabcd"
+
+    // leetcode-字符串hash =>枚举end位置,计算对应的正序反序hash值(base 131, mod 1000000007), 比较验证.
+    // leetcode-KMP算法 => 匹配反序字符串的最大长度~~~emmm， 略
+
+  </script>
+</body>
+</html>
