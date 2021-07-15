@@ -52,7 +52,7 @@ function escapeUserProvidedKey(text) {
 
 const POOL_SIZE = 10;
 const traverseContextPool = [];
-function getPooledTraverseContext(
+function getPooledTraverseContext( // 建立一个池子上下文
   mapResult,
   keyPrefix,
   mapFunction,
@@ -77,7 +77,7 @@ function getPooledTraverseContext(
   }
 }
 
-function releaseTraverseContext(traverseContext) {
+function releaseTraverseContext(traverseContext) { // 释放属性 => 手动控制内存释放 重新写入.还回一个干净的池子。 => 防止内存抖动.
   traverseContext.result = null;
   traverseContext.keyPrefix = null;
   traverseContext.func = null;
@@ -96,7 +96,7 @@ function releaseTraverseContext(traverseContext) {
  * process.
  * @return {!number} The number of children in this subtree.
  */
-function traverseAllChildrenImpl(
+function traverseAllChildrenImpl( // 处理children的各种异常容错。
   children,
   nameSoFar,
   callback,
@@ -128,7 +128,7 @@ function traverseAllChildrenImpl(
     }
   }
 
-  if (invokeCallback) {
+  if (invokeCallback) { //设定一个哨兵, 满足children的类型条件, 才会执行
     callback(
       traverseContext,
       children,
@@ -149,7 +149,7 @@ function traverseAllChildrenImpl(
     for (let i = 0; i < children.length; i++) {
       child = children[i];
       nextName = nextNamePrefix + getComponentKey(child, i);
-      subtreeCount += traverseAllChildrenImpl(
+      subtreeCount += traverseAllChildrenImpl( // 数组递归执行 => 展平。
         child,
         nextName,
         callback,
@@ -346,12 +346,14 @@ function mapIntoWithKeyPrefixInternal(children, array, prefix, func, context) {
  * @param {*} context Context for mapFunction.
  * @return {object} Object containing the ordered map of results.
  */
+
+// 1. 用法安全, 进行默认判定; 2. 数组展平; 3. 也能直接支持迭代器的使用
 function mapChildren(children, func, context) {
-  if (children == null) {
+  if (children == null) { // 容错判定
     return children;
   }
   const result = [];
-  mapIntoWithKeyPrefixInternal(children, result, null, func, context);
+  mapIntoWithKeyPrefixInternal(children, result, null, func, context); // 继续进行处理
   return result;
 }
 
