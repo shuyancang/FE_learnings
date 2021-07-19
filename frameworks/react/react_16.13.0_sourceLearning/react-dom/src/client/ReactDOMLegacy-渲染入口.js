@@ -172,10 +172,10 @@ function warnOnInvalidCallback(callback: mixed, callerName: string): void {
   }
 }
 
-function legacyRenderSubtreeIntoContainer(
-  parentComponent: ?React$Component<any, any>,
-  children: ReactNodeList,
-  container: Container,
+function legacyRenderSubtreeIntoContainer( // render的调用~
+  parentComponent: ?React$Component<any, any>, // 父节点
+  children: ReactNodeList, // 子节点
+  container: Container, // dom节点
   forceHydrate: boolean,
   callback: ?Function,
 ) {
@@ -187,10 +187,10 @@ function legacyRenderSubtreeIntoContainer(
   // TODO: Without `any` type, Flow says "Property cannot be accessed on any
   // member of intersection type." Whyyyyyy.
   let root: RootType = (container._reactRootContainer: any);
-  let fiberRoot;
-  if (!root) {
+  let fiberRoot; // fiber节点出现啦！
+  if (!root) { // 如果root为空~创建reactRoot在dom上挂载;
     // Initial mount
-    root = container._reactRootContainer = legacyCreateRootFromDOMContainer(
+    root = container._reactRootContainer = legacyCreateRootFromDOMContainer( // 从dom创建一个root
       container,
       forceHydrate,
     );
@@ -284,12 +284,12 @@ export function hydrate(
   );
 }
 
-export function render(
-  element: React$Element<any>,
-  container: Container,
-  callback: ?Function,
+export function render( // reactDOM的render入口函数: 
+  element: React$Element<any>, // reactElement
+  container: Container, // 实际dom节点
+  callback: ?Function, // 回调-一般不写~
 ) {
-  invariant(
+  invariant( // 节点判断
     isValidContainer(container),
     'Target container is not a DOM element.',
   );
@@ -305,7 +305,7 @@ export function render(
       );
     }
   }
-  return legacyRenderSubtreeIntoContainer(
+  return legacyRenderSubtreeIntoContainer( // 合法性完成 => 真正render函数的执行函数~
     null,
     element,
     container,
