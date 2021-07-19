@@ -312,17 +312,21 @@ export function getCurrentTime() {
   return msToExpirationTime(now());
 }
 
-export function computeExpirationForFiber(
+export function computeExpirationForFiber( // 为fiber计算过期时间
   currentTime: ExpirationTime,
   fiber: Fiber,
   suspenseConfig: null | SuspenseConfig,
 ): ExpirationTime {
   const mode = fiber.mode;
-  if ((mode & BlockingMode) === NoMode) {
+  if ((mode & BlockingMode) === NoMode) { // 按位与运, 基于二进制位运算快速判断当前的mode~ 可以减少哨兵变量
     return Sync;
   }
+  // react启动方式: 
+  // ConcurrentMode模式-ReactDOM.createRoot() => 实验中, 打算作为React的默认开发模式 => 开启所有新功能
+  // legacy模式-ReactDOM.render() => 当前使用的方式
+  // blocking模式-ReactDOM.render => React.createBlockingRoot(); 实验中, 作为迁移到concurent模式的第一个步骤
 
-  const priorityLevel = getCurrentPriorityLevel();
+  const priorityLevel = getCurrentPriorityLevel(); // 基于调用, 得到现在的优先级
   if ((mode & ConcurrentMode) === NoMode) {
     return priorityLevel === ImmediatePriority ? Sync : Batched;
   }
@@ -332,7 +336,7 @@ export function computeExpirationForFiber(
     // TODO: Should there be a way to opt out, like with `runWithPriority`?
     return renderExpirationTime;
   }
-
+  // 除NoPriority以外, 都与Schedule优先级对应, 用作递增数字, 可以数字比较
   let expirationTime;
   if (suspenseConfig !== null) {
     // Compute an expiration time based on the Suspense timeout.
@@ -343,19 +347,19 @@ export function computeExpirationForFiber(
   } else {
     // Compute an expiration time based on the Scheduler priority.
     switch (priorityLevel) {
-      case ImmediatePriority:
+      case ImmediatePriority: // 最高优先级 99 => 立刻
         expirationTime = Sync;
         break;
-      case UserBlockingPriority:
+      case UserBlockingPriority: // 用户输入优先级-尽快响应 98
         // TODO: Rename this to computeUserBlockingExpiration
         expirationTime = computeInteractiveExpiration(currentTime);
         break;
-      case NormalPriority:
+      case NormalPriority: // 普通97, 较低96
       case LowPriority: // TODO: Handle LowPriority
         // TODO: Rename this to... something better.
         expirationTime = computeAsyncExpiration(currentTime);
         break;
-      case IdlePriority:
+      case IdlePriority: // 95
         expirationTime = Idle;
         break;
       default:

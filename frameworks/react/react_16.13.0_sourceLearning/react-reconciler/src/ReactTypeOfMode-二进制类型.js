@@ -7,6 +7,8 @@
  * @flow
  */
 
+// 预定义的mode类型数值: 以二进制定义更方便记录计算；
+
 export type TypeOfMode = number;
 
 export const NoMode = 0b0000;

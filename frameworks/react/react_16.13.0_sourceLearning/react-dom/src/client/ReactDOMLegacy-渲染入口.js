@@ -172,6 +172,7 @@ function warnOnInvalidCallback(callback: mixed, callerName: string): void {
   }
 }
 
+// 1. 创建ReactRoot, 在dom上挂载, 创建FiberRoot; 2. 调用非批处理, 调用updateContainer;
 function legacyRenderSubtreeIntoContainer( // render的调用~
   parentComponent: ?React$Component<any, any>, // 父节点
   children: ReactNodeList, // 子节点
@@ -194,16 +195,16 @@ function legacyRenderSubtreeIntoContainer( // render的调用~
       container,
       forceHydrate,
     );
-    fiberRoot = root._internalRoot;
-    if (typeof callback === 'function') {
+    fiberRoot = root._internalRoot; // 根节点上的reactRoot指向了fiberRoot开始干事儿了！
+    if (typeof callback === 'function') { // 完成后执行callback
       const originalCallback = callback;
       callback = function() {
         const instance = getPublicRootInstance(fiberRoot);
         originalCallback.call(instance);
       };
     }
-    // Initial mount should not be batched.
-    unbatchedUpdates(() => {
+    // Initial mount should not be batched. 
+    unbatchedUpdates(() => { // 初始化 -> 不走批处理流程 batched(译: 成批的); 直接执行更新;
       updateContainer(children, fiberRoot, parentComponent, callback);
     });
   } else {

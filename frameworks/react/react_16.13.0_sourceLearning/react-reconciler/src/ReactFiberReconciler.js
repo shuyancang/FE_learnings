@@ -234,8 +234,8 @@ export function updateContainer(
   if (__DEV__) {
     onScheduleRoot(container, element);
   }
-  const current = container.current;
-  const currentTime = requestCurrentTimeForUpdate();
+  const current = container.current; // 对应当前Fiber对象
+  const currentTime = requestCurrentTimeForUpdate(); // 当前时间
   if (__DEV__) {
     // $FlowExpectedError - jest isn't a global, and isn't recognized outside of tests
     if ('undefined' !== typeof jest) {
@@ -243,8 +243,8 @@ export function updateContainer(
       warnIfNotScopedWithMatchingAct(current);
     }
   }
-  const suspenseConfig = requestCurrentSuspenseConfig();
-  const expirationTime = computeExpirationForFiber(
+  const suspenseConfig = requestCurrentSuspenseConfig(); // 当前批量更新的配置, 是一个全局对象
+  const expirationTime = computeExpirationForFiber( // 根据任务分优先级, 得到不同的过期时间
     currentTime,
     current,
     suspenseConfig,
