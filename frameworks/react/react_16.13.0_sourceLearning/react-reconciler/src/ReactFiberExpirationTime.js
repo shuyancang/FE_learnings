@@ -51,15 +51,15 @@ export function expirationTimeToMs(expirationTime: ExpirationTime): number {
   return (MAGIC_NUMBER_OFFSET - expirationTime) * UNIT_SIZE;
 }
 
-function ceiling(num: number, precision: number): number {
+function ceiling(num: number, precision: number): number { // 间隔在precision内的数得到相同的值~(除后取整再乘)
   return (((num / precision) | 0) + 1) * precision;
 }
 
-function computeExpirationBucket(
+function computeExpirationBucket( // 过期时间计算函数; => 间隔在precision内的任务进行一次集合批处理.
   currentTime,
   expirationInMs,
   bucketSizeMs,
-): ExpirationTime {
+): ExpirationTime { // 根据优先级, 再产生不同的偏移量, 进而将不同优先级的任务过期时间拉开差距 => 基于优先级的时间戳
   return (
     MAGIC_NUMBER_OFFSET -
     ceiling(

@@ -38,22 +38,38 @@
     //   1 <= heighti <= 231 - 1
     //   buildings 按 lefti 非递减排序
 
-    var getSkyline = function(buildings) { // 第一直觉应该是一个栈问题哈~？
-      const len = buildings.length;
-      const stack = [[0, 0]]; // 轮廓线第一个起点;
-      for(let i = 0; i < len; i++){ // 先基于builds生成相交轮廓线, 再基于轮廓线绘制结果.
-        const [x1, x2, y] = buildings[i];
-        const [lastX, lastY] = stack.pop();
-        if(lastX < x1){ // 最后一个点与建筑物不相连; 直接推送
-          stack.push([lastX, lastY], [x1, lastY], [x1, y], [x2, y]);
-        } else if (lastX === x1) { // 刚好相连无交错
-          stack.push([lastX, lastY], [x1, y], [x2, y]);
-        } else if () { // 有交错 => x2 的判定;
-          // stack.push([lastX, x2]);
-        } else { // 升高或降低
-          // stack
+    var getSkyline = function(buildings) { // 第一直觉应该是一个栈问题哈~？用坐标模拟线的碰撞 => stack推出直接模拟;
+      const len = buildings.length; // 将building进行分割合并. 只取高的。
+      const xList = [];
+      let left = buildings[0][0], right = 0; // 轮廓左右边界
+      for(let i = 0; i < len; i++){
+        const [x1, x2] = buildings[i];
+        xList.push(x1, x2);
+        right = Math.max(right, x2);
+      }
+      xList.sort();
+      const subRangeRecord = []
+      for(let i = 0; i < xList.length; i++){ // 
+        const pointX = xList[i];
+        let height = 0;
+        buildings.forEach(e => { // 1. 含有这个区域的建筑 2. 获取最大值
+          const [x1, x2, h] = e;
+          if (pointX >= x1 && pointX < x2) {
+            height = Math.max(height, h);
+          }
+        })
+        subRangeRecord.push([pointX, height]);
+      }
+      subRangeRecord.sort((a, b) => a[0] - b[0])
+      const res = [subRangeRecord[0]]
+      for (let i = 1; i < subRangeRecord.length; i++){
+        const [pointX, height] = res[res.length - 1];
+        const [x, y] = subRangeRecord[i];
+        if(height !== y) {
+          res.push([x, y]);
         }
       }
+      return res;
     };
   </script>
 </body>

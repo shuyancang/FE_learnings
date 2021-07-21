@@ -328,7 +328,7 @@ export function computeExpirationForFiber( // 为fiber计算过期时间
 
   const priorityLevel = getCurrentPriorityLevel(); // 基于调用, 得到现在的优先级
   if ((mode & ConcurrentMode) === NoMode) {
-    return priorityLevel === ImmediatePriority ? Sync : Batched;
+    return priorityLevel === ImmediatePriority ? Sync : Batched; // 是数~基本是32位的最大数了。
   }
 
   if ((executionContext & RenderContext) !== NoContext) {
@@ -346,7 +346,7 @@ export function computeExpirationForFiber( // 为fiber计算过期时间
     );
   } else {
     // Compute an expiration time based on the Scheduler priority.
-    switch (priorityLevel) {
+    switch (priorityLevel) { // 按照不同的优先级得到过期时间
       case ImmediatePriority: // 最高优先级 99 => 立刻
         expirationTime = Sync;
         break;
