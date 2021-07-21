@@ -224,7 +224,7 @@ export function createContainer(
 ): OpaqueRoot {
   return createFiberRoot(containerInfo, tag, hydrate, hydrationCallbacks);
 }
-
+// 1. n拿到FiberNode 2. 设置expirTime, 3. 封装callback 4. 新建update添加到queue, 5. 调度流程ScheduleWork
 export function updateContainer(
   element: ReactNodeList,
   container: OpaqueRoot,
@@ -250,7 +250,7 @@ export function updateContainer(
     suspenseConfig,
   );
 
-  const context = getContextForSubtree(parentComponent);
+  const context = getContextForSubtree(parentComponent); // 设置FiberRoot.context 首次执行返回一个emptyContext, 是一个{}
   if (container.context === null) {
     container.context = context;
   } else {
@@ -273,8 +273,8 @@ export function updateContainer(
       );
     }
   }
-
-  const update = createUpdate(expirationTime, suspenseConfig);
+  // 创建一个具有 expirationTime, payload, callback, next等属性的update -> 链表
+  const update = createUpdate(expirationTime, suspenseConfig); // 创建一个update, 链表~
   // Caution: React DevTools currently depends on this property
   // being called "element".
   update.payload = {element};
@@ -293,8 +293,8 @@ export function updateContainer(
     update.callback = callback;
   }
 
-  enqueueUpdate(current, update);
-  scheduleWork(current, expirationTime);
+  enqueueUpdate(current, update); // 添加update到quene队列
+  scheduleWork(current, expirationTime); // 调度和更新当前current对象;
 
   return expirationTime;
 }

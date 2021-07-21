@@ -196,12 +196,12 @@ const {
 type ExecutionContext = number;
 
 const NoContext = /*                    */ 0b000000;
-const BatchedContext = /*               */ 0b000001;
-const EventContext = /*                 */ 0b000010;
+const BatchedContext = /*               */ 0b000001; // 批处理 部分
+const EventContext = /*                 */ 0b000010; // 
 const DiscreteEventContext = /*         */ 0b000100;
-const LegacyUnbatchedContext = /*       */ 0b001000;
-const RenderContext = /*                */ 0b010000;
-const CommitContext = /*                */ 0b100000;
+const LegacyUnbatchedContext = /*       */ 0b001000; // 非批处理 部分
+const RenderContext = /*                */ 0b010000; // RenderRoot dom-diff, 构建fibertree工作
+const CommitContext = /*                */ 0b100000; // CommitRoot 最终渲染
 
 type RootExitStatus = 0 | 1 | 2 | 3 | 4 | 5;
 const RootIncomplete = 0;
@@ -340,7 +340,7 @@ export function computeExpirationForFiber( // 为fiber计算过期时间
   let expirationTime;
   if (suspenseConfig !== null) {
     // Compute an expiration time based on the Suspense timeout.
-    expirationTime = computeSuspenseExpiration(
+    expirationTime = computeSuspenseExpiration( // 根据
       currentTime,
       suspenseConfig.timeoutMs | 0 || LOW_PRIORITY_EXPIRATION,
     );
@@ -380,40 +380,43 @@ export function computeExpirationForFiber( // 为fiber计算过期时间
   return expirationTime;
 }
 
+// 1. 先找到rootFiber并遍历更新子节点的expirationTime;
+// 2. 判断是否有高优先级任务打断当前正在执行的任务;
+// 3. 获取当前任务的优先级 -> 如果sync, 且非批处理且不在非render/commit performSyncWorkOnRoot(同步)否则进入ensureRootIsScheduled(异步)
 export function scheduleUpdateOnFiber(
   fiber: Fiber,
   expirationTime: ExpirationTime,
 ) {
-  checkForNestedUpdates();
+  checkForNestedUpdates(); // 检查最近的更新次数
   warnAboutRenderPhaseUpdatesInDEV(fiber);
-
+  
   const root = markUpdateTimeFromFiberToRoot(fiber, expirationTime);
   if (root === null) {
     warnAboutUpdateOnUnmountedFiberInDEV(fiber);
     return;
   }
 
-  checkForInterruption(fiber, expirationTime);
+  checkForInterruption(fiber, expirationTime); // 判断是否有高优先级任务;
   recordScheduleUpdate();
 
   // TODO: computeExpirationForFiber also reads the priority. Pass the
   // priority as an argument to that function and this one.
-  const priorityLevel = getCurrentPriorityLevel();
+  const priorityLevel = getCurrentPriorityLevel(); // 得到优先级
 
-  if (expirationTime === Sync) {
+  if (expirationTime === Sync) { // 最高优先级
     if (
-      // Check if we're inside unbatchedUpdates
+      // Check if we're inside unbatchedUpdates 处理非批处理流程中
       (executionContext & LegacyUnbatchedContext) !== NoContext &&
-      // Check if we're not already rendering
+      // Check if we're not already rendering 不在render和commit阶段
       (executionContext & (RenderContext | CommitContext)) === NoContext
-    ) {
+    ) { // 执行 -> 注册或更新pendingInteraction ——update的集合
       // Register pending interactions on the root to avoid losing traced interaction data.
       schedulePendingInteractions(root, expirationTime);
 
       // This is a legacy edge case. The initial mount of a ReactDOM.render-ed
       // root inside of batchedUpdates should be synchronous, but layout updates
       // should be deferred until the end of the batch.
-      performSyncWorkOnRoot(root);
+      performSyncWorkOnRoot(root); // 传入, 更新
     } else {
       ensureRootIsScheduled(root);
       schedulePendingInteractions(root, expirationTime);
@@ -2671,7 +2674,7 @@ function checkForInterruption(
     enableUserTimingAPI &&
     workInProgressRoot !== null &&
     updateExpirationTime > renderExpirationTime
-  ) {
+  ) { // 如果有更高优先级的任务, 打断正在调度的fiber并执行
     interruptedBy = fiberThatReceivedUpdate;
   }
 }
