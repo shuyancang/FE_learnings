@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>存在重复元素III</title>
+</head>
+<body>
+  <script>
+    // 给你一个整数数组 nums 和两个整数 k 和 t 。请你判断是否存在 两个不同下标 i 和 j，使得 abs(nums[i] - nums[j]) <= t ，同时又满足 abs(i - j) <= k 。
+
+    // 如果存在则返回 true，不存在返回 false。
+
+    // 示例 1：    输入：nums = [1,2,3,1], k = 3, t = 0    输出：true
+    // 示例 2：    输入：nums = [1,0,1,1], k = 1, t = 2    输出：true
+    // 示例 3：    输入：nums = [1,5,9,1,5,9], k = 2, t = 3    输出：false
+
+    // 提示：
+    //   0 <= nums.length <= 2 * 104
+    //   -231 <= nums[i] <= 231 - 1
+    //   0 <= k <= 104
+    //   0 <= t <= 231 - 1
+
+    var containsNearbyAlmostDuplicate = function(nums, k, t) { // 先用暴力解法· ==> 竟然没超时···
+      for(let i = 0; i < nums.length; i++){
+        for(let j = i + 1; j < nums.length; j++){
+          const a = nums[i], b = nums[j];
+          if(Math.abs(a - b) <= t && Math.abs(i - j) <= k) {
+            return true
+          }
+        }
+      }
+      return false;
+    };
+
+    // 然后想到 ~ 滑动窗口怎么搞~ js的有序集合···有么有么有么~
+    // var containsNearbyAlmostDuplicate = function(nums, k, t) {
+    //   const len = nums.length;
+    //   const numSet = new Set(); // 维护size为k的集合;
+    //   const numPosHash = {};
+    //   for(let i = 0; i < len; i++){ // hash记录每个数对应的位置
+    //     numPosHash[nums[i]] = i;
+    //   }
+    //   const numSorted
+    //   for(let i = 0; i < len; i++){
+    //     const num = nums[i];
+    //     if(numSet.has(num)){ // 集合内已有该元素, 显然满足
+    //       return true;
+    //     } else { // 在set集中找到跟这个元素最接近的数 => 看是否差绝对值小于t; ===> js中不合适，抛弃
+
+    //     }
+    //   }
+    //   return false;
+    // };
+    // leetcode - 桶排序思路~
+    var containsNearbyAlmostDuplicate = function(nums, k, t){ // 按照元素大小分桶, 维护元素
+      // 桶大小为t + 1,
+      // 1. 如果两个元素位于同一桶, 满足条件return true
+      // 2. 如果元素相邻桶, 校验差值
+      // 3. 如果元素相隔, 不定不符合条件
+      // 每个nums数可以表现为: x = a * (t + 1) + b的形式; 
+      const len = nums.length;
+      const bucket = new Map();
+      for(let i = 0; i < len; i++){
+        const num = nums[i];
+        const id = getId(num, t + 1);
+        if(bucket.has(id)){
+          return true;
+        }
+        if(bucket.has(id + 1) && Math.abs(bucket.get(id + 1) - num) <= t) {
+          return true;
+        }
+        if(bucket.has(id - 1) && Math.abs(bucket.get(id - 1) - num) <= t) {
+          return true;
+        }
+        bucket.set(id, num);
+        if(i >= k){ // 移除最先的那个桶
+          bucket.delete(getId(nums[i - k], t + 1));
+        }
+      }
+      return false;
+    }
+
+    function getId (num, len) { // 返回所位于的桶的id; 0 - 9为一组, 
+      if(num < 0){ //假定len为10 正数0 - 9 ...一组 => 负数为保持一致(-1 -> -10) + 1变为(-0 -> -9)则可
+        return ((num + 1) / len | 0) - 1;
+      }
+      return (num / len) | 0
+    }
+  </script>
+</body>
+</html>

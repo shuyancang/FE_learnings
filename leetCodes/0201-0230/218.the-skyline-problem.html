@@ -38,7 +38,7 @@
     //   1 <= heighti <= 231 - 1
     //   buildings 按 lefti 非递减排序
 
-    var getSkyline = function(buildings) { // 第一直觉应该是一个栈问题哈~？用坐标模拟线的碰撞 => stack推出直接模拟;
+    var getSkyline = function(buildings) { // 用坐标模拟线的碰撞 先把建筑进行分割成最小单位然后进行处理;
       const len = buildings.length; // 将building进行分割合并. 只取高的。
       const xList = [];
       let left = buildings[0][0], right = 0; // 轮廓左右边界
@@ -71,6 +71,46 @@
       }
       return res;
     };
+    // https://leetcode-cn.com/problems/the-skyline-problem/solution/tian-ji-xian-gen-ju-zuo-you-bian-jie-pai-apj3/
+    var getSkyline = function(buildings){
+      const points = [];
+      const ans = [];
+      for(let [left, right, height] of buildings){
+        points.push([left, height], [right, -height]); // 转化为左右坐标点放入点集合;
+      }
+      points.sort((a, b) => a[0] - b[0] || b[1] - a[1]); // 横坐标优先, 排序
+      const len = points.length;
+      const heightList = [0]; // 记录的当前持有的高度集合(某个x, 所有的房屋高度)
+      let preH = 0; // 记录前最大高度 -> 最大高度出现变化 -> 捕获到关键点;
+      for(let [x, y] of points){
+        if (y > 0) { // 左节点, 加入高度集合 -> 二分保证排序;
+          heightList.splice(search(heightList, y), 0, y);
+        } else { // 右节点, 应移除
+          heightList.splice(search(heightList, -y), 1);
+        }
+        if(preH !== heightList[0]){ // 
+          ans.push([x, heightList[0]]);
+          preH = heightList[0]
+        }
+      }
+      return ans;
+    }
+
+    function search(arr, num){ // 二分查找num应处于的位置
+      let l = 0, r = arr.length - 1;
+      while(l < r){
+        const mid = l + ((r - l) >> 1);
+        if(arr[mid] === num){
+          return mid;
+        } else if (arr[mid] < num) {
+          r = mid;
+        } else {
+          l = mid + 1;
+        }
+      }
+      return l;
+    }
+
   </script>
 </body>
 </html>
