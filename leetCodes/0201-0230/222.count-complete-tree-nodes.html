@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>完全二叉树的节点个数</title>
+</head>
+<body>
+  <script>
+    // 给你一棵 完全二叉树 的根节点 root ，求出该树的节点个数。
+    // 完全二叉树 的定义如下：在完全二叉树中，除了最底层节点可能没填满外，其余每层节点数都达到最大值，并且最下面一层的节点都集中在该层最左边的若干位置。若最底层为第 h 层，则该层包含 1~ 2h 个节点。
+
+    // 示例 1： 输入：root = [1,2,3,4,5,6] 输出：6
+    // 示例 2： 输入：root = [] 输出：0
+    // 示例 3： 输入：root = [1] 输出：1
+
+    // 提示：
+    //   树中节点的数目范围是[0, 5 * 104]
+    //   0 <= Node.val <= 5 * 104
+    //   题目数据保证输入的树是 完全二叉树
+    //  
+    // 进阶：遍历树来统计节点是一种时间复杂度为 O(n) 的简单解决方案。你可以设计一个更快的算法吗
+
+    /**
+     * Definition for a binary tree node.
+     * function TreeNode(val, left, right) {
+     *     this.val = (val===undefined ? 0 : val)
+     *     this.left = (left===undefined ? null : left)
+     *     this.right = (right===undefined ? null : right)
+     * }
+     */
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+
+     var countNodes = function(root) { // 显然递归最简单昂~
+      if(!root) {
+        return 0;
+      } else if (root.left && root.right) {
+        return 1 + countNodes(root.left) + countNodes(root.right);
+      } else if(root.left === null && root.right === null) {
+        return 1;
+      } else {
+        return 2;
+      }
+    };
+
+    var countNodes = function(root) { // 优化一下~
+      if (!root) {
+        return 0;
+      }
+      return 1 + (root.left ? countNodes(root.left) : 0) + (root.right ? countNodes(root.right) : 0);
+    };
+
+    // 更快算法~? 获取深度 + 所缺位置. => 第一个root.right === null的位, 返回 Math.pow(2, h) - 1 - x
+    // 使用一个二进制数, 代表从根节点 => 左0右1的路径, 二分查找直到找到第一个null;
+    var countNodes = function (root) {
+      if(root === null){
+        return 0;
+      }
+      let depth = 0;
+      let node = root;
+      while(node.left){
+        depth++;
+        node = node.left;
+      } // detpth得到root的深度;
+      let min = 1 << depth; // 最下层的最小数编号
+      let max = (1 << (depth + 1)) - 1; // 最下层最大数编号 
+      while(min < max){
+        const mid = min + ((max - min + 1) / 2 | 0);
+        // console.log(min, max, mid, depth, exist(root, depth, min))
+        if(exist(root, depth, mid)){ // 这一位存在
+          min = mid;
+        } else { // 本位null
+          max = mid - 1;
+        }
+      }
+      return min
+    }
+
+    function exist(root, depth, bit){ // root为根, 高度为depth的树, bit二进制节点判定是否为null
+      let node = root;
+      while(depth > 0){
+        const pos = (bit & (1 << (depth - 1))) >> (depth - 1)// 位运算获取当前左还是右
+        node = pos === 0 ? node.left : node.right;
+        // console.log(bit, node, pos)
+        depth--;
+      }
+      return node !== null; // node在最尾层
+    }
+  </script>
+</body>
+</html>

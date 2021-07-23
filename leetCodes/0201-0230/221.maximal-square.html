@@ -25,9 +25,41 @@
     //   n == matrix[i].length
     //   1 <= m, n <= 300
     //   matrix[i][j] 为 '0' 或 '1'
-    var maximalSquare = function(matrix) { // F(m,n)坐标的最大正方形;
-
+    var maximalSquare = function(matrix) { // F(m,n)为坐标[m, n]为右下角的最大正方形;
+      const m = matrix.length;
+      const n = matrix[0].length;
+      const board = new Array(m).fill(0).map(e => new Array(n).fill(0));
+      let res = 0;
+      for(let i = 0; i < m; i++){
+        for(let j = 0; j < n; j++){
+          if(matrix[i][j] === '0'){
+            board[i][j] = 0;
+          } else if (matrix[i - 1] && matrix[i - 1][j - 1] && board[i - 1][j - 1] > 0) { // matrix[i][j] === '1' // 至少是1了~
+            let preSqure = Math.pow(board[i - 1][j - 1], 0.5); 
+            let curSqure = 1;
+            while(preSqure >= curSqure) { // 找到[i, j]为右下角终点, 对应的正方形大小
+              if(matrix[i - curSqure][j] === '1' && matrix[i][j - curSqure] === '1'){ // 满足正方形
+                curSqure++;
+                board[i][j] = curSqure * curSqure;
+              } else { // 有0; 循环结束
+                board[i][j] = curSqure * curSqure;
+                break;
+              }
+            }
+            res = Math.max(res, board[i][j]);
+          } else { // 上一个正方形不存在 => 只可能是1
+            board[i][j] = 1;
+            res = Math.max(1, res);
+          }
+        }
+      }
+      return res;
     };
+
+    // leetcode的动态规划: 
+    // dp(i,j) 表示以 (i, j) 为右下角，且只含 1 的正方形的边长最大值
+    // 转移方程: dp(i,j)=min(dp(i−1,j),dp(i−1,j−1),dp(i,j−1))+1 ===> 昂，这个动态规划公式比我那个好得多昂昂昂~~~~
+    
   </script>
 </body>
 </html>
