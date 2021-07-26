@@ -186,6 +186,7 @@ if (
     }
   };
 
+  // 1. 执行flushwork; 2. 判断是否有更多任务(在下一个事件循环继续调);-> 可以理解为异步的递归调用
   const performWorkUntilDeadline = () => {
     if (scheduledHostCallback !== null) {
       const currentTime = getCurrentTime();
@@ -195,17 +196,17 @@ if (
       deadline = currentTime + yieldInterval;
       const hasTimeRemaining = true;
       try {
-        const hasMoreWork = scheduledHostCallback(
+        const hasMoreWork = scheduledHostCallback( // 执行flushwork => 递归执行taskQueue里的callback(即performSyncWorkOnRoot)
           hasTimeRemaining,
           currentTime,
         );
-        if (!hasMoreWork) {
+        if (!hasMoreWork) { // 没有更多任务, 重置信息循环状态, 清空回调
           isMessageLoopRunning = false;
           scheduledHostCallback = null;
         } else {
           // If there's more work, schedule the next message event at the end
           // of the preceding one.
-          port.postMessage(null);
+          port.postMessage(null); // 有下一个任务 => 继续调度
         }
       } catch (error) {
         // If a scheduler task throws, exit the current browser task so the
@@ -221,10 +222,11 @@ if (
     needsPaint = false;
   };
 
+  // 通过messageChannel双向通道来处理任务, (宏任务, 异步执行)
   const channel = new MessageChannel();
   const port = channel.port2;
   channel.port1.onmessage = performWorkUntilDeadline;
-
+  // 及时任务调用, flushwork
   requestHostCallback = function(callback) {
     scheduledHostCallback = callback;
     if (!isMessageLoopRunning) {

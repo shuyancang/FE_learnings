@@ -78,6 +78,7 @@ var isPerformingWork = false;
 var isHostCallbackScheduled = false;
 var isHostTimeoutScheduled = false;
 
+// 遍历timerQueue根据时间判断加入到tastQueue;
 function advanceTimers(currentTime) {
   // Check for tasks that are no longer delayed and add them to the queue.
   let timer = peek(timerQueue);
@@ -118,7 +119,7 @@ function handleTimeout(currentTime) {
     }
   }
 }
-
+// 核心执行workLoop把每个taskQueue任务调用performSyncWorkOnRoot;
 function flushWork(hasTimeRemaining, initialTime) {
   if (enableProfiling) {
     markSchedulerUnsuspended(initialTime);
@@ -161,6 +162,8 @@ function flushWork(hasTimeRemaining, initialTime) {
   }
 }
 
+// 1. 将到期的timerQueue中任务添加到taskQueue;
+// 2. 逐个遍历taskQUeue中任务 => 执行performSyncWorkOnRoot
 function workLoop(hasTimeRemaining, initialTime) {
   let currentTime = initialTime;
   advanceTimers(currentTime);
@@ -294,6 +297,7 @@ function timeoutForPriorityLevel(priorityLevel) {
 
 // 1. 有延迟任务, 有立即任务
 // 2. 创建task(id, 优先级, 过期时间)
+// 3. 执行requestHostCallback请求主线程回调, 或主线程延时回调
 function unstable_scheduleCallback(priorityLevel, callback, options) {// 优先级, performSyncWorkOnRoot, 配置参数
   var currentTime = getCurrentTime();
 
@@ -345,7 +349,7 @@ function unstable_scheduleCallback(priorityLevel, callback, options) {// 优先�
       // Schedule a timeout.
       requestHostTimeout(handleTimeout, startTime - currentTime);
     }
-  } else {
+  } else { // taskQueue及时任务, 立即使用;
     newTask.sortIndex = expirationTime;
     push(taskQueue, newTask);
     if (enableProfiling) {
@@ -356,7 +360,7 @@ function unstable_scheduleCallback(priorityLevel, callback, options) {// 优先�
     // wait until the next time we yield.
     if (!isHostCallbackScheduled && !isPerformingWork) {
       isHostCallbackScheduled = true;
-      requestHostCallback(flushWork);
+      requestHostCallback(flushWork); // 
     }
   }
 
