@@ -292,13 +292,15 @@ function timeoutForPriorityLevel(priorityLevel) {
   }
 }
 
-function unstable_scheduleCallback(priorityLevel, callback, options) {
+// 1. 有延迟任务, 有立即任务
+// 2. 创建task(id, 优先级, 过期时间)
+function unstable_scheduleCallback(priorityLevel, callback, options) {// 优先级, performSyncWorkOnRoot, 配置参数
   var currentTime = getCurrentTime();
 
   var startTime;
   var timeout;
-  if (typeof options === 'object' && options !== null) {
-    var delay = options.delay;
+  if (typeof options === 'object' && options !== null) { // 是否传入配置;
+    var delay = options.delay; // 延迟任务: startTime = currentTime + delay
     if (typeof delay === 'number' && delay > 0) {
       startTime = currentTime + delay;
     } else {
@@ -307,7 +309,7 @@ function unstable_scheduleCallback(priorityLevel, callback, options) {
     timeout =
       typeof options.timeout === 'number'
         ? options.timeout
-        : timeoutForPriorityLevel(priorityLevel);
+        : timeoutForPriorityLevel(priorityLevel); // 得到本次调度时间
   } else {
     timeout = timeoutForPriorityLevel(priorityLevel);
     startTime = currentTime;
@@ -315,9 +317,9 @@ function unstable_scheduleCallback(priorityLevel, callback, options) {
 
   var expirationTime = startTime + timeout;
 
-  var newTask = {
+  var newTask = { // 新建task任务
     id: taskIdCounter++,
-    callback,
+    callback, // performSyncWorkOnRoot
     priorityLevel,
     startTime,
     expirationTime,
@@ -326,11 +328,12 @@ function unstable_scheduleCallback(priorityLevel, callback, options) {
   if (enableProfiling) {
     newTask.isQueued = false;
   }
-
-  if (startTime > currentTime) {
+  // 如果是及时任务加入taskQueue(调度执行), 如果是延时任务加入timerQueue, 
+  // 通过advanceTimers可以将timerQueue中优先级足够的任务添加到taskQueue;
+  if (startTime > currentTime) { // 延时任务
     // This is a delayed task.
     newTask.sortIndex = startTime;
-    push(timerQueue, newTask);
+    push(timerQueue, newTask); // timerQueue容器, 不立即使用;
     if (peek(taskQueue) === null && newTask === peek(timerQueue)) {
       // All tasks are delayed, and this is the task with the earliest delay.
       if (isHostTimeoutScheduled) {

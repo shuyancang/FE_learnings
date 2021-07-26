@@ -383,6 +383,7 @@ export function computeExpirationForFiber( // 为fiber计算过期时间
 // 1. 先找到rootFiber并遍历更新子节点的expirationTime;
 // 2. 判断是否有高优先级任务打断当前正在执行的任务;
 // 3. 获取当前任务的优先级 -> 如果sync, 且非批处理且不在非render/commit performSyncWorkOnRoot(同步)否则进入ensureRootIsScheduled(异步)
+// 4. 最终执行后续流程，执行performSyncWorkOnRoot
 export function scheduleUpdateOnFiber(
   fiber: Fiber,
   expirationTime: ExpirationTime,
@@ -416,7 +417,7 @@ export function scheduleUpdateOnFiber(
       // This is a legacy edge case. The initial mount of a ReactDOM.render-ed
       // root inside of batchedUpdates should be synchronous, but layout updates
       // should be deferred until the end of the batch.
-      performSyncWorkOnRoot(root); // 传入, 更新
+      performSyncWorkOnRoot(root); // 传入, 同步更新
     } else {
       ensureRootIsScheduled(root);
       schedulePendingInteractions(root, expirationTime);
@@ -571,11 +572,15 @@ function getNextRootExpirationTimeToWorkOn(root: FiberRoot): ExpirationTime {
 // expiration time of the existing task is the same as the expiration time of
 // the next level that the root has work on. This function is called on every
 // update, and right before exiting a task.
+// 1. 若有任务过期, 立刻执行;
+// 2. 没有任务, 重置
+// 3. 若有上一任务未完, 来新任务: 上一任务优先级高就执行; 否则中断上一任务,调度新任务;
+// 4. 根据优先级, 执行schedule(Sync)Callback => 去调用unstable_scheduleCallback
+// 5. 如果任务超过了timeout, 任务会过期;
 function ensureRootIsScheduled(root: FiberRoot) {
-  const lastExpiredTime = root.lastExpiredTime;
-  if (lastExpiredTime !== NoWork) {
-    // Special case: Expired work should flush synchronously.
-    root.callbackExpirationTime = Sync;
+  const lastExpiredTime = root.lastExpiredTime; // 获取上一个时间
+  if (lastExpiredTime !== NoWork) { // 只有任务过期时, 会被更改为过期时间
+    root.callbackExpirationTime = Sync; // => 任务过期需立即执行
     root.callbackPriority = ImmediatePriority;
     root.callbackNode = scheduleSyncCallback(
       performSyncWorkOnRoot.bind(null, root),
@@ -583,11 +588,10 @@ function ensureRootIsScheduled(root: FiberRoot) {
     return;
   }
 
-  const expirationTime = getNextRootExpirationTimeToWorkOn(root);
+  const expirationTime = getNextRootExpirationTimeToWorkOn(root); // 获取下一个任务的到期时间
   const existingCallbackNode = root.callbackNode;
-  if (expirationTime === NoWork) {
-    // There's nothing to work on.
-    if (existingCallbackNode !== null) {
+  if (expirationTime === NoWork) { // 没有新任务 (expirationTime初始值是NoWork)
+    if (existingCallbackNode !== null) {  // 没任务, 清空一下~
       root.callbackNode = null;
       root.callbackExpirationTime = NoWork;
       root.callbackPriority = NoPriority;
@@ -605,7 +609,7 @@ function ensureRootIsScheduled(root: FiberRoot) {
 
   // If there's an existing render task, confirm it has the correct priority and
   // expiration time. Otherwise, we'll cancel it and schedule a new one.
-  if (existingCallbackNode !== null) {
+  if (existingCallbackNode !== null) { // 如果上一任务未完, 来新任务: 上一任务优先级高就执行; 否则中断上一任务,调度新任务
     const existingCallbackPriority = root.callbackPriority;
     const existingCallbackExpirationTime = root.callbackExpirationTime;
     if (
@@ -613,25 +617,25 @@ function ensureRootIsScheduled(root: FiberRoot) {
       existingCallbackExpirationTime === expirationTime &&
       // Callback must have greater or equal priority.
       existingCallbackPriority >= priorityLevel
-    ) {
+    ) { // 上个任务优先级大于当前任务 => 继续执行上个任务
       // Existing callback is sufficient.
       return;
     }
     // Need to schedule a new task.
     // TODO: Instead of scheduling a new task, we should be able to change the
     // priority of the existing one.
-    cancelCallback(existingCallbackNode);
+    cancelCallback(existingCallbackNode); // 
   }
 
   root.callbackExpirationTime = expirationTime;
   root.callbackPriority = priorityLevel;
 
   let callbackNode;
-  if (expirationTime === Sync) {
+  if (expirationTime === Sync) { // 最高优先级 => 同步
     // Sync React callbacks are scheduled on a special internal queue
     callbackNode = scheduleSyncCallback(performSyncWorkOnRoot.bind(null, root));
   } else if (disableSchedulerTimeoutBasedOnReactExpirationTime) {
-    callbackNode = scheduleCallback(
+    callbackNode = scheduleCallback( // 非最高优先级 => 异步
       priorityLevel,
       performConcurrentWorkOnRoot.bind(null, root),
     );
@@ -641,7 +645,7 @@ function ensureRootIsScheduled(root: FiberRoot) {
       performConcurrentWorkOnRoot.bind(null, root),
       // Compute a task timeout based on the expiration time. This also affects
       // ordering because tasks are processed in timeout order.
-      {timeout: expirationTimeToMs(expirationTime) - now()},
+      {timeout: expirationTimeToMs(expirationTime) - now()}, // 设置一个过期时间
     );
   }
 
