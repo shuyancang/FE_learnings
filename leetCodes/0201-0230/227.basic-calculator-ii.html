@@ -22,9 +22,83 @@
     //   表达式中的所有整数都是非负整数，且在范围 [0, 231 - 1] 内
     //   题目数据保证答案是一个 32-bit 整数
 
-    var calculate = function(s) { // 一个基本的栈运用就行了~ => 
-
+    var calculate = function(s) { // 一个基本的栈运用就行了~
+      const stack = [];
+      const len = s.length;
+      let calcSync = false;
+      for(let i = 0; i < len; i++){
+        const unit = s[i];
+        if (unit === ' ') { // 空格跳过无效
+          continue;
+        } else if(unit === '+' || unit === '-') {
+          stack.push(unit);
+        } else if (parseInt(unit) >= 0) { // 获取到数值
+          let num = 0;
+          while((parseInt(s[i]) >= 0)) {
+            num = num * 10 + parseInt(s[i]);
+            i++
+          }
+          i--;
+          if(calcSync){ // 计算前面的乘除
+            const calcType = stack.pop();
+            const preNum = stack.pop();
+            stack.push(calcType === '*' ? (preNum * num) : parseInt(preNum / num));
+            calcSync = false;
+          } else {
+            stack.push(num)
+          }
+        } else if (unit === '*' || unit === '/') { // 记录乘除进行优先运算
+          stack.push(unit);
+          calcSync = true;
+        }
+      }
+      let res = 0;
+      let config = 1;
+      for(let i = 0; i < stack.length; i++){ // 只剩下: 数值, + , -
+        if(stack[i] === '-'){
+          config = -1;
+        } else if (stack[i] === '+') {
+          config = 1;
+        } else {
+          res += config * stack[i];
+        }
+      }
+      return res
     };
+
+    var calculate = function(s){ // leetcode的优化: 将+, -及对应后面的数直接推入栈(a-b, 推入a, -b), 遍历过程中遇到*/直接将栈顶元素pop运算;最后累加;
+      const stack = [];
+      let preSign = '+';
+      let num = 0;
+      const n = s.length;
+      for (let i = 0; i < n; ++i) {
+        if (!isNaN((s[i])) && s[i] !== ' ') {
+          num = num * 10 + parseInt(s[i]);
+        }
+        if (isNaN((s[i])) || i === n - 1) {
+          switch (preSign) {
+            case '+':
+              stack.push(num);
+              break;
+            case '-':
+              stack.push(-num);
+              break;
+            case '*':
+              stack.push(stack.pop() * num);
+              break;
+            default:
+              stack.push(stack.pop() / num | 0);
+          }   
+          preSign = s[i];
+          num = 0;
+        }
+      }
+      let ans = 0;
+      while (stack.length) {
+        ans += stack.pop();
+      }
+      return ans;
+    }
   </script>
 </body>
 </html>
