@@ -50,17 +50,48 @@
     };
 
     MyStack.prototype.pop = function() {
+      while(this.list1.length > 1){
+        this.list2.push(this.list1.shift());
+      }
       const res = this.list1.shift();
-      this.list1
+      this.list1 = [...this.list2];
+      this.list2 = [];
       return res;
     };
 
     MyStack.prototype.top = function() {
-
+      return this.list1[this.list1.length - 1];
     };
 
     MyStack.prototype.empty = function() {
-      return this.list1.length + this.list2.length === 0
+      return this.list1.length === 0
+    };
+
+    // 一个队列实现: 
+    var MyStack = function() {
+      this.list1 = [];
+    };
+
+    MyStack.prototype.push = function(x) { // 推入
+      // this.list1.push(x);
+      let len = this.list1.length;
+      this.list1.push(x);
+      while(len > 0){
+        this.list1.push(this.list1.shift())
+        len--;
+      }
+    };
+
+    MyStack.prototype.pop = function() {
+      return this.list1.shift();
+    };
+
+    MyStack.prototype.top = function() {
+      return this.list1[0]
+    };
+
+    MyStack.prototype.empty = function() {
+      return this.list1.length === 0
     };
 
   </script>
