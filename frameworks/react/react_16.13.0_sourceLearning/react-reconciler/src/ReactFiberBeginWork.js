@@ -998,8 +998,11 @@ function updateHostRoot(current, workInProgress, renderExpirationTime) {
   const nextProps = workInProgress.pendingProps;
   const prevState = workInProgress.memoizedState;
   const prevChildren = prevState !== null ? prevState.element : null;
+  // clone一个updateQueue, 分离current和workInProgress对updateQueue的引用
   cloneUpdateQueue(current, workInProgress);
+  // 处理updateQueue, 设置workInProgress的memoriezedState， expirationTime等属性
   processUpdateQueue(workInProgress, nextProps, null, renderExpirationTime);
+  // 获取下级reactElement的对象用于生成Fiber子树
   const nextState = workInProgress.memoizedState;
   // Caution: React DevTools currently depends on this property
   // being called "element".
@@ -1043,7 +1046,7 @@ function updateHostRoot(current, workInProgress, renderExpirationTime) {
   } else {
     // Otherwise reset hydration state in case we aborted and resumed another
     // root.
-    reconcileChildren(
+    reconcileChildren( // diff算法, 设置子树Fiber节点的effectTag
       current,
       workInProgress,
       nextChildren,
@@ -2883,6 +2886,10 @@ function remountFiber(
   }
 }
 
+// 1. 对比props变化 => 赋值didReceiveUpdate;
+// 2. 根据不同Fiber节点的类型处理不同的fiber
+// 3. 创建所有的Fiber节点, 构造Fiber树形结构
+// 4. 给当前Fiber对象设置effectTag标记
 function beginWork(
   current: Fiber | null,
   workInProgress: Fiber,
@@ -2911,7 +2918,7 @@ function beginWork(
   if (current !== null) {
     const oldProps = current.memoizedProps;
     const newProps = workInProgress.pendingProps;
-
+    // 新旧props的对比, 如果发生变化, context, hot reload都强制更新
     if (
       oldProps !== newProps ||
       hasLegacyContextChanged() ||
@@ -3108,7 +3115,7 @@ function beginWork(
   // move this assignment out of the common path and into each branch.
   workInProgress.expirationTime = NoWork;
 
-  switch (workInProgress.tag) {
+  switch (workInProgress.tag) { // 不同的Fiber节点类型
     case IndeterminateComponent: {
       return mountIndeterminateComponent(
         current,

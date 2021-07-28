@@ -998,6 +998,8 @@ function finishConcurrentRender(
 
 // This is the entry point for synchronous tasks that don't go
 // through Scheduler
+// 1. 设置RenderContext, 调用workLoopSync;
+// 2. 调用commitRoot
 function performSyncWorkOnRoot(root) {
   // Check if there's expired work on this root. Otherwise, render at Sync.
   const lastExpiredTime = root.lastExpiredTime;
@@ -1018,9 +1020,10 @@ function performSyncWorkOnRoot(root) {
 
   // If we have a work-in-progress fiber, it means there's still work to do
   // in this root.
+  // RenderContext
   if (workInProgress !== null) {
     const prevExecutionContext = executionContext;
-    executionContext |= RenderContext;
+    executionContext |= RenderContext; // 设置入renderContext
     const prevDispatcher = pushDispatcher(root);
     const prevInteractions = pushInteractions(root);
     startWorkLoopTimer(workInProgress);
@@ -1048,7 +1051,7 @@ function performSyncWorkOnRoot(root) {
       ensureRootIsScheduled(root);
       throw fatalError;
     }
-
+    // commitcontext -> 不能被打断的部分;
     if (workInProgress !== null) {
       // This is a sync render, so we should have finished the whole tree.
       invariant(
@@ -1469,7 +1472,7 @@ function inferTimeFromExpirationTimeWithSuspenseConfig(
 /** @noinline */
 function workLoopSync() {
   // Already timed out, so perform work without checking if we need to yield.
-  while (workInProgress !== null) {
+  while (workInProgress !== null) { // 递归 => 处理fiber并返回下一个fiber => 深度优先(child -> sibling)
     workInProgress = performUnitOfWork(workInProgress);
   }
 }
@@ -1482,6 +1485,8 @@ function workLoopConcurrent() {
   }
 }
 
+// 对当前传入Fiber节点开始, 进行深度优先循环处理
+// 1. 调用beginWork创建Fiber triee, 2. 如果创建fiber完成, 调用completeUnitOfWork
 function performUnitOfWork(unitOfWork: Fiber): Fiber | null {
   // The current, flushed, state of this fiber is the alternate. Ideally
   // nothing should rely on this, but relying on it here means that we don't
@@ -1497,7 +1502,7 @@ function performUnitOfWork(unitOfWork: Fiber): Fiber | null {
     next = beginWork(current, unitOfWork, renderExpirationTime);
     stopProfilerTimerIfRunningAndRecordDelta(unitOfWork, true);
   } else {
-    next = beginWork(current, unitOfWork, renderExpirationTime);
+    next = beginWork(current, unitOfWork, renderExpirationTime); // 创建Fiber节点
   }
 
   resetCurrentDebugFiberInDEV();
