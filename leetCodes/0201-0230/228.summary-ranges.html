@@ -63,6 +63,54 @@
           }
         })
       };
+
+      var summaryRanges = function(nums){
+        if(!nums || nums.length === 0){
+          return [];
+        }
+        const len = nums.length;
+        let left = null, right = null;
+        const res = [];
+        for(let i = 0; i < len; i++){
+          const cur = nums[i];
+          if(right === null){ // 初始
+          } else if (right === cur) { // 相同值
+            continue;
+          } else if (right + 1 === cur) { // 区间延伸
+            left = left === null ? right : left; // 无左区间, 生成; 有左区间, 不变
+          } else if (right + 1 < cur && left === null) { // 断开的区间, 单独right
+            res.push(`${right}`);
+          } else if (right + 1 < cur && left !== null) { // 断开的区间, 有区间left-> right
+            res.push(`${left}->${right}`);
+            left = null;
+          }
+          right = cur;
+        }
+        res.push(left === null ? `${right}` : `${left}->${right}`); // 最后的left, right
+        return res;
+      }
+
+      var summaryRanges = function(nums) { // Leetcode 不愧是官方···还是简洁很多啊！
+          const ret = [];
+          let i = 0;
+          const n = nums.length;
+          while (i < n) {
+              const low = i;
+              i++;
+              while (i < n && nums[i] === nums[i - 1] + 1) {
+                  i++;
+              }
+              const high = i - 1;
+              const temp = ['' + nums[low]];
+              if (low < high) {
+                  temp.push('->');
+                  temp.push('' + nums[high]);
+              }
+              ret.push(temp.join(''));
+          }
+          return ret;
+      };
+
   </script>
 </body>
 </html>
