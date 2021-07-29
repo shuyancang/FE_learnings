@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数1的个数</title>
+</head>
+<body>
+  <script>
+    // 给定一个整数 n，计算所有小于等于 n 的非负整数中数字 1 出现的个数。
+    // 示例 1： 输入：n = 13 输出：6
+    // 示例 2： 输入：n = 0  输出：0
+    // 提示：0 <= n <= 2 * 109
+
+    
+    // n = 0 count = 0; k > 0;
+    // 10以内的数k, 按分配应该是1 - k各一个;
+    // 100以内的数k, 
+    // n = k * 10^1     count = k > 1:  || k = 1: 1
+    // n = k * 100^2    count = 
+    var countDigitOne = function(n) { // 动态规划, 或者递归
+
+    };
+
+    var countTool = function(k, n){ //k为顶位数值(>= 1); n为后续0的长度; 
+      if (n === 0 && k === 0) { // 0
+        return 0;
+      } else if (n === 0 && k === 1) {
+        return 1;
+      }
+      if(k === 1){
+        let res = 0;
+        // return 1 + 8 * (countTool(2, n - 1) - countTool(1, n - 1));
+      }
+      // k > 1
+
+    }
+  </script>
+</body>
+</html>
