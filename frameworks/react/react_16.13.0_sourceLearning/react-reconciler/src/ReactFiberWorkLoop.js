@@ -1487,12 +1487,12 @@ function workLoopConcurrent() {
 
 // 对当前传入Fiber节点开始, 进行深度优先循环处理
 // 1. 调用beginWork创建Fiber triee, 2. 如果创建fiber完成, 调用completeUnitOfWork
-// 3. 处理Fiber节点, 创建dom对象，递归处理子树dom对象，把dom对象赋值给workinprogress.stateNode属性；设置dom的属性绑定事件；将子节点的sideEffect添加到父节点上
+// 3. 处理Fiber节点, 创建dom对象（或diff），递归处理子树dom对象，把dom对象赋值给workinprogress.stateNode属性；设置dom的属性绑定事件；将子节点的sideEffect添加到父节点上
 function performUnitOfWork(unitOfWork: Fiber): Fiber | null {
   // The current, flushed, state of this fiber is the alternate. Ideally
   // nothing should rely on this, but relying on it here means that we don't
   // need an additional field on the work in progress.
-  const current = unitOfWork.alternate;
+  const current = unitOfWork.alternate; // 指向 上一次构建的这个Fiber节点，可以很轻松的进行对比;
 
   startWorkTimer(unitOfWork);
   setCurrentDebugFiberInDEV(unitOfWork);
