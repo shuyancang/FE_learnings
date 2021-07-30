@@ -15,27 +15,37 @@
 
     
     // n = 0 count = 0; k > 0;
-    // 10以内的数k, 按分配应该是1 - k各一个;
-    // 100以内的数k, 
-    // n = k * 10^1     count = k > 1:  || k = 1: 1
-    // n = k * 100^2    count = 
-    var countDigitOne = function(n) { // 动态规划, 或者递归
-
-    };
-
-    var countTool = function(k, n){ //k为顶位数值(>= 1); n为后续0的长度; 
-      if (n === 0 && k === 0) { // 0
+    // 每10个数, 1出现一次; 每100个数, 个位上1出现10 * 1次, 十位数1出现一次, 出现10个数;...
+    var countDigitOne = function(n) {
+      if(n <= 0) {
         return 0;
-      } else if (n === 0 && k === 1) {
-        return 1;
       }
-      if(k === 1){
-        let res = 0;
-        // return 1 + 8 * (countTool(2, n - 1) - countTool(1, n - 1));
+      let res = 0;
+      let high = (n / 10) | 0; // 高位数保留
+      let low = 0; // 初始默认低位数
+      let cur = n % 10; // 当前最末位数值;
+      let config = 1; // 数量级标记
+      while(high !== 0 || cur !== 0) {
+        if(cur === 0){
+          res += high * config;
+        } else if (cur === 1) {
+          res += high * config + low + 1;
+        } else {
+          res += (high + 1) * config;
+        }
+        low += cur * config; // 下一个高位下1的个数;
+        cur = high % 10;
+        high = (high / 10) | 0;
+        config *= 10;
       }
-      // k > 1
+      return res;
+    };
+    // 可以统计: 每一个位上, 1出现的个数, 即: 分别统计个位上1出现多少次, 十位数上1出现多少次...再汇总即可！
+    // 假定: 我们要统计某位(cur)上出现的1的个数; 左边数记为high, 右边所有数记为low; base数量级
+    // 若cur === 0; 1的个数(0 < 1, 不会有额外的1了)只跟高位有关, 且 = high * base;
+    // 若cur > 1; 1的个数(cur > 1, 有一个额外的1)同样只跟高位有关 = (high + 1) * base;
+    // 若cur === 1; (cur与低位数有关-有多少个低位, 就有多少个额外的1, 外加一个x00)
 
-    }
   </script>
 </body>
 </html>

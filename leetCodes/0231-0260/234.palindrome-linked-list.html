@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>回文链表</title>
+</head>
+<body>
+  <script>
+    // 请判断一个链表是否为回文链表。
+    // 示例 1: 输入: 1 -> 2      输出: false
+    // 示例 2: 输入: 1->2->2->1  输出: true
+    // 进阶：
+    //   你能否用 O(n) 时间复杂度和 O(1) 空间复杂度解决此题？
+
+    var isPalindrome = function(head) { // 先考虑使用O(n)空间和时间复杂度
+      if(!head || !head.next){
+        return true;
+      }
+      const list = [];
+      while(head){
+        list.push(head.val);
+        head = head.next;
+      }
+      const len = list.length;
+      let left, right;
+      if (len % 2 === 1) { // 奇数
+        left = (len >> 1) - 1;
+        right = (len >> 1) + 1
+      } else { // 偶数
+        right = len >> 1;
+        left = right - 1;
+      }
+      while(left >= 0){
+        if(list[left] !== list[right]){
+          return false;
+        }
+        left--;
+        right++;
+      }
+      return true;
+    };
+
+    // var isPalindrome = function(head){ // 空间复杂度O(1) => 先获得链表的长度 => 在后半截进行倒转; 然后再次遍历
+    //   if(!head || !head.next){
+    //     return true;
+    //   }
+    //   let size = 0, node = head, lastNode = null;
+    //   while(node){
+    //     size++;
+    //     node = node.next;
+    //     if(!node.next){ // 存储最后一个节点
+    //       lastNode = node;
+    //     }
+    //   }
+    //   const reversNodePos = (len >> 1) + (len % 2 === 1 ? 1 : 0);// 根据len确定需要反转的前一个节点: (根据奇偶)
+    //   let reversPreNode = null, tmpPos = 0;
+    //   node = head;
+    //   while(node){
+    //     tmpPos++;
+    //     if(tmpPos === reversNodePos){
+    //       reversPreNode = node;
+    //       break;
+    //     }
+    //     node = node.next;
+    //   }
+    //   while(reversPreNode.next !== lastNode){ // 开始反转后半段;
+    //     let reversNode = reversPreNode.next; // 要放到最后的节点;
+    //     let nextNode = reversNode.next;
+    //     reversPreNode.next = nextNode;
+    //     reversNode.next = null;
+    //     lastNode.next = reversNode;
+    //     lastNode = lastNode.next;
+    //   }
+    //   node = head;
+    //   // 反转完毕的链表进行对比;
+    //   while(reversPreNode.next !== null){
+    //     if(node.val !== reversPreNode.next.val){
+    //       return false;
+    //     }
+    //     node = node.next;
+    //     reversPreNode = reversPreNode.next;
+    //   }
+    //   return true;
+    // }
+
+    const reverseList = (head) => {
+        let prev = null;
+        let curr = head;
+        while (curr !== null) {
+            let nextTemp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nextTemp;
+        }
+        return prev;
+    }
+
+    const endOfFirstHalf = (head) => {
+        let fast = head;
+        let slow = head;
+        while (fast.next !== null && fast.next.next !== null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        return slow;
+    }
+
+    var isPalindrome = function(head) {
+        if (head == null) return true;
+
+        // 找到前半部分链表的尾节点并反转后半部分链表
+        const firstHalfEnd = endOfFirstHalf(head);
+        const secondHalfStart = reverseList(firstHalfEnd.next);
+
+        // 判断是否回文
+        let p1 = head;
+        let p2 = secondHalfStart;
+        let result = true;
+        while (result && p2 != null) {
+            if (p1.val != p2.val) result = false;
+            p1 = p1.next;
+            p2 = p2.next;
+        }        
+
+        // 还原链表并返回结果
+        firstHalfEnd.next = reverseList(secondHalfStart);
+        return result;
+    };
+  </script>
+</body>
+</html>
