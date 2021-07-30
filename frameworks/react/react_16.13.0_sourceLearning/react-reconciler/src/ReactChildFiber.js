@@ -368,7 +368,7 @@ function ChildReconciler(shouldTrackSideEffects) {
     // This is simpler for the single child case. We only need to do a
     // placement for inserting new children.
     if (shouldTrackSideEffects && newFiber.alternate === null) {
-      newFiber.effectTag = Placement;
+      newFiber.effectTag = Placement; // 在这里打上effectTag标记
     }
     return newFiber;
   }
@@ -1290,7 +1290,8 @@ function ChildReconciler(shouldTrackSideEffects) {
   // This API will tag the children with the side-effect of the reconciliation
   // itself. They will be added to the side-effect list as we pass through the
   // children and the parent.
-  function reconcileChildFibers(
+  // 给fiber打上effect-tag标记
+  function reconcileChildFibers( 
     returnFiber: Fiber,
     currentFirstChild: Fiber | null,
     newChild: any,

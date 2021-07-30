@@ -211,18 +211,19 @@ if (__DEV__) {
   didWarnAboutDefaultPropsOnFunctionComponent = {};
 }
 
+// 1. 初次创建生成Fiber子节点; 2. 非初次更新Fiber节点(打上effect标记)
 export function reconcileChildren(
   current: Fiber | null,
   workInProgress: Fiber,
   nextChildren: any,
   renderExpirationTime: ExpirationTime,
 ) {
-  if (current === null) {
+  if (current === null) { // 初次
     // If this is a fresh new component that hasn't been rendered yet, we
     // won't update its child set by applying minimal side-effects. Instead,
     // we will add them all to the child before it gets rendered. That means
     // we can optimize this reconciliation pass by not tracking side-effects.
-    workInProgress.child = mountChildFibers(
+    workInProgress.child = mountChildFibers( // 创建Fiber
       workInProgress,
       null,
       nextChildren,
@@ -235,7 +236,7 @@ export function reconcileChildren(
 
     // If we had any progressed work already, that is invalid at this point so
     // let's throw it out.
-    workInProgress.child = reconcileChildFibers(
+    workInProgress.child = reconcileChildFibers( // 更新Fiber节点 并打上effecttag标记
       workInProgress,
       current.child,
       nextChildren,
@@ -986,6 +987,7 @@ function pushHostRootContext(workInProgress) {
   pushHostContainer(workInProgress, root.containerInfo);
 }
 
+// 1. 调用reconcileChildren; 2. 初次则创建Fiber节点; 3. 非初次即更新Fiber节点并打上effect标记
 function updateHostRoot(current, workInProgress, renderExpirationTime) {
   pushHostRootContext(workInProgress);
   const updateQueue = workInProgress.updateQueue;
@@ -1046,7 +1048,7 @@ function updateHostRoot(current, workInProgress, renderExpirationTime) {
   } else {
     // Otherwise reset hydration state in case we aborted and resumed another
     // root.
-    reconcileChildren( // diff算法, 设置子树Fiber节点的effectTag
+    reconcileChildren( // !!!!!最关键的: diff算法, 设置子树Fiber节点的effectTag
       current,
       workInProgress,
       nextChildren,
