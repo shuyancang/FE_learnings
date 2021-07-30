@@ -1487,6 +1487,7 @@ function workLoopConcurrent() {
 
 // 对当前传入Fiber节点开始, 进行深度优先循环处理
 // 1. 调用beginWork创建Fiber triee, 2. 如果创建fiber完成, 调用completeUnitOfWork
+// 3. 处理Fiber节点, 创建dom对象，递归处理子树dom对象，把dom对象赋值给workinprogress.stateNode属性；设置dom的属性绑定事件；将子节点的sideEffect添加到父节点上
 function performUnitOfWork(unitOfWork: Fiber): Fiber | null {
   // The current, flushed, state of this fiber is the alternate. Ideally
   // nothing should rely on this, but relying on it here means that we don't
@@ -1502,7 +1503,7 @@ function performUnitOfWork(unitOfWork: Fiber): Fiber | null {
     next = beginWork(current, unitOfWork, renderExpirationTime);
     stopProfilerTimerIfRunningAndRecordDelta(unitOfWork, true);
   } else {
-    next = beginWork(current, unitOfWork, renderExpirationTime); // 创建Fiber节点
+    next = beginWork(current, unitOfWork, renderExpirationTime); // 创建Fiber节点, 给节点打上effect-tag标识
   }
 
   resetCurrentDebugFiberInDEV();
@@ -1516,6 +1517,11 @@ function performUnitOfWork(unitOfWork: Fiber): Fiber | null {
   return next;
 }
 
+// 1. 创建DOM对象(不直接渲染)
+// 2. 递归处理子树DOM对象
+// 3. 把创建的dom对象赋值给workInProgress.stateNode属性
+// 4. 设置DOM对象的属性绑定事件等。
+// 5. 把子节点的sideEffect添加到父节点上
 function completeUnitOfWork(unitOfWork: Fiber): Fiber | null {
   // Attempt to complete the current unit of work, then move to the next
   // sibling. If there are no more siblings, return to the parent fiber.
@@ -1535,6 +1541,10 @@ function completeUnitOfWork(unitOfWork: Fiber): Fiber | null {
         !enableProfilerTimer ||
         (workInProgress.mode & ProfileMode) === NoMode
       ) {
+        // 1. 创建DOM对象(不直接渲染)
+        // 2. 递归处理子树DOM对象
+        // 3. 把创建的dom对象赋值给workInProgress.stateNode属性
+        // 4. 设置DOM对象的属性绑定事件等。
         next = completeWork(current, workInProgress, renderExpirationTime);
       } else {
         startProfilerTimer(workInProgress);
@@ -1559,6 +1569,7 @@ function completeUnitOfWork(unitOfWork: Fiber): Fiber | null {
         // Append all the effects of the subtree and this fiber onto the effect
         // list of the parent. The completion order of the children affects the
         // side-effect order.
+        // Fiber的第一个副作用和最后一个副作用： 将所有子Fiber的effects和当前Fiber的effects添加到父节点的effects队列中
         if (returnFiber.firstEffect === null) {
           returnFiber.firstEffect = workInProgress.firstEffect;
         }

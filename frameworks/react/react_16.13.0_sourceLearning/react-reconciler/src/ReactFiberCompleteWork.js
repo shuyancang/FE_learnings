@@ -680,7 +680,7 @@ function completeWork(
       updateHostContainer(workInProgress);
       return null;
     }
-    case HostComponent: {
+    case HostComponent: { // 会创建dom对象
       popHostContext(workInProgress);
       const rootContainerInstance = getRootHostContainer();
       const type = workInProgress.type;
@@ -745,7 +745,7 @@ function completeWork(
               );
             }
           }
-        } else {
+        } else { // 创建dom对象
           let instance = createInstance(
             type,
             newProps,
@@ -753,11 +753,11 @@ function completeWork(
             currentHostContext,
             workInProgress,
           );
-
+          // 把子树中的DOM对象append到本节点的instance中。
           appendAllChildren(instance, workInProgress, false, false);
 
           // This needs to be set before we mount Flare event listeners
-          workInProgress.stateNode = instance;
+          workInProgress.stateNode = instance; // 创建好的dom结构, 赋值过去。
 
           if (enableDeprecatedFlareAPI) {
             const listeners = newProps.DEPRECATED_flareListeners;
@@ -774,7 +774,7 @@ function completeWork(
           // (eg DOM renderer supports auto-focus for certain elements).
           // Make sure such renderers get scheduled for later work.
           if (
-            finalizeInitialChildren(
+            finalizeInitialChildren( // 设置对象属性, 绑定事件等等。
               instance,
               type,
               newProps,
