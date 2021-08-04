@@ -27,9 +27,58 @@
     //   p != q
     //   p 和 q 均存在于给定的二叉树中。
 
-    var lowestCommonAncestor = function(root, p, q) {
-      
+    var lowestCommonAncestor = function(root, p, q) { // 用二进制定位这两个节点的位置;
+      // 全部扫描 => 直到找到两个节点为止, 两个节点的位置, 用二进制进行标识, 最后进行比较
+      if(root === p || root === q){ // 有根节点直接返回;
+        return root;
+      }
+      let basePos = 1, config = 2, posP, posQ;
+      const dfs = (node, pos) => { // 深度遍历, 找解点 => 假设往左为1, 往右为0, pos为当前node的位置标记
+        if(node === p){
+          posP = pos;
+          config--;
+        } else if (node === q) {
+          posQ = pos;
+          config--;
+        }
+        if(config === 0){ // 两个位置都找完了, 结束;
+          return;
+        }
+        if(node.left){
+          dfs(node.left, (pos << 1) + 1);
+        }
+        if(config === 0){ // 不再执行后续;
+          return;
+        }
+        if(node.right){
+          dfs(node.right, pos << 1);// node.right的位置
+        }
+      }
+      dfs(root, basePos);
+      let res = '', index = 1, strP = posP.toString(2), strQ = posP.toString(2);
+      let res = root;
+      while(strP[index] === strQ[index]) {
+        const cur = strP[index];
+        res = cur === '1' ? res.left : res.right;
+        index++;
+      }
+      return res;
     };
+
+    var lowestCommonAncestor = function(root, p, q) { // 递归实现; => 构建searchTool, 递归找到包含某节点下是否包含某节点为子节点;
+      let res;
+      const searchTool = (node, p, q) => {
+        if (node === null) return false;
+        const hasLeft = searchTool(node.left, p, q);
+        const hasRight = searchTool(node.right, p, q);
+        if((hasLeft && hasRight) || ((node === p || node === q) && (hasLeft || hasRight))){
+          res = node;
+        }
+        return hasLeft || hasRight || node === p || node === q;
+      }
+      searchTool(root, p, q);
+      return res;
+    }
   </script>
 </body>
 </html>
