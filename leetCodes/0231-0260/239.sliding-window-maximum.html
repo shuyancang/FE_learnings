@@ -55,11 +55,62 @@
     };
 
     var maxSlidingWindow = function (nums, k){ // leetcode解决方式: 优先队列
-      
+      const len = nums.length;
+      const res = [];
+      const sortedList = nums.slice(0, k).sort((a, b) => b - a); // 排序好的数组
+      res.push(sortedList[0]); // 放入初始值;
+      for(let i = 0; i < len - k + 1; i++){ // 往右滑动窗口
+        const delNum = nums[i]; // 要删除的元素; logn在sortedList找到对应数并且删除
+        const delIndex = findNumInSortedList(sortedList, delNum);
+        sortedList.splice(delIndex, 1);
+        const addNum = nums[k + i]; // 要加入的元素; 添加进入sortedList
+        const addIndex = findNumInSortedList(sortedList, addNum);
+        sortedList.splice(addIndex + 1, 0, addNum);
+        res.push(sortedList[0]); // 继续添加最大数;
+      }
+      return res;
     }
 
-    var maxSlidingWindow = function (nums, k) { // leetcode解决方式: 单调队列
+    function findNumInSortedList(sortedList, num){ // 降序数组中找到数的位置. 如果没找到, 找到最接近的比目标数大的数;
+      let start = 0, end = sortedList.length - 1;
+      let target;
+      while(start <= end){
+        const mid = (start + end) >> 1;
+        if(sortedList[mid] > num){
+          start = mid + 1;
+          target = mid;
+        } else if (sortedList[mid] < num) {
+          end = mid - 1;
+          target = mid - 1;
+        } else {
+          target = mid;
+          break;
+        }
+      }
+      return target;
+    }
 
+    var maxSlidingWindow = function (nums, k) { // leetcode解决方式: 单调队列, 放一个队列放置单调的索引
+      const len = nums.length;
+      const quene = [];
+      for(let i = 0; i < k; i++){ // 放入最初的窗口
+        while(quene.length > 0 && nums[i] >= nums[quene[quene.length - 1]]) { // 大的数放在前面
+          quene.pop();
+        }
+        quene.push(i);
+      } // 队列quene存放的索引, 保证索引对应的值, 是单调递减的。
+      const res = [nums[quene[0]]];
+      for(let i = k; i < n; i++){
+        while(quene.length > 0 && nums[i] >= nums[quene[quene.length - 1]]) { // 新加入的数, 大于que中存储的数
+          quene.pop();
+        }
+        quene.push(i);
+        while(quene[0] <= i - k) {
+          quene.shift(); // 弹出第一个。
+        }
+        res.push(nums[quene[0]]);
+      }
+      return res;
     }
 
     var maxSlidingWindow = function (nums, k) { // leetcode解决方式: 分块预处理
