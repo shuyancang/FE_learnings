@@ -26,21 +26,125 @@
     //   每行的所有元素从左到右升序排列    每列的所有元素从上到下升序排列
     // -109 <= target <= 109
     var searchMatrix = function(matrix, target) {
-      const m = matrix.length;
-      const n = matrix[0].length;
-      if(target < matrix[0][0] || target > matrix[m - 1][n - 1]){
+      // const m = matrix.length;
+      // const n = matrix[0].length;
+      // if(target < matrix[0][0] || target > matrix[m - 1][n - 1]){
+      //   return false;
+      // }
+      // // 分别从上 - 下, 进行二分, 
+      // // 1. 找到: 矩阵最上行中正好大于target的topIndex, 则index及后面, 可以排除;
+      // // 2. 找到: 矩阵最下行中, 正好小于target的bottomIndex, 则index及前面, 可以排除; => target必定位于 bottomIndex -> topIndex之间; 构成一个新矩阵
+      // // 3. 新矩阵中, 找到最左列中, 正好大于target的leftIndex, 则leftIndex下面可以删除;
+      // // 4. 新矩阵中, 找到最右列中正好小于target的rightIndex, 则rightIndex上可以删除; => 得到一个新的举证 => while(){}
+      // let l = 0, t = 0, r = n - 1, b = m - 1;
+      // while(l < r || t < b) {
+      //   let left = l, right = r;
+      //   while(left < right){ // 在top行中, <= target 下一列 > target的位置;
+      //     let mid = (left + right + 1) >> 1;
+      //     const cur = matrix[t][mid];
+      //     if(cur === target) { // 命中!
+      //       return true;
+      //     } else if (cur > target) {
+      //       right = mid - 1;
+      //     } else {  // cur < target
+      //       left = mid;
+      //     }
+      //   }
+      //   r = right; // 右边的数据弃用;
+      //   left = l, right = r;
+      //   while(left < right) { // 在bottom 找到 >= target的上一列, 
+      //     let mid = (left + right) >> 1;
+      //     const cur = matrix[b][mid];
+      //     if(cur === target) {
+      //       return true;
+      //     } else if (cur < target) {
+      //       left = mid + 1;
+      //     } else {
+      //       right = mid;
+      //     }
+      //   }
+      //   l = left; // 左边的数据弃用, target必定位于l, r, b, t之间;
+      //   let top = t, bottom = b;
+      //   console.log(l, r, t, b);
+      //   debugger;
+      //   while(top < bottom){ // 继续进行: 行的二分
+      //     let mid = (top + bottom + 1) >> 1;
+      //     const cur = matrix[mid][l];
+      //     if(cur === target){
+      //       return true;
+      //     } else if (cur > target) { // 本行及下面下面行的全弃用
+      //       bottom = mid - 1;
+      //     } else {
+      //       top = mid;
+      //     }
+      //   }
+      //   b = bottom;
+      //   top = t, bottom = b;
+      //   while(top < bottom){
+      //     const mid = (top + bottom) >> 1;
+      //     const cur = matrix[mid][r];
+      //     if(cur === target){
+      //       return true;
+      //     } else if (cur < target) {
+      //       top = mid + 1;
+      //     } else {
+      //       bottom = mid;
+      //     }
+      //   }
+      //   t = top;
+      // }
+      // return false;
+      // // 只剩下一列或者一行了, 进行二分即可;
+    };
+
+    // leetcode方法。
+    // 方法一暴力, O(MN)直接遍历；
+    // 方法二: 二分搜索；迭代矩阵的对角线, 从当前元素进行对列和对行的搜索;
+    var searchMatrix = function(matrix, target) {
+      if(!matrix || matrix.length === 0 || matrix[0].length === 0) {
         return false;
       }
-    };
-    188188
-    37746309
+      const shortLine = Math.min(matrix.length, matrix[0].length);
+      for(let i = 0; i < shortLine; i++){ // 进行对角线遍历
+        const verFound = searchTool(matrix, target, i, true);
+        const horFound = searchTool(matrix, target, i, false);
+        if(verFound || horFound) {
+          return true;
+        }
+      }
+      return false;
+    }
 
-    https://www.taoshouyou.com/game/sanguozhihuanxiangdalu-14931-0-21/6877742-0-0-4-0-0-0
+    function searchTool(matrix, target, start, isVertical){ // 搜索;
+      let a = start;
+      let b = isVertical ? (matrix[0].length - 1) : (matrix.length - 1);
+      while(a <= b){
+        let mid = (a + b) >> 1;
+        if(isVertical){ // 纵向搜索
+          if(matrix[start][mid] < target) {
+            a = mid + 1;
+          } else if (matrix[start][mid] > target) {
+            b = mid - 1;
+          } else {
+            return true;
+          }
+        } else {
+          if(matrix[mid][start] < target) {
+            a = mid + 1;
+          } else if (matrix[mid][start] > target) {
+            b = mid - 1;
+          } else {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
 
+    // 方法三: 将已经排序的二维矩阵分为四个子矩阵, 其中两个可能包含, 其中两个肯定不包含~ => 递归
     
 
-
-    106575258192160
+    // 方法四: 
   </script>
 </body>
 </html>
