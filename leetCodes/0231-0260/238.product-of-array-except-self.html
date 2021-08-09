@@ -20,10 +20,33 @@
 
     var productExceptSelf = function(nums) {
       const len = nums.length;
-      const res = new Array(len).fill(1);
-      for (let i = 0; i < len; i++) {
-        
+      const leftPro = new Array(len).fill(1); // i记录i位置左侧所有数的乘积
+      const rightPro = new Array(len).fill(1); // i记录i位置右侧所有数的乘积
+      for (let i = 1; i < len; i++) {
+        leftPro[i] = leftPro[i - 1] * nums[i - 1];
       }
+      for (let i = len - 2; i >= 0; i--){
+        rightPro[i] = rightPro[i + 1] * nums[i + 1];
+      }
+      const res = new Array(len).fill(1);
+      for(let i = 0; i < len; i++){
+        res[i] = leftPro[i] * rightPro[i];
+      }
+      return res;
+    };
+
+    var productExceptSelf = function(nums) { // 常数空间的方法:
+      const len = nums.length;
+      const res = new Array(len).fill(1); // i记录i位置左侧所有数的乘积
+      for (let i = 1; i < len; i++) {
+        res[i] = res[i - 1] * nums[i - 1];
+      }
+      let rightRecord = 1;
+      for (let i = len - 2; i >= 0; i--){
+        rightRecord = rightRecord * nums[i + 1];
+        res[i] = res[i] * rightRecord;
+      }
+      return res;
     };
   </script>
 </body>

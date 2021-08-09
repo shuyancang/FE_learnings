@@ -1737,7 +1737,7 @@ function resetChildExpirationTime(completedWork: Fiber) {
 
 function commitRoot(root) {
   const renderPriorityLevel = getCurrentPriorityLevel();
-  runWithPriority(
+  runWithPriority( // 设置优先级 为最高优先级 => 保证不被打断;
     ImmediatePriority,
     commitRootImpl.bind(null, root, renderPriorityLevel),
   );
@@ -1808,12 +1808,12 @@ function commitRootImpl(root, renderPriorityLevel) {
 
   // Get the list of effects.
   let firstEffect;
-  if (finishedWork.effectTag > PerformedWork) {
+  if (finishedWork.effectTag > PerformedWork) { // 有副作用;PerformedWork(值为1), 需要更新dom
     // A fiber's effect list consists only of its children, not itself. So if
     // the root has an effect, we need to add it to the end of the list. The
     // resulting list is the set that would belong to the root's parent, if it
     // had one; that is, all the effects in the tree including the root.
-    if (finishedWork.lastEffect !== null) {
+    if (finishedWork.lastEffect !== null) { // fiber的effect列表只包含子fiber的effect, 不包含自身, 把自身effect进行添加 ==>统一收集副作用
       finishedWork.lastEffect.nextEffect = finishedWork;
       firstEffect = finishedWork.firstEffect;
     } else {
@@ -1842,6 +1842,7 @@ function commitRootImpl(root, renderPriorityLevel) {
     startCommitSnapshotEffectsTimer();
     prepareForCommit(root.containerInfo);
     nextEffect = firstEffect;
+    // before mutation: 调用 getSnapshotBeforeUpdate
     do {
       if (__DEV__) {
         invokeGuardedCallback(null, commitBeforeMutationEffects, null);
@@ -1853,7 +1854,7 @@ function commitRootImpl(root, renderPriorityLevel) {
         }
       } else {
         try {
-          commitBeforeMutationEffects();
+          commitBeforeMutationEffects(); // 在这里调用getSnapshotBeforeUpdate
         } catch (error) {
           invariant(nextEffect !== null, 'Should be working on an effect.');
           captureCommitPhaseError(nextEffect, error);
@@ -1872,6 +1873,7 @@ function commitRootImpl(root, renderPriorityLevel) {
     // The next phase is the mutation phase, where we mutate the host tree.
     startCommitHostEffectsTimer();
     nextEffect = firstEffect;
+    // mutation, 调用render(){} 更新到最新的Fiber状态
     do {
       if (__DEV__) {
         invokeGuardedCallback(
@@ -1911,6 +1913,7 @@ function commitRootImpl(root, renderPriorityLevel) {
     // layout, but class component lifecycles also fire here for legacy reasons.
     startCommitLifeCyclesTimer();
     nextEffect = firstEffect;
+    // 调用didMount 和 didUpdate
     do {
       if (__DEV__) {
         invokeGuardedCallback(
