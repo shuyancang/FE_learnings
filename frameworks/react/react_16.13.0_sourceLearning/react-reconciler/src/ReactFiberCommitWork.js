@@ -439,7 +439,8 @@ export function commitPassiveHookEffects(finishedWork: Fiber): void {
     }
   }
 }
-
+// 执行didMount/didUpdate生命周期, 
+// 执行commitUpdateQueue, 调用callback
 function commitLifeCycles(
   finishedRoot: FiberRoot,
   current: Fiber | null,
@@ -450,7 +451,7 @@ function commitLifeCycles(
     case FunctionComponent:
     case ForwardRef:
     case SimpleMemoComponent:
-    case Block: {
+    case Block: { // 如果是hooks
       // At this point layout effects have already been destroyed (during mutation phase).
       // This is done to prevent sibling component effects from interfering with each other,
       // e.g. a destroy function in one component should never override a ref set

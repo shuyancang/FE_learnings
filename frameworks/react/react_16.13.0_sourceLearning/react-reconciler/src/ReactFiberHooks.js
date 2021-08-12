@@ -135,7 +135,7 @@ let didWarnAboutMismatchedHooksForComponent;
 if (__DEV__) {
   didWarnAboutMismatchedHooksForComponent = new Set();
 }
-
+// hook的结构, 不同于Fiber;
 export type Hook = {|
   memoizedState: any,
   baseState: any,
@@ -143,13 +143,13 @@ export type Hook = {|
   queue: UpdateQueue<any, any> | null,
   next: Hook | null,
 |};
-
+// effect的结构.
 export type Effect = {|
   tag: HookEffectTag,
   create: () => (() => void) | void,
-  destroy: (() => void) | void,
+  destroy: (() => void) | void, // 调用完成后执行的
   deps: Array<mixed> | null,
-  next: Effect,
+  next: Effect, // 构成链表
 |};
 
 export type FunctionComponentUpdateQueue = {|lastEffect: Effect | null|};
@@ -928,9 +928,9 @@ function updateRef<T>(initialValue: T): {|current: T|} {
 
 function mountEffectImpl(fiberEffectTag, hookEffectTag, create, deps): void {
   const hook = mountWorkInProgressHook();
-  const nextDeps = deps === undefined ? null : deps;
-  currentlyRenderingFiber.effectTag |= fiberEffectTag;
-  hook.memoizedState = pushEffect(
+  const nextDeps = deps === undefined ? null : deps; // 依赖数组
+  currentlyRenderingFiber.effectTag |= fiberEffectTag; // 设置effectTag
+  hook.memoizedState = pushEffect( // 这是effect, 不同于state
     HookHasEffect | hookEffectTag,
     create,
     undefined,
@@ -940,7 +940,7 @@ function mountEffectImpl(fiberEffectTag, hookEffectTag, create, deps): void {
 
 function updateEffectImpl(fiberEffectTag, hookEffectTag, create, deps): void {
   const hook = updateWorkInProgressHook();
-  const nextDeps = deps === undefined ? null : deps;
+  const nextDeps = deps === undefined ? null : deps; // 依赖数组
   let destroy = undefined;
 
   if (currentHook !== null) {
