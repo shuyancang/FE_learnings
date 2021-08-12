@@ -652,12 +652,15 @@ function mountReducer<S, I, A>(
   return [hook.memoizedState, dispatch];
 }
 
+// 1. 递归执行queue中的update, 
+// 2. 计算最新的state, 赋值给memoriedState;
 function updateReducer<S, I, A>(
   reducer: (S, A) => S,
   initialArg: I,
   init?: I => S,
 ): [S, Dispatch<A>] {
   const hook = updateWorkInProgressHook();
+  // 拿到mount阶段创建的queue;
   const queue = hook.queue;
   invariant(
     queue !== null,
@@ -747,12 +750,12 @@ function updateReducer<S, I, A>(
           update.suspenseConfig,
         );
 
-        // Process this update.
+        // Process this update. eagerState是预先处理的state
         if (update.eagerReducer === reducer) {
           // If this update was processed eagerly, and its reducer matches the
           // current reducer, we can use the eagerly computed state.
           newState = ((update.eagerState: any): S);
-        } else {
+        } else { // 执行action, state的计算;
           const action = update.action;
           newState = reducer(newState, action);
         }
@@ -780,7 +783,7 @@ function updateReducer<S, I, A>(
   }
 
   const dispatch: Dispatch<A> = (queue.dispatch: any);
-  return [hook.memoizedState, dispatch];
+  return [hook.memoizedState, dispatch]; // 返回最新的值
 }
 
 function rerenderReducer<S, I, A>(
@@ -837,21 +840,26 @@ function rerenderReducer<S, I, A>(
   return [newState, dispatch];
 }
 
+// 第一次执行函数体时: 执行
 function mountState<S>(
   initialState: (() => S) | S,
 ): [S, Dispatch<BasicStateAction<S>>] {
   const hook = mountWorkInProgressHook();
+  // 默认值是function，就执行得到初始值, 默认值也可以是普通值;
   if (typeof initialState === 'function') {
     // $FlowFixMe: Flow doesn't like mixed types
     initialState = initialState();
   }
+  // hooks中的state 存在memoizedState中
   hook.memoizedState = hook.baseState = initialState;
+  // 新建一个队列
   const queue = (hook.queue = {
     pending: null,
     dispatch: null,
     lastRenderedReducer: basicStateReducer,
     lastRenderedState: (initialState: any),
   });
+  // 已将queue传递给dispatch, 
   const dispatch: Dispatch<
     BasicStateAction<S>,
   > = (queue.dispatch = (dispatchAction.bind(
@@ -859,9 +867,10 @@ function mountState<S>(
     currentlyRenderingFiber,
     queue,
   ): any));
-  return [hook.memoizedState, dispatch];
+  return [hook.memoizedState, dispatch]; // 第一次执行完毕后返回默认值和dispatch;
 }
 
+// 后续更新state 执行以下函数体
 function updateState<S>(
   initialState: (() => S) | S,
 ): [S, Dispatch<BasicStateAction<S>>] {
@@ -1282,13 +1291,13 @@ function dispatchAction<S, A>(
     fiber,
     suspenseConfig,
   );
-
+    // 创建一个update， 添加到queue, 有闲暇时提前计算最新state保存在eagerState中, 调用scheduleWork进入调度触发function重新执行
   const update: Update<S, A> = {
     expirationTime,
     suspenseConfig,
     action,
-    eagerReducer: null,
-    eagerState: null,
+    eagerReducer: null, // 优化手段: 浏览器有闲暇时可以提前把state计算保存
+    eagerState: null, // 
     next: (null: any),
   };
 
@@ -1305,6 +1314,7 @@ function dispatchAction<S, A>(
     update.next = pending.next;
     pending.next = update;
   }
+  // update添加入队列
   queue.pending = update;
 
   const alternate = fiber.alternate;
