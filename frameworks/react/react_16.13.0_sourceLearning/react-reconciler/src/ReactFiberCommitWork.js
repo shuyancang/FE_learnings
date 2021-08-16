@@ -334,7 +334,7 @@ function commitHookEffectListUnmount(tag: number, finishedWork: Fiber) {
     const firstEffect = lastEffect.next;
     let effect = firstEffect;
     do {
-      if ((effect.tag & tag) === tag) {
+      if ((effect.tag & tag) === tag) { // 有没有destroy, 然后执行即可
         // Unmount
         const destroy = effect.destroy;
         effect.destroy = undefined;

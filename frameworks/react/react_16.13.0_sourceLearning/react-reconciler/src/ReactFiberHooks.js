@@ -948,7 +948,7 @@ function updateEffectImpl(fiberEffectTag, hookEffectTag, create, deps): void {
     destroy = prevEffect.destroy;
     if (nextDeps !== null) {
       const prevDeps = prevEffect.deps;
-      if (areHookInputsEqual(nextDeps, prevDeps)) {
+      if (areHookInputsEqual(nextDeps, prevDeps)) { // useEffect的依赖对比
         pushEffect(hookEffectTag, create, destroy, nextDeps);
         return;
       }
