@@ -142,9 +142,34 @@
     }
 
     // 方法三: 将已经排序的二维矩阵分为四个子矩阵, 其中两个可能包含, 其中两个肯定不包含~ => 递归
-    
+    var searchMatrix = function (matrix, target){
 
-    // 方法四: 
+    };
+
+    var matrixCompareTool = function(){
+      
+    }
+
+    // 方法四: 简直巧妙 -> 从矩阵左下角开始, 如果当前值大于目标值, 当前值+1列, 继续比较, 如果当前值小于目标值, 当前值-1行
+    // 完美利用矩阵排序功能, 每个当前值必定是已找到位置中行的最小值, 列的最大值, 因此如果小于当前值, 目标值只有可能在“上面”, 如果大于当前值, 目标值只有可能在“右面”
+    var searchMatrix = function(matrix, target){
+      if(!matrix || matrix.length === 0 || matrix[0].length === 0) {
+        return false;
+      }
+      let m = matrix.length; // 行标记
+      let n = 0; // 列
+      while(m >= 0 && n < matrix[0].length){ // 出界 -> 找不到。
+        const cur = matrix[m][n];
+        if(target > cur){
+          n++
+        } else if (target < cur) {
+          m--;
+        } else {
+          return true;
+        }
+      }
+      return false;
+    }
   </script>
 </body>
 </html>
