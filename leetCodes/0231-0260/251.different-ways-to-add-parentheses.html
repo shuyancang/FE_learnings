@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>为运算表达式设计优先级</title>
+</head>
+<body>
+  <script>
+    // 给定一个含有数字和运算符的字符串，为表达式添加括号，改变其运算优先级以求出不同的结果。你需要给出所有可能的组合的结果。有效的运算符号包含 +, - 以及 * 。
+
+    // 示例 1: 输入: "2-1-1" 输出: [0, 2]
+    //     解释:  ((2-1)-1) = 0  (2-(1-1)) = 2
+    // 示例 2: 输入: "2*3-4*5" 输出: [-34, -14, -10, -10, 10]
+    //   解释: 
+    //     (2*(3-(4*5))) = -34 
+    //     ((2*3)-(4*5)) = -14 
+    //     ((2*(3-4))*5) = -10 
+    //     (2*((3-4)*5)) = -10 
+    //     (((2*3)-4)*5) = 10
+
+    var diffWaysToCompute = function(expression) {
+      const list = strTool(expression); // list结构必定是 数, 运算符, 数, 运算符, 因此, index为奇数必定运算
+      const res = new Set();
+      let operatorNum = (list.length - 1) / 2; // 一共有多少个计算符;
+      let recordList = [list];
+      while(operatorNum > 0){ // 每次使用一个运算符;
+        let nextList = [];
+        for(let i = 0; i < operatorNum; i++){ // 使用第几个计算符
+          for(let j = 0; j < recordList.length; j++){
+            const tmpList = [...recordList[j]];
+            const pos = i * 2 + 1; // 运算符位置
+            const operator = tmpList[pos];
+            let num;
+            if(operator === '+') {
+              num = tmpList[pos - 1] + tmpList[pos + 1];
+            } else if (operator === '-') {
+              num = tmpList[pos - 1] - tmpList[pos + 1];
+            } else if (operator === '*') {
+              num = tmpList[pos - 1] * tmpList[pos + 1];
+            }
+            tmpList.splice(pos - 1, 3, num)
+            nextList.push(tmpList);
+          }
+        }
+        recordList = nextList;
+        operatorNum--;
+      }
+      for(let i = 0; i < recordList.length; i++){
+        res.add(recordList[i][0]);
+      }
+      return [...res];
+    };
+
+    function strTool(expression){ // 字符串加工成为 数值, 计算符号... 的数组结构
+      let num = null, index = 0, len = expression.length;
+      const list = [];
+      while(index < len){
+        let unit = expression[index];
+        if (unit === '+' || unit === '-' || unit === '*') { // 运算符
+          list.push(num);
+          list.push(unit);
+          num = null;
+        } else if (unit >= 0) { // 数值
+          num = num === null ? parseInt(unit) : (num * 10 + parseInt(unit));
+        }
+        index++;
+      }
+      list.push(num);
+      return list
+    }
+
+    // 方法2: 分治: expression可以分解为, 任意一个运算符, 和左右的字符内容的结合, 因此可以无限分治
+    var diffWaysToCompute = function(expression){
+      const res = [];
+      const opSet = new Set(['+', '-', '*']);
+      const dfs = (str) => {
+        if(parseInt(str) === parseInt(str)){ // 数值直接返回
+          return parseInt(str);
+        } else {
+          const len = str.length;
+          for(let i = 0; i < len; i++){
+            const unit = str[i];
+            const left = dfs(str.substring(0, i));
+            const right = dfs(str.substring(i + 1, len));
+            let calcNum;
+            switch (unit) {
+              case '+':
+                calcNum = left + right;
+                break;
+              case '-':
+                calcNum = left - right;
+                break;
+              case '*':
+                calcNum = left * right;
+                break;
+              default:
+                break;
+            }
+          }
+        }
+      } 
+    }
+
+  </script>
+</body>
+</html>
