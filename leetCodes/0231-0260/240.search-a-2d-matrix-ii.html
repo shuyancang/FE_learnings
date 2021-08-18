@@ -143,11 +143,27 @@
 
     // 方法三: 将已经排序的二维矩阵分为四个子矩阵, 其中两个可能包含, 其中两个肯定不包含~ => 递归
     var searchMatrix = function (matrix, target){
-
+      if(!matrix || matrix.length === 0 || matrix[0].length === 0) {
+        return false
+      }
+      return matrixCompareTool(matrix, target, 0, 0, matrix[0].length - 1, matrix.length - 1);
     };
 
-    var matrixCompareTool = function(){
-      
+    var matrixCompareTool = function(matrix, target, left, top, right, bottom){ // 矩形范围内搜索目标值
+      if(left > right || top > bottom){
+        return false;
+      } else if (target < matrix[top][left] || target > matrix[bottom][right]){ // target 小于最小值或 大于最大值
+        return false;
+      }
+      const mid = (right + left) >> 1;
+      let row = top;
+      while(row <= bottom && matrix[row][mid] <= target){
+        if(matrix[row][mid] === target){
+          return true;
+        }
+        row++;
+      }
+      return matrixCompareTool(matrix, target, left, row, mid - 1, bottom) || matrixCompareTool(matrix, target, mid + 1, top, right, row - 1);
     }
 
     // 方法四: 简直巧妙 -> 从矩阵左下角开始, 如果当前值大于目标值, 当前值+1列, 继续比较, 如果当前值小于目标值, 当前值-1行
@@ -156,7 +172,7 @@
       if(!matrix || matrix.length === 0 || matrix[0].length === 0) {
         return false;
       }
-      let m = matrix.length; // 行标记
+      let m = matrix.length - 1; // 行标记
       let n = 0; // 列
       while(m >= 0 && n < matrix[0].length){ // 出界 -> 找不到。
         const cur = matrix[m][n];
