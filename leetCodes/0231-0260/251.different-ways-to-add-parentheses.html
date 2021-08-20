@@ -72,35 +72,43 @@
     }
 
     // 方法2: 分治: expression可以分解为, 任意一个运算符, 和左右的字符内容的结合, 因此可以无限分治
+    const opSet = new Set(['+', '-', '*']); // 捕捉符号
+
     var diffWaysToCompute = function(expression){
-      const res = [];
-      const opSet = new Set(['+', '-', '*']);
-      const dfs = (str) => {
-        if(parseInt(str) === parseInt(str)){ // 数值直接返回
-          return parseInt(str);
+      const dfs = (str) => { // 分治 -> 其实更像是一个 取任意 字符 作为 根节点, 左右形成新树;
+        let res = [];
+        if(Number(str) === Number(str)){ // 是数据数值直接返回
+          res.push(parseFloat(str));
         } else {
           const len = str.length;
           for(let i = 0; i < len; i++){
             const unit = str[i];
-            const left = dfs(str.substring(0, i));
-            const right = dfs(str.substring(i + 1, len));
-            let calcNum;
-            switch (unit) {
-              case '+':
-                calcNum = left + right;
-                break;
-              case '-':
-                calcNum = left - right;
-                break;
-              case '*':
-                calcNum = left * right;
-                break;
-              default:
-                break;
+            if(opSet.has(unit)){ // 符号位
+              const leftRes = dfs(str.substring(0, i));
+              const rightRes = dfs(str.substring(i + 1, len));
+              for (let leftNum of leftRes) {
+                for(let rightNum of rightRes){
+                  switch (unit) {
+                    case '+':
+                      res.push(leftNum + rightNum);
+                      break;
+                    case '-':
+                      res.push(leftNum - rightNum);
+                      break;
+                    case '*':
+                      res.push(leftNum * rightNum);
+                      break;
+                    default:
+                      break;
+                  }
+                }
+              }
             }
           }
         }
-      } 
+        return res;
+      }
+      return dfs(expression);
     }
 
   </script>

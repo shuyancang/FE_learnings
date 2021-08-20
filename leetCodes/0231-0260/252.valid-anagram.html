@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>有效的字母异位词</title>
+</head>
+<body>
+  <script>
+    // 给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。
+    // 注意：若 s 和 t 中每个字符出现的次数都相同，则称 s 和 t 互为字母异位词。
+
+    // 示例 1: 输入: s = "anagram", t = "nagaram" 输出: true
+    // 示例 2: 输入: s = "rat", t = "car"         输出: false
+    //  
+    // 提示:
+    //   1 <= s.length, t.length <= 5 * 104
+    //   s 和 t 仅包含小写字母
+    //  
+    // 进阶: 如果输入字符串包含 unicode 字符怎么办？你能否调整你的解法来应对这种情况？
+    var isAnagram = function(s, t) {
+      if(s.length !== t.length){
+        return false;
+      }
+      let unitMap = new Map();
+      for(let i = 0; i < s.length; i++){
+        const cur = s[i];
+        unitMap.set(cur, (unitMap.get(cur) || 0) + 1);
+      }
+      for(let i = 0; i < t.length; i++){
+        const cur = t[i];
+        if(unitMap.get(cur) === undefined){
+          return false;
+        } else {
+          const curNum = unitMap.get(cur);
+          if(curNum <= 0) {
+            return false;
+          } else if (curNum === 1) {
+            unitMap.delete(cur);
+          } else {
+            unitMap.set(cur, curNum - 1)
+          }
+        }
+      }
+      return true;
+    };
+  </script>
+</body>
+</html>
