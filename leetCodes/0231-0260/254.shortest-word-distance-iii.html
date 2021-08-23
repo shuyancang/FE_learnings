@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>最短单词距离III</title>
+</head>
+<body>
+  <script>
+    // 给定一个单词列表和两个单词 word1 和 word2，返回列表中这两个单词之间的最短距离。
+
+    // word1 和 word2 是有可能相同的，并且它们将分别表示为列表中两个独立的单词。
+
+    // 示例:
+    // 假设 words = ["practice", "makes", "perfect", "coding", "makes"].
+
+    // 输入: word1 = “makes”, word2 = “coding”    输出: 1
+    // 输入: word1 = "makes", word2 = "makes"     输出: 3
+    // 注意: 你可以假设 word1 和 word2 都在列表里。
+
+    var shortestWordDistance = function(wordsDict, word1, word2) {
+      let res = Infinity;
+      const len = wordsDict.length;
+      let posFir = null, posSec = null;
+      for(let i = 0; i < len; i++){
+        const cur = wordsDict[i];
+        if(cur === word1 && cur === word2){ // 相等的
+          posFir = posSec;
+          posSec = i;
+        } else if (cur === word2) {
+          posSec = i;
+        } else if (cur === word1) {
+          posFir = i;
+        }
+        if(posSec !== null && posFir !== null) {
+          res = Math.min(res, Math.abs(posFir - posSec));
+        }
+      }
+      return res;
+    };
+  </script>
+</body>
+</html>

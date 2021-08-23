@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中心对称数II</title>
+</head>
+<body>
+  <script>
+    // 中心对称数是指一个数字在旋转了 180 度之后看起来依旧相同的数字（或者上下颠倒地看）。
+    // 找到所有长度为 n 的中心对称数。
+
+    // 示例 : 输入:  n = 2 输出: ["11","69","88","96"]
+    var findStrobogrammatic = function(n) {
+      const dfs = (len) => {
+        if (len === 1) {
+          return ['0', '1', '8']
+        } else if (len === 2) {
+          return ["00", "11","69","88","96"]
+        }
+        const preRes = dfs(len - 2); // 递归
+        let res = [];
+        for(let i = 0; i < preRes.length; i++){
+          const cur = preRes[i];
+          res.push(`1${cur}1`);
+          res.push(`6${cur}9`);
+          res.push(`8${cur}8`);
+          res.push(`9${cur}6`);
+          res.push(`0${cur}0`);
+        }
+        return res;
+      }
+      return dfs(n).filter(e => e.length === 1 || e[0] !== '0');
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 中心对称数是指一个数字在旋转了 180 度之后看起来依旧相同的数字（或者上下颠倒地看）。
+
+    // 请写一个函数来判断该数字是否是中心对称数，其输入将会以一个字符串的形式来表达数字。
+
+    // 示例 1: 输入: num = "69"   输出: true
+    // 示例 2: 输入: num = "88"   输出: true
+    // 示例 3: 输入: num = "962"  输出: false
+    // 示例 4: 输入: num = "1"    输出：true
+
+    var isStrobogrammatic = function(num) {
+      const hashMap = {
+        '0': '0',
+        '1': '1',
+        '6': '9',
+        '8': '8',
+        '9': '6'
+      }
+      let left = 0, right = num.length - 1;
+      while(left <= right){
+        const leftLetter = num[left];
+        const rightLetter = num[right];
+        if(!hashMap[leftLetter] || hashMap[leftLetter] !== rightLetter){
+          return false;
+        }
+        left++;
+        right--;
+      }
+      return true;
+    };
+  </script>
+</body>
+</html>
