@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>移位字符串分组</title>
+</head>
+<body>
+  <script>
+    // 给定一个字符串，对该字符串可以进行 “移位” 的操作，也就是将字符串中每个字母都变为其在字母表中后续的字母，比如："abc" -> "bcd"。这样，我们可以持续进行 “移位” 操作，从而生成如下移位序列：
+
+    // "abc" -> "bcd" -> ... -> "xyz"
+    // 给定一个包含仅小写字母字符串的列表，将该列表中所有满足 “移位” 操作规律的组合进行分组并返回。
+
+    // 示例：
+
+    // 输入：["abc", "bcd", "acef", "xyz", "az", "ba", "a", "z"]
+    // 输出：
+    // [
+    //   ["abc","bcd","xyz"],
+    //   ["az","ba"],
+    //   ["acef"],
+    //   ["a","z"]
+    // ]
+    // 解释：可以认为字母表首尾相接，所以 'z' 的后续为 'a'，所以 ["az","ba"] 也满足 “移位” 操作规律。
+
+    var groupStrings = function(strings) {
+      // 将所有字符串, 首位平移至a, 处理为26进制的差值表现形式 
+      // res为map, key为差值记录, values为对应的原数组内字符串
+      const len = strings.length;
+      const resMap = new Map();
+      for (let i = 0; i < len; i++) {
+        const cur = strings[i];
+        const strLen = cur.length;
+        let key = '';
+        let step = cur[0].charCodeAt() - 97; // 获得第一个字符距离a的差值; 后续所有字符，都按照差值平移
+        for(let j = 0; j < strLen; j++){
+          const letterCode = cur[j].charCodeAt();
+          const newLetter = String.fromCharCode(letterCode >= cur[0].charCodeAt() ? (letterCode - step) : (letterCode + 26 - step));
+          key = `${key}${newLetter}`;
+        }
+        const values = resMap.get(key) || [];
+        values.push(cur);
+        resMap.set(key, values);
+      }
+      const res = [];
+      for(let [key, values] of resMap){
+        res.push(values);
+      }
+      return res;
+    };
+  </script>
+</body>
+</html>

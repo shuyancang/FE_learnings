@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中心对称数III</title>
+</head>
+<body>
+  <script>
+    // 中心对称数是指一个数字在旋转了 180 度之后看起来依旧相同的数字（或者上下颠倒地看）。
+    // 写一个函数来计算范围在 [low, high] 之间中心对称数的个数。
+
+    // 示例: 输入: low = "50", high = "100" 输出: 3 
+    //   解释: 69，88 和 96 是三个在该范围内的中心对称数
+    // 注意: 由于范围可能很大，所以 low 和 high 都用字符串表示。
+
+    // 生成从 low 到 high的对称字符串, 从中心开始往两边添加数值; 显然初始中心只有可能是 '', '1', '0', '8';
+    // 往X两边添加的数值可能是: '0X0', '1X1', '6X9', '8X8', '9X6' 
+    var strobogrammaticInRange = function(low, high) {
+      let count = 0;
+      const lowLen = low.length;
+      const highLen = high.length;
+      const dfs = (str) => {
+        const curLen = str.length;
+        if(curLen > highLen){ // 构建的可能字符串已超长, 停止;
+          return;
+        }
+        if(curLen === highLen && str - high > 0) { // 构建的字符大于最大值, pass
+          return;
+        }
+        if (curLen >= 2 && str[0] === '0') { // 以0开头的字符 -> 可继续后续首位添加其他字符, 但不计入有效数字
+
+        } else if (str - low < 0) { // 小于最小值的 字符 -> 同样可继续添加首位字符, 但不满足当前要求, 不计入有效
+
+        } else if (curLen > 0) { // 剩下的都是满足要求的数据, 记录
+          count++;
+        }
+        dfs(`0${str}0`); // 对str进行首尾的添加操作
+        dfs(`1${str}1`);
+        dfs(`6${str}9`);
+        dfs(`8${str}8`);
+        dfs(`9${str}6`);
+      }
+      dfs(''); // 依次以可能的四个中心字符开始dfs; 往两边添加数值
+      dfs('0');
+      dfs('1');
+      dfs('8');
+      return count;
+    };
+
+    var getNumTool = function (numStr) { // 从1 -> numStr的对称数数量
+      const len = numStr.length;
+      if (len === 1) { // 0, 1, 8;
+        return 
+      }
+    }
+
+    var strobogrammaticInRange = function(low, high) { // 直接找到所有low -> high之间的数值进行判断. 效率较低.
+      const dfs = (len) => {
+        if(len === 0) {
+          return []
+        } else if (len === 1) {
+          return ['0', '1', '8']
+        } else if (len === 2) {
+          return ["00", "11","69","88","96"]
+        }
+        const preRes = dfs(len - 2); // 递归
+        let res = [];
+        for(let i = 0; i < preRes.length; i++){
+          const cur = preRes[i];
+          res.push(`1${cur}1`);
+          res.push(`6${cur}9`);
+          res.push(`8${cur}8`);
+          res.push(`9${cur}6`);
+          res.push(`0${cur}0`);
+        }
+        return res;
+      }
+      const minLen = low.length;
+      const maxLen = high.length;
+      const list = [];
+      for(let i = minLen; i <= maxLen; i++) {
+        list.push(...dfs(i));
+      }
+      return list.filter(e => {
+        if (e - low < 0 || e - high > 0 || (e.length > 1 && e[0] === '0')) {
+          return false;
+        }
+        return true;
+      }).length;
+    };
+
+  </script>
+</body>
+</html>
