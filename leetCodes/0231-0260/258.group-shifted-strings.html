@@ -38,17 +38,13 @@
         for(let j = 0; j < strLen; j++){
           const letterCode = cur[j].charCodeAt();
           const newLetter = String.fromCharCode(letterCode >= cur[0].charCodeAt() ? (letterCode - step) : (letterCode + 26 - step));
-          key = `${key}${newLetter}`;
+          key = key + newLetter;
         }
         const values = resMap.get(key) || [];
         values.push(cur);
         resMap.set(key, values);
       }
-      const res = [];
-      for(let [key, values] of resMap){
-        res.push(values);
-      }
-      return res;
+      return [...resMap.values()];
     };
   </script>
 </body>

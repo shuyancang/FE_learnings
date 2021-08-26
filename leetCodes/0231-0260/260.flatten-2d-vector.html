@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>展开二维向量</title>
+</head>
+<body>
+  <script>
+    // 请设计并实现一个能够展开二维向量的迭代器。该迭代器需要支持 next 和 hasNext 两种操作。
+    // 示例：
+    // Vector2D iterator = new Vector2D([[1,2],[3],[4]]);
+    // iterator.next(); // 返回 1
+    // iterator.next(); // 返回 2
+    // iterator.next(); // 返回 3
+    // iterator.hasNext(); // 返回 true
+    // iterator.hasNext(); // 返回 true
+    // iterator.next(); // 返回 4
+    // iterator.hasNext(); // 返回 false
+
+/**
+ * @param {number[][]} vec
+ */
+var Vector2D = function(vec) { // 最简单的方式, 铺平数组, 但这并不是迭代器的初衷 => 迭代器实际上植入一个追踪, 辅助进行遍历;
+  this.list = [];
+  this.index = 0;
+  for(let i = 0; i < vec.length; i++){
+    let subList = vec[i];
+    this.list.push(...subList);
+  }
+};
+
+Vector2D.prototype.next = function() {
+  const cur = this.list[this.index];
+  this.index++;
+  return cur;
+};
+
+Vector2D.prototype.hasNext = function() {
+  return this.index <= this.list.length - 1
+};
+
+  var Vector2D = function(vec) { // 使用inner和outer双指针,指向next位置
+    this.data = vec;
+    this.inner = 0;
+    this.outer = 0;
+  };
+
+  Vector2D.prototype.getNextPos = function(){ // 获取next
+    while (this.outer < this.data.length && this.inner === this.data[this.outer].length) {
+      this.inner = 0;
+      this.outer++;
+    }
+  }
+
+  Vector2D.prototype.next = function() {
+    this.getNextPos(); // 此时this.inner 和 this.outer已经指向next
+    if(this.outer >= this.data.length){
+      return undefined;
+    }
+    const res = this.data[this.outer][this.inner];
+    this.inner++; // 指向理论上的下一个位置
+    return res;
+  };
+
+  Vector2D.prototype.hasNext = function() {
+    this.getNextPos();
+    return this.outer < this.data.length;
+  };
+
+  </script>
+</body>
+</html>

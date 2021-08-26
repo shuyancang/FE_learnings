@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>统计同值子树</title>
+</head>
+<body>
+  <script>
+    // 给定一个二叉树，统计该二叉树数值相同的子树个数。
+    // 同值子树是指该子树的所有节点都拥有相同的数值。
+    // 示例：
+    //   输入: root = [5,1,5,5,5,null,5]
+
+    //                 5
+    //               / \
+    //               1   5
+    //             / \   \
+    //             5   5   5
+    //   输出: 4
+
+    var countUnivalSubtrees = function(root) {
+      if(!root){
+        return false;
+      }
+      let count = 0;
+      let isUni = false;
+      const dfs = (node) => {
+        if(node.left === null && node.right === null) { // 叶子结点, 必定同值
+          isUni = true;
+        } else if (node.left ===  null) { // 只有右节点
+          isUni = dfs(node.right) && (node.right.val === node.val);
+        } else if (node.right === null) { // 只有左节点
+          isUni = dfs(node.left) && (node.left.val === node.val);
+        } else { // 左右节点都有
+          let leftUni = dfs(node.left);
+          let rightUni = dfs(node.right);
+          isUni = leftUni && rightUni && node.val === node.left.val && node.val === node.right.val;
+        }
+        if(isUni){
+          count++;
+        }
+        return isUni;
+      }
+      dfs(root);
+      return count;
+    };
+  </script>
+</body>
+</html>
