@@ -22,8 +22,38 @@
     // 进阶挑战： 您能否使用恒定的空间复杂度来完成此题？
 
     var verifyPreorder = function(preorder) {
-
+      const len = preorder.length;
+      if (len < 2) {
+        return true;
+      }
+      const dfs = (left, right, min, max) => {
+        const nodeVal = preorder[left]; // 根节点 -> 之后分左右两边;
+        if(nodeVal > max || nodeVal < min) {
+          return false;
+        } else if (left === right) { // 只有一个元素了
+          return true;
+        }
+        let rightIndex;
+        for(let i = left + 1; i <= right; i++) { // 找到第一个比nodeVal大的节点
+          if(preorder[i] > nodeVal){
+            rightIndex = i;
+            break;
+          }
+        }
+        if(rightIndex === undefined) { // 全都小于nodeVal => 所有值都应该位于左节点 以下, 只需检查左节点树是否搜索树
+          return dfs(left + 1, right, min, Math.min(max, nodeVal));
+        } else if (rightIndex === left + 1) { // 第一个元素就大于nodeVal, 所有值位于右节点
+          return dfs(left + 1, right, Math.max(min, nodeVal), max);
+        } else {
+          return dfs(left + 1, rightIndex - 1, min, Math.min(max, nodeVal)) && dfs(rightIndex, right, Math.max(min, nodeVal), max);
+        }
+      }
+      return dfs(0, len - 1, -Infinity, Infinity);
     };
+
+    // 进阶挑战~~~~emmmm, 有点难。 ====> Leetcode 单调栈
+    // 维护一个单调递减栈, 当当前值大于栈顶元素时, 弹出栈元素 => 可认为是某子树向右节点遍历, 
+    // 只要满足: 每次入栈的值大于之前出栈的值即可;
   </script>
 </body>
 </html>
