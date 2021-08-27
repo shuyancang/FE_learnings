@@ -18,8 +18,26 @@
     //   0 <= starti < endi <= 106
 
     var minMeetingRooms = function(intervals) {
-
+      let count = 0;
+      intervals.sort((a, b) => a[0] - b[0]); // 将会议数组排序;
+      while(intervals.length > 0){
+        const rest = [];
+        let lastMaxTime = 0;
+        for(let i = 0; i < intervals.length; i++){
+          const [start, end] = intervals[i];
+          if(lastMaxTime <=  start) { // 可以放入这个会议室 -> 不冲突, 只需替换变量即可
+            lastMaxTime = end;
+          } else { // 冲突会议室
+            rest.push([start, end]);
+          }
+        }
+        intervals = rest;
+        count++;
+      }
+      return count;
     };
+
+    // 优先队列
   </script>
 </body>
 </html>
