@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>粉刷房子</title>
+</head>
+<body>
+  <script>
+    // 假如有一排房子，共 n 个，每个房子可以被粉刷成红色、蓝色或者绿色这三种颜色中的一种，你需要粉刷所有的房子并且使其相邻的两个房子颜色不能相同。
+    // 当然，因为市场上不同颜色油漆的价格不同，所以房子粉刷成不同颜色的花费成本也是不同的。每个房子粉刷成不同颜色的花费是以一个 n x 3 的正整数矩阵 costs 来表示的。
+
+    // 例如，costs[0][0] 表示第 0 号房子粉刷成红色的成本花费；costs[1][2] 表示第 1 号房子粉刷成绿色的花费，以此类推。
+    // 请计算出粉刷完所有房子最少的花费成本。
+
+    // 示例 1：
+    // 输入: costs = [[17,2,17],[16,16,5],[14,3,19]] 输出: 10
+    //   解释: 将 0 号房子粉刷成蓝色，1 号房子粉刷成绿色，2 号房子粉刷成蓝色。
+    //      最少花费: 2 + 5 + 3 = 10。
+    // 示例 2： 输入: costs = [[7,6,2]] 输出: 2
+    //  
+    // 提示:
+    //   costs.length == n
+    //   costs[i].length == 3
+    //   1 <= n <= 100
+    //   1 <= costs[i][j] <= 20
+
+    var minCost = function(costs) { // 动态规划;
+      // board(m)(n)表示第m个房子, 刷成索引为n颜色 的 房子的最少花费成本; 
+      // 有board(m)(n) = Math.min(board(m-1)(0 | 1 | 2 && 非n), board(m-1)(0 | 1 | 2 && 非n)) // m-1房子刷成另外两种颜色的最少花费
+      // 比较得到board(m)中的最小值, 显然board(0) = costs[0]
+      const m = costs.length;
+      const n = 3;
+      const board = new Array(m).fill(0).map(e => new Array(3));
+      board[0] = costs[0];
+      for(let i = 1; i < m; i++){
+        board[i][0] = Math.min(board[i-1][1], board[i-1][2]) + costs[i][0];
+        board[i][1] = Math.min(board[i-1][0], board[i-1][2]) + costs[i][1];
+        board[i][2] = Math.min(board[i-1][0], board[i-1][1]) + costs[i][2];
+      }
+      return Math.min(...board[m - 1]);
+    };
+
+    var minCost = function(costs) { // 动态规划 => 空间简化
+      const m = costs.length;
+      const board = [costs[0][0], costs[0][1], costs[0][2]];
+      for (let i = 1; i < m; i++) {
+        let tmpFir = board[0], tmpSec = board[1], tmpThi = board[2];
+        board[0] = Math.min(tmpSec, tmpThi) + costs[i][0];
+        board[1] = Math.min(tmpFir, tmpThi) + costs[i][1];
+        board[2] = Math.min(tmpFir, tmpSec) + costs[i][2];
+      }
+      return Math.min(board[0], board[1], board[2]);
+    };
+  </script>
+</body>
+</html>
