@@ -54,6 +54,23 @@
     // 进阶挑战~~~~emmmm, 有点难。 ====> Leetcode 单调栈
     // 维护一个单调递减栈, 当当前值大于栈顶元素时, 弹出栈元素 => 可认为是某子树向右节点遍历, 
     // 只要满足: 每次入栈的值大于之前出栈的值即可;
+
+    var verifyPreorder = function(preorder){
+      const len = preorder.length;
+      const stack = [];
+      let min = -Infinity;
+      for(let i = 0; i < len; i++){
+        const cur = preorder[i];
+        while(stack[stack.length - 1] < cur) {
+          min = stack.pop();
+        }
+        if(cur < min) {
+          return false;
+        }
+        stack.push(cur);
+      }
+      return true;
+    }
   </script>
 </body>
 </html>
