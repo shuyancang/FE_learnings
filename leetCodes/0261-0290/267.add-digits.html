@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>各位相加</title>
+</head>
+<body>
+  <script>
+    // 给定一个非负整数 num，反复将各个位上的数字相加，直到结果为一位数。
+    // 示例: 输入: 38 输出: 2 
+    //   解释: 各位相加的过程为：3 + 8 = 11, 1 + 1 = 2。 由于 2 是一位数，所以返回 2。
+    // 进阶: 你可以不使用循环或者递归，且在 O(1) 时间复杂度内解决这个问题吗？
+    var addDigits = function(num) {
+      let transCalc = num;
+      while (transCalc >= 10) {
+        let sum = 0;
+        while (transCalc >= 10) { // 位数叠加
+          sum += (transCalc % 10);
+          transCalc = (transCalc / 10) | 0;
+        }
+        sum += transCalc;
+        transCalc = sum;
+      }
+      return transCalc;
+    };
+
+    // leetcode: 考虑100...a + 10..b + ... 100x + 10y + z = 99...a + 9...b + ... + 99x + 9y + (a + b + ... + x + y + z)
+    // (a + b + ... + y + z)的和, 可以续重复以上步骤, 直至(a + b + ... + y + z <= 9)因此任意位整数, 都可以拆解为 % 9 的余数
+    // 固若整数 % 9 为0 , 则 为 9;
+    // 否则为 % 9 的余数
+    var addDigits = function (num) {
+      if(num <= 9) {
+          return num;
+      }
+      const tmp = num % 9;
+      return tmp === 0 ? 9 : tmp;
+    }
+  </script>
+</body>
+</html>

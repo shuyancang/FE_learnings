@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>较小三数之和</title>
+</head>
+<body>
+  <script>
+    // 给定一个长度为 n 的整数数组和一个目标值 target，寻找能够使条件 nums[i] + nums[j] + nums[k] < target 成立的三元组  i, j, k 个数（0 <= i < j < k < n）。
+
+    // 示例： 输入: nums = [-2,0,1,3], target = 2  输出: 2 
+    // 解释: 因为一共有两个三元组满足累加和小于 2:
+    //     [-2,0,1]
+    //     [-2,0,3]
+    // 进阶：是否能在 O(n2) 的时间复杂度内解决？
+
+    var threeSumSmaller = function(nums, target) { // 暴力;
+      let count = 0;
+      for(let i = 0; i < nums.length; i++){
+        for(let j = i + 1; j < nums.length; j++){
+          for(let k = j + 1; j < nums.length; k++){
+            if(nums[i] + nums[j] + nums[k] < target) {
+              count++;
+            } 
+          }
+        }
+      }
+      return count;
+    };
+
+    var threeSumSmaller = function (nums, target) { // 排序 => 双指针 外层循环
+      nums.sort((a, b) => a - b); // 首先进行升序排列;
+      const len = nums.length;
+      if(len < 3) {
+        return 0
+      }
+      let count = 0;
+      for(let i = 0; i < nums.length; i++){
+        const cur = nums[i];
+        const max = target - cur; // 剩余部分(i - j，需要找到和小于max的组合数)
+        let start = i + 1, end = len - 1;
+        while (start < end) { 
+          if(nums[start] + nums[end] < max){ // 符合要求的两个数的和, 如果此时含有left的数，一共有end - start组
+            count += (end - start);
+            start++; // 左指针右移
+          } else {
+            end--; // 两边界数的和大于目标, 右指针左移
+          }
+        }
+      }
+      return count;
+    }
+    
+  </script>
+</body>
+</html>
