@@ -28,28 +28,49 @@
         const relations = relataionMap.get(node); // 这个节点对应的所有边节点
         visited[node] = 1;
         for(let cur of relations){
-          if(visited[cur] === 2 || node === pre) { // 已经访问完成的干净节点
+          if(visited[cur] === 2 || cur === pre) { // 已经访问完成的干净节点
             continue;
           } else if (visited[cur] === 1) { // 出现循环, 有错误
             return false;
-          } else if (!dfs(cur)) { // 一个未访问的节点
+          } else if (!dfs(cur, node)) { // 一个未访问的节点
             return false;
           }
         }
         visited[node] = 2;
         return true;
       }
-      for(let i = 0; i < n; i++){
-        const isTreeNode = dfs(i);
-        if(!isTreeNode) {
-          return false;
-        }
-      }
-      return true;
+      const isTreeNode = dfs(0, null);
+      return visited.every(e => e === 2);
     };
     // validTree(5, [[0,1],[0,2],[0,3],[1,4]]) // true
     // validTree(5, [[0,1], [1,2], [2,3], [1,3], [1,4]]) // false
-    // 
+    // validTree(5, [[0,1],[0,4],[1,4],[2,3]])
+    // leetcode: 并查集: 最初一堆集合内元素为各自一组, 每组有一个根节点, 查找: 基于根节点查找, 合并: 多个元素合并共享一个根节点; => 搜索复杂度O(n)
+    var validTree = function(n, edges){
+      const groups = new Array(n).fill(0).map((v, i) => i); // 初始化并查集, 每个元素是一个子集, 每个子集初始只有自己;index: 节点, group[index]节点对应集合的根节点;
+      let count = n; // 最终的并查集个数;
+      const unionGroup = (a, b) => { // 合并a, b节点对应的子集
+        groups[findGroup(a)] = findGroup(b); // 找到a, b对应的根节点, parent对应调整根节点标记;
+        count--; // 子集减少1个
+      }
+      const findGroup = (node) => { // 获取node对应的集合根节点
+        if(groups[node] !== node) { // 该节点 不是 集合的根节点, 
+          groups[node] = findGroup(groups[node]); // 查找自己的根节点并复制给groups[node]
+        }
+        return groups[node]; // 
+      };
+      for(let [start, end] of edges){
+        if (findGroup(start) === findGroup(end)) { // 根节点相同 => 循环
+          return false;
+        } else { // 根节点不同, 合并
+          unionGroup(start, end);
+        }
+      }
+      return count === 1;
+    } 
+
+
+
   </script>
 </body>
 </html>
