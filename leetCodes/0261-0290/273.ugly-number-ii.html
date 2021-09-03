@@ -13,11 +13,51 @@
     //     示例 2： 输入：n = 1  输出：1   解释：1 通常被视为丑数。
     //     提示：1 <= n <= 1690
 
-    var nthUglyNumber = function(n) {
-      // 丑数: num = (2 ** x) * (3 ** y) * (5 ** z);
-      // x + y + z = t; t = 0 -> 1 -> 2 ....;优先按照 x -> y -> x + 1 -> z的方式 进行增加排列;
+    var nthUglyNumber = function(n) { // 考虑用单调栈进行 ---> 频繁的 尾部 +-; 复杂度较高易入死循环昂~
+      let cur = 0;
+      let list = [1];
+      while(cur < n - 1) {
+        let curNum = list[cur];
+        const addNums = [curNum * 2, curNum * 3, curNum * 5];
+        const addList = [];
+        while (addNums.length > 0) {
+          const lastAddNum = addNums[addNums.length - 1];
+          const lastOriNum = list[list.length - 1];
+          if (lastAddNum > lastOriNum) {
+            addList.push(addNums.pop());
+          } else if (lastAddNum < lastOriNum) {
+            addList.push(list.pop());
+          } else {
+            list.pop();
+          }
+        }
+        while(addList.length > 0) {
+          list.push(addList.pop());
+        }
+        cur++;
+      }
+      return list[cur];
     };
 
+    var nthUglyNumber = function(n){ // 动态规划
+      // 有数组dp， dp[i]表示第i个丑数; 显然dp [0] = 0; dp[1] = 1; 
+      // 假定有丑数 x 为第k 个丑数(dp[k] = x); 设定p2, p3, p5, 有dp[k] = dp[p2] * 2 | dp[p3] * 3 | dp[p5] * 5; (小的那个)
+      const dp = new Array(n + 1).fill(0);
+      dp[1] = 1;
+      let p2 = 1, p3 = 1, p5 = 1; 
+      for(let i = 2; i <= n; i++){
+        let num2 = p2 * 2, num3 = p3 * 3, num5 = p5 * 5;
+        dp[i] = Math.min(num2, num3, num5);
+        if(dp[i] === num2) {
+          p2++;
+        } else if (dp[i] === num3) {
+          p3++;
+        } else {
+          p5++;
+        }
+      }
+      return dp[n];
+    }
   </script>
 </body>
 </html>
