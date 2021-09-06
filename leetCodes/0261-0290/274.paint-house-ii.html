@@ -22,19 +22,31 @@
 
     var minCostII = function(costs) {
       const houseNum = costs.length;
-      const colorTypes = houseNum[0].length;
-      const db = new Array(houseNum).fill(0).map(e => new Array(colorType).fill(0));
+      const colorTypes = costs[0].length;
+      const db = [];
       db[0] = costs[0];
-      for(let house = 1; i < houseNum; i++){
-        for (let color = 0; color < colorTypes; color++) {
-          db[house][color] = 
-        }
-        db[house][0] = Math.min(db[house - 1][1], db[house - 1][2]) + costs[house][0];
-        db[house][1] = Math.min(db[house - 1][0], db[house - 1][2]) + costs[house][1];
-        db[house][2] = Math.min(db[house - 1][1], db[house - 1][0]) + costs[house][2];
+      for(let i = 1; i < houseNum; i++){
+        db[i] = listSum(costs[i], db[i - 1]);
       }
       return Math.min(...db[houseNum - 1])
     };
+
+    var listSum = function(target, preCosts){ // 两个数组, 返回target对应索引下 与 preCosts的最小和(不能与preCosts相同索引相加)
+      let firMin, secMin; // firMin最小数对应的索引, secMin次小数对应的索引;
+      firMin = preCosts[0] > preCosts[1] ? 1 : 0;
+      secMin = firMin === 1 ? 0 : 1;
+      for(let i = 2; i < preCosts.length; i++){ // 找到最小的两个数
+        if(preCosts[i] < preCosts[secMin]){
+          secMin = preCosts[i] < preCosts[firMin] ? firMin : i;
+          firMin = preCosts[i] < preCosts[firMin] ? i : firMin;
+        }
+      }
+      const res = [];
+      for(let i = 0; i < target.length; i++){ // 当前项 + 可取最小数值 => 结果
+        res.push(target[i] + ((i === firMin) ? preCosts[secMin] : preCosts[firMin]));
+      }
+      return res;
+    }
   </script>
 </body>
 </html>
