@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>回文排列II</title>
+</head>
+<body>
+  <script>
+    // 给定一个字符串 s ，返回其通过重新排列组合后所有可能的回文字符串，并去除重复的组合。
+    // 如不能形成任何回文排列时，则返回一个空列表。
+
+    // 示例 1： 输入: "aabb" 输出: ["abba", "baab"]
+    // 示例 2： 输入: "abc"  输出: []
+
+    var generatePalindromes = function(s) { // 先收集相关字符, 然后进行回溯即可.
+      const letterMap = new Map();
+      const letterSet = new Set();
+      const letterTotal = new Set();
+      for(let i = 0;i < s.length;i++){
+        const cur = s[i];
+        const curCount = letterMap.get(cur) || 0;
+        letterMap.set(cur, curCount + 1);
+        letterTotal.add(cur);
+        if(letterSet.has(cur)){
+          letterSet.delete(cur);
+        } else {
+          letterSet.add(cur);
+        }
+      }
+      if (letterSet.length > 1) { // 不是回文字符串;
+        return [];
+      }
+      const midStr = letterSet.length === 1 ? [...letterSet][0] : '';
+      const dfs = (str) => {
+        
+      }
+    };
+  </script>
+</body>
+</html>
