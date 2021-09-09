@@ -15,6 +15,10 @@
     // 示例 2： 输入: "abc"  输出: []
 
     var generatePalindromes = function(s) { // 先收集相关字符, 然后进行回溯即可.
+      // 1. 收集字符信息 unitMap(a: 2, b: 4, c: 6...) -> 判定是否可以形成回型字符串
+      // 2. 基于unitMap明确中心字符串, 然后得到单边字符串str: 'abbccc'
+      // 3. str的组合, 形成组合
+      // 4. 构造输出
       const letterMap = new Map();
       const letterSet = new Set();
       const letterTotal = new Set();
@@ -33,10 +37,41 @@
         return [];
       }
       const midStr = letterSet.length === 1 ? [...letterSet][0] : '';
-      const dfs = (str) => {
+      const dfs = (strMap) => {
         
       }
     };
+
+    function strComb(strMap){ // {'a': 2, 'b': 4, ... }
+      const res = [];
+      const unitList = [...strMap.keys()];
+      const dfs = (str) => {
+        if (unitList.length === 1) {
+          const unit = strList[0];
+          const subStr = new Array(strMap.get(unit) / 2).fill(unit).join('');
+          res.push(`${str}${subStr}`);
+        }
+        for(let unit of unitList){
+          const unitNum = strMap.get(unit);
+          if(unitNum === 2){
+            strMap.delete(unit);
+          } else {
+            strMap.set(unit, unitNum - 2);
+          }
+          dfs(`${str}${unit}`);
+          strMap.set(unit, (strMap.get(unit) || 0) + 2);
+        }
+      }
+      return res;
+    }
+
+    function getStrRes(str, mid = ''){
+      let res = mid;
+      for(let i = str.length - 1; i >= 0; i++){
+        res = `${str[i]}${mid}${str[i]}`;
+      }
+      return res;
+    }
   </script>
 </body>
 </html>
