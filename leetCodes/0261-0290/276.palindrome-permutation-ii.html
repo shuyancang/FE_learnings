@@ -21,57 +21,60 @@
       // 4. 构造输出
       const letterMap = new Map();
       const letterSet = new Set();
-      const letterTotal = new Set();
       for(let i = 0;i < s.length;i++){
         const cur = s[i];
         const curCount = letterMap.get(cur) || 0;
         letterMap.set(cur, curCount + 1);
-        letterTotal.add(cur);
         if(letterSet.has(cur)){
           letterSet.delete(cur);
         } else {
           letterSet.add(cur);
         }
       }
-      if (letterSet.length > 1) { // 不是回文字符串;
+      if (letterSet.size > 1) { // 不是回文字符串;
         return [];
       }
-      const midStr = letterSet.length === 1 ? [...letterSet][0] : '';
-      const dfs = (strMap) => {
-        
+      let midStr = '';
+      if (letterSet.size === 1) {
+        midStr = [...letterSet][0];
+        if(letterMap.get(midStr) === 1) {
+            letterMap.delete(midStr);
+        } else {
+            letterMap.set(midStr, letterMap.get(midStr) - 1);
+        }
       }
+      const strList = strComb(letterMap);
+      if(strList.length === 0) {
+          return [midStr];
+      }
+      return strList.map(e => {
+        return `${e}${midStr}${e.split('').reverse().join('')}`;
+      })
     };
 
-    function strComb(strMap){ // {'a': 2, 'b': 4, ... }
-      const res = [];
+    function strComb(strMap){ // {'a': 2, 'b': 4, ... } => 返回可形成的数据集合。
       const unitList = [...strMap.keys()];
-      const dfs = (str) => {
-        if (unitList.length === 1) {
-          const unit = strList[0];
-          const subStr = new Array(strMap.get(unit) / 2).fill(unit).join('');
-          res.push(`${str}${subStr}`);
+      if (unitList.length === 1) {
+        const unit = unitList[0];
+        const unitNum = strMap.get(unit) / 2;
+        return [new Array(unitNum).fill(unit).join('')];
+      }
+      let res = [];
+      for(let unit of unitList) {
+        let nextMap = new Map(strMap);
+        const unitNum = nextMap.get(unit);
+        if (unitNum === 2) {
+          nextMap.delete(unit);
+        } else {
+          nextMap.set(unit, unitNum - 2);
         }
-        for(let unit of unitList){
-          const unitNum = strMap.get(unit);
-          if(unitNum === 2){
-            strMap.delete(unit);
-          } else {
-            strMap.set(unit, unitNum - 2);
-          }
-          dfs(`${str}${unit}`);
-          strMap.set(unit, (strMap.get(unit) || 0) + 2);
-        }
+        const nextRes = strComb(nextMap);
+        res.push(...strComb(nextMap).map(e => `${unit}${e}`));
       }
       return res;
     }
-
-    function getStrRes(str, mid = ''){
-      let res = mid;
-      for(let i = str.length - 1; i >= 0; i++){
-        res = `${str[i]}${mid}${str[i]}`;
-      }
-      return res;
-    }
+  
+    
   </script>
 </body>
 </html>
