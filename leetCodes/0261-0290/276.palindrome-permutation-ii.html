@@ -74,7 +74,44 @@
       return res;
     }
   
-    
+    var generatePalindromes = function (s) {
+      const unitMap = new Map();
+      const len = s.length;
+      for(let i = 0; i < len; i++){
+        unitMap.set(s[i], (unitMap.get(s[i]) || 0) + 1);
+      }
+      let singleUnit = '';
+      for (let [key, num] of unitMap) {
+        if (num % 2 === 1 && !!singleUnit) { // 两奇数 -> 不可组成回文 
+          return [];
+        } else if (num % 2 === 1) { // 1奇数 -> 中心数
+          singleUnit = key;
+          newUnitNum = num - 1;
+          (newUnitNum === 0) ? (unitMap.delete(key)) : (unitMap.set(key, newUnitNum));
+        }
+      }
+      // 中心字母singleUnit 和 其他字母组合unitMap;
+      const res = [];
+      const dfs = (str) => { // 
+        if (len === str.length) {
+          res.push(str);
+          return;
+        }
+        let unitList = [...unitMap.keys()];
+        for (let unit of unitList) { // 遍历字母
+          const unitNum = unitMap.get(unit);
+          if(unitNum === 2){
+            unitMap.delete(unit);
+          } else {
+            unitMap.set(unit, unitNum - 2);
+          }
+          dfs(`${unit}${str}${unit}`);
+          unitMap.set(unit, unitNum);
+        }
+      }
+      dfs(singleUnit);
+      return res;
+    }
   </script>
 </body>
 </html>
