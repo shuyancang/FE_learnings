@@ -114,7 +114,7 @@ export type ReactEventResponder<E, C> = {
   ...
 };
 
-export type EventPriority = 0 | 1 | 2;
+export type EventPriority = 0 | 1 | 2; // 事件优先级
 
 export const DiscreteEvent: EventPriority = 0;
 export const UserBlockingEvent: EventPriority = 1;
