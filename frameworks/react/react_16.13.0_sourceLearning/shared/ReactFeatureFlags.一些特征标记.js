@@ -1,11 +1,4 @@
-/**
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- * @flow strict
- */
+
 
 export const enableUserTimingAPI = __DEV__;
 
@@ -56,8 +49,6 @@ export const enableFundamentalAPI = false;
 
 // Experimental Scope support.
 export const enableScopeAPI = false;
-
-// New API for JSX transforms to target - https://github.com/reactjs/rfcs/pull/107
 
 // We will enforce mocking scheduler with scheduler/unstable_mock at some point. (v17?)
 // Till then, we warn about the missing mock, but still fallback to a legacy mode compatible version
