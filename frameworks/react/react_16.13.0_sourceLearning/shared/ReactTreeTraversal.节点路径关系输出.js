@@ -1,20 +1,10 @@
-/**
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
+
 
 import {HostComponent} from './ReactWorkTags';
 
-function getParent(inst) {
+function getParent(inst) { // 寻找return对应的parent节点
   do {
     inst = inst.return;
-    // TODO: If this is a HostRoot we might want to bail out.
-    // That is depending on if we want nested subtrees (layers) to bubble
-    // events to their parent. We could also go through parentNode on the
-    // host node but that wouldn't work for React Native and doesn't let us
-    // do the portal feature.
   } while (inst && inst.tag !== HostComponent);
   if (inst) {
     return inst;
@@ -22,11 +12,7 @@ function getParent(inst) {
   return null;
 }
 
-/**
- * Return the lowest common ancestor of A and B, or null if they are in
- * different trees.
- */
-export function getLowestCommonAncestor(instA, instB) {
+export function getLowestCommonAncestor(instA, instB) { // 找到a, b最低共同祖先
   let depthA = 0;
   for (let tempA = instA; tempA; tempA = getParent(tempA)) {
     depthA++;
@@ -60,10 +46,8 @@ export function getLowestCommonAncestor(instA, instB) {
   return null;
 }
 
-/**
- * Return if A is an ancestor of B.
- */
-export function isAncestor(instA, instB) {
+
+export function isAncestor(instA, instB) { // A是否B的祖先节点
   while (instB) {
     if (instA === instB || instA === instB.alternate) {
       return true;
@@ -73,17 +57,12 @@ export function isAncestor(instA, instB) {
   return false;
 }
 
-/**
- * Return the parent instance of the passed-in instance.
- */
+
 export function getParentInstance(inst) {
   return getParent(inst);
 }
 
-/**
- * Simulates the traversal of a two-phase, capture/bubble event dispatch.
- */
-export function traverseTwoPhase(inst, fn, arg) {
+export function traverseTwoPhase(inst, fn, arg) { // inst的捕获/冒泡的事件调度
   const path = [];
   while (inst) {
     path.push(inst);
@@ -98,14 +77,7 @@ export function traverseTwoPhase(inst, fn, arg) {
   }
 }
 
-/**
- * Traverses the ID hierarchy and invokes the supplied `cb` on any IDs that
- * should would receive a `mouseEnter` or `mouseLeave` event.
- *
- * Does not invoke the callback on the nearest common ancestor because nothing
- * "entered" or "left" that element.
- */
-export function traverseEnterLeave(from, to, fn, argFrom, argTo) {
+export function traverseEnterLeave(from, to, fn, argFrom, argTo) { // 冒泡/捕获的对应路线。
   const common = from && to ? getLowestCommonAncestor(from, to) : null;
   const pathFrom = [];
   while (true) {
