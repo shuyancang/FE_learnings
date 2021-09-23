@@ -26,9 +26,76 @@
     //   1 <= words[i].length <= 100
     //   words[i] 仅由小写英文字母组成
 
+    // 好难啊~不会，参看leetcode大神，图拓扑排序~
+
+    function ensureCharInGraph (char, graph, indegreeMap) {
+      if (!graph.has(char)) graph.set(char, new Set());
+      if (indegreeMap[char] === undefined) indegreeMap[char] = 0
+    }
+
     var alienOrder = function(words) {
-      let res = '';
-      
+      const N = words.length, INVALID_ORDER = ''
+      if(N === 1) {
+        let letterSet = new Set();
+        for(let letter of words[0]) {
+          if (letterSet.has(letter)) {
+            return [...letterSet].join('');
+          } else {
+            letterSet.add(letter);
+          }
+        }
+        return [...letterSet].join('');
+      }
+      let graph = new Map(); // 创建一个图
+      let indegreeMap = Object.create(null)
+      for (let i = 1; i < N; ++i) {
+        const word1 = words[i - 1], word2 = words[i]; // 获取先后相邻单词。
+        const maxLength = Math.max(word1.length, word2.length); // 获取最长长度
+        let gotEdge = false
+        for (let j = 0; j < maxLength; ++j) { // 开始填充路径。
+          const char1 = word1[j], char2 = word2[j]
+          // 检测非法边的方式2
+          // if (char1 && !char2 && !gotEdge) return INVALID_ORDER
+          if (char1) ensureCharInGraph(char1, graph, indegreeMap) // 在两个图内添加字符标识;
+          if (char2) ensureCharInGraph(char2, graph, indegreeMap)
+          if (gotEdge || !char1 || !char2 || char1 === char2) continue // 到边界或相同字符串, 跳过;
+          gotEdge = true // gotEdge设置后, 上个字母不同, 后续不必继续比较如图;
+          // NOTICE: 入度的去重需要专门判断
+          if (graph.get(char1).has(char2)) continue
+          graph.get(char1).add(char2)
+          indegreeMap[char2]++
+        }
+        // 检测非法边的方式1:
+        // `!gotEdge` 表示前面 `min(word1.length, word2.length)` 个字母都相同。
+        // 因为如果前面 `min(word1.length, word2.length)` 个字母都相同，那么 gotEdge 没有机会设置成 true 。
+        if (!gotEdge && word1.length > word2.length) return INVALID_ORDER
+      }
+
+      if (graph.size === 1) return words[0] // 平凡图
+
+      let queue = []
+      for (let char in indegreeMap) {
+        if (indegreeMap[char] !== 0) continue
+        queue.push(char) // 初始的最外层字母;
+      }
+      let start = 0
+      while (queue.length) { // 依次出队并进行有序排列, 最终输出即可;
+        // 软出队，在队列中保留拓扑序列
+        const oldLength = queue.length
+        for (let i = start; i < oldLength; ++i) {
+          const curChars = graph.get(queue[i])
+          for (let curChar of curChars) {
+            indegreeMap[curChar]-- // 出队时, 调整对应数的入度.
+            if (indegreeMap[curChar] !== 0) continue // 没到最底层;
+            queue.push(curChar)
+          }
+        }
+        if (queue.length === oldLength) break // 即未放入任何有效字母;
+        start = oldLength // 后续继续开始第二层的图扫描
+      }
+
+      // 如果遍历不完所有节点，则有环，非法字典
+      return queue.length === graph.size ? queue.join('') : INVALID_ORDER
     };
   </script>
 </body>
