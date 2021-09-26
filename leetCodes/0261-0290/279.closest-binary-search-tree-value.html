@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>最接近的二叉搜索树值</title>
+</head>
+<body>
+  <script>
+    // 给定一个不为空的二叉搜索树和一个目标值 target，请在该二叉搜索树中找到最接近目标值 target 的数值。
+
+    // 注意：给定的目标值 target 是一个浮点数  题目保证在该二叉搜索树中只会存在一个最接近目标值的数
+    // 示例：输入: root = [4,2,5,1,3]，目标值 target = 3.714286 输出: 4
+
+    //     4
+    //   / \
+    //   2   5
+    // / \
+    // 1   3
+
+    var closestValue = function(root, target) { // 递归的二分。
+      if(!root) {
+        return null;
+      }
+      const rootVal = root.val;
+      if (rootVal === target) { // 显然~
+        return rootVal;
+      }
+      const diffVal = Math.abs(target - rootVal);
+      if (rootVal < target) {
+        if (root.right === null) {
+          return rootVal;
+        } else {
+          const rightVal = closestValue(root.right, target);
+          const diffCompare = Math.abs(target - rightVal);
+          return diffVal > diffCompare ? rightVal : rootVal;
+        }
+      }
+      if (root.left === null) {
+        return rootVal
+      }
+      const leftVal = closestValue(root.left, target);
+      const diffCompare = Math.abs(target - leftVal);
+      return diffVal > diffCompare ? leftVal : rootVal;
+    };
+  </script>
+</body>
+</html>
