@@ -43,7 +43,7 @@ if (__DEV__) {
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
-function getDeclarationErrorAddendum() {
+function getDeclarationErrorAddendum() { // render方法提示
   if (ReactCurrentOwner.current) {
     const name = getComponentName(ReactCurrentOwner.current.type);
     if (name) {
@@ -53,7 +53,7 @@ function getDeclarationErrorAddendum() {
   return '';
 }
 
-function getSourceInfoErrorAddendum(source) {
+function getSourceInfoErrorAddendum(source) { // 错误提示
   if (source !== undefined) {
     const fileName = source.fileName.replace(/^.*[\\\/]/, '');
     const lineNumber = source.lineNumber;
@@ -102,7 +102,7 @@ function getCurrentComponentErrorInfo(parentType) {
  * @param {ReactElement} element Element that requires a key.
  * @param {*} parentType element's parent's type.
  */
-function validateExplicitKey(element, parentType) {
+function validateExplicitKey(element, parentType) { // key检查。
   if (!element._store || element._store.validated || element.key != null) {
     return;
   }
@@ -166,7 +166,7 @@ function validateChildKeys(node, parentType) {
     if (node._store) {
       node._store.validated = true;
     }
-  } else if (node) {
+  } else if (node) { // 可遍历
     const iteratorFn = getIteratorFn(node);
     if (typeof iteratorFn === 'function') {
       // Entry iterators used to provide implicit keys,
@@ -190,7 +190,7 @@ function validateChildKeys(node, parentType) {
  *
  * @param {ReactElement} element
  */
-function validatePropTypes(element) {
+function validatePropTypes(element) { // 类型检测。
   if (__DEV__) {
     const type = element.type;
     if (type === null || type === undefined || typeof type === 'string') {
@@ -244,7 +244,7 @@ function validatePropTypes(element) {
  * Given a fragment, validate that it can only be provided with fragment props
  * @param {ReactElement} fragment
  */
-function validateFragmentProps(fragment) {
+function validateFragmentProps(fragment) { // Fragment检测
   if (__DEV__) {
     setCurrentlyValidatingElement(fragment);
 
@@ -269,7 +269,7 @@ function validateFragmentProps(fragment) {
   }
 }
 
-export function jsxWithValidation(
+export function jsxWithValidation( // jsx检测
   type,
   props,
   key,
@@ -400,7 +400,7 @@ export function jsxWithValidationDynamic(type, props, key) {
   return jsxWithValidation(type, props, key, false);
 }
 
-export function createElementWithValidation(type, props, children) {
+export function createElementWithValidation(type, props, children) { // 创建元素检测。
   const validType = isValidElementType(type);
 
   // We warn in this case but don't throw. We expect the element creation to
@@ -479,7 +479,7 @@ export function createElementWithValidation(type, props, children) {
 
 let didWarnAboutDeprecatedCreateFactory = false;
 
-export function createFactoryWithValidation(type) {
+export function createFactoryWithValidation(type) { // 工厂函数检测。
   const validatedFactory = createElementWithValidation.bind(null, type);
   validatedFactory.type = type;
   if (__DEV__) {
@@ -510,7 +510,7 @@ export function createFactoryWithValidation(type) {
   return validatedFactory;
 }
 
-export function cloneElementWithValidation(element, props, children) {
+export function cloneElementWithValidation(element, props, children) { // 克隆元素检测。
   const newElement = cloneElement.apply(this, arguments);
   for (let i = 2; i < arguments.length; i++) {
     validateChildKeys(arguments[i], newElement.type);

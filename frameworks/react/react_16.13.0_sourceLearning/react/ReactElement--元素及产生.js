@@ -28,7 +28,7 @@ if (__DEV__) {
   didWarnAboutStringRefs = {};
 }
 
-function hasValidRef(config) {
+function hasValidRef(config) { // 是否有有效ref
   if (__DEV__) {
     if (hasOwnProperty.call(config, 'ref')) {
       const getter = Object.getOwnPropertyDescriptor(config, 'ref').get;
@@ -40,7 +40,7 @@ function hasValidRef(config) {
   return config.ref !== undefined;
 }
 
-function hasValidKey(config) {
+function hasValidKey(config) { // 是否有有效key;
   if (__DEV__) {
     if (hasOwnProperty.call(config, 'key')) {
       const getter = Object.getOwnPropertyDescriptor(config, 'key').get;
@@ -52,7 +52,7 @@ function hasValidKey(config) {
   return config.key !== undefined;
 }
 
-function defineKeyPropWarningGetter(props, displayName) {
+function defineKeyPropWarningGetter(props, displayName) { // props误传key提示；
   const warnAboutAccessingKey = function() {
     if (__DEV__) {
       if (!specialPropKeyWarningShown) {
@@ -74,7 +74,7 @@ function defineKeyPropWarningGetter(props, displayName) {
   });
 }
 
-function defineRefPropWarningGetter(props, displayName) {
+function defineRefPropWarningGetter(props, displayName) { // props误传ref提示;
   const warnAboutAccessingRef = function() {
     if (__DEV__) {
       if (!specialPropRefWarningShown) {
@@ -96,7 +96,7 @@ function defineRefPropWarningGetter(props, displayName) {
   });
 }
 
-function warnIfStringRefCannotBeAutoConverted(config) {
+function warnIfStringRefCannotBeAutoConverted(config) { // 字符串ref转换提示。
   if (__DEV__) {
     if (
       typeof config.ref === 'string' &&
@@ -143,22 +143,17 @@ function warnIfStringRefCannotBeAutoConverted(config) {
  * indicating filename, line number, and/or other information.
  * @internal
  */
-const ReactElement = function(type, key, ref, self, source, owner, props) {
+const ReactElement = function(type, key, ref, self, source, owner, props) { // React元素
   const element = {
-    // This tag allows us to uniquely identify this as a React Element
     $$typeof: REACT_ELEMENT_TYPE, // react用于标识 react元素的独有标识. 是一个安全策略-(唯一且无法字符串化)规避xss攻击;
-
-    // Built-in properties that belong on the element
     type: type,
     key: key,
     ref: ref,
     props: props,
-
-    // Record the component responsible for creating this element.
-    _owner: owner,
+    _owner: owner, // 标记元素的owner
   };
 
-  if (__DEV__) {
+  if (__DEV__) { // 测试环境下需额外进行的便于调试存储的数据信息;
     // The validation flag is currently mutative. We put it on
     // an external backing store so that we can freeze the whole object.
     // This can be replaced with a WeakMap once they are implemented in
@@ -199,12 +194,7 @@ const ReactElement = function(type, key, ref, self, source, owner, props) {
   return element;
 };
 
-/**
- * https://github.com/reactjs/rfcs/pull/107
- * @param {*} type
- * @param {object} props
- * @param {string} key
- */
+
 export function jsx(type, config, maybeKey) {
   let propName;
 
@@ -252,7 +242,7 @@ export function jsx(type, config, maybeKey) {
     }
   }
 
-  return ReactElement(
+  return ReactElement( 
     type,
     key,
     ref,
@@ -438,7 +428,7 @@ export function createElement(type, config, children) { // 创建react元素的�
  * Return a function that produces ReactElements of a given type.
  * See https://reactjs.org/docs/react-api.html#createfactory
  */
-export function createFactory(type) {
+export function createFactory(type) { // 创建指定类型的react元素
   const factory = createElement.bind(null, type);
   // Expose the type on the factory and the prototype so that it can be
   // easily accessed on elements. E.g. `<Foo />.type === Foo`.
@@ -449,7 +439,7 @@ export function createFactory(type) {
   return factory;
 }
 
-export function cloneAndReplaceKey(oldElement, newKey) {
+export function cloneAndReplaceKey(oldElement, newKey) { // 克隆元素(key替换)
   const newElement = ReactElement(
     oldElement.type,
     newKey,
@@ -467,7 +457,7 @@ export function cloneAndReplaceKey(oldElement, newKey) {
  * Clone and return a new ReactElement using element as the starting point.
  * See https://reactjs.org/docs/react-api.html#cloneelement
  */
-export function cloneElement(element, config, children) {
+export function cloneElement(element, config, children) { // 克隆元素(完全克隆), get新元素
   invariant(
     !(element === null || element === undefined),
     'React.cloneElement(...): The argument must be a React element, but you passed %s.',
