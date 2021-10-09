@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>整数转英文表示</title>
+</head>
+<body>
+  <script>
+    // 将非负整数 num 转换为其对应的英文表示。
+
+    // 示例 1：  输入：num = 123           输出："One Hundred Twenty Three"
+    // 示例 2：  输入：num = 12345         输出："Twelve Thousand Three Hundred Forty Five"
+    // 示例 3：  输入：num = 1234567       输出："One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"
+    // 示例 4：  输入：num = 1234567891
+    //     输出："One Billion Two Hundred Thirty Four Million Five Hundred Sixty Seven Thousand Eight Hundred Ninety One"
+
+    // 提示：0 <= num <= 231 - 1
+    /**
+     * @param {number} num
+     * @return {string}
+     */
+    const baseNumMap = { // 个位
+      1: "One",
+      2: "Two",
+      3: "Three",
+      4: "Four",
+      5: "Five",
+      6: "Six",
+      7: "Seven",
+      8: "Eight",
+      9: "Nine",
+    }
+
+    const tenNumMap = { // 十位
+      10: "Ten",
+      11: "Eleven",
+      12: "Twelve",
+      13: "Thirteen",
+      14: "Fourteen",
+      15: "Fifteen",
+      16: "Sixteen",
+      17: "Seventeen",
+      18: "Eighteen",
+      19: "Nineteen",
+    }
+
+    const hunNumMap = { // 百位内十分位数
+      2: "Twenty",
+      3: "Thirty",
+      4: "Forty",
+      5: "Fifty",
+      6: "Sixty",
+      7: "Seventy",
+      8: "Eighty",
+      9: "Ninety",
+    }
+
+    var numberToWords = function(num) {
+      if(num === 0) {
+        return 'Zero';
+      }
+      let list = [];
+      list.push(num % 1000);
+      while(num >= 1000) {
+        num = parseInt(num / 1000);
+        list.push(num % 1000);
+      }
+      function miniNumTrans(data){  // 千以内的数转换: 
+        if(data === 0) {
+          return '';
+        } else if (data < 10) {
+          return baseNumMap[data];
+        } else if (data < 20) {
+          return tenNumMap[data];
+        } else if (data < 100) {
+          const leftPart = hunNumMap[parseInt(data / 10)];
+          const rightPart = data % 10 > 0 ? ` ${baseNumMap[data % 10]}` : '';
+          return `${leftPart}${rightPart}`;
+        }
+        const leftPart = `${baseNumMap[parseInt(data / 100)]} Hundred`;
+        const rightPart = miniNumTrans(data % 100);
+        return `${leftPart}${leftPart && rightPart ? ' ' : ''}${rightPart}`;
+      }
+      const len = list.length;
+      const levList = ['', 'Thousand', 'Million', 'Billion'];
+      let res = '';
+      for(let i = len - 1; i >= 0; i--) {
+        const base = levList[i];
+        const curStr = miniNumTrans(list[i]);
+        // res = (res ? ` ${res}` : '') + ((curStr && res) ? ` ${curStr}` : '') + (base ? ` ${base}` : '');
+        res += ((res && curStr) ? ` ${curStr}` : curStr) + ((curStr && base) ? ` ${base}` : '');
+      }
+      return res;
+    };
+  </script>
+</body>
+</html>

@@ -36,10 +36,119 @@
      * @return {number[]}
      */
 
-    // 思路1, 显然遍历得到一个已排序数组, 找到target所处位置, 两边
+    // 思路1, 显然遍历得到一个已排序数组, 找到target所处位置, 两边搜索即可。
     var closestKValues = function(root, target, k) {
-
+      const values = [];
+      const dfs = (node) => { // 先序遍历
+        if (!node) {
+          return;
+        }
+        node.left && dfs(node.left);
+        values.push(node.val);
+        node.right && dfs(node.right);
+      }
+      dfs(root); // 得到升序排列的数据数组values
+      const total = values.length;
+      // if (k >= total) { // 超出或者相等
+      //   return values;
+      // }
+      let count = total - k;
+      let left = 0, right = total - 1;
+      while(count > 0) {
+        const leftDiff = Math.abs(target - values[left]);
+        const rightDiff = Math.abs(target - values[right]);
+        if (rightDiff > leftDiff) {
+          right--;
+        } else {
+          left++;
+        }
+        count--;
+      }
+      return values.slice(left, right + 1);
     };
+
+    // leetcode思路
+//     先找到第1接近的节点。 时空复杂度O(logn), O(1), n是树的节点数
+// 然后基于第1接近的节点，分别往比它小、比它大两个方向找最接近target的节点，比较得出第2接近的节点。
+// 如何找？根据二叉搜索树定义，某个节点的整个左子树都小于等于该节点，整个右子树都大于等于该节点。
+// 对任一节点：
+// 找比它小的最接近target的节点。
+// 如果它有左子节点，那么先向左走1步再向右走到头，就是结果
+// 否则，自底向上在它的祖先节点中找（因为该节点可能属于某个祖先节点的左子树），如果找到比它小的节点，就是结果。
+// 否则，没有结果，它自己已是整个树的最小值
+// 找比它大的最接近target的节点，同理
+// 时空复杂度 O(h), O(h), 树高h=logn，最坏情况h=n
+// 循环，直到找到第k接近的节点。
+// 以上全程用栈记录路径以便返回祖先节点。
+
+// var closestKValues = function(root, target, k) {
+//   // NOTICE: path 表示从 root 通往某节点的路径，且包括该节点。
+//   // 因为到达的任一节点都有可能就是最接近 target 的节点
+//   let path = [root]
+//   let closestNode = root
+//   let node = root
+  
+//   // 找最接近的第1个数：相当于二分法，打擂台找最值
+//   while (true) {
+//     // 提前退出打擂台
+//     if (target === node.val) break
+//     node = target < node.val ? node.left : node.right
+//     // 游标移动后首先判断是否越界，没越界才记录路径
+//     if (!node) break
+//     path.push(node)
+//     if (Math.abs(node.val - target) < Math.abs(closestNode.val - target)) {
+//       closestNode = node
+//     }
+//   }
+//   // NOTICE: 接下来 path 的语义变成：
+//   // 从 root 通往某节点的路径，且不包括该节点。因为要便于接下来的 smaller, bigger 找祖先节点。
+//   // 那么不能包括的该节点是哪个节点？因为接下来是从 closestNode 开始找 smaller, bigger, 所以就是 closestNode
+//   while (path.length) {
+//     if (path.pop() === closestNode) break
+//   }
+//   let closestK = [closestNode.val]
+  
+//   // 根据 nextKey 指示的方向，返回下一个最接近的节点, 且就地修改 path
+//   const getNext = (cur, path, nextKey, prevKey) => {
+//     if (cur[nextKey]) {
+//       path.push(cur)
+//       cur = cur[nextKey]
+//       while (cur[prevKey]) {
+//         path.push(cur)
+//         cur = cur[prevKey]
+//       }
+//       return cur
+//     }
+//     while (path.length) {
+//       const node = path.pop()
+//       const isNext = nextKey === smallerKey ?
+//         node.val <= cur.val :
+//         node.val >= cur.val
+//       if (isNext) return node
+//     }
+//     return null
+//   }
+//   const smallerKey = 'left', biggerKey = 'right'
+//   // 从 closestNode 开始找最接近的第2,3,4...k个数
+//   let smallerPath = path
+//   // 浅拷贝，以免 smallerPath, biggerPath 互相影响
+//   let biggerPath = path.slice()
+//   let smaller = getNext(closestNode, smallerPath, smallerKey, biggerKey)
+//   let bigger = getNext(closestNode, biggerPath, biggerKey, smallerKey)
+//   while (closestK.length < k && (smaller || bigger)) {
+//     if (smaller && (!bigger || Math.abs(smaller.val - target) <= Math.abs(bigger.val - target))) {
+//       closestK.push(smaller.val)
+//       smaller = getNext(smaller, smallerPath, smallerKey, biggerKey)
+//     }
+//     else {
+//       closestK.push(bigger.val)
+//       bigger = getNext(bigger, biggerPath, biggerKey, smallerKey)
+//     }
+//   }
+
+//   return closestK
+// };
+
       </script>
 </body>
 </html>
