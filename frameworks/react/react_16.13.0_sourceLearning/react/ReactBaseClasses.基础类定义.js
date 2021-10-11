@@ -17,7 +17,7 @@ if (__DEV__) {
 /**
  * Base class helpers for the updating state of a component.
  */
-function Component(props, context, updater) {
+function Component(props, context, updater) { // 组件
   this.props = props;
   this.context = context;
   // If a component has string refs, we will assign a different object later.
@@ -54,7 +54,7 @@ Component.prototype.isReactComponent = {};
  * @final
  * @protected
  */
-Component.prototype.setState = function(partialState, callback) {
+Component.prototype.setState = function(partialState, callback) { // 依次定义组件方法.
   invariant(
     typeof partialState === 'object' ||
       typeof partialState === 'function' ||
@@ -126,7 +126,7 @@ ComponentDummy.prototype = Component.prototype;
 /**
  * Convenience component with default shallow equality check for sCU.
  */
-function PureComponent(props, context, updater) {
+function PureComponent(props, context, updater) { // 纯组件
   this.props = props;
   this.context = context;
   // If a component has string refs, we will assign a different object later.

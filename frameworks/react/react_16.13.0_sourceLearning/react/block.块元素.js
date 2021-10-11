@@ -20,7 +20,7 @@ export default function block<Args, Props, Data>(
   query: (...args: Args) => Data,
   render: (props: Props, data: Data) => React$Node,
 ): (...args: Args) => Block<Props> {
-  if (__DEV__) {
+  if (__DEV__) { // 错误调试信息输出.
     if (typeof query !== 'function') {
       console.error(
         'Blocks require a query function but was given %s.',
