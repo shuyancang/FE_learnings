@@ -14,7 +14,7 @@ export function lazy<T, R>(ctor: () => Thenable<T, R>): LazyComponent<T> {
     $$typeof: REACT_LAZY_TYPE,
     _ctor: ctor,
     // React uses these fields to store the result.
-    _status: -1,
+    _status: -1, // 标识是否懒加载完成.
     _result: null,
   };
 
@@ -28,7 +28,7 @@ export function lazy<T, R>(ctor: () => Thenable<T, R>): LazyComponent<T> {
         get() {
           return defaultProps;
         },
-        set(newDefaultProps) {
+        set(newDefaultProps) { // lazy中, 修改defaultProps 告警提示。
           console.error(
             'React.lazy(...): It is not supported to assign `defaultProps` to ' +
               'a lazy component import. Either specify them where the component ' +

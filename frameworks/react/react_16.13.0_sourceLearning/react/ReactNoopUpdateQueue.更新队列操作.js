@@ -7,7 +7,7 @@
 
 const didWarnStateUpdateForUnmountedComponent = {};
 
-function warnNoop(publicInstance, callerName) {
+function warnNoop(publicInstance, callerName) { // 无效操作提示。
   if (__DEV__) {
     const constructor = publicInstance.constructor;
     const componentName =
@@ -59,7 +59,7 @@ const ReactNoopUpdateQueue = {
    * @param {?string} callerName name of the calling function in the public API.
    * @internal
    */
-  enqueueForceUpdate: function(publicInstance, callback, callerName) {
+  enqueueForceUpdate: function(publicInstance, callback, callerName) { // 强制更新队列
     warnNoop(publicInstance, 'forceUpdate');
   },
 
@@ -76,7 +76,7 @@ const ReactNoopUpdateQueue = {
    * @param {?string} callerName name of the calling function in the public API.
    * @internal
    */
-  enqueueReplaceState: function(
+  enqueueReplaceState: function( // state替换
     publicInstance,
     completeState,
     callback,
@@ -97,7 +97,7 @@ const ReactNoopUpdateQueue = {
    * @param {?string} Name of the calling function in the public API.
    * @internal
    */
-  enqueueSetState: function(
+  enqueueSetState: function( // setState放入队列
     publicInstance,
     partialState,
     callback,

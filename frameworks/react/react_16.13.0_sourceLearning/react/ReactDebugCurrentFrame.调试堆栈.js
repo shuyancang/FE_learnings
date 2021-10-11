@@ -26,7 +26,7 @@ if (__DEV__) {
   // Stack implementation injected by the current renderer.
   ReactDebugCurrentFrame.getCurrentStack = (null: null | (() => string));
 
-  ReactDebugCurrentFrame.getStackAddendum = function(): string {
+  ReactDebugCurrentFrame.getStackAddendum = function(): string { // 获取当前堆栈信息;
     let stack = '';
 
     // Add an extra top frame while an element is being validated
