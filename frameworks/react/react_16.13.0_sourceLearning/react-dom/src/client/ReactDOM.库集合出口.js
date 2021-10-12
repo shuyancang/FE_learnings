@@ -81,7 +81,7 @@ setAttemptHydrationAtCurrentPriority(attemptHydrationAtCurrentPriority);
 let didWarnAboutUnstableCreatePortal = false;
 let didWarnAboutUnstableRenderSubtreeIntoContainer = false;
 
-if (__DEV__) {
+if (__DEV__) { // Map, Set兼容要求
   if (
     typeof Map !== 'function' ||
     // $FlowIssue Flow incorrectly thinks Map has no prototype

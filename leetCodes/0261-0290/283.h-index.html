@@ -30,7 +30,24 @@
      */
     var hIndex = function(citations) {
       const len = citations.length;
-      return citations.sort((a, b) => a - b)[len - 1 >> 1];
+      let sortedList = citations.sort((a, b) => a - b); // 排序后, 第一个不为
+      if (sortedList[len - 1] === 0) { // 最大值为0
+        return 0;
+      } else if (len === 1) {
+        return 1;
+      }
+      let res = -Infinity;
+      for(let i = 0; i < len; i++) {
+        const cur = sortedList[i];
+        if (cur === 0) {
+          continue;
+        }
+        //升序中: 每个遍历阶段的h值;
+        const count = len - i; // 满足计数条件的个数;
+        if (true) { // 获取可能的h值
+          res = Math.max(res);
+        }
+      }
     };
   </script>
 </body>
