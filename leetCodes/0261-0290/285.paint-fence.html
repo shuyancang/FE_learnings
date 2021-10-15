@@ -25,18 +25,12 @@
 // 题目数据保证：对于输入的 n 和 k ，其答案在范围 [0, 2**31 - 1] 内
 
     var numWays = function(n, k) {
-      // 显然的动态规划吧~
-      // let sum = 0;
-      // let firSum = k, secSum = k * k; // 第一 第二个栅栏的可能情况     
-      // if (n === 1) { // 一个栅栏
-      //   return firSum;
-      // } else if (n === 2) { // 两个栅栏
-      //   return secSum; // 任意搭配即可;
-      // }
-      // for (let i = 2; i < n; i++) {
-      //   sum = firSum * secSum - // (前两个栅栏任意搭配的可能性 - 前两个栅栏颜色相同的可能性次数)
-      // }
-      // return sum;
+      if (n === 0) {
+        return 0;
+      } else if (n === 1) {
+        return k;
+      }
+      const board = []; // board[m][n] m种颜料涂n个栅栏的可能涂色方案, board[m][]
     };
   </script>
 </body>
