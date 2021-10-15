@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>H指数</title>
 </head>
+
 <body>
   <script>
     // 给你一个整数数组 citations ，其中 citations[i] 表示研究者的第 i 篇论文被引用的次数。计算并返回该研究者的 h 指数。
@@ -19,7 +21,7 @@
     //   解释：给定数组表示研究者总共有 5 篇论文，每篇论文相应的被引用了 3, 0, 6, 1, 5 次。
     //       由于研究者有 3 篇论文每篇 至少 被引用了 3 次，其余两篇论文每篇被引用 不多于 3 次，所以她的 h 指数是 3。
     // 示例 2： 输入：citations = [1,3,1]      输出：1
-     
+
     // 提示：[0, 1,, 1, 1, 1, 2, 2, 3, 3]
     //   n == citations.length
     //   1 <= n <= 5000
@@ -28,26 +30,70 @@
      * @param {number[]} citations
      * @return {number}
      */
-    var hIndex = function(citations) {
+
+    var hIndex = function (citations) {
       const len = citations.length;
-      let sortedList = citations.sort((a, b) => a - b); // 升序
-      if (sortedList[len - 1] === 0) { // 最大值为0
+      citations.sort((a, b) => a - b); // 升序
+      if (citations[len - 1] === 0) { // 最大值为0
         return 0;
       } else if (len === 1) { // 数组长度只有1, 且最大值不为0 => 1
         return 1;
       }
-      let res = -Infinity;
-      for(let i = 0; i < len; i++) {
-        const cur = sortedList[i];
-        if (cur === 0 || cur === sortedList[i - 1]) { // 无用值抛弃
+      for (let i = 0; i < len; i++) {
+        const cur = citations[i];
+        if (cur === 0) { // 无用值抛弃
           continue;
         }
         const mayH = Math.min(len - i, cur); // h篇论文, 被引用了至少cur次
-        if (true) { //条件 其余n - h被引用次数不超过h次
-          res = Math.max(res);
+        if (mayH === len) {
+          return mayH;
+        }
+        if (citations[len - mayH - 1] <= mayH) { //条件 其余n - h被引用次数不超过h次
+          return mayH;
         }
       }
+      return 1;
     };
+
+    // leetcode解法: 对h指数的了解不够,;
+    // 排序方法1: 排序, 假定h初始为0; 核心: 如果当前H指数为h且在遍历过程中找到citations[i] > h则不满足要求, h值加一直到无法增大;
+    var hIndex = function(citations) {
+      citations.sort((a, b) => a - b);
+      let h = 0, i = citations.length - 1;
+      while (i >= 0 && citations[i] > h) { // 不满足要求的h指数
+        h++;
+        i--;
+      }
+      return h; // 反向思考~
+    }
+
+    // 计数排序: 上述算法提醒 最终的时间复杂度, 跟排序算法复杂度有关, 可以使用计数排序算法
+    // 根据上述解法我们发现，最终的时间复杂度与排序算法的时间复杂度有关，所以我们可以使用计数排序算法，新建并维护一个数组 counter 用来记录当前引用次数的论文有几篇。
+
+    // 根据定义，我们可以发现 H 指数不可能大于总的论文发表数，所以对于引用次数超过论文发表数的情况，我们可以将其按照总的论文发表数来计算即可。这样我们可以限制参与排序的数的大小为 [0,n][0,n]（其中 nn 为总的论文发表数），使得计数排序的时间复杂度降低到 O(n)。
+
+    // 最后我们可以从后向前遍历数组 counter，对于每个 0 <= i <= n，在数组 counter 中得到大于或等于当前引用次数 ii 的总论文数。当我们找到一个 H 指数时跳出循环，并返回结果。
+    var hIndex = function(citations) {
+      let n = citations.length, tot = 0;
+      const counter = new Array(n + 1).fill(0);
+      for (let i = 0; i < n; i++) {
+        if (citations[i] >= n) { // 某论文引用次数 >= 数组长度, 则记录为最大值n;
+          counter[n]++;
+        } else { // 未超出最大长度的论文数, 记录该文出现的次数
+          counter[citations[i]]++;
+        }
+      }
+      // 此时得到: counter形如[0, 2, 4, 1, 0, 2, 1, ...], index代表被引用的次数, counter[index]代表被引用次数出现的次数;
+      for (let i = n; i >= 0; i--) {
+        tot += counter[i]; // 被引用次数, 不小于counter[i]的次数。
+        if (tot >= i) { // 满足其余被引用数, 不超过i的要求; 找到并退出
+          return i;
+        }
+      }
+      return 0;
+    };
+
   </script>
 </body>
+
 </html>
