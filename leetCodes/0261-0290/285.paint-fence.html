@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 有 k 种颜色的涂料和一个包含 n 个栅栏柱的栅栏，请你按下述规则为栅栏设计涂色方案：
+
+    // 每个栅栏柱可以用其中 一种 颜色进行上色。
+    // 相邻的栅栏柱 最多连续两个 颜色相同。
+    // 给你两个整数 k 和 n ，返回所有有效的涂色 方案数 。
+
+// 示例 1： 输入：n = 3, k = 2   输出：6
+//   解释：所有的可能涂色方案如上图所示。注意，全涂红或者全涂绿的方案属于无效方案，因为相邻的栅栏柱 最多连续两个 颜色相同。
+// 示例 2： 输入：n = 1, k = 1   输出：1
+// 示例 3： 输入：n = 7, k = 2   输出：42
+//  
+// 提示：
+// 1 <= n <= 50
+// 1 <= k <= 10**5
+// 题目数据保证：对于输入的 n 和 k ，其答案在范围 [0, 2**31 - 1] 内
+
+    var numWays = function(n, k) {
+      // 显然的动态规划吧~
+      // let sum = 0;
+      // let firSum = k, secSum = k * k; // 第一 第二个栅栏的可能情况     
+      // if (n === 1) { // 一个栅栏
+      //   return firSum;
+      // } else if (n === 2) { // 两个栅栏
+      //   return secSum; // 任意搭配即可;
+      // }
+      // for (let i = 2; i < n; i++) {
+      //   sum = firSum * secSum - // (前两个栅栏任意搭配的可能性 - 前两个栅栏颜色相同的可能性次数)
+      // }
+      // return sum;
+    };
+  </script>
+</body>
+</html>
