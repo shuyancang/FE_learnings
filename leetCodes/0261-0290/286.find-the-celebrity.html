@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>搜寻名人</title>
+</head>
+<body>
+  <script>
+    // 假设你是一个专业的狗仔，参加了一个 n 人派对，其中每个人被从 0 到 n - 1 标号。
+    // 在这个派对人群当中可能存在一位 “名人”。所谓 “名人” 的定义是：其他所有 n - 1 个人都认识他/她，而他/她并不认识其他任何人。
+
+    // 现在你想要确认这个 “名人” 是谁，或者确定这里没有 “名人”。而你唯一能做的就是问诸如 “A 你好呀，请问你认不认识 B呀？” 的问题，以确定 A 是否认识 B。你需要在（渐近意义上）尽可能少的问题内来确定这位 “名人” 是谁（或者确定这里没有 “名人”）。
+
+    // 在本题中，你可以使用辅助函数 bool knows(a, b) 获取到 A 是否认识 B。请你来实现一个函数 int findCelebrity(n)。
+    // 派对最多只会有一个 “名人” 参加。若 “名人” 存在，请返回他/她的编号；若 “名人” 不存在，请返回 -1。
+
+    // 示例 1:
+
+    // 输入: graph = [
+    //   [1,1,0],
+    //   [0,1,0],
+    //   [1,1,1]
+    // ]
+    // 输出: 1
+    // 解释: 有编号分别为 0、1 和 2 的三个人。graph[i][j] = 1 代表编号为 i 的人认识编号为 j 的人，而 graph[i][j] = 0 则代表编号为 i 的人不认识编号为 j 的人。“名人” 是编号 1 的人，因为 0 和 2 均认识他/她，但 1 不认识任何人。
+    // 示例 2:
+
+    // 输入: graph = [
+    //   [1,0,1],
+    //   [1,1,0],
+    //   [0,1,1]
+    // ]
+    // 输出: -1 解释: 没有 “名人”
+ 
+    // 提示：
+    //   n == graph.length
+    //   n == graph[i].length
+    //   2 <= n <= 100
+    //   graph[i][j] 是 0 或 1.
+    //   graph[i][i] == 1
+ 
+    // 进阶：如果允许调用 API knows 的最大次数为 3 * n ，你可以设计一个不超过最大调用次数的解决方案吗？
+
+    // 直接循环很容易解决, 依次进行n ** 2询问, 得到一个graph, 通过graph, 找到一行只有一个1, 对应1的列, 全是1即可;
+    var solution = function(knows) { // knows(a, b) => bool
+        /**
+         * @param {integer} n Total people
+         * @return {integer} The celebrity
+         */
+        return function(n) {
+          const personNum = n;
+          let board = new Array(personNum).fill(0).map(e => new Array(personNum).fill(0));
+          let maybeCelebrity = [];
+          for (let i = 0; i < personNum; i++) {
+            let allZero = true;
+            for(let j = 0; j < personNum; j++) {
+              board[i][j] = knows(i, j) ? 1 : 0;
+              if (i !== j && board[i][j] === 1) {
+                allZero = false;
+              }
+            }
+            if (allZero) { // i人, 不认识任何人;
+              maybeCelebrity.push(i); // 可能是名人的人
+            }
+          }
+          let resList = new Array(maybeCelebrity.length).fill(true);
+          for (let i = 0; i < board.length; i++) {
+            for(let j = 0; j < maybeCelebrity.length; j++) {
+              const person = maybeCelebrity[j]; // 人编号
+              const isCelebrity = board[i][person]; // 是否认识
+              if (!isCelebrity) { // 该条不是名人
+                resList[j] = false;
+              }
+              if (i === board.length - 1 && isCelebrity && resList[j] === true) { // 最后一个人也进行了确认: 名人
+                return person;
+              }
+            }
+          }
+          return -1;
+        };
+    };
+
+    // ；leetcode简化方法: 假定ans为0, 迭代n个人, 如果ans认识迭代中的k, 令ans为k;
+    // 我们知道如果存在名人，那么在迭代的过程必定会遇到名人,并且此时ans认识名人，不管ans此时是不是名人，所以此时令ans=名人。在接下来的迭代中，由于名人不认识其他人，则必然不会发生ans值的变更
+
+    var solution = function(knows) {
+      return function (n) {
+        let ans = 0;
+        for (let i = 0; i < n; i++) {
+          if (knows(ans, i)) {
+            ans = i;
+          }
+        }
+        for (let i = 0; i < n; i++) {
+          if (i !== ans) {
+            if(!knows(i, ans)) {
+              return -1;
+            }
+            if(knows(ans, i)) {
+              return -1;
+            }
+          }
+        }
+        return ans;
+      }
+    }
+
+  </script>
+</body>
+</html>
