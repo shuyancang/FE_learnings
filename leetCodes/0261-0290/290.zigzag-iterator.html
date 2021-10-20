@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>锯齿迭代器</title>
+</head>
+<body>
+  <script>
+    // 给出两个一维的向量，请你实现一个迭代器，交替返回它们中间的元素。
+
+    // 示例: 输入:v1 = [1,2] v2 = [3,4,5,6] 
+    //       输出: [1,3,2,4,5,6]
+
+    // 解析: 通过连续调用 next 函数直到 hasNext 函数返回 false， next 函数返回值的次序应依次为: [1,3,2,4,5,6]。
+    // 拓展：假如给你 k 个一维向量呢？你的代码在这种情况下的扩展性又会如何呢?
+    // 拓展声明：“锯齿” 顺序对于 k > 2 的情况定义可能会有些歧义。所以，假如你觉得 “锯齿” 这个表述不妥，也可以认为这是一种 “循环”。例如：
+
+    // 输入:
+    // [1,2,3]
+    // [4,5,6,7]
+    // [8,9]
+    // 输出: [1,4,8,2,5,9,3,6,7].
+
+
+  // 方法1. 创建一个虚拟的 m-n 位置图 ===> 计算并记录最终位置, 输出数组即可
+  // 方法2. 循环静态v1, v2即可(不推荐)
+  // 方法3. 直接基于每个指向下一个位置的连接, 进行遍历查找, 直到不再有下一个为止。
+  var ZigzagIterator = function ZigzagIterator(v1, v2) {
+    this.list = [];
+    const board = [v1, v2];
+    let rowIndex = 0, colIndex = 0;
+    let maxIndex = 0;
+    while (board[rowIndex][colIndex] !== undefined || colIndex <= maxIndex) {
+      if (board[rowIndex][colIndex] !== undefined) {
+        this.list.push(board[rowIndex][colIndex]);
+      }
+      maxIndex = Math.max(maxIndex, board[rowIndex].length - 1);
+      if (rowIndex === board.length - 1) {
+        rowIndex = 0;
+        colIndex++;
+      } else {
+        rowIndex++;
+      }
+    }
+    this.index = 0;
+  };
+
+  ZigzagIterator.prototype.hasNext = function hasNext() { // return bool
+    return this.index < this.list.length;
+  };
+
+  ZigzagIterator.prototype.next = function next() { // return int
+    const val = this.list[this.index];
+    this.index++;
+    return val;
+  };
+  </script>
+</body>
+</html>

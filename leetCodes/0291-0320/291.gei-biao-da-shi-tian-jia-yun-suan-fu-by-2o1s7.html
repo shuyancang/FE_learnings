@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>给表达式添加运算符</title>
+</head>
+<body>
+  <script>
+    // 给定一个仅包含数字 0-9 的字符串 num 和一个目标值整数 target ，在 num 的数字之间添加 二元 运算符（不是一元）+、- 或 * ，返回所有能够得到目标值的表达式。
+
+    // 示例 1:输入: num = "123", target = 6            输出: ["1+2+3", "1*2*3"] 
+    // 示例 2:输入: num = "232", target = 8            输出: ["2*3+2", "2+3*2"]
+    // 示例 3:输入: num = "105", target = 5            输出: ["1*0+5","10-5"]
+    // 示例 4:输入: num = "00", target = 0             输出: ["0+0", "0-0", "0*0"]
+    // 示例 5:输入: num = "3456237490", target = 9191  输出: []
+
+    // 提示：
+    //   1 <= num.length <= 10
+    //   num 仅含数字
+    //   -231 <= target <= 231 - 1
+
+    // 直接查看leetcode题解
+    // 设字符串num长度n, 可以往中间n - 1空隙中添加 加减乘符或不添加
+    // 定义递归函数dfs(expr, i, res, mul), expr为当前表达式, i标识现在到了num第几个数字, res为当前表达式结果, mul为最后一个连乘结果;
+
+    // 递归判定如下:
+    // 如果i === n 递归完成如果res === target找到, 放入答案中;
+    // 如果i < n 需枚举当前表达式末尾符号(*, +, -)及该符号后需截取多少位数值, 假设符号之后的数值为val, 有
+    // 1. +号, res增加val, val单独构成连乘串;
+    // 2. -号, res减少val, -val连乘串;
+    // 3. *号, res撤销之前的mul计算结果, 并计算新的mul = mul *val,
+
+    var addOperators = function(num, target) {
+        const n = num.length;
+        const ans = [];
+        let expr = [];
+
+        const backtrack = (expr, i, res, mul) => {
+            if (i === n) {
+                if (res === target) {
+                    ans.push(expr.join(''));
+                }
+                return;
+            }
+            const signIndex = expr.length;
+            if (i > 0) {
+                expr.push(''); // 占位，下面填充符号
+            }
+            let val = 0;
+            // 枚举截取的数字长度（取多少位），注意数字可以是单个 0 但不能有前导零
+            for (let j = i; j < n && (j === i || num[i] !== '0'); ++j) {
+                val = val * 10 + num[j].charCodeAt() - '0'.charCodeAt();
+                expr.push(num[j]);
+                if (i === 0) { // 表达式开头不能添加符号
+                    backtrack(expr, j + 1, val, val);
+                } else { // 枚举符号
+                    expr[signIndex] = '+';
+                    backtrack(expr, j + 1, res + val, val);
+                    expr[signIndex] = '-';
+                    backtrack(expr, j + 1, res - val, -val);
+                    expr[signIndex] = '*';
+                    backtrack(expr, j + 1, res - mul + mul * val, mul * val);
+                }
+            }
+            expr = expr.splice(signIndex, expr.length - signIndex)
+        }
+
+        backtrack(expr, 0, 0, 0);
+        return ans;
+    }
+
+  </script>
+</body>
+</html>

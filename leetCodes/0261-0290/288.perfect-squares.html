@@ -57,10 +57,77 @@
       return res;
     }
 
-    var numSquares = function (n) { // 动态规划: F[m][n]为n对应的, 包含m的最少的完全平方数, 则对任意F(n)有
+    var numSquares = function (n) { // 动态规划: F[n]为n对应的, 包含最少的完全平方数, 则对任意F(n)有Math.min(F(n - m) + F(m));
       if (n < 4) {
         return n;
+      } else if (Number.isInteger(n ** 0.5)) { // n本身是一个完全平方数, 直接返回1即可
+        return 1;
       }
+      const resList = [0, 1, 2, 3];
+      for (let i = 4; i <= n; i++) { // i为要求的数
+        if (Number.isInteger(i ** 0.5)) { // 本身是完全平方数, 直接返回结果1
+          resList[i] = 1;
+        } else {
+          resList[i] = Infinity;
+          for (let h = 1; h <= i / 2; h++) { // 获取i可能的组合数
+            resList[i] = Math.min(resList[i], resList[h] + resList[i - h]);
+          }
+        }
+      }
+      return resList[n];
+    } // 昂昂昂, 复杂度n ** 2, 还是不行啊~还有没有优化方案。
+
+    var numSquares = function(n) { // leetcode方法一, 与上述思路一致, 但复杂度进行了一定的优化 复杂度：n * 根号n
+      const list = new Array(n + 1).fill(0);
+      for (let i = 1; i <= n; i++) {
+        let minCount = Infinity;
+        for (let j = 1; j * j <= i; j++) { // 必然在1 , 根号i区间
+          minCount = Math.min(minCount, list[i - j * j]);
+        }
+        list[i] = minCount + 1;
+      }
+      return list[n];
+    }
+
+    var numSquares = function(n) { // 数学方法
+      // 四平方和定理证明了任意一个正整数都可以被表示为至多四个正整数的平方和。这给出了本题的答案的上界。 
+      // 四平方和定理包含了一个更强的结论：当且仅当 n !== (4 ** k) * (8m + 7)时, n可以被表示为至多三个正整数的平方和
+      // 1. 当 n === (4 ** k) * (8m + 7)时, n 只能被表示为四个正整数的平方和
+      // 2. n !== (4 ** k) * (8m + 7)时 继续判断到底多少个完全平方数能够表示 n
+        // 答案为 1 时，则必有 n 为完全平方数，这很好判断；
+        // 答案为 2 时, 有 n = a ** 2 + b ** 2 只需要枚举a(1 <= a <= n ** 0.5)判断n - a ** 0.5是否完全平方数
+        // 答案为 3 时, 是以上两种情况的剩余情况;
+
+      var numSquares = function(n) {
+          if (isPerfectSquare(n)) {
+              return 1;
+          }
+          if (checkAnswer4(n)) {
+              return 4;
+          }
+          for (let i = 1; i * i <= n; i++) {
+              let j = n - i * i;
+              if (isPerfectSquare(j)) {
+                  return 2;
+              }
+          }
+          return 3;
+      }
+
+      // 判断是否为完全平方数
+      const isPerfectSquare = (x) => {
+          const y = Math.floor(Math.sqrt(x));
+          return y * y == x;
+      }
+
+      // 判断是否能表示为 4^k*(8m+7)
+      const checkAnswer4 = (x) => {
+          while (x % 4 == 0) {
+              x /= 4;
+          }
+          return x % 8 == 7;
+      }
+
     }
   </script>
 </body>

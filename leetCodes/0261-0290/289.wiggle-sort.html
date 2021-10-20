@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>摆动排序</title>
+</head>
+<body>
+  <script>
+    // 给你一个无序数组nums, 将该数组原地重排后, 使得nums[0] <= nums[1] >= nums[2] <= nums[3] ...;
+    // 实例: 输入: nums = [3,5,2,1,6,4] 输出: 一个可能的解答是 [3,5,1,6,2,4]
+    var wiggleSort = function (nums) {
+      const len = nums.length;
+      if (len <= 1) {
+        return nums;
+      } else if (len === 2) {
+        const first = nums[0];
+        const last = nums[1];
+        if(first > last) {
+            nums[0] = last;
+            nums[1] = first;
+        }
+      }
+      // 三个变量记录, 滑动排序即可
+      let start = 0; curDirection = true; // curDirection为true需要中间大于两边, false需要小于两边
+      while (start <= len - 3) {
+        const startNum = nums[start];
+        const midNum = nums[start + 1];
+        const lastNum = nums[start + 2];
+        if (curDirection) {
+          const max = Math.max(startNum, midNum, lastNum);
+          if (max === startNum) {
+            nums[start] = midNum;
+            nums[start + 1] = max;
+          } else if (max === lastNum) {
+            nums[start + 1] = max;
+            nums[start + 2] = midNum;
+          }
+        } else {
+          const min = Math.min(startNum, midNum, lastNum);
+          if (min === startNum) {
+            nums[start] = midNum;
+            nums[start + 1] = min;
+          } else if (min === lastNum) {
+            nums[start + 1] = min;
+            nums[start + 2] = midNum;
+          }
+        }
+        curDirection = !curDirection;
+        start++;
+      }
+    }
+
+    var wiggleSort = function (nums) { // 更简单的比较, 记录当前需要的两个数即可
+      const len = nums.length;
+      let cur = 0, sortType = true; // sortType每一次都要交换方向: 锯齿状数排序->true需要升序, false需要降序
+      while (cur <= len - 2) {
+        const curNum = nums[cur];
+        const nextNum = nums[cur + 1];
+        const minNum = Math.min(curNum, nextNum);
+        const maxNum = Math.max(curNum, nextNum);
+        nums[cur] = sortType ? minNum : maxNum;
+        nums[cur + 1] = sortType ? maxNum : minNum;
+        sortType = !sortType;
+        cur++;
+      }
+    }
+  </script>
+</body>
+</html>
