@@ -45,32 +45,33 @@
       return null;
     };
 
-    var inorderSuccessor = function(root, p) { // 中序遍历找, 但: 后继节点必定只可能是p的父节点!
+    var inorderSuccessor = function(root, p) {
+      // 二分查找: p; 如果p有后继节点, 有两种可能: 
+      // 1. 如果p有右子树, 肯定是是p右子树的最小值(左递归即可)
+      // 2. 如果p没有右子树, 肯定值大于p.val的最近父节点(二分中, 记录二分中父节点即可)
+      // 3. 如果以上不存在, 返回null
       const val = p.val;
       let res = null;
-      const iterTree = (node) => {
-        if (!node) {
-          return;
-        }
-        if (node.val === val && node.right) { // 找到节点 且有右子节点, 则必定是右子树的最小值.
-          if (node.right) { // 有右子节点, 找到子节点的最小值;
-            let subNode = node.right;
-            while(subNode){
-              res = subNode;
-              subNode = subNode.left;
-            }
-          } else { // 无右子树, 不必继续搜索子树, 必是第一个比该节点大的父节点;
-            return;
+      let preFartherNode = null;
+      while (root) {
+        if (root.val === p.val && root.right) { // 找到对应节点, 且右子树存在 ===> 深度遍历最小值
+          let node = root.right;
+          while(node.left){
+            node = node.left;
           }
-        } else if (node.val > val) { // 或者就是node, 或者是node左子树中的某个值
-
-        } else { // node.val < val; 
-
+          return node; // 最小值, 直接返回即可
+        } else if (root.val === p.val) { // target没有右子节点
+          return preFartherNode;
+        } else if (root.val > p.val) { // 父节点值大于目标值, 进行记录
+          preFartherNode = root; // 暂存
+          root = root.left;
+        } else { // 父节点值 小于 目标值 ===> 再右侧
+          root = root.right;
         }
       }
-      iterTree(root);
       return null;
     };
+    
   </script>
 </body>
 </html>
