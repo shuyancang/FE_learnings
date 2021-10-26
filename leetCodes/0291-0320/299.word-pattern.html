@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>单词规律</title>
+</head>
+<body>
+  <script>
+    // 给定一种规律 pattern 和一个字符串 str ，判断 str 是否遵循相同的规律。
+    // 这里的 遵循 指完全匹配，例如， pattern 里的每个字母和字符串 str 中的每个非空单词之间存在着双向连接的对应规律。
+
+    // 示例1:
+    //   输入: pattern = "abba", str = "dog cat cat dog" 输出: true
+    // 示例 2:
+    //   输入:pattern = "abba", str = "dog cat cat fish" 输出: false
+    // 示例 3:
+    //   输入: pattern = "aaaa", str = "dog cat cat dog" 输出: false
+    // 示例 4:
+    //   输入: pattern = "abba", str = "dog dog dog dog" 输出: false
+    // 说明: 你可以假设 pattern 只包含小写字母， str 包含了由单个空格分隔的小写字母。    
+
+    var wordPattern = function(pattern, s) {
+      const list = s.split(' ');
+      if (pattern.length !== list.length) {
+        return false;
+      }
+      let letterMap = {}, wordMap = {};
+      for (let i = 0; i < pattern.length; i++) {
+        const letter = pattern[i];
+        const word = list[i];
+        if (letterMap[letter] && letterMap[letter] !== word) {
+          return false;
+        }
+        if(wordMap[word] && wordMap[word] !== letter) {
+          return false;
+        }
+        letterMap[letter] = word;
+        wordMap[word] = letter;
+      }
+      return true;
+    };
+  </script>
+</body>
+</html>
