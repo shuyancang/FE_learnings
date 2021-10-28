@@ -29,32 +29,69 @@
     //   pattern 和 s 由小写英文字母组成
 
     var wordPatternMatch = function(pattern, s) {
-      if (pattern.length === 0 && s.length === 0) {
-        return true;
-      }
-      if (pattern.length === 0 || s.length === 0) {
-        return false;
-      }
-      if (pattern.length > s.length) {
-        return false;
-      }
-      const dfs = (restPattern, restStr, letterMap, wordMap) => { // 余下匹配符restPattern, restStr余下的字符串, letterMap已有字符的映射
-        if (restPattern.length > restStr) {
+      const dfs = (restPattern, restStr, letterMap, wordMap) => {
+        // 余下匹配符:restPattern, 余下字符串restStr, 字符映射letterMap(letter:word), 单词映射wordMap(word:letter)
+        const patternLen = restPattern.length;
+        const strLen = restStr.length;
+        debugger
+        if (patternLen > restStr) {
           return false;
         }
-        if (restPattern.length === 0 && restStr.length === 0) {
+        if (patternLen === 0 && strLen === 0) {
           return true;
         }
-        if (restPattern.length === 0 || restStr.length === 0) {
+        if (patternLen === 0 || strLen === 0) {
           return false;
         }
-        if (restPattern.length === 1 && restStr.length > 0) {
-          if(!letterMap[restPattern] && )
+        if (patternLen === 1) { // 匹配到还剩一个字符, 最后一步，老铁加油！
+          if (letterMap[restPattern] && letterMap[restPattern] !== restStr) { // 已有字母映射, 且不相等
+            return false;
+          }
+          if (wordMap[restStr] && wordMap[restStr] !== restPattern) { // 已有单词 映射, 且不相等
+            return false;
+          } 
+          return true; // 满足映射要求, 完成匹配
         }
-
+        const lastLetter = restPattern[patternLen - 1]; // 最后一个字符
+        if (letterMap[lastLetter]) { // 已有字符映射
+          const curMapWord = letterMap[lastLetter];
+          const curMapWordLen = curMapWord.length;
+          const subWord = restStr.substring(strLen - curMapWordLen, strLen); // 映射部分
+          if (subWord === curMapWord) { // 满足部分映射, 继续执行
+            return dfs(
+              restPattern.substring(0, patternLen - 1),
+              restStr.substring(0, strLen - curMapWordLen),
+              letterMap,
+              wordMap
+            )
+          } else { // 不匹配, 返回时失败
+            return false;
+          }
+        }
+        for(let i = patternLen - 1; i < restStr.length; i++) { // letter不在映射中, 遍历选择同样不在映射中的单词, 组成映射并进行递归 + 回溯
+          const curWord = restStr.substring(i, strLen);
+          if (wordMap[curWord]) { // 已有单词记录, 跳过
+            continue;
+          }
+          letterMap[lastLetter] = curWord;
+          wordMap[curWord] = lastLetter;
+          if(dfs(
+            restPattern.substring(0, patternLen - 1),
+            restStr.substring(0, strLen - curWord.length),
+            letterMap,
+            wordMap
+          )) {
+            return true;
+          }
+          delete letterMap[lastLetter];
+          delete wordMap[curWord];
+        }
+        return false;
       }
-      dfs(pattern, s, {});
+      return dfs(pattern, s, {}, {});
     };
+
+    wordPatternMatch('abab', 'redblueredblue')
   </script>
 </body>
 </html>
