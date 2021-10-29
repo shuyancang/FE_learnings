@@ -28,10 +28,26 @@
      */
     // 稳定获胜条件: 下一步没有连续+号
     // 操作一步, 对手是否必败条件 => 对手: 不论怎么操作必定失败(没有连续+, 或必定面临没有连续+的情况)
-    // 
+    // 1. 结局只有一种: 不是必胜, 就是对手必胜 => 
+    // 2. 稳定获胜: 操作一次翻转 => 对手必败;
+    // 3. 稳定必败: 无论如何操作 => 对手必胜;
+    // 必败的最终条件: 接收到字符串时, 已经没有连续的'++'
     var canWin = function(currentState) {
-
+      const len = currentState.length;
+      let res = false;
+      for (let i = 0; i < len - 1; i++) {
+        if (currentState[i] === '+' && currentState[i + 1] === '+') { // 可以翻转
+          const pre = currentState.substring(0, i);
+          const aft = currentState.substring(i + 2, len);
+          const tmpRes = canWin(`${pre}--${aft}`); // 对手是否胜利
+          if (!tmpRes) { // 只要对手负, 则自己必定胜利
+            return true;
+          }
+        }
+      }
+      return false;
     };
+    // 处理成一个数组, 使用回溯的思路处理相对更合理
   </script>
 </body>
 </html>

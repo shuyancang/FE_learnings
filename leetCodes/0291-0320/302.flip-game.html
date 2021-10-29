@@ -26,7 +26,7 @@
     for(let i = 0; i < currentState.length - 1; i++){
       if(currentState[i] === '+', currentState[i + 1] === '+') {
         const pre = currentState.substring(0, i);
-        const aft = currentState.substring(i + 1, currentState.length)
+        const aft = currentState.substring(i + 2, currentState.length)
         res.push(`${pre}--${aft}`);
       }
     }
