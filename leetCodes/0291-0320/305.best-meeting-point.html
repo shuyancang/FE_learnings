@@ -26,7 +26,27 @@
      * @return {number}
      */
     var minTotalDistance = function(grid) { // 简单的方法就是直接暴力计算, 先收集所有的1记录, 然后选定每一个地址进行计算即可。
-      
+      const persons = [];
+      const m = grid.length;
+      const n = grid[0].length;
+      for (let i = 0; i < m; i++) {
+        for(let j = 0; j < n; j++) {
+          if (grid[i][j] === 1) {
+            persons.push([i, j]);
+          }
+        }
+      }
+      let minSum = Infinity;
+      for(let i = 0; i < m; i++) {
+        for(let j = 0; j < n; j++) {
+          let distance = 0;
+          for (let k = 0; k < persons.length; k++) {
+            distance += (Math.abs(persons[k][0] - i) + Math.abs(persons[k][1] - j));
+          }
+          minSum = Math.min(minSum, distance);
+        }
+      }
+      return minSum;
     };
   </script>
 </body>
