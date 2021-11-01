@@ -48,6 +48,40 @@
       }
       return minSum;
     };
+
+    // leetcode: 实际上, 收集所有的点, 将行列坐标收集，选择中间的元素, 计算两个维度下一维子问题的距离之和, 就是答案!
+    var minTotalDistance = function(grid) {
+      const rowNum = grid.length;
+      const colNum = grid[0].length;
+      const rows = [];
+      const cols = [];
+      for(let i = 0; i < rowNum; i++) { // 收集行索引
+        for (let j = 0; j < colNum; j++) {
+          if (grid[i][j] === 1) {
+            rows.push(i);
+          }
+        }
+      }
+      for(let j = 0; j < colNum; j++) { // 收集列索引
+        for (let i = 0; i < rowNum; i++) {
+          if (grid[i][j] === 1) {
+            cols.push(j);
+          }
+        }
+      }
+      const getMinDis = (list) => { // 显然在遍历时, 索引已经排好序, 可直接进行比较相减距离, 即可完成相关距离搜集
+        let distance = 0;
+        let start = 0, end = list.length - 1;
+        while (start < end) { // 双指针, 找到中位数, 进而计算距离 => 奇数到中间不需收集, 距离为0, 偶数, 两者的距离差即可
+          distance += Math.abs(list[end] - list[start]);
+          start++;
+          end--;
+        }
+        return distance;
+      }
+      return getMinDis(rows) + getMinDis(cols);
+    }
+
   </script>
 </body>
 </html>
