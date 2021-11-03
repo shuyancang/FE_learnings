@@ -18,7 +18,7 @@
     1. 如果需要操作dom可以考虑缓存dom, 避免每次操作前反复重新获取;
     2. 利用document.createDucumentFragment创建文档碎片节点, 创建虚拟的节点对象, 处理完成后一次性替换, 避免反复频繁修改dom的重绘重排(或者复制一个克隆元素, 在内存中操作, 再进行替换)
     3. innerHtml替代appendChild
-    4. 可以考虑使用requestAnimationFrame吧任何导致重绘的操作放到requestAnimationFrame内
+    4. 可以考虑使用requestAnimationFrame把任何导致重绘的操作放到requestAnimationFrame内
     5. 模拟dom树创建virtualDom(字符串对象), 先将dom抽象为虚拟dom, 操作虚拟dom进行diff算法, 最终批量修改真实dom, 最大化避免重绘重排。
 
    */
