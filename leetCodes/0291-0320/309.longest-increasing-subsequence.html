@@ -24,9 +24,55 @@
     //   你可以设计时间复杂度为 O(n2) 的解决方案吗？
     //   你能将算法的时间复杂度降低到 O(n log(n)) 吗?
 
-    var lengthOfLIS = function(nums) {
-
+    var lengthOfLIS = function(nums) { // 动态规划dp[i]为以第i个数结尾的最长上升子序列长度
+      // 则对于i前面任一项来说, dp[i] 默认为1, 但对于任意j, 只要dp[j] < dp[i]则 dp[i] = dp[j] + 1; 找到最大dp[i]值
+      if (nums < 2) {
+        return nums.length;
+      }
+      const dp = [1];
+      let res = 0;
+      for (let i = 1; i < nums.length; i++) { // 以i 为结尾的
+        dp[i] = 1;
+        for (let j = 0; j < i; j++) {
+          if(nums[j] < nums[i]) {
+            dp[i] = Math.max(dp[i], dp[j] + 1);
+          }
+        }
+        res = Math.max(res, dp[i]);
+      }
+      return res;
     };
+    // leetcode: 贪心  +  二分;
+    // 考虑一个简单的贪心，如果我们要使上升子序列尽可能的长，则我们需要让序列上升得尽可能慢，因此我们希望每次在上升子序列最后加上的那个数尽可能的小。
+    // d[i]: 长度i的最小上升子序列末尾元素的最小值, len记录目前最长上升子序列长度, 起始len = 1, d[1] = nums[0]
+    // d[i]显然单调递增 => 遍历nums元素更新d和len的值, 如果nums[i] > d[len]更新Len = len + 1; 否则找到满足d[i - 1] < nums[j] < d[i]的下标兵更新d[i] = nums[j]
+    // 很神奇的方法, 详解看https://leetcode-cn.com/problems/longest-increasing-subsequence/solution/zui-chang-shang-sheng-zi-xu-lie-by-leetcode-soluti/
+    var lengthOfLIS = function(nums) {
+      if (nums.length === 0) {
+        return 0;
+      }
+      const d = [0];
+      let len = 1;
+      d[len] = nums[0];
+      for(let i = 1; i < nums.length; i++) {
+        if (nums[i] > d[len]) {
+          d[++len] = nums[i];
+        } else { // 二分查找下标
+          let left = 1, right = len, pos = 0;
+          while (left <= right) {
+            const mid = (left + right) >> 1;
+            if (d[mid] < nums[i]) {
+              pos = mid;
+              left = mid + 1;
+            } else {
+              right = mid - 1;
+            }
+          }
+          d[pos + 1] = nums[i];
+        }
+      }
+      return len;
+    }
   </script>
 </body>
 </html>
