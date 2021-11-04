@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>a默认事件禁止后怎么实现跳转</title>
+</head>
+<body>
+  <a href="https://www.baidu.com" id="normalLink">普通</a>
+  <a href="https://www.baidu.com" id="disabledLink">被禁止</a>
+  <a href="https://www.baidu.com" id="pointerNoneLink" style="pointer-events: none;">样式禁止</a>
+  <script>
+    document.getElementById('disabledLink').addEventListener("click", function (e) {
+      e.preventDefault(); // 禁止默认事件, 但并不影响继续添加绑定click事件 ===> 可在click事件内做相关操作即可。
+    })
+
+    document.getElementById('disabledLink').addEventListener("click", function (e) {
+      console.log(e.target.href)
+      location.href = "https://www.baidu.com"
+    })
+
+    document.getElementById('pointerNoneLink').addEventListener("click", function (e) { // 样式禁止, 那就是click事件都无法添加了~只能先修改放开样式限制, 利用js进行操作了。
+      console.log(e); // ===> 不会触发
+    })
+  </script>
+</body>
+</html>

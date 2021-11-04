@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>meta元素都有哪些</title>
+</head>
+<body>
+
+  <script>
+    /*
+      元数据metadata: 用来构建HTML文档基本结构, 以及就如何处理文档向浏览器提供信息和指示, 它们本身不是文档内容, 但提供了后面文档内容的信息.
+      title, base, meta都是元数据元素
+    */
+
+    /*
+      meta元素
+      meta元素可提供有关页面的元信息, 比如针对搜索引擎和更新频次的描述的关键词。
+      meta元素可以定义文档的各种元数据, 提供各种文档信息. 
+      html文档可包含多个meta元素, 每个meta元素只能用于一种用途, 如果想定义多个文档信息, 需要在head中添加多个meta元素
+    */
+
+    /*  
+      meta元素的属性:
+      meta元素包含四大属性: charset, content, http-equiv, name
+      charset: 页面的字符编码
+      content: 通常配合name或http-equiv使用, 给这两个属性提供一个值
+      http-equiv: 用作http头部的某些作用, 通过定义改属性可以改变服务器和服务代理的行为(在html4中有很多值, 在html5中只有refresh, default-style, content-type可用)
+      name: 用于定义页面元数据, 不能与http-equiv, charset共存, 通常配合content使用
+    */
+
+    /*
+      meta元素的用途
+      除了charset以外, 都是http-equiv属性 或 name属性， 配合content使用的。
+      1. name 指定名 值 定义元数据: <meta name="参数" content="描述信息">
+        <meta name="keywords" content="网站内容关键词, 逗号隔开, 用于seo搜索">
+        <meta name="application name" content="当前页所属web应用系统名称">
+        <meta name="description" content="当前页的描述">
+        <meta name="author" content="作者">
+        <meta name="copyright" content="版权信息">
+        <meta name="renderer" content="为双核浏览器准备的, 用于指定双核浏览器默认以何种方式渲染页面">
+        <meta name="viewport" content="视口初始大小提示, 供移动设备使用">
+
+      2. charset： html5新增属性，声明字符串编码
+        <meta charset="utf-8">
+        旧html: <meta http-equiv="content-type" content="text/html;charset=utf-8">
+        理论上可使用任何字符编码, 但并不是所有浏览器都能够理解
+
+      3. http-equiv模拟http标头字段, 与content属性结合
+        <meta http-equiv="参数" content="值">
+        
+        <meta http-equiv="refresh" content="2;URL=https://www.baidu.com">
+          refresh指定一个时间间隔(秒), 时间过去后从服务器重新载入当前页面, 也可以指定一个页面 ===> 2秒后跳转到百度！
+        
+        <meta http-equiv="X-UA-Compatible" content="IE-edge;chrome=1">
+          X-UA-Compatible指定浏览器采取何种版本渲染当前页面, ie和chrome使用最新版本渲染该页面
+
+        <meta http-equiv="cache-control" content="no-cache">
+          用于指定所有缓存机制在整个请求/响应链中必须服从的指令
+    */ 
+
+    /* 常用的meta
+    <!-- 声明文档使用的字符编码 -->
+      <meta charset='utf-8'>
+        <!-- 优先使用 IE 最新版本和 Chrome -->
+    
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <!-- 页面描述 -->
+      <meta name="description" content="不超过150个字符"/>
+        <!-- 页面关键词 -->
+      <meta name="keywords" content=""/>
+        <!-- 网页作者 -->
+      <meta name="author" content="name, email@gmail.com"/>
+        <!-- 搜索引擎抓取 -->
+      <meta name="robots" content="index,follow"/>
+        <!-- 为移动设备添加 viewport -->
+      <meta name="viewport" content="initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+        <!-- `width=device-width` 会导致 iPhone 5 添加到主屏后以 WebApp 全屏模式打开页面时出现黑边 http://bigc.at/ios-webapp-viewport-meta.orz -->
+
+    <!-- iOS 设备 begin -->
+      <meta name="apple-mobile-web-app-title" content="标题">
+        <!-- 添加到主屏后的标题（iOS 6 新增） -->
+      <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+      <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL">
+        <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari） -->
+      <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+        <!-- 设置苹果工具栏颜色 -->
+
+      <meta name="format-detection" content="telphone=no, email=no"/>
+        <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+        <!-- 启用360浏览器的极速模式(webkit) -->
+      <meta name="renderer" content="webkit">
+        <!-- 避免IE使用兼容模式 -->
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- 不让百度转码 -->
+      <meta http-equiv="Cache-Control" content="no-siteapp" />
+        <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+      <meta name="HandheldFriendly" content="true">
+    <!-- 微软的老式浏览器 -->
+      <meta name="MobileOptimized" content="320">
+        <!-- uc强制竖屏 -->
+      <meta name="screen-orientation" content="portrait">
+        <!-- QQ强制竖屏 -->
+      <meta name="x5-orientation" content="portrait">
+        <!-- UC强制全屏 -->
+      <meta name="full-screen" content="yes">
+        <!-- QQ强制全屏 -->
+      <meta name="x5-fullscreen" content="true">
+        <!-- UC应用模式 -->
+      <meta name="browsermode" content="application">
+        <!-- QQ应用模式 -->
+      <meta name="x5-page-mode" content="app">
+        <!-- windows phone 点击无高光 -->
+      <meta name="msapplication-tap-highlight" content="no">
+    <!-- iOS 设备 end -->
+
+      <meta name="msapplication-TileColor" content="#000"/>
+        <!-- Windows 8 磁贴颜色 -->
+      <meta name="msapplication-TileImage" content="icon.png"/>
+        <!-- Windows 8 磁贴图标 -->
+
+      <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml"/>
+        <!-- 添加 RSS 订阅 -->
+      <link rel="shortcut icon" type="image/ico" href="/favicon.ico"/>
+       <!-- 添加 favicon icon -->
+
+      <!-- sns 社交标签 begin -->
+        <!-- 参考微博API -->
+        <meta property="og:type" content="类型" />
+        <meta property="og:url" content="URL地址" />
+        <meta property="og:title" content="标题" />
+        <meta property="og:image" content="图片" />
+        <meta property="og:description" content="描述" />
+      <!-- sns 社交标签 end -->
+    */
+  </script>
+</body>
+</html>
