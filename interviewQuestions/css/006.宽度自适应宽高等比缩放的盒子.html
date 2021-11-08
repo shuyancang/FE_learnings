@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>css实现宽度自适应, 宽高保持等比缩放</title>
+  <style>
+    /* #box{
+      width: 30%;
+      height: calc(30vw * 0.75);
+      background-color: red;
+    } */
+    #box{
+      width: 30%;
+      height: 0;
+      background-color: red;
+      padding-bottom: 30%;
+    }
+  </style>
+</head>
+<body>
+  <div id="box"></div>
+  <script>
+    /*
+      css实现div宽度自适应, 宽高保持等比缩放
+        1. 直接使用百分比 + calc
+        2. 使用padding实现(padding， margin的计算基于父元素计算的)
+        3. 使用伪元素margin-top撑开容器
+        #box {
+          width: 30%;
+          overflow: hidden;
+          background: red;
+        }
+        #box:after {
+          content: "";
+          display: block;
+          margin-top: 100%;
+        }
+    */
+  </script>
+</body>
+</html>

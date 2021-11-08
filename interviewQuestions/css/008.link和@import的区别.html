@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>link和@import区别</title>
+  <link rel="stylesheet" type="text/css" href="./test.css"></link>
+  <link rel="stylesheet" type="text/css" href="./import.css"></link>
+</head>
+<body>
+  <div>
+    内容
+  </div>
+  <ul>
+    <li>a</li>
+    <li>b</li>
+  </ul>
+  <script>
+    // link和@import区别
+    /*
+      link链接样式: 在html中进行加载, 引入外部的css文件;
+      @import导入样式: 在css文件中导入外部的css文件; 或在<style></style>中导入样式
+
+      区别: 
+        1. link是XHTML标签, 除了加载css外, 还能定义RSS等其他事务, @import是css的范畴只能加载css
+        2. link引入css时, 在页面载入时同时加载; @import需页面网页载入后加载, 会出现一开始没有css闪烁出现样式后的页面
+        3. link是XHMLT标签无兼容问题, @import是CSS2.1提出, 低版本不兼容
+        4. link支持使用js控制DOM去控制改变样式, @import不支持
+    */
+  </script>
+</body>
+</html>

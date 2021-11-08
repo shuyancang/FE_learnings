@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>行内元素与块级元素区别</title>
+</head>
+<body>
+  <div>盒子</div>
+  <span>行内</span>
+  <div>盒子</div>
+  <script>
+    /*
+      区别: 
+        行内元素在一条直线上排列, 同行下水平方向排列; 块级元素占据一行, 垂直方向排列。 块级元素从新行开始结束断行;
+        块级元素可包含行内和块级元素, 行内元素不可包含块级元素;
+        属性不同, 在盒子模型上, 行内元素设置width无效, height无效, margin上下无效, padding上下无效;  
+
+      转换: display: block/inline进行互相转换
+      扩展: inline-block
+        既有block元素设置宽高属性, 又具有inline元素默认不换行的特性(也可以设置vertical-align)
+        HTML中换行符空格符制表符合并为空白符, 字体大小不为零的情况下, 空白符自然占据一定的宽度, 使用inline-block会产生元素间的间隙
+    */
+  </script>
+</body>
+</html>

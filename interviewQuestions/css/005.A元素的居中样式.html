@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>元素A的样式书写</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    .box{
+      display: flex;
+      align-items: center;
+      font-size: 20px;
+      justify-content: center;
+      width: calc(100vw - 20px);
+      margin: 0 10px;
+      height: calc(50vw - 10px);
+    }
+  </style>
+</head>
+<body>
+  <div class="box">A</div>
+  <script>
+    /*
+      屏幕中间有元素A, A中有文字A, 随着屏幕宽度增加, 需始终满足下列条件
+        A垂直居屏幕中央
+        A距离屏幕左右边距各10px
+        A元素中的文字A的fant-size: 20px; 水平垂直居中
+        A元素的高度始终是A元素宽度的50%;
+    */
+
+    // 实现方式1: 利用A元素的transform(0, -50%实现居中), 盒子使用100%
+    // 实现方式2: 使用calc + vw实现; 盒子使用transform
+    // 实现方式3: 使用伪元素定位50%, 50%再(translate -50%, -50%)实现居中。
+  </script>
+</body>
+</html>
