@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>画出css盒子模型</title>
+</head>
+<body>
+  <script>
+    // 请画出css盒子模型, 基于盒子模型的原理, 说明相对定位, 绝对定位, 浮动实现样式是如何实现的。
+    /*
+      1. 盒子模型: 任一元素都是一个盒子, 盒子占用一定空间和位置, 他们之间的相互组合就形成了网页布局
+        w3c盒子模型的构成: content, border, padding, margin;
+        (IE: width = border + content + padding)
+        (标准盒模型: width = content)
+      2. 相对定位: 对象不可层叠, 不脱离文档流, 基于自身静态位置再通过left等定位, 且通过z-index进行层次分级；
+      3. 绝对定位: 脱离文档流, 通过left等定位, 定位基准为最近一个有定位设置的父级对象; 如果父级没有设置定位属性, 将基于body坐标原点进行定位
+      4. 浮动: 脱离文档流(从普通布局排版中拿走), 其他盒子在定位的时候, 会当做脱离文档流的元素不存在而进行定位;
+    */
+  </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>css如何实现动画</title>
+</head>
+<body>
+  <script>
+    // 1. :hover添加伪类
+    // 2. js改变css属性
+    // 3. transition: 1s; (transition: property属性 duration过渡时长 timing-function速度曲线 delay延迟), 多个属性可以使用逗号隔开, 如transition: background 1s,width 2s,height 3s;
+    // 4. animation: name(动画名) duration(持续时间) timing-function(速度曲线) delay(延迟) iteration-count(播放次数) direction(播放方向-none时间轴, reverse反时间轴, alternate来回往复, alternate-reverse反来回往复) play-state(元素播放状态-running继续, paused暂停) fill-mode(结束后元素样式: none回到动画没开始的状态, forwards停留在结束样式, backwords回到动画第一帧, both轮流)
+    /*
+      transition与animation的区别: animation提供了更多的控制, 尤其是时间轴的控制, 
+    */ 
+
+    // 易混淆css：
+    // animation: 设置动画属性, 是一个简写属性, 包含6个属性
+    // transition: 设置元素的样式过渡;
+    // transform: 控制元素的形变, 与动画并无关系
+    // translate: 是transform的一个属性, 控制移动
+  </script>
+</body>
+</html>

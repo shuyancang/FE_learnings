@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>css半圆</title>
+  <style>
+    #box{
+      width: 200px;
+      height: 200px;
+      overflow: hidden;
+      position: relative;
+    }
+    #box::after{
+      position: absolute;
+      border-radius: 50%;
+      content: '';
+      width: 200px;
+      height: 200px;
+      left: 50%;
+      background-color: lightblue;
+    }
+    #circle{
+      width: 100px;
+      height: 50px;
+      background-color: yellowgreen;
+      border-radius: 50px 50px 0 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="box"></div>
+  <div id="circle"></div>
+  <script>
+   // 方法一: 伪元素切除一半的圆
+   // 方法二: 直接使用border-radius绘制
+
+  </script>
+</body>
+</html>

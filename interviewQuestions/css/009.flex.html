@@ -10,18 +10,17 @@
   <script>
     // flex的完整写法是, 分别是什么意思
     /*
-      flex: 1
       flex-grow; flex-shrink; flex-basic;
       flex-grow定义放大比例, 默认0: 即使存在剩余空间也不放大;
       flex-grow定义缩小比例, 默认1: 即空间不足, 项目缩小
-      flex-basis: 指定flex元素在主轴的初始大小
-      flex: 1;
-      flex: none;
-      flex: auto;
-      flex: 非负数a
-      flex；长度l或百分比p;
-      flex: 两个非负数a,b
-      flex: 一个非负数和一个长度或百分比
+      flex-basis: 指定flex元素在主轴的初始大小, 默认auto;
+      flex: 1; ==> flex: 
+      flex: none; ==> flex: 0 0 auto;
+      flex: auto; ===> flex: 1 1 auto;
+      flex: 非负数a ===> flex: a 1 0%;
+      flex；长度l或百分比p; ===> flex: 1 1 l/p
+      flex: 两个非负数a,b; ===> flex: a b 0%;
+      flex: 一个非负数a和一个长度l或百分比p ===> flex: a 1 l/p;
     */
   </script>
 </body>

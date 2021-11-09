@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>css等高布局</title>
+  <style>
+      html,
+      body,
+      p {
+          padding: 0;
+          margin: 0;
+      }
+      .wrap {
+          display: flex;
+      }
+      .item {
+          flex:1;
+          margin-right: 5px;
+          background-color: brown;
+      }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="item">left</div>
+    <div class="item">
+        <p>center</p>
+        <p>center</p>
+        <p>center</p>
+        <p>center</p>
+        <p>center</p>
+        <p>center</p>
+    </div>
+    <div class="item">right</div>
+  </div>
+  <script>
+    // CSS实现等高布局, 要求元素代码占用的高度, 以多列中较高的为准;
+    // 方法1: 直接flex布局即可
+    // 方法2: table布局: 父元素display: table; table-layout: fixed; 子元素: display: table-cell天然具有等高属性。
+    // 方法3: 设置父容器的overflow:hidden, 给每列设置较大的底内边距(padding-bottom)利用数值相似的负外边(margin-bottom)距消除这个高度
+    // 方法4: 使用grid布局; grid-template-columns 设置列宽， grid-auto-flow 自动布局算法，设置优先填充列
+    /*
+      <style>
+        html,
+        body,
+        p {
+          margin: 0;
+          padding: 0;
+        }
+        .wrap {
+          display: grid;
+          grid-template-columns: 33.3% 33.3% 33.3%;
+          grid-auto-flow: column;
+          grid-gap: 10px;
+          background-color: grey;
+        }
+        .item {
+          background-color: brown;
+        }
+      </style>
+    
+    */
+  </script>
+</body>
+</html>
