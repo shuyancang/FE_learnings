@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>标签渲染顺序与优先级</title>
+</head>
+<body>
+  <script>
+    // 标签的class样式渲染顺序, id, class, 标签, 伪类的优先级
+    /*
+      1. 浏览器通过优先级来判断哪些属性与一个元素最相关, 优先级是基于不同的选择器组成的匹配规则
+      2. 优先级是分配给css声明的一个权重, 由匹配的选择器的每一种选择类型的数值决定;
+      3. 当优先级相同时, 最后声明的css引用到元素上
+
+      优先级按照以下顺序递增: 
+      标签选择器, 伪元素 < 类选择器, 属性选择器, 伪类 < ID选择器
+      
+      一般*, +, >, ~, 和否定伪类对优先级没有影响;
+    */
+  </script>
+</body>
+</html>

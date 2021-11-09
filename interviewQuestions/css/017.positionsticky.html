@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>介绍css3中的position:sticky</title>
+  <style>
+    li{
+      height: 300px;
+      background-color: yellowgreen;
+      margin-bottom: 40px;
+      /* position: -webkit-sticky; */
+      position: sticky;
+      top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <ul>
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+    <li>4</li>
+    <li>5</li>
+    <li>6</li>
+    <li>7</li>
+    <li>8</li>
+  </ul>
+  <script>
+    // 介绍css3中的position:sticky
+    /*
+      1. 该元素不脱离文档流, 仍保留元素原本在文档流中的位置
+      2. 元素在容器中被滚动超过指定偏移量时, sticky元素就固定在指定位置(形如fixed)
+      3. 元素固定的相对偏移是对于离他最近的具有滚动框的祖先元素, 如果祖先元素不可滚动, 这相对于viewport来计算元素偏移量
+    */
+  </script>
+</body>
+</html>
