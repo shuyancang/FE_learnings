@@ -8,7 +8,40 @@
 </head>
 <body>
   <script>
-    
+    // 清除浮动的方式
+    // 清除浮动可以理解为清除浮动产生的影响。当元素浮动时也就是为当前元素创建了块格式化上下文(BFC)，会对周围元素或父元素在布局上产生一定影响, 如父元素因无法自动计算高度而产生的高度塌陷；因脱硫文档流使兄弟元素错位等。要清除浮动产生的影响，其实就是解决这两方面的问题。方法可以是设置父元素高度，或利用BFC, 或使用上自带属性clear进行清除
+    // 1. 设置父元素高度: 解决浮动产生的父元素塌陷问题, 内部元素浮动并未彻底清除。且需进行计算后设定。除非子元素高度不变否则不推荐使用
+    // 2. clear
+    //     浮动元素下方添加空div, 设置clear:both;height:0;overflow:hidden;
+    //     伪元素clear, 使用自带的属性, 在需要清除的位置添加一个兄弟元素, 设置clear属性即可, 较为推荐
+    // 3. 利用BFC: 计算BFC时, 浮动元素也参与计算, 因此清除浮动只需触发一个BFC即可
+    //     实际项目较为常用的:
+    //        display: inline-block;
+    //        display: table;
+    //        overflow不为visible的块元素设置overflow:hidden;
+    //        float: left/right;
+    //        position为absolute或relative
+    //     该方法把属性添加到父元素中, 以解决内部元素浮动影响, 不能用于解决兄弟元素的浮动问题
+
+      // BFC:
+      // BFC的布局规则
+      // 内部的Box会在垂直方向，一个接一个地放置。
+
+      // Box垂直方向的距离由margin决定。属于同一个BFC的两个相邻Box的margin会发生重叠。
+
+      // 每个盒子（块盒与行盒）的margin box的左边，与包含块border box的左边相接触(对于从左往右的格式化，否则相反)。即使存在浮动也是如此。
+
+      // BFC的区域不会与float box重叠。
+
+      // BFC就是页面上的一个隔离的独立容器，容器里面的子元素不会影响到外面的元素。反之也如此。
+
+      // 计算BFC的高度时，浮动元素也参与计算。
+
+      // 如何创建BFC
+      // 1、float的值不是none。
+      // 2、position的值不是static或者relative。
+      // 3、display的值是inline-block、table-cell、flex、table-caption或者inline-flex
+      // 4、overflow的值不是visible
   </script>
 </body>
 </html>
