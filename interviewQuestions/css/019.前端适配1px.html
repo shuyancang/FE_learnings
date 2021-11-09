@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>前端适配1px的问题</title>
+</head>
+<body>
+  <script>
+    // 前端适配1px的问题:
+    /*
+      前置知识: 像素分为物理像素和设备像素, 因此在pc端和移动端存在设备像素比的概念, 即PC看到的1px与移动端的1px不同;
+      在pc上像素称为物理像素, 在PC上dpr为1即书写css样式在pc上显示多少, 而在移动端像素通常为设备像素, PC和移动端不处理的情况下, 1px是不同的
+      一个物理像素等于多少个设备像素，取决于移动设备的屏幕特性(是否Retina)，和用户的缩放比例
+      如果Retina高清屏, dpr可能为2或3;
+
+      CSS pixels: CSS和js的像素单位, 与设备屏幕的像素无必然关系; CSS像素是可以被软件和硬件任意调节的单位, 独立于设备逻辑直接应用于逻辑上衡量像素的单位. CSS声明和所有的js属性都是用的是Css像素
+
+      device pixels: 设备像素。显示屏的最小物理单位。每个dp包含自己的颜色宽高并不可细分。
+
+      dpi: 设备独立像素(Dots Per Inch)
+
+      dpr: 设备像素比 = 设备像素 / css像素; 可以通过window.devicePixelRatio获取设备dpr值, 一般在桌面浏览器中dpr为1, 移动端大多数机型都不是1, iphone普遍为2或3, 此时1个css像素不再对应一个物理像素
+
+      视口viewport: 浏览器上用来显示网页的那部分区域, 有三个子概念layout viewport, visual viewport, ideal viewport
+      
+      layout viewport(布局视口): 为容纳桌面浏览器设置的网站默认布局宽度大于屏幕宽度, 使得页面可以横向拖动不至于挤成一团, 可以通过document.documentElement.clientWidth获取
+
+      visual viewport(视觉视口): 屏幕可视区域, 即物理像素尺寸; 可通过window.innerWidth获取; 是一个可变的值
+
+      ideal viewport(理想视口): 最适合移动设备的viewport，宽度等于移动设备的屏幕宽度
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+
+    */
+
+    /*
+      解决方案： 
+        1. border-image: 基于媒体查询不同的设备像素比给不同的border-image;
+        .border_1px {
+          border-bottom: 1px solid #000;
+        }
+        @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+          .border_1px {
+            border-bottom: none;
+            border-width: 0 0 1px 0;
+            border-image: url(../img/1pxline.png) 0 0 2 0 stretch;
+          }
+        }
+        2. background-image同上;
+        3. 伪类 + transform 基于media查询判断不同的设备像素比对线条进行缩放
+        4. svg: 借助POSTCss的postcss-write-svg直接使用svg的1px边框
+        5. 设置viewport: 通过设置缩放让css像素等于物理像素
+        const scale = 1 / window.devicePixelRatio;
+        const viewport = document.querySelector('meta[name="viewport"]');
+        if (!viewport) {
+          viewport = document.createElement("meta");
+          viewport.setAttribute("name", "viewport");
+          window.document.head.appendChild(viewport);
+        }
+        viewport.setAttribute(
+          "content",
+          "width=device-width,user-scalable=no,initial-scale=" +
+            scale +
+            ",maximum-scale=" +
+            scale +
+            ",minimum-scale=" +
+            scale
+        );
+        6. box-shadow: 
+        .boder_1px {
+          box-shadow: inset 0 -1px 1px -1px #d4d6d7;
+        }
+    */
+  </script>
+</body>
+</html>
