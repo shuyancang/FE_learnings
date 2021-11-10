@@ -1,5 +1,23 @@
 
 
+
+
+后续要学习的东西:
+
+https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/
+
+1. css: grid布局
+
+
+
+
+2. http解析流程
+3. webpack插件
+4. react原理
+5. webworker
+6. flutter
+7. 
+
 # 1.
 
 
