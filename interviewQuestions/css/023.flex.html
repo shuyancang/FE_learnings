@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .box{
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: space-around;
+      align-items: center;
+    }
+    .item{
+      flex: 0 0 400px;
+      margin: 20px 20px;
+      background-color: lightblue;
+      height: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+    <div class="item">4</div>
+    <div class="item">5</div>
+    <div class="item">6</div>
+    <div class="item">7</div>
+    <div class="item">8</div>
+    <div class="item">9</div>
+    <div class="item">10</div>
+  </div>
+  <script>
+    // 1. 说说flex布局, 属性, 作用
+    /*
+      display: flex;
+      flex-direction: 主轴方向, row, column, row-reverse
+      flex-wrap: 是否换行, wrap, no-wrap, wrap-reverse
+      flex-flow: 以上两个属性的简写
+      justify-content: 盒子元素在主轴上的对齐方式, flex-start起始对齐, flex-end末尾, center中间, space-between平均, space-around平均但两端保留间距的一半
+      align-items: 盒子在侧轴的对齐方式flex-start, flex-end, center同上, baseline如果行内轴与侧轴同一条则同flex-start否则同基线对齐, stretch如果指定侧轴大小属性为auto其值会使项目边距盒尺寸尽可能接近所在行尺寸
+      align-content: 设置或检索弹性盒子堆叠伸缩行的对齐方式设置项同justify-items; 容器flex盒子有多余空间时, 这些内部(多行)元素在盒子内侧轴的分布方式
+
+      对于align-items和align-content的区别，我们只需要记住以下两点，
+      align-items属性是针对单独的每一个flex子项起作用，它的基本单位是每一个子项，在所有情况下都有效果（当然要看具体的属性值）。
+      align-content属性是将flex子项作为一个整体起作用，它的基本单位是子项构成的行，只在两种情况下有效果：①子项多行且flex容器高度固定 ②子项单行，flex容器高度固定且设置了flex-wrap:wrap;
+      注：这里的高度固定的意思实际上是让flex容器在交叉轴上有多余的空间。
+    */
+
+    /* flex子元素属性
+      order: 通过order属性控制位置, 数字小在前, 大在后
+      flex-grow: 设置弹性盒的扩展比率, 根据比率分配剩余空间
+      flex-shrink: 设置该盒子的收缩比例, 根据比率定义收缩空间
+      flex-basis: 盒子伸缩基准值, 如果所有子元素基准值之和大于剩余空间, 按比例伸缩剩余空间
+      flex: grow, shrink, basis的简写
+      align-self: 在侧轴的对齐方式, 用于覆盖父容器的align-items设置
+    */
+
+    // 2. flex布局如何将八个元素分两行摆放;
+    // 使用flex: 0 0 25%即可
+  </script>
+</body>
+</html>

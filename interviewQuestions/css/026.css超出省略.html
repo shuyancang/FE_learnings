@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <style>
+    .ellipsis{
+      width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .secEllipsis{
+      width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: wrap;
+      word-break: break-all;
+      height: 63px;
+      line-height: 21px;
+    }
+  </style>
+  <div class="ellipsis">fewjfwejfkwjeklfjwekljfweljflkwejflkewjflkwejfklewjflwejflwejflkewjflkewjflkwejfklwejfklwjeklfjwelkfjwekljfwlejfklwejflkjfklwjefkljwelkfjweklf</div>
+
+  <div class="secEllipsis">fewjfwejfkwjeklfjwekljfweljflkwejflkewjflkwejfklewjflwejflwejflkewjflkewjflkwejfklwejfklwjeklfjwelkfjwekljfwlejfklwejflkjfklwjefkljwelkfjweklf</div>
+
+  <script>
+    // css超出省略怎么写, 三行超出省略怎么写
+    // 超出省略: overflow: hidden; text-overflow: ellipsis; white-space: nowrap
+    // 三行超出省略: 在以上的基础上, 增加display: -webkit-box; --webkit-line-clamp: 3; -webkit-box-orient:vertical;
+
+    // display: -webkit-box 弹性盒子布局
+    // -webkit-box-orient 子元素排列方式
+    // text-overflow文本溢出的展示方式
+  </script>
+</body>
+</html>
