@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 什么情况下会触发浏览器分层
+    /*
+      分层与合成
+        如果没有分层机制，从布局直接生成目标，每次页面很小的变化都会触发重排或重绘，渲染代价很大；为提升每帧的渲染效率引入分层机制；
+        将页面的素材分解成多个图层给的操作即是分层，最后图层的合并操作成为合成；分层和合成通常一起使用，（合成过程非常短）
+
+      生成层的方式
+        3d transforms
+        video，audio，iframe
+        animation实现的动画转换
+        position：fixed
+        will-change
+        filter
+        有合成层的后代同时本身overflow不为hidden
+    
+    */
+  </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>响应式布局</title>
+</head>
+<body>
+  <script>
+    // 响应式布局用到的技术, 移动端需要注意什么
+
+    /*
+      响应式布局: 在不同的屏幕分辨率下, 页面的不同展示样式; 优点: 方便简单明了, 缺点CSS样式文件多
+
+      响应式实现方案
+        1. 媒体查询@media screen: 选择屏幕大小的分割点, 768,992,1200等。 + 需要明确移动端优先还是PC优先, 移动端首先使用min-width, pc端优先使用max-width
+        2. 百分比布局
+        3. rem布局
+            上述代码中将视图容器分为10份，
+            font-size用十分之一的宽度来表示，
+            最后在header标签中执行这段代码，
+            就可以动态定义font-size的大小，
+            从而1rem在不同的视觉容器中表示不同的大小，
+            用rem固定单位可以实现不同容器内布局的自适应。
+            function refreshRem() {
+                var docEl = doc.documentElement;
+                var width = docEl.getBoundingClientRect().width;
+                var rem = width / 10;
+                docEl.style.fontSize = rem + 'px';
+                flexible.rem = win.rem = rem;
+            }
+            win.addEventListener('resize', refreshRem);
+        4. 视口单位(vw 或 rem + vw)
+            // rem 单位换算：定为 75px 只是方便运算，750px-75px、640-64px、1080px-108px，如此类推
+            $vm_fontsize: 75; // iPhone 6尺寸的根元素大小基准值
+            @function rem($px) {
+                @return ($px / $vm_fontsize ) * 1rem;
+            }
+            // 根元素大小使用 vw 单位
+            $vm_design: 750;
+            html {
+                font-size: ($vm_fontsize / ($vm_design / 2)) * 100vw; 
+                // 同时，通过Media Queries 限制根元素最大最小值
+                @media screen and (max-width: 320px) {
+                    font-size: 64px;
+                }
+                @media screen and (min-width: 540px) {
+                    font-size: 108px;
+                }
+            }
+            // body 也增加最大最小宽度限制，避免默认100%宽度的 block 元素跟随 body 而过大过小
+            body {
+                max-width: 540px;
+                min-width: 320px;
+            }
+        5. 图片响应式max-width适应, srcset基于不同dpi加载不同屏幕(<img srcset="photo_w350.jpg 1x, photo_w640.jpg 2x" src="photo_w350.jpg" alt="">); 使用background-image, 使用picture标签
+
+    响应式布局的要点
+      在实际项目中，我们可能需要综合上面的方案，比如用斄攃廭来做字体的适配，用廴斄擹廴攃厳来做图片的响应式，宽度可以用斄攃廭，壧壓攃攎，栅格系统等来实现响应式，然后可能还需要利用媒体查询来作为响应式布局的基础，因此综合上面的实现方案，项目中实现响应式布局需要注意下面几点：
+
+      设置viewport
+      媒体查询
+      字体的适配（字体单位）
+      百分比布局
+      图片的适配（图片的响应式）
+      结合flex, grid, BFC，栅格系统等已经成型的方案
+    
+    移动端需要注意: 
+            添加禁止浏览器主动缩放功能
+            移动端字体放大问题(可视部分宽度小于480需进行处理, 禁用html的字号自动调整：默认情况iphone会将过小字号放大，通过-webkit-text-size-adjust: none设置)
+            移动端1px问题: 某些机型1px较粗, 可以使用viewport+reme或transform： scale(0.5)实现
+
+    */
+  </script>
+</body>
+</html>

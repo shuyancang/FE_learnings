@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 简述grid布局
+    // 对于换行后的元素，如果单独控制第二行的元素分布, 使用flex无法实现
+    /*
+      父元素属性
+        display:grid; 定义一个网格布局, 
+        grid-template-colums设置列尺寸(grid-template-column: 200px 200px 200px; 三列, 列宽200px)
+        grid-template-rows设置行尺寸(grid-template-rows: 200px 200px 200px; 3行, 行高200px)
+          也可简化写为: grid-template-column/rows: repeat(3, 33.33%);
+          自动填充, 项目宽高固定, 容器不固定时, 自动填充网格数: grid-template-columns/rows: repeat(auto-fill, 33.33%)
+        gird-row-gap: 20px; 行间距设置
+        grid-column-gap: 20px; 列间距
+        grid-gap: 30px 20px; 复合式写法, 指定行列间距
+        grid-auto-flow: column | row; 规划子元素放置顺序-默认先行后列排列
+
+      子项目属性
+        grid-column-start: 1; 左边框所在垂直网络线
+        grid-column-end: 3; 右边框所在垂直网络线
+        grid-row-start: 1; 上边框
+        grid-row-end: 2; 下边框
+
+        grid-column是grid-column-start / grid-column-end的复合写法: grid-column: 1 / 3;
+        grid-row是grid-row-start grid-row-end复合写法 grid-row: 1 / 2;
+    
+    */
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // BFC是什么, 触发条件是什么, 有哪些应用场景。
+    /*
+      BFC: 块级格式化上下文(BOX Formatting context); 是页面上一个隔离的独立容器, 容器内的子元素不影响外面元素, 反之亦然;
+
+      BFC布局规则
+        内部的box从上往下竖直排列
+        同一个BFC内的box相邻marging重叠，不同BFC的不重叠
+        是页面的独立容器，不受外部影响，也不影响外部
+        BFC区域不予Float box重叠
+        计算BFC的高度, 浮动元素也参与计算
+      
+      触发条件:
+        根元素
+        float不为none
+        position： absolute或fixed
+        overflow不为visible
+        display: inline-block, table-cell, flex, inline-flex, grid等
+      
+      应用场景:
+        清除内部浮动，触发父元素的BFC，
+        利用不同的BFC，防止margin重叠
+        阻止元素被浮动元素覆盖各自独立渲染
+        自适应两栏布局。
+    */
+  </script>
+</body>
+</html>
