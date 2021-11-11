@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <style>
+    .pie {
+      position: relative;
+      margin: 1em auto;
+      padding: 0;
+      width: 32em;
+      height: 32em;
+      border-radius: 100%;
+      list-style: none;
+      overflow: hidden;
+      transform: rotate(0deg) /*针对mac safari浏览器兼容*/
+
+    }
+    .slice {   /*一个slice最多设置成一个90度的扇形，超过就需要多个slice进行拼接*/
+      overflow: hidden;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 50%;
+      height: 50%;
+      transform-origin: 0% 100%;/*设置旋转的基准点*/
+    }
+    .slice-1 {
+      transform: rotate(-36deg) skewY(-54deg);/*通过配置rotate和skewY的值来设置扇形的角度和位置*/
+      background: #FF0088;
+  }
+    .slice-2 {
+      transform: rotate(-72deg) skewY(-54deg);
+      background: #FF0000;
+  }
+  </style>
+  <ul class='pie'>
+      <li class='slice-1 slice'> </li>
+      <li class='slice-2 slice'> </li>
+  <ul>
+  <script>
+    // 直角扇形1: 正方形一个边border-radius 100%即可。
+    // 直角扇形2: 正方形4个边border-radius100%; 只显示一个即可
+    // 任意角度扇形3: 一个外框, 一个扇形，进行切割
+    // 明天继续
+  </script>
+</body>
+</html>
