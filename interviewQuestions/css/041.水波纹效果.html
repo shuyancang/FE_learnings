@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <style>
+    .bg{
+      background-color: #ececec;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      position: relative;
+    }
+    .wv{
+      position: absolute;
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      border: 5px solid lightblue;
+      animation: wave 5s linear infinite;
+    }
+    .wv2{
+      animation-delay: 1s;
+    }
+    .wv3{
+      animation-delay: 2s;
+    }
+    .wv4{
+      animation-delay: 3s;
+    }
+    .wv5{
+      animation-delay: 4s;
+    }
+    @keyframes wave {
+      0% {
+        opacity: 0;
+        transform: scale(0.1);
+      }
+      20% {
+        opacity: 0;
+        transform: scale(0.2);
+      }
+      20.1% {
+        opacity: 1;
+        transform: scale(0.201);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1);
+      }
+    }
+  </style>
+  <div class="bg">
+    <div class="wv wv1"></div>
+    <div class="wv wv2"></div>
+    <div class="wv wv3"></div>
+    <div class="wv wv4"></div>
+    <div class="wv wv5"></div>
+  </div>
+  <script>
+    // 使用css实现波纹效果
+    // bg背景, 定位
+    // wv圆: 边框渐显渐隐扩大
+  </script>
+</body>
+</html>

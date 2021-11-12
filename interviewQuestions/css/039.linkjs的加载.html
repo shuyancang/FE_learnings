@@ -7,6 +7,24 @@
   <title>Document</title>
 </head>
 <body>
+  <style>
+    .box{
+      background-color: lightblue;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      position: relative;
+    }
+    .pos{
+      width: 100px;
+      height: 100px;
+      background-color: yellowgreen;
+      transform: skew(20deg, 20px);
+    }
+  </style>
+  <div class="box">
+    <div class="pos"></div>
+  </div>
   <script>
     // 通过link进来的css会阻塞页面渲染么, js呢，如何解决
 

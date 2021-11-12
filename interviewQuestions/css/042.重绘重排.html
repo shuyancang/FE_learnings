@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 重绘, 重排; 那些操作会导致重绘重排;
+
+    /*
+      重排: 改变元素尺寸属性, 会重新进行尺寸计算, 影响后续布局, 绘制, 即为重排
+      重绘: 修改元素的颜色等, 不影响布局但会重新进行样式计算绘制, 即为重绘
+
+      重绘和重排都会占用主线程, js运行也占用主线程, 会出现抢占时间问题, 如果某些功能不断导致重绘重排浏览器每一帧都在计算样式布局和绘制操作, 会导致性能问题
+
+      触发重绘重排的因素:
+        页面首次渲染
+        窗口resize
+        元素位置，尺寸发生变化
+        可见元素的增/删
+        字体的大小改变
+        css的伪类激活......
+    
+      相关优化:
+        如果在页面有大量js和动画运行，都在占用主线程(一帧的时间内布局和绘制结束还有剩余时间js就会拿到主线程的使用权)，如果js执行时间过长，影响了下一帧的渲染，会出现页面的卡顿
+
+        优化1. requestAnimationFrame, 在每一帧被调用
+          把js分解成更小的任务模块，在每一帧事件用完前暂停js执行归还主线程，这样下一帧开始时主线程按时执行布局和绘制
+        优化2. 栅格化 
+          栅格化的整个流程不占用主线程，只会在合成器线程和栅格线程中运行，就无需和js抢占主线程。css中有个动画属性transform，通过该属性实现的动画不会经过布局和绘制，而是直接运行在合成器线程和栅格线程，就不会影响js执行的影响。(transform实现的动画由于不需要经过布局绘制等计算操作，节省很多运算事件)
+        优化3 适度避免重绘重排
+          transform替代定位
+          visible替代display:none
+          避免使用table布局
+          尽可能在DOM树的末端改变class
+          避免设置多层内联样式, 尽量层级扁平
+          动画效果应用到position: absolute或fixed的元素上
+          避免使用css表达式
+          将频繁重绘或回流的节点设置为图层(video, iframe)
+          css3加速: transform: translateZ, opacity, filters, will-change等
+        优化4 js的优化
+          避免频繁操作样式 合并操作
+          避免频繁操作dom
+          防抖，节流控制频率
+          避免频繁读取应发回流/重绘的属性
+          对具有复杂动画的元素使用绝对定位
+    */
+  </script>
+</body>
+</html>
