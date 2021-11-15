@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 完善下面函数, 实现图片的加载
+
+
+    function createImg(url) { // 显然使用一个
+      return new Promise((res, rej) => {
+        const img = document.createElement('img');
+        img.src = url;
+        img.onload = () => {
+          console.log('onload', url)
+          res(img);
+        }
+        img.onerror = () => {
+          console.log('errorimg', url)
+          rej(img)
+        }
+      })
+    }
+
+    // createImg(url).then((value) => {
+    //   document.body.appendChild(value);
+    // });
+
+    createImg('https://pics3.baidu.com/feed/0bd162d9f2d3572cdeb2b74047530e2e63d0c3a0.jpeg?token=8fea46cf24603223a2b6d353fc922d8d').then((value) => {
+      document.body.appendChild(value);
+    })
+    createImg('https://pics3.baidu.com/123454').then((value) => {
+      document.body.appendChild(value);
+    })
+  </script>
+</body>
+</html>

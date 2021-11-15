@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 如果不想对obj对象添加或删除元素，应该怎么做。
+    // Object.seal(): 封闭对象, 将对象属性变为不可配置, 且阻止增加新属性
+    // Object.freeze(); 冻结对象, 对对象所有属性的操作将失败。
+    // 利用Proxy实现, 扮演中间人角色, 配置捕捉器
+
+    const target = {}
+    const lockedObj = new Proxy(target, {
+      set(){
+        return false;
+      },
+      deleteProperty(){
+        return false;
+      },
+      defineProperty(){
+        return false;
+      }
+    });
+
+  </script>
+</body>
+</html>

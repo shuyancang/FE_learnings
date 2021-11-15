@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function lottery(whiteList, participant) {
+      let total = 20000;
+      const participantLen = participantLen.length;
+      const whiteListLen = whiteList.length;
+      if (participantLen + whiteListLen < total) {
+        return [];
+      }
+      const res = [];
+      while(total > 0 && whiteList.length > 0){
+        res.push(whiteList.pop());
+      }
+      // 找到剩余的随机total个数
+      
+
+    }
+    // whiteList:类型字符串数组,意义是表示从其他系统中计算出来的活跃用户，如果这批用户参与抽奖，则必定让他中奖。长度不超过1万
+    // participant:类型字符串数组,意义是表示此次活动中真正参与抽奖的用户，长度约是10万。
+
+    // 函数希望从participant返回 2 万个用户，表示中奖用户，优先选取whiteList上的用户，若不在whiteList上，对participant 剩余的随机 选取即可。
+  </script>
+</body>
+</html>
