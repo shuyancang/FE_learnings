@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 如何解决es6的兼容问题
+
+    /*
+      基本对js版本的兼容, 一般使用babel进行处理
+      babel: js编译器. 主要通过内部的Babylon解析，经过一系列的babel-traverse， 然后babel-generator生成为我们运行环境的源码.
+
+      babel能识别js代码主要归功于Babylon的ast语法分析。解析(parse) => 转换(transform) => 生成(generate)
+      1. parse 接收代码并输出ast: 词法分析(字符串形式的代码转为令牌token流), 语法分析(令牌转为ast)
+      2. transform转换, 输入源码的删改
+      3. generate生成, 将ast代码转换过的代码生成对应的源码
+
+      使用方式: 
+      1. 安装babel(@babel/core)
+      2. .bablerc配置(presets, plugins)
+      3. 命令行转码(@babel/cli)
+      4. babel-node提供一个ES6的环境
+      5. @babel/register
+      6. polyfill
+      7. 直接引入浏览器环境, <script>引入@babel/standalone模块
+
+    */ 
+    
+    
+  </script>
+</body>
+</html>
