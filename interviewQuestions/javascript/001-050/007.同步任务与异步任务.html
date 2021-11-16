@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // async function test1(){
+    //   console.log('start test1');
+    //   console.log(await test2());
+    //   console.log('end test1');
+    // }
+
+    // async function test2(){
+    //   console.log('test2');
+    //   return await 'return test2 value';
+    // }
+
+    // test1();
+
+    // setTimeout(() => {
+    //   console.log('setTimeout');
+    // }, 0)
+
+    // new Promise((res, rej) => {
+    //   console.log('promise1')
+    //   res();
+    // }).then(() => {
+    //   console.log('promise2');
+    // });
+    // console.log('end async');
+
+    // start test1 => test2 => promise1 => end async => promise2 => return test2 value => end test1 => setTimeout
+
+    // 浏览器有同步任务和异步任务, 浏览器是怎么处理的
+
+    /*
+      1. 浏览器与js
+        首先浏览器是多线程的, 但js是单线程的(一次只能处理一件事情, 后一个任务需要前一个任务的执行)
+        js在单线程中实现异步机制主要是依赖浏览器的任务队列
+      2. 任务队列: 主任务队列, 等待任务队列
+        主任务队列: 自上而下执行, 如果遇到一个异步操作, 不会立即执行而是把它放到等待任务队列中排队, 当主任务队列完成后才会到等待任务队列中查找(主任务队列任务完不成，等待任务队列一直不会进行处理)
+        等待任务队列：先到达条件的会被重新放到主任务队列中执行，接着继续在等待任务队列中排队
+        所有任务，都要排队。前一个任务只要阻塞，必然影响队列后的任务。
+      3. 同步任务和异步任务
+        同步：在一个线程上同一时间只能做一件事情，当前事情完成才能进行下一任务
+        异步：主线中执行一个任务，但这个任务是一个异步任务，就会移出主线程放到等待队列中；又分宏任务和微任务
+        宏任务(macrotasks)：定时器，事件绑定，ajax，回调函数，node中的fs; 还有setImmediate, I/O, UI rendering
+        微任务(microtasks)：promise，async await，process.nextTick, MutataionObserver等。
+
+        任务执行顺序: 主线程, 微任务, 宏任务, 按条件顺序依次执行。
+          实际上, 工作栈内执行遇到宏任务后, 会讲宏任务放到宏任务队列, 微任务放到微任务队列, 
+          出栈后, 首先检查微任务队列是否有任务, 如果有拉入工作栈同步执行, 然后检查宏任务队列
+          每次事件循环清空微任务队列后, 再处理宏任务。
+
+        宏任务的本质: 参与了事件循环
+        微任务本质: 直接在js引擎中执行, 没有参与循环任务; 微任务在当前js调用完立刻执行.
+
+      js运行机制
+        1. js engine: Chrome的引擎v8
+        2. web apis: DOM的操作, Ajax, Timeout等
+        3. Callback queue: 回调的队列, web api的回调都在这里排队
+        4. EventLoop: 事件循环, 宏任务和微任务的容器
+    */
+
+    // await 的返回(类似于 thenable) 是微任务, 但async的函数体执行是立刻的。
+    async function as1() {
+      console.log("as1 start");
+      await as2();
+      console.log("as1 end");
+    }
+
+    function tt(text){
+      console.log(text);
+    }
+
+    async function as2() {
+      console.log("as2");
+    }
+
+    console.log("script start");
+
+    setTimeout(function () {
+      console.log("setTimeout");
+    }, 0);
+
+    tt('text1');
+    as1();
+    tt('text2');
+
+    new Promise(function (resolve) {
+      console.log("prom1");
+      resolve();
+    }).then(function () {
+      console.log("prom2");
+    });
+    console.log("script end");
+
+    // script start => text1 => as1 start => as2 => text2 => prom1 => script end => as1 end => prom2 => setTimeout
+  </script>
+</body>
+</html>

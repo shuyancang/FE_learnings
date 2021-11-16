@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 虚拟列表是什么, 其原理
+    /*
+      1. 长列表: 数据量大, 无法分页来加载的列表
+      2. 常用处理方式: 
+        懒渲染(无限滚动, 每次只渲染一部分, 等剩余部分滚动到可见区域再渲染其他部分)
+        可视区域渲染: 只渲染可见部分, 不渲染其他部分。
+        虚拟列表即是可视区渲染方法进行的优化
+      
+      3. 原理: 
+        3.1: 可滚动区域计算，得到整个内容的整体高度
+        3.2: 可见区域计算，得到需渲染高度区域
+        3.3：保存列表元素位置，只渲染可视区域内的列表元素，当可见区域滚动时, 根据滚动的offset大小及位置，计算可见区域应该渲染哪些元素
+      
+      4. 实现：
+        计算可见区域起始数据的index，结束index，获取可见区域的数据，并进行渲染。
+        计算起始index对应的数据在整个列表中的偏移位置offset, 并设置。
+    */
+  </script>
+</body>
+</html>

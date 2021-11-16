@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 判断js数据类型的操作有哪些
+
+    // 1. typeof, 只能获取基本的类型(number, undefined, string), 包装类型获取并不详细(object, function), 且typeof null 为 'object'
+    // 2. instanceof 获取引用类型(也可以确定实例对象的原型)
+    // 3. [Object].constructor判断引用类型的值的数据类型.
+    // 4. Object.prototype.toString.call() 用于判断所有类型的值, 返回的是[object **]
+
+    // 一般情况下, 类型判断使用typeof, 引用判断使用instanceof
+
+    var arr = ["1", "3"];
+
+    typeof arr; //object
+    arr instanceof Array; //true
+
+    function Person() {
+      this.name = "zhangsan";
+    }
+    var a = new Person();
+    console.log(a instanceof Person); // true
+    var b = 3;
+    console.log(b instanceof Person); //false
+
+    var a = "hello";
+    var b = [];
+    var e = {};
+    var f = function () {};
+    var g = 12;
+    console.log(a.constructor);
+    console.log(b.constructor);
+    console.log(e.constructor);
+    console.log(f.constructor);
+    console.log(g.constructor);
+    console.log(a.constructor == String);
+    console.log(b.constructor == Array);
+    console.log(e.constructor == Object);
+    console.log(f.constructor == Function);
+    console.log(g.constructor == Number);
+
+    var a = "hello";
+    var b = [];
+    var e = {};
+    var f = function () {};
+    var g = 12;
+    console.log(Object.prototype.toString.call(a));
+    console.log(Object.prototype.toString.call(b));
+    console.log(Object.prototype.toString.call(e));
+    console.log(Object.prototype.toString.call(f));
+    console.log(Object.prototype.toString.call(g));
+    console.log(Object.prototype.toString.call(a) == "[object String]");
+    console.log(Object.prototype.toString.call(b) == "[object Array]");
+    console.log(Object.prototype.toString.call(e) == "[object Object]");
+    console.log(Object.prototype.toString.call(f) == "[object Function]");
+    console.log(Object.prototype.toString.call(g) == "[object Number]");
+
+  </script>
+</body>
+</html>

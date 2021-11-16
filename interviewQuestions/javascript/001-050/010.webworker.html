@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // webWorker的缺点是什么, worker线程怎么获取上下文, 解决卡顿除了webworker还有其他解决方法吗?
+
+    /*
+      1. 缺点: 不能访问web页面, dom api, 消耗cpu周期导致系统反应速度变慢
+
+      2. 获取上下文:
+        主线程与worker之间的通信内容可以是文本也可以是对象, 但这种通信是拷贝关系(传值, 非传址), 因此worker对通信内容的改变不会影响主线程；
+        浏览器的运行机制：先把通信内容串行化，在讲字符串发给worker后还原
+        主线程与worker也能交换二进制数据（file，blob，arraybuffer等）；但发送二进制数据（默认拷贝）会造成性能问题。
+        未解决性能问题允许主线程将二进制数据直接转移给子线程。转移方法transferable Objects,
+        worker.postMessage(arrayBuffer, [arrayBuffer]); 可以快速将数据交给worder从而不产生性能负担
+      
+      3. 其他解决卡顿的方案
+
+        3.1 Timing Slicing-针对事件进行分片处理小函数
+        3.2 web worker提供的多线程处理
+    */
+  </script>
+</body>
+</html>

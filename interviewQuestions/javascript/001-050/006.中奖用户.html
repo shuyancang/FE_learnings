@@ -8,19 +8,30 @@
 </head>
 <body>
   <script>
-    function lottery(whiteList, participant) {
+    function lottery(whiteList, participant) { // whiteList是participant的子集。
       let total = 20000;
       const participantLen = participantLen.length;
-      const whiteListLen = whiteList.length;
-      if (participantLen + whiteListLen < total) {
-        return [];
+      const whiteLen = whiteList.length;
+      if(participantLen <= total) { // 全部中奖, 不用循环。
+        return participant;
       }
-      const res = [];
-      while(total > 0 && whiteList.length > 0){
-        res.push(whiteList.pop());
+      // 利用一个set, 从participant中排除whiteList的信息;
+      const whiteSet = new Set(whiteList);
+      const res = [...whiteList];
+      const list = [];
+      for (let i = 0; i < participantLen; i++) {
+        const tmp = participant[i];
+        if(!whiteSet.has(tmp)){
+          list.push(tmp);
+        };
       }
-      // 找到剩余的随机total个数
-      
+      total -= whiteLen;
+      while(total > 0){
+        const randomIndex = Math.floor(Math.random() * list.length);
+        res.push(list.splice(randomIndex, 1));
+        total--;
+      }
+      return res;
 
     }
     // whiteList:类型字符串数组,意义是表示从其他系统中计算出来的活跃用户，如果这批用户参与抽奖，则必定让他中奖。长度不超过1万
