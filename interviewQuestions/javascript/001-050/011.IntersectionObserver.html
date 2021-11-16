@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 怎么计算组件在视口内出现了几次, IntersectionObserver怎么使用, 怎么知道一个DOM元素出现在视口内
+
+    /*
+      1.  组件在视口内出现了几次
+          方法一. 监听scroll, 调用元素的getBoundingClientRect方法得到他相对于视口左上角的坐标判断是否在视口内。
+          方法二. 使用IntersectionObserver方法。
+      2. IntersectionObserver
+        const io = new IntersectionObserver(callback, option)
+
+        callback元素可见性发生变化的回调, option可选的配置对象
+        io.observer(document.getElementById('testDOM')); // 开始观察
+        io.unoberver(); // 停止观察
+        如果需要观察多个节点元素, 多次调用该方法即可。
+        callback在元素刚进入视口和离开视口时触发, callback参数entries是一个数组, 记录被观察对象列表的可见性的变化信息
+
+        options配置对象
+          threshold: 什么时候触发回调（可见百分比, 触发）
+          root: 基于容器滚动的可见性触发
+          rootMargin: 定义根元素的margin以扩展或缩小触发的距离。
+    */
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现一个函数，将url的querystring转换为对象
+    const seachTool = function(url){
+      const searchStr = (url || '').split('?')[1] || '';
+      const res = {};
+      const searchList = searchStr.split('&');
+      for (const str of searchList) {
+        const [key, val] = str.split('=');
+        if (res[key]) {
+          res[key].push(val);
+        } else {
+          res[key] = [val];
+        }
+      }
+      return res;
+    }
+  </script>
+</body>
+</html>

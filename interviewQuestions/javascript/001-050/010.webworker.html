@@ -7,7 +7,20 @@
   <title>Document</title>
 </head>
 <body>
+  <div>aaa</div>
   <script>
+    console.log("本轮任务");
+    new Promise((resolve, reject) => {
+      resolve(3);
+    }).then(() => {
+      console.log("本轮微任务");
+    });
+
+    document.querySelector("div").addEventListener("click", () => {
+      console.log("click");
+    });
+    document.querySelector("div").dispatchEvent(new Event("click"));
+    console.log("hello");
     // webWorker的缺点是什么, worker线程怎么获取上下文, 解决卡顿除了webworker还有其他解决方法吗?
 
     /*

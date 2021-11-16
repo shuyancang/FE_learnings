@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 请实现一个cacheRequest(url, callback)方法, 保证当使用ajax时, 对同一个api实际在网络层只发出一次请求以节省流量(假定已存在request底层方法用于封装ajax请求, 调用格式为request(url, data => {}))
+
+    /*
+      示范代码如下:
+      cacheRequest('/user', data => { // a.js
+        console.log('a.js中请求user数据', data);
+      })
+
+      cacheRequest('/user', data => { // a.js
+        console.log('a.js中请求user数据', data);
+      })
+    */
+
+    const caches = {};
+    const cacheRequst = function(url, callback){
+      if (caches[url]) {
+        callback(caches[url]);
+        return;
+      }
+      request(url, data => {
+        callback(data);
+        caches[url] = data;
+      });
+    }
+  </script>
+</body>
+</html>
