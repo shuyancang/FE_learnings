@@ -9,8 +9,28 @@
 <body>
   <script>
     // 浏览器为什么要阻止跨域请求, 如何解决跨域, 每次跨域请求都需要到达后端吗
-
+    /*
+      1. 跨域 => 同源策略: 基于网络安全考虑。关注三点: 协议，域名，端口
+      2. 那些网络资源涉及跨域禁止操作
+        无法获取非同源网页的cookie, localStorage, indexedDB(缓存)
+        非同源网页DOM(iframe)
+        无法向非同源地址发送ajax请求或fetch请求
+      3. 解决跨域
+        jsonp
+        document.domain + iframe: 设置成自身或更高一级的父域, 主域必须相同.
+        location.hash + iframe
+        window.name + iframe: window.name有个特征, 在一个窗口的生命周期里, 窗口载入的所有页面都是共享window.name, 每个页面对window.name都有读写权限
+        postMessage
+        CORS
+        nginx
+        nodejs中间件代理
+        websocket
     
+      4. 跨域需要明确的问题
+        跨域并非浏览器限制发起跨域请求, 而是请求正常发起但结果被浏览器拦截, 每次请求都会发出服务器也会相应，但浏览器端在接受响应时基于同源策略拦截。
+        有些浏览器不允许https 跨域访问http, 这会在未发出请求就被拦截。
+    */
+
   </script>
 </body>
 </html>
