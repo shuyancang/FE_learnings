@@ -18,6 +18,37 @@
         4. 新的Promise实例传递一个数组results, 对应每个之前传入的Promise实例的结果, 每一项都有status属性对应'fulfilled'或'rejected'，fulfiilled有完成后的value属性，rejected有reason属性。
 
     */
+
+    Promise.selfSettled = function(list){
+      const count = list.length;
+      const results = new Array(count);
+
+      return new Promise((res, rej) => {
+        let resNum = 0;
+        for (let i = 0; i < count; i++) {
+          list[i].then(
+            val => {
+              results[i] = {
+                status: 'fulfilled',
+                value,
+              }
+            },
+            reason => {
+              results[i] = {
+                status: 'rejected',
+                reason,
+              }
+            }
+          ).finally(() => {
+            resNum++;
+            if (resNum === count) {
+              res(results);
+            }
+          });
+        }
+      });
+    }
+    
   </script>
 </body>
 </html>
