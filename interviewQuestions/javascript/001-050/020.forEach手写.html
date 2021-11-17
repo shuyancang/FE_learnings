@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 手写forEach
+    function forEach(callback, self){
+
+    }
+    Array.prototype.forEach = function(cb, self = this){
+      if(typeof cb !== 'function') {
+        throw('forEach of array is not a function');
+      }
+      for(let i = 0; i < self.length; i++) {
+        // cb(self[i], i, self);
+        cb.call(self, self[i], i, self);
+      }
+    }
+    // forEach接受的callback参数(eachItem, index, curList);
+  </script>
+</body>
+</html>

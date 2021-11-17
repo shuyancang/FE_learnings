@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 两个有序数组A, B, 判断B是否A的子序, 要求不可转化数据格式
+
+    // 两种思路, 一种使用栈, 不断出栈直到完成/不满足要求, 一种使用双指针直到尽头/不满足要求;
+    function isSubList(listA, listB){
+      if (listA.length < listB.length) {
+        return false;
+      }
+      while(listA.length > 0 && listB.length > 0){
+        const lastNum = listB.pop();
+        const temNum = listA.pop();
+        if (lastNum === temNum) {
+          continue;
+        }
+        listB.push(lastNum);
+      }
+      return listB.length === 0;
+    }
+
+    function isSubList(listA, listB){ 
+      let slow = 0, fast = 0;
+      while (fast < listA.length) {
+        if(listA[fast] === listB[slow]) {
+          slow++;
+          fast++;
+        } else if (listA[fast] > listB[slow]) { // 不等
+          return false;
+        } else {
+          fast++;
+        }
+        if (slow === listB.length - 1) {
+          return true;
+        }
+      }
+      return false;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 深拷贝如何解决循环引用
+    function cloneDeep(source){ // 基础版本的拷贝, 但若其中有循环拷贝, 会出现内存泄露
+      if (source === null || typeof source !== 'object' || typeof source === 'function') {
+        return source;
+      }
+      if (source instanceof Array) {
+        return source.map(e => cloneDeep(e));
+      } else { // 对象
+        const res = {};
+        for(let [key, val] of Object.entries(source)){
+          res[key] = cloneDeep(val);
+        }
+      }
+    }
+
+    // 解决方案, 将拷贝过程中, 所有的对象, 存入Set中, 利用Set.has来进行判断是否出现了循环.
+    const objSet = new Set();
+    function cloneLoopDeep(source) {
+      if (source === null || typeof source !== 'object' || typeof source === 'function') {
+        return source;
+      }
+      if (source instanceof Array) {
+        return source.map(e => cloneDeep(e));
+      } else { // 对象
+        const res = {};
+        for(let [key, val] of Object.entries(source)){
+          if (val === null || typeof val !== 'object' || typeof val === 'function') {
+            res[key] = val;
+          } else if (objSet.has(val)) { // 是对象 且出现了循环拷贝
+            res[key] = (val instanceof Array) ? [...val] : {...val};
+          } else {
+            objSet.set(val);
+            res[key] = cloneLoopDeep(val);
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>

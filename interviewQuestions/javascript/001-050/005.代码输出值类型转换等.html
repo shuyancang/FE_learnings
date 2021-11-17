@@ -66,10 +66,16 @@
         Function.prototype.a = () => alert(1);
         Object.prototype.b = () => alert(2);
         function A(){}
-        var a = new A(); // a原型链 => Object => Function
-        a.b(); // 在Function方法上 找不到Object的方法; error: is not a function
-        b.a(); // 在Object的方法上, 没有a方法, 但在Function原型链上找到了: 弹出1
+        var a = new A(); // a显然是一个对象, 
+        a.b(); // 所有对象, 必定是基于Object的实例, 因此有原型方法;
+        a.a(); // a是对象, 不是函数, 不具备a方法, 报错(not a function)
 
+      // 6. 
+        function F(){
+          this.a = 1;
+        } 
+        var obj = new F();
+        console.log(obj.prototype) // undefined, 构造函数的实例, 没有prototype属性, 除了Function; 实例对象通过__proto__指向原型链
   </script>
 </body>
 </html>
