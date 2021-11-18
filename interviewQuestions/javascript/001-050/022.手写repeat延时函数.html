@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function repeat(func, times, wait) {
+
+    }
+    const repeatFun = repeat(console.log, 4, 3000);
+    repeatFun('hello word'); // 实现每间隔3000打印4次
+
+    function repeat(func, times, wait) { // 直接利用interval
+      return function(params){
+        let count = times;
+        const intervalId = setInterval(() => {
+          func.call(null, params);
+          count--;
+          if (count === 0) {
+            clearInterval(intervalId);
+          }
+        }, wait);
+      }
+    }
+
+    function repeat(func, times, wait){ // 利用promise, times后触发一次then, 直到wait耗尽.
+      return function loopPromise(params){
+        new Promise((res) => {
+          setTimeout(() => {
+            if (times >= 1) {
+              times--;
+              func(params);
+              res();
+            }
+          }, wait);
+        }).then(() => {
+          loopPromise(params);
+        });
+      }
+
+      // 或
+      // const promiseTool = (msg) => {
+      //   return new Promise((res) => {
+      //     setTimeout(() => {
+      //       func(msg);
+      //       resolve();
+      //     }, wait);
+      //   })
+      // }
+      // return async function(msg){
+      //   while(times > 0) {
+      //     await promiseTool(msg);
+      //     times--;
+      //   }
+      // } 
+    }
+
+  </script>
+</body>
+</html>

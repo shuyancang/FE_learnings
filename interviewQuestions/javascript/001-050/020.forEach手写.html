@@ -12,13 +12,13 @@
     function forEach(callback, self){
 
     }
-    Array.prototype.forEach = function(cb, self = this){
+    Array.prototype.forEach = function(cb, self = null){
       if(typeof cb !== 'function') {
         throw('forEach of array is not a function');
       }
-      for(let i = 0; i < self.length; i++) {
+      for(let i = 0; i < this.length; i++) {
         // cb(self[i], i, self);
-        cb.call(self, self[i], i, self);
+        cb.call(self, this[i], i, this);
       }
     }
     // forEach接受的callback参数(eachItem, index, curList);
