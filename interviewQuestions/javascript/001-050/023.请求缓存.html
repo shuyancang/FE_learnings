@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 多个页面会公用一个ajax请求, 如何实现只请求一次, （请求缓存）
+    const request = (url, options) => {
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          res({ data: 123 });
+        }, 1000)
+      })
+    }
+
+    const caches = new Map();
+
+    const cacheRequest = (url, options) => {
+      const queryKey = `${url}:${options.method}`;
+      const cacheInfo = caches.get(queryKey);
+      if (cacheInfo && cacheInfo.status === 'fulfilled') { // 已缓存信息
+        return Promise.resolve(cacheInfo.data);
+      } else if (cacheInfo && cacheInfo.status === 'pending') { // 正在请求中
+        return caches.pending;
+      } else if (!cacheInfo) { // 无缓存
+        const requestPedding = request(url, options);
+        caches.set(queryKey, { status: 'pending', pending: requestPedding }); // 请求缓存起来
+        return new Promise((res, rej) => { // promise的缓存
+          requestPedding.then(data => {
+            caches.set(queryKey, {
+              status: 'fulfilled',
+              data,
+            });
+            return Promise.resolve(data);
+          }).catch((err) => {
+            caches.set(queryKey, {
+              status: 'fail',
+              err,
+            })
+            return Promise.reject(err);
+          });
+        });
+      }
+    }
+
+  </script>
+</body>
+</html>
