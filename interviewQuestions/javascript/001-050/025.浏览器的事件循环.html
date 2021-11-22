@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 浏览器的事件循环 和 node事件循环的区别;
+
+    /*
+      1. 浏览器事件循环: 为避免大资源导致文件等待加载出现浏览器停止渲染卡顿, 浏览器任务: 同步, 异步;
+        
+        1.1 同步 => 主线程 => 任务依次全部执行完毕 => 读取任务队列结果主线程执行
+            异步 => event Table(注册回调) => Event Queue => 读取任务队列结果主线程执行
+
+            同步任务和异步任务, 执行中进入不同场所, 同步任务进入主线程, 异步进入event table注册回调函数
+            异步会讲回调函数放入event queue队列, 等待同步任务完成
+            同步执行完毕后主线程进入event queue读取回调, 并执行
+            当所有任务执行完成, 线程闲置。同时js引擎会不断检查主线是否为空, 如果有任务就继续重复上述步骤; 即常说的事件循环(eventloop)
+          
+            补: js引擎中有一个monitor process的进程不断检查主线程, 保证主线程为空时 读取event queue回调来执行
+      
+        1.2 js的任务分类: 宏任务(macrotask)
+          script
+          setTimeout, setInterval, setImmediate
+          I/O
+          UIrender
+          requestAnimationFrame
+        
+        1.3 js的任务分类: 微任务(microtask)
+          process.nextTick
+          Promise中的then, catch ,finally
+          async await(async会隐式返回一个promise, 在await执行后, 会忘微任务队列增加一个微任务)
+          MutationObserver
+        
+        浏览器在针对宏任务和微任务的基本调度是: 执行当前宏任务 => 执行结束 => 微任务队列中是否有微任务 => 执行所有微任务 => 下一个宏任务...
+
+        console.log("script start");
+
+        async function async1() {
+          await async2();
+          console.log("async1 end");
+        }
+        async function async2() {
+          console.log("async2 end");
+        }
+        async1();
+
+        setTimeout(function () {
+          console.log("setTimeout");
+        }, 0);
+
+        new Promise((resolve) => {
+          console.log("Promise");
+          resolve();
+        })
+          .then(function () {
+            console.log("promise1");
+          })
+          .then(function () {
+            console.log("promise2");
+          });
+
+        console.log("script end");
+        // script start => async2 end => Promise => script end => async1 end=> promise1 => promise2 => setTimeout
+    
+      2. Node事件循环: 在libuv中实现的;
+        2.1 libuv中的事件循环6个阶段:
+          timers阶段: 执行setTimeout, setInterval注册回调函数
+          pending callbacks阶段: I/O 的 callback 推迟到下一次循环执行
+          idle, prepare阶段: 执行一些node内部回调
+          poll阶段: I/O时间回调, 同时检测定时器是否到达
+          check阶段: 执行setImmediate注册的回调函数
+          close callbacks阶段: 执行socket.on等回调函数
+        在node中，不是把队列中的任务拿到一个执行栈中执行，而是将整个任务队列全部一起执行或执行到队列的上限，清空队列再去执行其他的(队列执行完毕后切换到其他队列时如果有微任务会将微任务执行完)
+
+        2.2 阶段介绍
+          每轮事件循环都经过以上6个阶段, 在每个过程之后，都会间接性的去执行microtask
+          a. poll阶段执行程序, 同步执行poll队列中的回调, 知道队列为空或能执行的回调达到系统上线
+          b. 然后检查有没有预设的setImmediate, 如果有就转入check阶段, 没有就查询距离最近的timers，用这个时间来作为poll的阻塞时间，如果timer队列是空的就一直阻塞下去;
+
+          特例: nextTick不会在这些阶段执行，而是在每个阶段后都执行。 
+
+          setTimeout(() => console.log(1));
+          setImmediate(() => console.log(2));
+          process.nextTick(() => console.log(3));
+          Promise.resolve().then(() => console.log(4));
+          console.log(5);
+          输出5,3,4,1,2
+      3. 在浏览器和node环境不同的代码
+          console.log(0);
+          setTimeout(() => {
+            console.log("timer1");
+            Promise.resolve().then(() => {
+              console.log("promise1");
+            });
+          }, 0);
+
+          setTimeout(() => {
+            console.log("timer2");
+            Promise.resolve().then(() => {
+              console.log("promise2");
+            });
+          });
+          浏览器中: 0 => timer1 => promise1 => timer2 => promise2
+          node中: 0 => timer1 => timer2 => promise1 => promise2
+        
+      3. node版本的影响:
+          node10及之前, microtask会在事件循环各阶段之间执行, 即一个阶段执行完毕就执行microtask
+          node11后eventloop运行原理发生了变化, 一旦执行一个阶段的宏任务就立刻执行微任务队列, 与浏览器趋于一致。
+      4. setTimeout和setImmediate的顺序
+          setTimeout在timer时候执行, 优先处理timer的回调, settimeout执行顺序优先于setImmediate； 但在settimeout为0时,不一定优先, 因为node识别不了0ms的setTimeout, 至少需要1ms, 如果超过1ms就会优先处理setTimeout的回调，反之则会忽略当前setTimeout回调
+    */
+
+    
+    
+  </script>
+</body>
+</html>

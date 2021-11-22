@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 假设一个秒杀页面, 通过api获取服务器时间戳, 页面上线后用户反馈秒杀倒计时忽前忽后，但不会超出真实时间, 怎么排查, 可能的原因是什么？
+
+    /* 
+      问题分析
+      客户端与服务端的时间同步方案, 最简单的实现方案是设置定时器, 每秒拉取时间从而显示服务器时间, 但存在问题:
+        1. 服务器时拿到的时间由于有网络时间, 客户端拿到时间戳时，已落后于服务器时间
+        2. 每秒拉取服务器接口，增加服务器压力
+      
+      如果从一开始进入页面获取时间戳，客户端定时器每秒让拿到的服务器时间增加1000毫秒，这样会因为setInterval的不准确性(js单线程的阻塞)导致客户端与服务端差距越来越大
+    
+
+      解决方案:
+        1. 客户端初始化时候, 调用获取时间接口: 记录请求时间request_time, 接口响应时间response_time, 接口返回记录的服务器时间server_time, 客户端此时时间local_time;
+        2. 网络不可靠, 甚至延时可达数秒, 因此对时间校准会造成干扰;
+        3. 假定客户端发送请求到服务器的时间，和服务器响应到客户端的时间基本一致, 则一次请求总时间: response_time - request_time
+        4. 真实的服务器时间real_server_time = server_time + (response_time - request_time) / 2
+        5. 当客户端需要获取当前准确的服务器时间时，只要先得到当前客户端时间locale_now_time,那么就可以通过差值获得相对准确的服务器时间: server_now_time = locale_now_time + (real_server_time - locale_time);
+        6. 通过以上公式, 可本地加上定时器, 每秒获取一次当前时间local_now-time, 计算server_now_time即可;
+    */ 
+  </script>
+</body>
+</html>
