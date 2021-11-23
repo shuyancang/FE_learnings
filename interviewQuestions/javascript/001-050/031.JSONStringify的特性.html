@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 说一下JSON.stringify的特性, 与遍历相比哪个性能更高
+
+    /*
+      1. 特性
+        1.1 常用于将obj存入localStorage, Post请求中的JSON body, 处理响应体中的json形式数据, 甚至实现一个深拷贝
+        1.2 对于undefined，函数，symbol作为值时，该键值会被忽略序列化，
+            对于undefined，函数，symbol作为数组中的值时，会被序列化为null
+            单独对undefined，函数，symbol进行序列化时, 会被序列化为undefined
+        1.3 非数组对象的属性, 不一定能保证一特定的顺序出现在序列化后的字符串中
+        1.4 如果转换中 有toJSON函数, 该函数返回值就是序列化结果, 忽略其他所有属性的值
+          JSON.stringify({
+            str: "str",
+            toJSON: function () {
+              return "strToJson";
+            },
+          });
+          // "strToJson"
+        1.5 会正常序列化Date的值: 
+          JSON.stringify({ now: new Date() });
+          "{"now":"2021-02-01T05:00:54.082Z"}"
+        1.6 NaN和Infinity格式的数值当做null
+        1.7 布尔值, 数字, 字符串的包装对象在序列化中会自动转为对应的原始值
+        1.8 其他类型的对象, 如Map/set/weakmap/weakset金辉序列化可枚举的属性
+        1.9 实现深拷贝最简单粗暴的方式就是序列化(JSON.parse(JSON.stringify())); 但因序列化的诸多特性, 会导致坑点如循环引用等。
+        1.10 所有以symbol为键的属性都会被完全忽略
+        1.11 BigInt值不能被序列化
+      
+      2. JSON.stringify的第二个参数replacer, 可是函数或数组
+          replacer: func(key, val)对每一个属性和值进行函数的执行, 可以从而实现打破undefined, symbol, function的转换规则
+          replacer: array, 代表将被序列化成字符串的属性名, 没有的就不进行序列化
+      
+      3. JSON.stringify的第三个参数space, 指定缩进用的空白字符串
+          如果是数, 代表多少个空格， 上限为10，若小于1，则没有空格
+          如果是字符串，会将字符串作为空格的替代插入字符串,超过10个字符取前10个字母
+
+      
+      4. 性能: 
+          JSON.stringify和遍历比较, 性能差很多(接近5倍)。底层实际上也是使用的遍历.
+        
+    
+    
+    */
+  </script>
+</body>
+</html>

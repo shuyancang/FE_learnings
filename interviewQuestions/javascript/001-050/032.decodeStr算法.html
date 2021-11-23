@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 约定规则实现一个decodeStr方法, 输入一个字符串, 根据约定输出编码结果
+    // str = '2[a]1[bc]' => aabc
+    // str = '2[e2[d]]' => eddedd
+    // str = '3[abc]2[cd]ff' => abcabcabccdcdff
+    // N[string]标识string重复N次, 假设字符串必定有效
+
+    function decodeStr(str){ // 从前往后遍历, 以[time, str]的结构计入栈中
+      const res = '';
+      const stack = [];
+      for (let i = 0; i < str.length; i++) {
+        const unit = str[i];
+        if (unit === ']') { // 依次取出stack字符找到前面那个[
+          let curStr = ''
+          while(true){
+            const lastUnit = stack.pop();
+            if(lastUnit === '[') {
+              break;
+            }
+            curStr = lastUnit + curStr;
+          }
+        } else {
+          stack.push(unit);
+        }
+      }
+    }
+  </script>
+</body>
+</html>
