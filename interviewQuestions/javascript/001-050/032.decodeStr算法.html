@@ -28,11 +28,29 @@
             }
             curStr = lastUnit + curStr;
           }
+          if(stack.length === 0) {
+            stack.push(curStr);
+          } else if (stack[stack.length - 1] >= 0) { // 重复次数
+            let count = stack.pop();
+            let tmpStr = '';
+            while (count > 0) {
+              tmpStr += curStr;
+              count--;
+            }
+            stack.push(tmpStr);
+          } else { // 字母, 直接拼接即可
+            stack.push(stack.pop() + curStr);
+          }
+        } else if (unit >= 0 && stack.length > 0 && stack[stack.length - 1] >= 0) { // 数值 , 看情况进行合并
+          stack.push(parseInt(stack.pop() + curStr));
         } else {
           stack.push(unit);
         }
       }
+      return stack.join('');
     }
+
+    // 方法二, 同样使用栈, 记录每个[]的索引, 每次遍历拆分一个[], 直到拆分完成。
   </script>
 </body>
 </html>

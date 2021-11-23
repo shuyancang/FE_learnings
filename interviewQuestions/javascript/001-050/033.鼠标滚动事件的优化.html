@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 鼠标滚动时, 会触发很多次事件, 如何解决
+
+    /*
+      1. scroll事件连续大量触发, 其监听函数中不应该有非常耗时的计算, 推荐使用requestAnimationFrame或setTimeout控制触发频率
+
+        function animationScroll(){
+          let running = false;
+          const eventScroll = () => {
+            if (running) {
+              return;
+            }
+            running = true;
+            requestAnimationFrame(() => {
+              // onHandlerTrigger() 触发事件
+              // running = false;
+            })
+          }
+        }
+
+        let timer = null;
+        funtion scrollThrottler(onHandlerTrigger, delay){
+          if (!timer) {
+            timer = setTimeout(() => {
+              // timer = null;
+              // onHandlerTrigger() 触发事件
+            }, delay)
+          }
+        }
+
+        更普适的代码:
+        function throttle(fn, wait){
+          const cur = Date.now();
+          return function(){
+            if(cur + wait - Date.now() < 0) {
+              fn();
+              time = Date.now();
+            }
+          }
+        }
+        // loadash 提供现成的throttle函数, 直接使用throttle(callback, wait)
+    */
+  </script>
+</body>
+</html>
