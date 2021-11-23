@@ -11,8 +11,17 @@
     // 十进制转36进制
     // 最简单的方法使用toString(36)即可实现
     function baseConvert(num){
-      return 
+      // 利用String.FromCharCode(65) = 'A'进行计算
+      let res = '';
+      while (num >= 0) {
+        const rest = num % 36;
+        const letter = rest > 9 ? String.FromCharCode(rest - 10 + 65) : `${rest}`;
+        res = `${letter}${res}`;
+        num = parseInt(num / 36);
+      }
+      return res;
     }
+    // 转为任意进制, 可以将36改为变量进行即可
   </script>
 </body>
 </html>
