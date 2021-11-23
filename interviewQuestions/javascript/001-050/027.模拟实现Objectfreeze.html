@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 模拟实现Object.freeze
+    // Object.freeze: 对象属性不可添加, 不可删除, 同时对象已有属性不可配置, 不可修改(可遍历)
+    function _freeze(obj){
+      for (const key of Object.keys()) { // 使用for key in 且 判定obj.hasOwnProperty(key)更原生
+        Object.defineProperty(obj, key, {
+          writable: false, // 不可写
+        });
+      }
+      Object.seal(obj); // 锁定对象(对象不可添加删除新属性，所有现有属性的configurable变为不可配置false);
+    }
+
+    /*
+      Object.defineProperty(obj, key, config) // 定义对象属性的特性
+      configuable: 是否可配置, 如果false，属性的描述符(wriable, enumeralbe)将不会被修改, 且不可删除
+      wriable: 是否可修改属性值
+      enumerable: 是否可遍历
+      value: 属性值
+
+      Object.getOwnPropertyDescriptors(obj) // 获取对象属性的特性
+
+      Object.preventExtensions 阻止对象拓展(添加新属性) => Object.isExtensions判定是否可拓展
+    */
+  </script>
+</body>
+</html>
