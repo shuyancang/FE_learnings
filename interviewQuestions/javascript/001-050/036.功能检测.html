@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 什么是功能检测, 功能推断, UA字符串
+
+    // 功能检测: 确定浏览器是否支持某段代码, 是否运行不同的代码, 以便浏览器始终能正常运行代码的功能而不会在浏览器中出现崩溃和错误
+    //      if('geolocation' in navigator) {} else {}
+  
+    // 功能推断: 对功能进行检测, 检测判断后, 使用其他功能, 基于上面的判断推断其他功能也能用; 该方法不推荐,不能确保万无一失
+    //      if(document.getElementByTagName) {const element = document.getElementById(id)}
+
+    // UA字符串, 浏览器报告的一个字符串
+    // 允许网络协议对等方识别用户代理的类型，操作系统，应用商，应用版本，通过navigator.userAgent访问, 但该字符串难以解析且存在欺骗性
+    // Chrome： 同时作为chrome和safari进行报告。检查Safari除了检查Safari字符串还需检查是否存在Chrome
+  </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 手写ajax
+
+    /*
+      1. 基础ajax代码: 
+      const http = new XMLHttpRequest();
+      http.open('GET', 'someurl', ) // http.open(method, url, async, user, password)
+      http.setRequestHeader('Accept', 'application/json') // http.setRequestHeader(header, value)
+      http.responseType = 'json';
+      http.send(null);
+      http.onreadystatechange = function(){
+        if(http.readyState !== 4){
+          return;
+        }
+        if (http.status === 2) {
+          console.log(http.responseText);
+        } else {
+          console.err(http.statusText);
+        }
+      }
+
+      http.onerror = function(){
+        console.err(http.statusText);
+      }
+      // 以上可封装入一个Promise方法中, 进而通过then获取res或rej, 即为通用的请求封装;
+    
+      2. 相关知识点: 
+        XMLHttpRequest.open() 接受参数(method, url, async, user, password)
+        XMLHttpRequest.send() 传输的参数;
+        XMLHttpRequest.setRequestHeader() 设置http请求头信息, 必须在open之后，send之前。两个参数(header头信息字段, value对应字段值)
+        XMLHttpRequest.getResponseHeader() 获取指定头信息字段
+        XMLHttpRequest.setAllResponseHeader() 获取所有http头信息
+        XMLHttpRequest.readyState返回当前所处状态: 
+          0(UNSENT) 请求未初始化
+          1(OPENNED)服务器连接已建立
+          2(HEADERS_RECEIVED)请求已接受
+          3(LOADING)处理中
+          4(DONE)请求已完成
+        XMLHttpRequest.status: 整数标识服务器回应的http状态码
+        XMLHttpRequest.onreadystatechange监听readystate变化的函数
+        XMLHttpRequest.responseText从服务器接受的字符串
+    */
+    
+
+
+  </script>
+</body>
+</html>
