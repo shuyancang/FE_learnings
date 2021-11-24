@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 如果在控制台运行以下函数, 页面(选项卡)UI是否任然响应
+
+    function foo(){
+      return Promise.resolve().then(foo);
+    }
+    
+    // 不会响应 
+    /*
+      1. 开发人员假设事件循环图中只有一个任务队列, 实际上我们可以有多个任务队列, 由浏览器选择其中一个队列并在该队列中处理回调.
+      2. 从底层看, js有宏任务和微任务, 宏任务在单个循环周期中一次一个的推入堆栈, 但微任务总是在执行后返回事件循环之前才清空，因此如果以处理条目的速度向这个队列添加条目，就永远在处理微任务，只有当微任务队列为空时，事件循环才会重新渲染页面。
+
+      因此, foo会不断的在微任务列表添加另一个foo回调，导致时间循环无法处理其他事件。阻止渲染。
+    
+
+      console.log('start');
+      setTimeout(() => {
+        console.log('timeout none');
+        setTimeout(() => {
+          console.log('timeout none innner');
+        })
+      })
+      setTimeout(() => {
+        console.log('timeout 0');
+        setTimeout(() => {
+          console.log('timeout 0 innner');
+        }, 0)
+      }, 0)
+      Promise.resolve(1).then(res => {
+        console.log('Promise1')
+        Promise.resolve(1).then(() => {
+          console.log('promise1 inner')
+        })
+      })
+      Promise.resolve(1).then(res => {
+        console.log('Promise2')
+        Promise.resolve(1).then(() => {
+          console.log('promise2 inner')
+        })
+      })
+      console.log('end');
+    */
+
+    console.log('start');
+      setTimeout(() => {
+        console.log('timeout 0');
+        Promise.resolve(0).then(() => {
+          console.log('promise0 inner')
+        })
+      }, 0)
+      Promise.resolve(1).then(() => {
+        console.log('promise1 inner')
+        setTimeout(() => {
+          console.log('timeout 1 inner')
+        }, 0);
+      })
+      console.log('end');
+  </script>
+</body>
+</html>

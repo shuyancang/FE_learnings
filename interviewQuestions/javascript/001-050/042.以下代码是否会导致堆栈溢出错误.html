@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 判断一下代码是否会导致堆栈溢出
+
+    function foo(){
+      setTimeout(foo, 0);
+    }
+    // foo(); 
+    /*
+      不会。
+      浏览器主要组件: js engine(堆栈), eventloop, task queue, webapi;
+      调用栈是后进先出, 每次从堆栈中取出一个函数然后从上到下运行。每当遇到一些异步代码时, 就交给Web api. 因此每当事件被触发时，callback都会被发送到任务队列；
+      eventloop不断监视任务队列，并按照排序一次处理一个回调，每当调用堆栈为空时，eventloop获取回调并将其放入堆栈中进行处理。调用堆栈不为空时，事件循环不会将任何回调推入堆栈
+      因此foo执行时，会将内部setTimeout放入webapi中，执行完毕后，调用堆栈为空，计时器到达，foo将会被发送到任务队列中，如此循环执行，堆栈不会溢出。
+    */
+  </script>
+</body>
+</html>

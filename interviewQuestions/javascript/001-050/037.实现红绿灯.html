@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现一个红绿灯(3s 打印red, 2s打印green, 1s 打印yellow)
+
+    // Promise~~~~这么写还不如嵌套写setTimeout呢~
+    function trafficLigit(){
+      function twinkle(color, delay){
+        return new Promise((res, rej) => {
+          setTimeout(() => {
+            console.log(color);
+            res();
+          }, delay);
+        })
+      }
+      twinkle('red', 3000).then(() => {
+        twinkle('green', 2000).then(() => {
+          twinkle('yellow', 1000)
+        })
+      })
+    }
+
+    async function trafficLigit(){ // 直接使用async 和 await 看起来友好多了~
+      function twinkle(color, delay){
+        return new Promise((res) => {
+          setTimeout(() => {
+            console.log(color);
+            res(color);
+          }, delay);
+        })
+      }
+      await twinkle('red', 3000);
+      await twinkle('green', 2000);
+      await twinkle('yellow', 1000);
+    }
+
+    trafficLigit();
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 有一个函数, 参数是一个函数, 返回值也是一个函数, 返回的函数和入参的函数像是，但这个函数只能执行3次，再次执行无效，如何实现
+
+    function callbackTimes(callback){
+      let maxTime = 3;
+      return (...rest) => {
+        if(maxTime > 0) {
+          callback.call(...rest)
+          maxTime--;
+        }
+      }
+    }
+
+    const logInfo = callbackTimes(console.log);
+    logInfo('start', 'say', 'hi');
+    logInfo('01', 'come');
+    logInfo('02', 'come');
+    logInfo('03', 'come');
+    logInfo('04', 'come');
+  </script>
+</body>
+</html>

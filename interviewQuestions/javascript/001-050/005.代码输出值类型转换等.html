@@ -76,6 +76,56 @@
         } 
         var obj = new F();
         console.log(obj.prototype) // undefined, 构造函数的实例, 没有prototype属性, 除了Function; 实例对象通过__proto__指向原型链
+
+      // 7. 
+        let a = 1, b = 2, head = { next: { next: 1 }};
+        [a, b] = [b, a];
+        [head.next, head.next.next] = [head.next.next, head.next];
+
+        console.log(a, b, head);
+        // a, b值互换，显而易见, a变为2, b变为1;
+        // 初始head.next.next值为1缓存, head.next值为{next: 1}缓存起来, 
+        // head.next = 1; head.next.next = {next: 1}显然, head变为{next: 1}(因为1.next = 1不符合要求)
+        // 解构: 以上实际上可以理解为，在右边创建临时变量存储, 对应值然后赋值给等号左边的信息；
+
+        /* 解构： 数组解构, 对象解构
+          数组解构: 按顺序作用到数组的元素上, 变量或者对象的属性，取决于对应的位置；
+            [, , c] = [1, 2, 3]可以有选择性的给对应位置赋值，省去不必要的赋值
+          对象解构: 根据属性名解构，先找到同名属性, 把等号右侧的属性值赋值给等号左边的同属姓名的属性上。
+
+          默认值, 如果数组解构中对应指定位置不存在, 就会使用默认值, 只要与undefined比较即可进行判定
+        */
+      
+      // 8. 
+        const value = {number: 10};
+        let number = 2;
+        const myultiply = (x = {...value}, y = number) => {
+          y++;
+          console.log((x.number *= y));
+        }
+        
+        myultiply(); // 10 * 3 -> 30
+        myultiply(); // 10 * 3 -> 30
+        myultiply(value, number); // 10 * 3 -> 30但此时value为number:30
+        myultiply(value, number); // 30 * 3 -> 90
+        // {...value}为默认值时，为浅拷贝, 值不会被影响。
+        // js中所有函数的参数, 都是按值传递的。把函数外部的值复制给函数内部的参数, 就合把值从一个变量复制到另一个变量一样。
+        // 不过，基本类型的传递如同基本变量的复制一样，传递按值传递。而应用类型的传递如同引用类型变量的复制一样，是按照引用传递的。即，传入函数的是原始值的地址，因此在函数内部修改引用类型的值，会影响原始值。
+      
+      // 9. 
+        const person = {name: 'zhangsan'}
+        Object.defineProperty(person, "age", {
+          value: 21
+        });
+        person.age = 18;
+        console.log(person); // {name: 'zhangsan', 'age': 21}
+        console.log(Object.keys(person));  // ['name']
+
+        // Object.defineProperty方法添加的属性，默认不可枚举, 默认不可变, 不可改。
+        // 对象里目前存在的属性描述符有两种主要形式: 数据描述符(value, writable)和存取描述符(getter, setter)
+        // configurable: 是否可配置，可删除。
+        // enumrable: 是否可迭代。
+        // 如果描述符中属性被省略，默认configurable, enumrable, writable均为false, value, get, set均为undefined
   </script>
 </body>
 </html>
