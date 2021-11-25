@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 嵌套调用, a.b.c.d.e易抛出异常, 请写一个get函数, 使用get(a, 'b.c.d.e')
+
+    function loadashGet(target, path, defaultVal){
+      const keys = path.replace(/\[(\d+)\]/g, '.').split('.');
+      let temp = target;
+      for (let key of keys) {
+        if(temp === undefined) {
+          return defaultVal;
+        }
+        temp = temp[key];
+      }
+      return temp;
+      // 利用reduce可以更简洁
+      return keys.reduce((pre, cur) => {
+        return pre[cur] || {}
+      }, (target || {})) || defaultVal;
+    }
+  </script>
+</body>
+</html>

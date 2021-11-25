@@ -8,7 +8,8 @@ https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/
 
 
 1.  Proxy, Reflect的ES6
-
+2. 正则匹配的$1 等。
+3. prototype
 
 
 
