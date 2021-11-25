@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现链式调用
+
+    // 核心: 调用完的方法, 返回实例本身this
+    function Test(){
+      console.log('初始化');
+    }
+    Test.prototype.doSth = function(param){
+      console.log('do sth')
+      return this;
+    }
+
+    const obj = {
+      a(){
+        return this;
+      },
+      b(){
+        return this;
+      }
+    }
+
+    class LinkedCallType{ // 类的链式调用, 返回new 的新类。
+      constructor(initValue){
+        this.value = initValue || 0;
+      }
+      add(num){
+        return new LinkedCallType(this.value + num);
+      }
+      minus(num){
+        return new LinkedCallType(this.value - num);
+      }
+      mul(num){
+        return new LinkedCallType(this.value * num);
+      }
+      devide(num){
+        return new LinkedCallType(this.value / num);
+      }
+    }
+  </script>
+</body>
+</html>

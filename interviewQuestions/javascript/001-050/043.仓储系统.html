@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现一个简单的仓储系统, 可以不断的转入转出货物, 货物最多两层子类目, 数值代表该子类目转入转出的数量。转出时不可爆仓
+
+    /*
+      category中, key代表类目/子类目名, value为number代表类目的数量, 为object的嵌套结构，最多嵌套两层。
+      {
+        proA: {
+          a: 1,
+          b: 2,
+          c: {
+            c1: 3, 
+            c2: 4,
+          }
+        },
+        proB: ...
+      }
+      转入{proA: {a: 3, c: 1}}存入, 但此时若转出{proA: {a: 4}}就会发现子类目a爆仓
+    */
+
+    class Category{
+      constructor(options){
+        this.store = options;
+      }
+      inputCate(goods, target = this.store){
+        for (let key of Object.keys(goods)) {
+          const val = goods[key];
+          if (typeof val === 'number') {
+            target[key] = (target[key] || 0) + val;
+          } else if (typeof val === 'object' && val !== null) {
+            if(!target[key]){
+              target[key] = {};
+            }
+            this.inputCate(val, target[key]);
+          }
+        }
+      }
+      outputCate(goods, target = this.store){
+        for(let key of Object.keys(goods)) {
+          const val = goods[key];
+          if (typeof val === 'number') {
+            if (val > (target[key] || 0)) {
+              throw Error(`${key}已爆仓`);
+            }
+            target[key] = target[key] - val;
+          } else if (typeof val === 'object' && val !== null) {
+            this.outputCate(val, target[key]);
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>

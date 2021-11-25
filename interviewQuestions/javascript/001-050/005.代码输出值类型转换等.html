@@ -126,6 +126,16 @@
         // configurable: 是否可配置，可删除。
         // enumrable: 是否可迭代。
         // 如果描述符中属性被省略，默认configurable, enumrable, writable均为false, value, get, set均为undefined
+      
+      // 10.
+        const firstPromise = new Promise((res, rej) => {
+          setTimeout(res, 500, 'one');
+        });
+        const secendPromise = new Promise((res, rej) => {
+          setTimeout(res, 100, 'two');
+        })
+        Promise.race([firstPromise, secendPromise]).then(res => console.log(res));
+        // 'two'， race处理的是率先改变状态的Promise， 因此只执行快速的。
   </script>
 </body>
 </html>

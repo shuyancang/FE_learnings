@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现add(1)(2)(3)
+    /* 函数的柯里化: 
+      基础版: const add = (a) => (b) => (c) => a + b + c;
+      柯里化
+        function add(...arg){
+          let res = arg[arg.length - 1];
+          if(arg.length === 1) {
+            return res;
+          }
+          arg.pop();
+          return res + add(arg);
+        }
+    
+    
+    */
+  </script>
+</body>
+</html>
