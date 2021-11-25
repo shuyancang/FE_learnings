@@ -12,16 +12,35 @@
     /* 函数的柯里化: 
       基础版: const add = (a) => (b) => (c) => a + b + c;
       柯里化
-        function add(...arg){
-          let res = arg[arg.length - 1];
-          if(arg.length === 1) {
-            return res;
+        进阶版1.明确fn参数的个数时; 
+          const curry = (fn) => {
+            return function recursionTool(...args){
+              console.log(args, fn.length);
+              if (args.length === fn.length) { // 明确fn参数的个数时;
+                return fn(...args);
+              }
+              return (...nextArgs) => recursionTool(...args, ...nextArgs) // 递归将当前参数, 放到后续中执行。
+            }
+          } 
+          const getSum = (a, b, c) => a + b + c;
+        
+        进阶版2: fn参数随意时:
+          const getSum = (...args) => args.reduce((a, b) => a + b);
+          const curry = (fn) => {
+            let args = [];
+            return function temp(...nextArgs) {
+              console.log(args, nextArgs)
+              if (nextArgs.length > 0) {
+                args = [...args, ...nextArgs];
+                return temp;
+              }
+              const val = fn(...args);
+              args = [];
+              return val;
+            }
           }
-          arg.pop();
-          return res + add(arg);
-        }
-    
-    
+          const testRes = curry(getSum);
+          testRes(1)(2)()
     */
   </script>
 </body>
