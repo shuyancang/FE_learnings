@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 用ES6 Proxy实现arr[-1]的访问
+
+    const arr = [1, 2, 3, 4, 5];
+    function setArraySpe(arr){
+      return new Proxy(arr, {
+        get: function(target, prop, receiver){
+          return Reflect.get(
+            target,
+            prop >= 0 ? prop : (target.length + (+prop)), // 负数就反向访问。
+            receiver
+          );
+          // return target[target.length + prop]
+        }
+      });
+    }
+
+    /*
+      Proxy: 创建对象代理, 实现基本操作的拦截和自定义
+        const p = new Proxy(target-目标对象, handler-处理器对象)
+        handler对象的方法: 
+          handler.getPrototypeOf => Object.getPrototypeOf方法的捕捉器
+          handler.setPrototypeOf => Object.setPrototypeOf方法的捕捉器
+          handler.isExtensible
+          handler.preventExtensions
+          handler.getOwnPropertyDescriptor
+          handler.defineProperty
+          handler.has: in操作符的捕捉器
+          handler.get: 属性读取操作的捕捉器(obj, prop)
+          handler.set: 属性设置操作的捕捉器(obj, prop, val)
+          handler.deleteProperty: delete操作的捕捉器
+          handler.ownKeys: Object.getOwnPropertyNames 和 Object.getOwnPropertySymbols方法的捕捉器
+          handler.apply 函数调用操作的捕捉器
+          handler.construct: new操作的捕捉器
+
+      Reflect: 提供拦截js操作的方法, 并非构造函数
+        Reflect.apply(target, thisArg, args); 对函数进行调用, 同时传入 一个数组为参数与Function.prototype.apply类似.
+        Reflect.construct(target, args, newTarget) 对构造函数执行new操作, 相当于new target(...args)
+        Reflect.defineProperty(target, prop, attrs) 类似Object.defineProperty, 成功返回true
+        Reflect.deleteProperty(target, prop) 作为delete操作符, 相当于执行delete target[prop]
+        Reflect.get(target, prop, receiver) 获取目标属性值, 类似target[name]
+        Reflect.getOwnPropertyDescriptor(target, prop); 类似Object.getOwnPropertyDescriptor, 返回属性描述或undefined
+        Reflect.getPrototypeOf(target) 类似Object.getPrototypeOf
+        Reflect.has(target, prop) 判断对象是否存在某个属性, 与in运算符相同
+        Reflect.isExtension(target) 同Object.isExtension
+        Reflect.ownKeys(target): 返回对象自身属性数组
+        Reflect.preventExtensions(target)
+        Reflect.set(target, prop, val, receiver) 将值分配给属性的函数, 返回bool(成功true)
+        Reflect.setPrototypeOf(target, prototype) 设置对象的原型, 返回bool
+    */
+  </script>
+</body>
+</html>

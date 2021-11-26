@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 将基于parentId关联的以为数组，转化为树形数组;
+    const input = [{
+      id: 1,
+      val: 'headNode',
+      parentId: null, // 基于该属性挂钩, 树形数组携带children;
+    }];
+
+    const transTree = (list) => {
+      const listMap = new Map(); // 将数据移动到map结构中方便直接修改 -> 额外空间但时间复杂度有降低;
+      const parentIdSet = new Set(); // 父id集合;
+      for(let node of list){
+        listMap.set(node.id, node);
+        parentIdSet.add(node.id);
+      }
+      for (let parentId of parentIdSet) {
+        const
+      }
+      return treeList;
+    }
+
+  </script>
+</body>
+</html>

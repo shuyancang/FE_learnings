@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现Promise.all方法
+
+    function _PromiseAll(promLists){
+      return new Promise((res, rej) => {
+        let count = 0;
+        const results = [];
+        for (let i = 0; i < promLists.length; i++) {
+          const curPro = promLists[i];
+          curPro.then((data) => {
+            count++;
+            results[i] = data;
+          }).catch(err => {
+            rej(err);
+          }).finally(() => {
+            if (count === promLists.length) {
+              res(results);
+            }
+          });
+        }
+      })
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 介绍防抖和节流, 区别及应用, 用js实现
+
+    /*
+      1. 防抖: 一段时间内无重复操作才执行;  // 操作后一段时间执行, 如果期间又有重复操作, 就一直延迟。
+        适用场景: 按钮提交(防止多次提交, 只执行最后一次提交); 搜索框/输入框改变查询(防止连续操作发送请求, 只发送最后一次输入)
+        fucntion debouce(fn, wait){
+          let timer = null; // 如果需要有返回值, 可以在此处 let res = null;
+          return function(...rest){
+            clearTimeout(time);
+            timer = setTimeout(() => {
+              fn.apply(this, rest); // 函数如果需要返回值, 在此处接收,赋值给res,
+            }, wait)
+          }
+        }
+      
+      2. 节流: 单位时间内, 只执行一次, 若多次执行, 只执行一次
+        使用场景: 拖拽(防止高频触发位置变动), 监控浏览器的resize
+        实现: 时间戳, 定时器
+        function throttle(fn, wait){
+          let timer = 0;
+          return function(...rest){
+            const cur = Date.now();
+            if (timer === 0 || cur - pre > wait) {
+              fn.call(this, ...rest);
+              timer = cur;
+            }
+          }
+        }
+
+        function throttle(fn, wait){
+          let timer = null;
+          return function(...rest){
+            if (timer === null) {
+              func.call(...rest); // 立刻执行, 时间段内只执行一次.
+              timeout = setTimeout(() => {
+                // func.call(...rest); 写这里也可以。
+                timeout = null;
+              }, wait)
+            }
+          }
+        }
+    */ 
+
+  </script>
+</body>
+</html>
