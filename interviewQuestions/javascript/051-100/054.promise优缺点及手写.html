@@ -98,7 +98,113 @@
             }
     */
 
+    const PENDING = 'pending';
+    const FULLFILLED = 'fullfilled';
+    const REJECTED = 'rejected';
+    const _Promise = function(fn){
+      this.status = PENDING;
+      this.value = undefined;
+      this.reason = undefined;
+      this.onFullfilledCallbacks = []; // 收集完成状态对应的onFullfilled函数
+      this.onRejectedCallbacks = []; // 收集失败状态对应的onRejected函数
+      function resolve(value){ // 成功接收
+        if (value instanceof _Promise) { // resolve跟一个Promise
+          return value.then(resolve, reject); // 将Promise
+        }
+        setTimeout(() => { // 保证本次执行为异步执行;
+          this.status = FULLFILLED;
+          this.value = value;
+          this.onFullfilledCallbacks.forEach(cb => cb(this.value));
+        })
+      }
+      function reject(reason) { // 失败状态接收
+        setTimeout(() => {
+          this.status = REJECTED;
+          this.reason = reason;
+          this.onRejectedCallbacks.forEach(cb => cb(this.reason));
+        });
+      }
+      try {
+        fn(resolve, reject);
+      } catch (err) {
+        reject(err);
+      }
+    }
 
+    _Promise.prototype.then = function(onFullfilled, onRejected){
+      onFullfilled = (typeof onFullfilled === 'function') ? onFullfilled : (val => val); // 保证参数默认类型
+      onRejected = (typeof onRejected === 'function') ? onRejected : (err => { throw err; }); 
+      if (this.status === FULLFILLED) { // 已完成状态
+        const nextPromise = new Promise((res, rej) => {
+          setTimeout(() => {
+            try {
+              // res(onFullfilled(this.value)); // 保证继续往后链式传输promise
+              resolvePromise(nextPromise, onFullfilled(this.value), res, rej);
+            } catch (e) {
+              rej(e);
+            }
+          });
+        });
+        return nextPromise;
+      }
+      if (this.state === REJECTED) {
+        const nextPromise = new Promise((res, rej) => {
+          setTimeout(() => {
+            try {
+              // rej(onRejected(this.reason))
+              resolvePromise(nextPromise, onRejected(this.reason), res, rej);
+            } catch (error) {
+              rej(error);
+            }
+          });
+        })
+        return nextPromise;
+      }
+      if (this.state === PENDING) { // 等待状态; 将相关的Promise进行缓存, 等待执行到对应状态时再进行处理
+        const nextPromise = new Promise((res, rej) => {
+          this.onFullfilledCallbacks.push(val => {
+            try {
+              resolvePromise(nextPromise, onFullfilled(val), res, rej);
+            } catch (error) {
+              rej(error)
+            }
+          });
+          this.onRejectedCallbacks.push(reason => {
+            try {
+              resolvePromise(nextPromise, onRejected(reason), res, rej);
+            } catch (error) {
+              rej(error);
+            }
+          })
+        });
+        return nextPromise;
+      }
+    }
+
+    function resolvePromise(newPromise, x, resolve, reject){
+      let called = false;
+      try {
+        if (typeof x.then === 'function') {
+          then.call(
+            x,
+            y => {
+              if(called) return;
+              called = true;
+              resolvePromise(newPromise, y, resolve, reject);
+            },
+            r => {
+              if(called) return;
+              called = true;
+              reject(r);
+            }
+          )
+        } else {
+          resolve(x);
+        }
+      } catch (error) {
+        resolve(x);
+      }
+    }
 
   </script>
 </body>
