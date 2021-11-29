@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 自定义一个myInterval(fn, a, b)每次间隔a, a + b, a +2b, ...a + nb时间执行fn, 然后写一个myClear停止对应计时器
+
+    function intervalTool (cb, a, b) { // 写法一闭包
+      let count = 1;
+      let timer;
+      function myInterval() {
+        timer = setTimeout(() => {
+          count++;
+          cb();
+          myInterval();
+        }, a + count * b);
+      }
+      function myClear(){
+        if (timer) {
+          clearTimeout(timer);
+        }
+      }
+      return {myInterval, myClear};
+    }
+    
+    const {myInterval, myClear} = intervalTool(() => {
+      console.log('00000');
+    }, 1000, 500);
+
+    function MyInterval (cb, a, b) { // 写法二构造函数
+      this.count = 0;
+      this.timer = null;
+      this.start = () => {
+        this.timer = setTimeout(() => {
+          console.log(a + this.count * b);
+          cb();
+          this.count++;
+          this.start();
+        }, a + this.count * b);
+      }
+      this.stop = () => {
+        clearTimeout(this.timer);
+      }
+    }
+    const tt = new MyInterval(() => console.log('00'), 1000, 1000);
+    tt.start();
+  </script>
+</body>
+</html>
