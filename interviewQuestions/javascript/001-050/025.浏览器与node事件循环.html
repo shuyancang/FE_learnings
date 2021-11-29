@@ -16,19 +16,21 @@
         1.1 同步 => 主线程 => 任务依次全部执行完毕 => 读取任务队列结果主线程执行
             异步 => event Table(注册回调) => Event Queue => 读取任务队列结果主线程执行
 
-            同步任务和异步任务, 执行中进入不同场所, 同步任务进入主线程, 异步进入event table注册回调函数
-            异步会讲回调函数放入event queue队列, 等待同步任务完成
-            同步执行完毕后主线程进入event queue读取回调, 并执行
-            当所有任务执行完成, 线程闲置。同时js引擎会不断检查主线是否为空, 如果有任务就继续重复上述步骤; 即常说的事件循环(eventloop)
+            a. 同步任务直接在主线程排队依次执行, 异步任务在任务队列中, 若有多个异步任务则需要在任务队列中排队等待, 任务下一步会被移动到调用栈然后主线程执行调用栈的任务; 
+            b. 调用栈是一个栈结构, 函数调用形成帧栈, 帧中记录当前函数的参数、局部变量等上下文信息，函数调用完成后执行上下文从栈中弹出
+            c. 同步任务和异步任务, 执行中进入不同场所, 同步任务进入主线程, 异步进入event table注册回调函数
+            d. 异步会讲回调函数放入event queue队列, 等待同步任务完成
+            e. 同步执行完毕后主线程进入event queue读取回调, 并执行
+            f. 当所有任务执行完成, 线程闲置。同时js引擎会不断检查主线是否为空, 如果有任务就继续重复上述步骤; 即常说的事件循环(eventloop)
           
             补: js引擎中有一个monitor process的进程不断检查主线程, 保证主线程为空时 读取event queue回调来执行
       
         1.2 js的任务分类: 宏任务(macrotask)
           script
           setTimeout, setInterval, setImmediate
-          I/O
+          I/O(鼠标键盘网络事件)
           UIrender
-          requestAnimationFrame
+          requestAnimationFrame(既不属于宏任务, 也不属于微任务, 他要求的是浏览器下次重绘之前调用指定的动作, 它在GUI渲染前执行, 在宏任务之后执行, 不过不一定会在当前帧执行, 浏览器根据当前策略自行决定在哪一帧执行)
         
         1.3 js的任务分类: 微任务(microtask)
           process.nextTick
@@ -68,19 +70,25 @@
         // script start => async2 end => Promise => script end => async1 end=> promise1 => promise2 => setTimeout
     
       2. Node事件循环: 在libuv中实现的;
+          Nodejs采用v8作为js解析引擎, 在I/O处理方面使用自己设计的libuv(基于事件驱动的跨平台抽象层, 封装不同操作系统的底层特性, 对外提供统一的API, 在它里面实现事件循环机制)
+          Node的运行机制: 
+            V8解析js脚本 => 解析后的代码执行Node API => libuv负责Node API的执行，将不同任务分配到不同线程形成EVENT loop, 以异步形式将任务的执行结果返回给V8 => 反馈给用户
         2.1 libuv中的事件循环6个阶段:
-          timers阶段: 执行setTimeout, setInterval注册回调函数
-          pending callbacks阶段: I/O 的 callback 推迟到下一次循环执行
+          timers阶段: 执行setTimeout, setInterval注册回调函数, 由poll阶段控制;
+          I/O callbacks阶段: I/O 的 callback 推迟到下一次循环执行, 处理一些上一轮循环中少数未执行的I/O
           idle, prepare阶段: 执行一些node内部回调
-          poll阶段: I/O时间回调, 同时检测定时器是否到达
+          poll阶段: 获取新的I/O事件, 适当条件下将node阻塞在这里, 同时检测定时器是否到达
           check阶段: 执行setImmediate注册的回调函数
           close callbacks阶段: 执行socket.on等回调函数
         在node中，不是把队列中的任务拿到一个执行栈中执行，而是将整个任务队列全部一起执行或执行到队列的上限，清空队列再去执行其他的(队列执行完毕后切换到其他队列时如果有微任务会将微任务执行完)
+          
 
         2.2 阶段介绍
           每轮事件循环都经过以上6个阶段, 在每个过程之后，都会间接性的去执行microtask
           a. poll阶段执行程序, 同步执行poll队列中的回调, 知道队列为空或能执行的回调达到系统上线
           b. 然后检查有没有预设的setImmediate, 如果有就转入check阶段, 没有就查询距离最近的timers，用这个时间来作为poll的阻塞时间，如果timer队列是空的就一直阻塞下去;
+          c. Nodejs中的宏任务: Timer Queue, IO Callbacks Queue, CheckQueue, Close Callbacks Queue; 在浏览器中可以认为只有一个宏队列(所有宏任务都添加到这个宏队列中), 在Nodejs中不同的宏任务放在不同的宏队列
+          d. NodeJs中的微任务: Next Tick Queue(放置process.nextTick回调); Other Micro Queue(其他微任务如Promise); 同样的在浏览器也可以认为只有一个微任务, 而Node中不同的微任务在不同的微队列中。
 
           特例: nextTick不会在这些阶段执行，而是在每个阶段后都执行。 
 
@@ -90,6 +98,12 @@
           Promise.resolve().then(() => console.log(4));
           console.log(5);
           输出5,3,4,1,2
+        
+        2.3 Nodejs的Eventloop
+          a. 执行全局js同步代码
+          b. 执行microtask微任务, 先执行Next Tick Queue中的任务, 再执行Other Micro Queue中的任务
+          c. 开始执行宏任务, 六个阶段分别执行对应阶段的任务, 从第一阶段开始执行相应每个阶段宏任务中的所有任务, 注意这里是所有每个阶段宏任务队列的所有任务 (浏览器中只是读取宏任务队列的第一个任务出来执行); 每个阶段的宏任务执行完毕后, 开始执行微任务;
+          d. 总体:Timer => 步骤b => I/O => 步骤b => Check => 步骤b => Close => 步骤b => Timer...
       3. 在浏览器和node环境不同的代码
           console.log(0);
           setTimeout(() => {

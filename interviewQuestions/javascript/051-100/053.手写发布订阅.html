@@ -14,15 +14,26 @@
     */
 
     class Observer {
-
+      eventCaches = new WeakMap();
       on(eventname, callback){
-
+        const callbackList = eventCaches.get(eventname) || new Set();
+        callbackList.add(callback);
       }
-      of(eventname, callback){
-
+      off(eventname, callback){
+        if(callback){
+          eventCaches.get(eventname).delete(callback)
+        } else {
+          eventCaches.delete(eventname);
+        }
       }
-      emit(){ // 将订阅的事件, 依次执行。
-
+      emit(eventname, data){
+        const eventList = eventCaches.get(eventname);
+        if (!eventList) {
+          return;
+        }
+        for (event of eventList) {
+          data ? event(data) : event();
+        }
       }
     }
     
