@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现鼠标点击页面中任意标签, alert该标签的名称(注意兼容性)
+    
+    document.onclick = function(e){
+      const event = e || window.event;
+      const target = event.target || event.srcElement;
+      console.log(target.tagName);
+    }
+
+    // 优雅实现
+    function getElementName(event){
+      const evt = event || window.event;
+      const target = evt.target || evt.srcElement || {};
+      console.log(target.tagName || 'no tag name');
+    }
+    window.onload = function(){
+      const body = document.getElementsByTagName('body');
+      body[0].onclick = getElementName;
+    }
+
+  </script>
+</body>
+</html>

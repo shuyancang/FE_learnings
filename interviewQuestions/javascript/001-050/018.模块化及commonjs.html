@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 谈一谈commonjs的实现愿意
+
+    /*
+      1. 模块化
+        1.1 最初的模块化需要使用命名空间(jq的window.$), 会导致命名空间冲突, 无法合理管理版本和依赖, 无法控制依赖的加载顺序等问题;
+        1.2 模块化开发: 提升效率, 方便维护, 方便重用;
+        1.3 从生产角度, 模块化开发是一种生产方式, 效率高成本低; 软件角度说是一种开发模式, 便于维护开发效率高
+        1.4 模块化规范: 服务端主要是commonjs, 主要有AMD(异步模块定义, 依赖前置), CMD(通用模块定义, 依赖就近). AMD规范主要有requirejs，cmd主要实现有seajs, 随着es6已有模块化的实现, 第三方模块化组件淘汰
+      
+      2. commonjs
+        作为nodejs的规范, 现阶段require/exports依然必须(与ES6的差异, 暂时无法直接兼容); 
+        babel可将未被宿主环境直接支持的ES6 module编译为ES5的commjs, 
+        commonjs的核心: 通过require来同步加载依赖, 通过module.exports导出需要暴露的接口（module.exports = someModule; const moduleA = require('someModule')）
+      
+      3. 当node遇到require(X)时, require内部逻辑: 
+        3.1 X为内部模块时: 直接返回该模块
+        3.2 以相对路径开头: 找到当前所在模块位置找到X的路径, 找到对应的引入(可以是程序, 文件, 或目录)
+        3.3 如果X带路径, 根据所在位置，确定X可能的安装目录, 或在每个目录中查找
+        3.4 如果以上都没找到, 抛出not fount异常
+        3.5 找到对应引入后, node内部提供一个Module函数, 所有模块都是Module的实例, require的源码在Node的lib/module.js文件中, 
+          function Module(id, parent){
+            this.id = id; // 识别符, 通常是带有绝对路径的模块文件名
+            this.exports = {}; // 模块的对外输出
+            this.parent = parent; // 调用该模块的模块
+            this.filename = null; // 模块文件名, 带有绝对路径
+            this.loaded = false; // 加载状态
+            this.childen = []; // 模块要使用的其他模块
+          }
+          module.exports = Module;
+          基于该方式, 定义了模块的导出
+        3.6 加载模块: 
+          Module.prototype.load = function(filename){
+            var extension = path.extname(filename) || 'js';
+            Module._extensions[extension](this, filename);
+            this.loaded = true;
+          }
+          // 再基于js, json进行不同的处理
+          Module._extensions['.js'] = function(module, filename){
+            const content = fs.readFileSync(filename, 'utf8');
+            module._compile(stripBOM(content), filename);
+          }
+           Module._extensions['.json'] = function(module, filename){
+            const content = fs.readFileSync(filename, 'utf8');
+            try{
+              module.exports = JSON.parse(stripBOM(content));
+            }catch(err){}
+          }
+          // module_compile用于模块的编译:
+          Module.prototype._compile = function(content, filename){
+            var self = this;
+            var args = [self.exports, require, self, filename, dirname];
+            return compiledWrapper.apply(self.exports, args);
+          }
+          基本等同于: function(exports, require, module, __filename, __dirname){}
+      
+      总结: 
+          commonjs核心: 注入exports, require, module三个全局变量, 执行模块的源码, 然后将模块exports变量值输出
+    */ 
+
+    // 目前主流的js模块化实现技术有哪些, 说出区别
+    /*
+      1. commonjs: Nodejs是commonjs的主要实践者, 提供module, exports, require, global(module.exoports输出, require加载)
+          1.1 同步方式加载模块, 在服务端, 模块文件都存储在本地磁盘, 读取速度非常快, 但在浏览器使用异步更加合理;
+          1.2 规范: 
+            a. 一个文件一个模块, 拥有单独的作用域
+            b. 定义的变量, 函数, 都属于模块内
+            c. 通过require加载, 
+            d. 通过module.exports(或exports)暴露;
+          1.3 注意事项:
+            a. exports和module.exports同时存在时, module.export会覆盖exports;
+            b. 模块内全是exports时, 等同于module.exports;
+            c. exports是module.exports的子集
+            d. 所有代码运行在模块作用域, 不污染全局
+            e. 模块可多次加载, 但只在第一次加载时运行, 缓存运行结果. 后续加载直接读取缓存;
+            f. 模块加载, 按照代码出现顺序同步加载;
+            g. __dirname代表当前文件夹所在的文件夹路径
+            h. __filename代表当前文件所在的文件夹路径 + 文件名 
+      2. ES6模块化
+          2.1 主要由export 和 import构成, 还有 export default指定;
+          2.2 ES6的模块不是对象, import命令会被js引擎静态分析, 在编译时引入模块代码, 而不是在代码运行时加载, 因此无法实现动态条件加载, 也因此是的静态分析成为可能;
+          2.3 import { fn } from './xxx'对应export导出; import fn from './xxx'对应export default导出;
+          2.4 export可以导出的是一个对象包含的多个属性; export default只能导出一个可以不具名的函数, 可以通过import进行引用。(可以使用require使用, 因为webpack起了相关的server)
+      3. AMD(异步加载模块async module definition)
+          3.1 是一个在浏览器端模块化开发的规范, 不是原生的规范, 使用AMD规范需要引入对应的函数库requirejs;
+          3.2 AMD采用的是异步加载模块, 模块加载不影响后面语句的进行, 所有依赖这个模块的语句，都定义在一个回调中，加载完成后回调才会执行；
+          3.3 使用require实现AMD规范模块化, 使用require.config()指定路径, 使用define定义模块, require加载模块
+            define('moduleName', ['a', 'b'], function(a, b){ return someExportValue })
+            require(['a', 'b'], function(a, b){})
+          3.4 requirejs主要解决的问题: 
+            a. 文件可能有互相依赖关系, 被依赖的文件要早于依赖它的文件加载到浏览器
+            b. js加载的时候浏览器会停止页面渲染, 加载文件越多，页面响应时间越长；
+            c. 异步加载前置；
+          3.4 语法define(id, dependencies, factory); 
+            id定义模块标识, 如果没有定义该参数，就是用的脚本文件名；
+            dependencies是一个当前模块使用的模块名称数组；
+            factory, 工厂方法, 模块初始化要执行的函数或对象, 如果为函数应该被执行一次, 如果是对象, 此对象应该是模块的输出值;
+      4. CMD: 另一种模块化方案, AMD推崇依赖前置提前执行, CMD推崇依赖就近延迟执行。在seajs推广中产生的。
+          推崇一个文件一个模块, 所以经常使用文件名作为模块id; 一般不在define参数中写依赖, 而是在factory中写
+          define(id, deps, factory)
+          factory(require, exports, module){}
+          require是factory第一个参数, 接受模块标识作为唯一参数, 用来获取其他模块提供的接口
+          exports是一个对象, 用于向外提供模块接口
+          module一个对象, 上面存储当前模块相关联的一些属性和方法
+
+          define(function(require, exports, module)){ export.aaa = 'aaa'; module.exports = 'aaa'} // 定义没有依赖的模块
+          define(function(require, exports, module){
+            const module1 = require('./01.js'); // 同步引入模块
+            require.async('./02.js', function(mod){ // 异步引入模块
+
+            })
+            exports.bbb = 'bbb'; // 暴露接口
+          })
+          define(function(require){ // 引用模块
+            const mod1 = require('./01.js');
+            mod1.show()
+          })
+      5. UMD
+          一个整合了commonjs和amd规范的方法，希望能够解决跨平台模块方案
+          运行原理：先判断是否支持nodejs模块是否存在，存在就是用nodejs的模块模式；在判断是否支持amd，存在则使用amd方式加载模块
+          (function(window, factory){
+            if(typeof exports === 'object'){
+              module.exports = factory();
+            } else if (typeof define === 'function' && define.amd) {
+              define(factory);
+            } else {
+              window.eventUtil = functory()
+            }
+          })(this, function(){})
+      6. 总结
+          commonsjs同步加载, 通过module.export导出, 通过require引入, 每个文件都是一个模块,有自己的作用域文件内变量, 属性函数不被外界访问, node会将模块缓存, 第二次加载会在缓存中获取;
+          amd是异步加载, 应用于浏览器环境, requirejs是对应的模块化工具, 通过define定义声明, 通过require('', function({}))加载;
+          es6模块化通过export default 导出, 使用import导入;
+          ex6模块的运行机制与commonjs不同, js引擎对脚本静态分析时候, 遇到加载指令后悔生成一个只读引用, 等到脚本真正执行时候才去引用模块, 在引用到执行的过程中, 模块中的值发生变化, 导入的值也会发生变化,  ES6模块是动态引用, 并不会缓存值. 模块里总是绑定其所在的模块
+    */
+  </script>
+</body>
+</html>
