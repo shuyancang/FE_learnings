@@ -21,10 +21,11 @@
         location.hash + iframe
         window.name + iframe: window.name有个特征, 在一个窗口的生命周期里, 窗口载入的所有页面都是共享window.name, 每个页面对window.name都有读写权限
         postMessage
-        CORS
-        nginx
+        CORS: 服务端设置的不需客户端操作, 背后思想是使用自定义的http头部让浏览器和服务器沟通, 从而决定响应是否成功。如果服务器认为这个请求可以接受, 就在Access-Control-Allow-Origin头部中回发相同的源信息, 如果没有这个头部或信息源不匹配, 浏览器就会驳回请求.
+        nginx: 中转代理
         nodejs中间件代理
         websocket
+        其他的方式: postMessage, onmessage; link/script/img/bacground不受跨域限制的方式等
     
       4. 跨域需要明确的问题
         跨域并非浏览器限制发起跨域请求, 而是请求正常发起但结果被浏览器拦截, 每次请求都会发出服务器也会相应，但浏览器端在接受响应时基于同源策略拦截。

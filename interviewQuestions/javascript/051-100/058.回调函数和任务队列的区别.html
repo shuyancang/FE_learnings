@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 回调函数和任务队列的区别;
+
+    /*
+      1. 回调函数: 是作为参数传给某个函数的函数, 在某个函数执行完成后执行
+      2. 任务队列: 是事件的队列, IO设备完成某项任务后, 就在队列中添加事件, 标识相关异步任务可以进入执行栈
+
+      同步任务: 主线程上排队执行的任务, 顺序执行
+      异步任务: 不仅如此主线程, 进入任务队列的任务, 当主线程上的同步任务完成后, 主线程读取任务队列中的任务, 开始异步执行
+
+      任务队列中的事件，包含IO设备的事件, 用户产生的事件。 只要指定过回调函数，这些事件发生时就会进入任务队列，等待主线程读取
+
+      异步任务必定产生回调，主线程开始执行异步任务，就是执行对应的回调函数。
+    */
+  </script>
+</body>
+</html>

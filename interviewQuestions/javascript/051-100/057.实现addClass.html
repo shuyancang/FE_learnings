@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现原生的addClass方法;
+    const node = document.getElementById('someId');
+    // 方法一, 利用classList对象
+    node.classList.add('some-new-class1');
+    // 方法二, 利用attribute
+    node.setAttribute('class', `${node.getAttribute('class')} some-new-class2`)
+    // 方法三, 利用className
+    node.className = `${node.className} some-new-class3`;
+  </script>
+</body>
+</html>

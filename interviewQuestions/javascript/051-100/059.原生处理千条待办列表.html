@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button id="listSetBtn">过期设置</button>
+  <ul id='box'></ul>
+  <script>
+    /*
+      1. 在不使用vue, react的前提下写代码解决以下问题: 
+        一个list页面上, 含1000个条目的代办列表, 其中100项在同一时间达到了过期时间, 需要在对应项的text-node添加'已过期'文字, 尽可能减少dom重绘次数;
+      2. 使用vue或react解决上述问题;
+    */
+
+    // 1. 原生方法, 生成innerHTML字符串, 将其中100个li的属性修改后变为已过期文字,
+    function createKeys (max, len) { // 生成需要过期的索引
+      const keySet = new Set();
+      if (max < len) {
+        return keySet;
+      }
+      while(keySet.size < len) {
+        const mayIndex = parseInt(Math.random() * max);
+        keySet.add(mayIndex);
+      }
+      return keySet;
+    }
+    const maxListCount = 1000, expListCount = 100;
+    const box = document.getElementById('box');
+    const listSetBtn = document.getElementById('listSetBtn');
+    // 先生成基本的dom结构: dataset对应数据
+    let initDom = '';
+    for(let i = 0; i < maxListCount; i++) {
+      initDom += `<li data-key=${i}>${i}</li>`;
+    }
+    box.innerHTML = initDom;
+
+    listSetBtn.onclick = function(){
+      const keySets = createKeys(maxListCount, expListCount);
+      let resHTML = '';
+      for (let i = 0; i < maxListCount; i++) {
+        resHTML += `<li data-key=${i}>${i}${keySets.has(i) ? '已过期' : ''}</li>`;
+      }
+      box.innerHTML = resHTML;
+    }
+
+    // 2. 框架方法: ==> 略。很轻松
+    // (vue: mouted执行初始化, method写一个数据生成方法)
+    // (React: state创建初始化数据, 一个onListKeyChange方法生成对应数据即可)
+    // 在dom中使用map / for结构生成对应的list, 直接创建, 基于list的key判定数据项是否过期即可。
+    // 创建时候基于maxListCount直接生成数组, 遍历创建
+    // 点击时候, 动态生成随机的key字符串即可。
+  </script>
+</body>
+</html>
