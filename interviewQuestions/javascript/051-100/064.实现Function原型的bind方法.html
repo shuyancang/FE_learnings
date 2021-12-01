@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现Function原型的bind方法, 使得以下程序最后能够输出"success";
+
+    function Animal(name, color){
+      this.name = name;
+      this.color = color;
+    }
+    Animal.prototype.say = function(){
+      return `I'm a ${this.color} 的 ${this.name}`;
+    }
+    const cats = Animal._bind(null, 'cat');
+    const cat = new Cat('white');
+    if(cat.say() === "I'm a white 的 cat" && cat instanceof Cat && cat instanceof Animal){
+      console.log('success');
+    }
+
+    Function.prototype._bind = function(_this, arg) {
+      const name = arg;
+      const caller = this;
+      const fn = function(color){
+        caller.call(this, name, color); // 灵活的可变为: caller.call(this, ...arg, ...params) 实现完全体的bind
+      }
+      fn.prototype = Object.create(caller.prototype);
+      fn.prototype.say = function(){
+        return `I'm a ${this.color} 的 ${this.name}`;
+      }
+      return fn;
+    }
+  </script>
+</body>
+</html>

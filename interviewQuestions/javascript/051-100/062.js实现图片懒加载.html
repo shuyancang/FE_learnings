@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 原生js实现图片懒加载
+    /*
+      1. 定义img元素时, 定义属性data-src存放图片地址;
+      2. 获取屏幕可视区域尺寸
+      3. 获取元素到窗口边缘的距离
+      4. 当元素在可视区域时, 将data-src赋值给src, 不执行其他操作
+      实际上: 给一个默认的图片占位, 在图片进入可视区域(利用IntersectionObserver提供的api, 然后利用window.requestIdleCallback在空闲时间再加载图片)
+
+      需要注意的点: 
+        可在距离100px进入可视区域时, 开始加载
+        滚动时只处理未加载的图片(可将要加载的图片收集到一个dataSet()中)
+        滚动时的函数节流
+    */
+    function lazyLoad3(imgs) {
+      const io = new IntersectionObserver((ioes) => {
+        ioes.forEach((ioe) => {
+          const img = ioe.target;
+          const intersectionRatio = ioe.intersectionRatio;
+          if (intersectionRatio > 0 && intersectionRatio <= 1) {
+            if (!img.src) {
+              img.src = img.dataset.src;
+            }
+          }
+          img.onload = img.onerror = () => io.unobserve(img);
+        });
+      });
+      imgs.forEach((img) => io.observe(img));
+    }
+    lazyLoad3(imgs);
+  </script>
+</body>
+</html>

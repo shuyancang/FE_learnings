@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 使用js实现cookie的设置读取和删除.
+
+    // const cookies = document.cookie; // 读取
+    // document.cookie = 'a=b; expires=' + new Date().toGMTString();
+    // document.cookie = "name=oeschger;expires=Wed, 10 Dec 2021 12:51:30 GMT";
+
+    // document.cookie需要在服务上运行才生效, 本地无效;
+    // document.cookie既能读又能写, 但每次设置，都是新增一条cookie
+    // 要删除document.cookie, 需要通过设置expires时间(GMT)过期来实现
+    function getCookie(name, value){
+      const 
+    }
+
+    // setCookie可以设置expires, max-age, path, domain, secure等。
+
+    document.cookie = "name=oeschger;path=./";
+    document.cookie = "favorite_food=tripe;path=./";
+    console.log(document.cookie);
+    // 显示: name=oeschger;favorite_food=tripe
+
+
+  </script>
+
+</body>
+</html>

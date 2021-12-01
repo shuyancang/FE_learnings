@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现两个变量的交换
+
+    let a = 1, b = 2;
+    const tmp = a;
+    a = b;
+    b = tmp;
+
+    [b, a] = [a, b];
+
+    // 其他方法: 利用加法: 
+    b = a + b;
+    a = b - a;
+    b = b - a;
+
+    // 利用减法
+    b = a - b;
+    a = a - b;
+    b = a + b;
+
+    // 按位异或
+    b = a ^ b;
+    a = a ^ b;
+    b = a ^ b;
+
+    // 逗号表达式 => 逗号表达式将两个及以上的式子链接起来, 从左往右逐个计算, 整个表达式的值为最后一个表达式的值。
+    a = b + ((b = a), 0);
+  </script>
+</body>
+</html>
