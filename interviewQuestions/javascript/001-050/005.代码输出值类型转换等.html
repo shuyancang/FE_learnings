@@ -57,6 +57,17 @@
         // 1. var 和 函数声明可以提升, 函数声明优先于var
         // 2. var 变量提升赋值undefined, 函数整体提升
         // 3. 函数声明重复声明会被覆盖
+        // 4. 在块(if true {} 或 if false {})内的函数声明 或 变量声明, 会将函数声明提升到函数作用域顶部;
+        // 注意 
+          // 如果改变了作用域内函数域声明的函数处理规则, 对老代码会产生影响, 因为为了减轻不兼容问题, es6在附录中规定浏览器可以不遵守以上规则有自己的定义方式
+          // 允许在块级作用域内声明函数
+          // 函数声明类似于var，会提升到全局作用域的头部
+          // 同时, 函数声明还会提升到所在块级作用域的头部;
+          // 以上三条规则只对ES6浏览器有效, 其他环境不一定遵守. 还是将块级作用域的函数当成let处理
+          // 块级作用域函数, 就像预先在全局作用域中使用var声明一个变量, 且默认为undefined
+        // 5. 块级作用域函数, 编译阶段将函数声明提升到全局作用域, 并声明一个变量, 同时会提升到块级作用域的顶部
+        // 6. 块级作用域函数只有在定义声明函数那行代码执行过后，才会被映射到全局作用域;
+
         // let 和 const
         // 1. 不存在变量声明提升，不能重复声明
         // 2. 作用域死区, 使用前必须先声明
@@ -136,6 +147,72 @@
         })
         Promise.race([firstPromise, secendPromise]).then(res => console.log(res));
         // 'two'， race处理的是率先改变状态的Promise， 因此只执行快速的。
+
+      // 11. 
+        function yideng(){
+          console.log(1);
+        }
+        (function(){
+          if(false){
+            function yideng(){
+              console.log(2);
+            }
+          }
+          console.log(typeof yideng);
+          yideng();
+        })
+        // undefined, TypeError: yideng is not a function
+        // 直接在函数体内定义的函数声明, 整个都会提前, 但在块中声明的函数, 只会提升其声明部分, 不分配实际内存空间, 因此在上题内部yideng被提升的只是声明的函数名称变量, 未实际赋值。
+      
+      // 12. 
+      console.log(a,window.a); // undefined undefined
+      {
+          console.log(a,window.a); // function a(){} undefined
+          function a(){}
+          console.log(a,window.a); // function a(){} function a(){}
+      }
+      console.log(a,window.a);	// function a(){} function a(){}
+
+      // 13.
+      console.log(window.a,a);//undefined undefined
+      {
+          console.log(window.a,a);//undefined function a(){}
+          function a() {};
+          a = 10;
+          console.log(window.a,a); //function a(){}  10
+      };
+      console.log(window.a,a); //function a(){}  function a(){}
+      // 第一个log,块级作用域函数a的声明会被提升到全局作用域，所以不报错，是 undefined undefined
+      // 第二个log,在块级作用域中，由于声明函数a提升到块级作用域顶端,所以打印 a = function a(){}，而 window.a由于并没有执行函数定义的那一行代码，所以仍然为 undefined。
+      // 第三个log,这时已经执行了声明函数定义，所以会把函数a映射到全局作用域中。所以输出 function a(){},
+      // 第四个log,就是 function a(){} function a(){}，因为在块级作用域中壒壧攁厴婩壒.a的值已经被改变了，变成了function a(){}
+      // 块级作用域函数只有执行函数声明语句的时候，才会重写对应的全局作用域上的同名变量
+
+      // 14. 
+      console.log("start");
+      setTimeout(() => {
+        console.log("children2");
+        Promise.resolve().then(() => {
+          console.log("children3");
+        });
+      }, 0);
+      new Promise(function (resolve, reject) {
+        console.log("children4");
+        setTimeout(function () {
+          console.log("children5");
+          resolve("children6");
+        }, 0);
+      }).then((res) => {
+        console.log("children7");
+        setTimeout(() => {
+          console.log(res);
+        }, 0);
+      });
+      // start => children4 => children2 => children3 => children5 => children7 => children6
+      // 先执行script宏任务脚本, 输出start; 第一个定时器进入宏任务队列, 
+      // 执行微任务Promise, 输出children4; 第二个定时器进入宏任务队列；
+      // 取出第一个定时器, 执行children2, 遇到微任务输出children3
+      // 取出第二个定时器, 执行children5, 然后继续执行微任务, then 输出children7, 获取res输出children6
   </script>
 </body>
 </html>

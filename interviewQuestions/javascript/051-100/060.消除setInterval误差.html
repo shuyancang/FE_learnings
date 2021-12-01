@@ -12,14 +12,24 @@
   
     /*
       setInterval不能消除, 可以利用递归调用setTimeout自循环执行以解决问题
-      
-
-    
     */
 
     function createTimer(endTime){ // 实现到endTime的自定义倒计时
-
+      setTimeout(() => {
+        const curTime = new Date().valueOf();
+        const diffSec = parseInt((new Date(endTime).valueOf() - curTime) / 1000);
+        if (diffSec < 0) return;
+        const sec = `${diffSec % 60}`.padStart(2, '0');
+        const restMin = parseInt(diffSec / 60);
+        const min = `${restMin % 60}`.padStart(2, '0');
+        const resHour = parseInt(restMin / 60);
+        const hour = `${resHour % 24}`.padStart(2, '0');
+        const restDay = `${parseInt(resHour / 24)}`.padStart(2, '0');
+        console.log(`活动剩余${restDay}天${hour}小时${min}分${sec}秒`) 
+        createTimer(endTime);
+      }, 1000)
     }
+    createTimer('2021-12-12')
   </script>
 </body>
 </html>
