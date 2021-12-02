@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // string添加一个_trim方法, 截取字符串前后空白字符串
+
+    String.prototype._trim = function(){
+      // 找到start和end
+      if(typeof this !== 'string' && !(this instanceof String)) {
+        throw new Error('type error, not a string');
+      }
+      const len = this.length;
+      let left = 0, right = len - 1;
+      while (left < right) {
+        if(this[left] !== ' ' && this[right] !== ' ') { // 完成
+          return this.substring(left, right + 1);
+        }
+        if(this[left] === ' ') {
+          left++;
+        }
+        if(this[right] === ' ') {
+          right--;
+        }
+      }
+      return '';
+    }
+    // 正则答案: return this.replace(/^\s*|\s*$/g,'');
+  </script>
+</body>
+</html>

@@ -10,7 +10,7 @@ https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/
 1. Proxy, Reflect的ES6
 2. 正则匹配的$1 等。match, replace
 3. prototype, __proto__, constructor
-
+4. 装饰器@
 
 
 3. webpack插件

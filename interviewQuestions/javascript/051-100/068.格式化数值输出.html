@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现格式化输出: 输入99999999, 输出999,999,999;
+    
+    function dataFormat(num){
+      const resStack = [];
+      let config = '';
+      if(num < 0) {
+        config = '-';
+        num = -num;
+      }
+      while (true) {
+        resStack.push(num % 1000);
+        num = parseInt(num / 1000);
+        if (num < 1000) {
+          return config + resStack.reverse().join(',');
+        }
+      }
+    }
+
+    // 解答
+    // 方法一: 普通循环, 将num转为字符串数组, 每三个存入, 再合并
+    // 方法二: 转为字符串数组后, 利用reduce函数进行合并
+    // 方法三: 利用正则表达式; return (num+'').replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    // 方法四: 直接调用api toLocaleString('en-US')
+    // 方法五: 利用IntL对象（Collator, NumberFormat, DateTimeFormat） return new Intl.NumberFormat().format(num);
+  </script>
+</body>
+</html>

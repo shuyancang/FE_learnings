@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 对于函数A, 在不改变A功能的即调用方式下, 每次调用函数都能在控制台打印hello world
+
+    function A(){
+      console.log('调用函数A');
+    }
+    // 方法一:  直接替换
+    const tmp = A;
+    function A(...rest){
+      console.log('hello world')
+      tmp(...rest);
+    }
+
+    // 方法二: 装饰器 => 高阶函数思路进行装饰, 实际上也是进行函数的覆盖生成
+    const consoleDecorator = (fn, execute, env) => {
+      const lastFn = env[fn];
+      env[fn] = function(){
+        return execute(lastFn.bind(env));
+      }
+    }
+    consoleDecorator('A', (fn) => {
+      fn();
+      console.log('hello world');
+    });
+    A();
+
+    // 方法三: 切片
+
+  </script>
+</body>
+</html>
