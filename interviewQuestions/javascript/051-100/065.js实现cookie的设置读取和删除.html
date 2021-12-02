@@ -17,17 +17,41 @@
     // document.cookie需要在服务上运行才生效, 本地无效;
     // document.cookie既能读又能写, 但每次设置，都是新增一条cookie
     // 要删除document.cookie, 需要通过设置expires时间(GMT)过期来实现
-    function getCookie(name, value){
-      const 
+    function getCookie(name){
+      const cookieList = (document.cookie || '').split('; ').map(e => e.split('='));
+      const cookieInfo = cookieList.find(e => e[0] === name) || [];
+      return cookieInfo[1] ? unescape(cookieInfo[1]) || null;
+    }
+
+    function setCookie({ name, val, expires, maxAge, path, domain, secur }){
+      const cookieInfos = [`${name}=${escape(val)}`];
+      if (expires && new Date(expires).getTime() > new Date().getTime()) { // 有效时间~过期就不设置
+        const expStr = new Date(expires).toGMTString();
+        cookieInfos.push(expStr);
+      }
+      for (let [key, val] of Object.entries()) {
+        if (val) {
+          cookieInfos.push(`${key}=${val}`);
+        }
+      }
+      document.cookie = cookieInfos.join(';'); // 中间；隔开的cookie设置方式。
+    }
+
+    function delCookie(name){ // 删除cookie只需要将该cookie设置为过期即可
+      const val = getCookie(name);
+      document.cookie = `${name}=${val};expires=${new Date(new Date.getTime() - 1000).toGMTString()}`;
     }
 
     // setCookie可以设置expires, max-age, path, domain, secure等。
-
     document.cookie = "name=oeschger;path=./";
     document.cookie = "favorite_food=tripe;path=./";
     console.log(document.cookie);
     // 显示: name=oeschger;favorite_food=tripe
 
+    // 实际上getCookie可以通过正则: 
+    // const reg = new RegExp('(^| )'+name+'=([^;]*)(;|$)');
+    // const arr = document.cookie.match(reg);
+    // unescape(arr[2])
 
   </script>
 

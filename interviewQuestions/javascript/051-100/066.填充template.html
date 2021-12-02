@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现填充template方法 ==> 算法题的话, 可以创建一个stack栈, 存储对应的变量记录. 遇到结尾, 替换并弹出.
+    var str = '您好, <%=name%>, 欢迎来到<%=location%>'
+    function template(str){
+      return function(info){
+        return str.replace(/<%=(\w+)%>/g, function(m, p){
+          return info[p];
+        })
+      }
+    }
+    const compiled = template(str);
+    compiled({name: '张三', 'location': '这里'});
+  </script>
+</body>
+</html>
