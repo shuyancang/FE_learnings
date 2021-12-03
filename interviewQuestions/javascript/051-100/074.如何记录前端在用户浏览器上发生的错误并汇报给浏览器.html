@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 如何记录前端在用户浏览器上发生的错误, 并汇报给服务器
+
+    /*
+      1. 代码执行的错误捕获: 
+        try catch: 影响代码可读性, 无法处理异步中的错误, 无法处理语法错误
+        window.onerror: 能够捕获到异步或同步的运行时错误
+        window.addEventListener('error'): 监听注册多个事件处理函数, 坚挺到资源加载报错
+        window.addEventListener('unhandlerrejection'): 捕获Promise错误
+      2. 资源加载错误捕获
+        imgObj.onerror: 图片加载错误捕获
+        performance.getEntries: 获取到成功加载的资源， 可以间接的根据对比获取到错误
+        window.addEventlistener('error', fn, true), 捕获不冒泡, 捕获阶段可以出发, window.onerror不会触发
+      3. 错误上报
+        一般使用image对象进行上报, 使用图片发送get请求, 上报信息, 犹豫浏览器对图片有缓存, 同样的请求图片指挥发送一次, 避免重复上报.
+      4. 第三方库: sentry-javascript
+  
+    */
+  </script>
+</body>
+</html>
