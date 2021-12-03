@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 请使用js代码实现事件代理。
+
+    /*
+      1. 概念
+        利用事件冒泡, 只制定一个事件处理程序, 管理某一类型的所有事件。
+        将事件建立在一个统一管理的地方，比在不可预期的多个dom上直接绑定事件，可以减少dom交互次数，提高性能。
+      2. 原理
+        利用事件冒泡实现。从最深节点开始逐步向上传播事件。将最外层的某个盒子创建事件, 利用冒泡触发该事件， 【委托父级代为执行事件】
+      3. 实现
+    */ 
+    // 实现ul中的li代理
+    window.onload = function(){
+      const ulBox = document.getElementById('ul'); // 列表盒子
+      const liList = document.getElementsByTagName('li'); // ul下的li
+      ulBox.onmouseover = function(event){
+        const evt = event || window.event;
+        const target = evt.target || evt.srcElement;
+        if (target.nodeName.toLowerCase() === 'a') {
+          target.style.background = 'red';
+        }
+      }
+      ulBox.onmouseout = function(event){
+        const evt = event || window.event;
+        const target = evt.target || evt.srcElement;
+        if (target.nodeName.toLowerCase() === 'a') {
+          target.style.background = 'transparent';
+        }
+      }
+    }
+
+    // 实现事件代理的通用代码
+    !function(root, doc){
+      class Delegator{
+        constructor(selector){
+          this.root = document.querySelector(selector); // 代理绑定的dom父元素
+          this.delegatorEvents = {}; // 代理元素及事件
+          this.delegator = (evt) => {
+            const currentNode = evt.target;
+            const targetEvents = this.delegatorEvents[evt.type] || [];
+            while (currentNode !== evt.currentTarget) { // 将事件逐步委托到父节点
+              targetEvents.forEach(target => {
+                if(currentNode.matches(target.matcher)) { // 开始委托并将当前目标节点的event对象传出去
+                  target.callback.call(currentNode, evt);
+                }
+              });
+              currentNode = currentNode.parentNode;
+            }
+          }
+        }
+        on (event, selector, fn) { // 事件绑定,event事件类型; selector选择器, fn回调函数
+          if(!this.delegatorEvents[event]) { // 相同事件只添加一次
+            this.delegatorEvents[event] = [{
+              matcher: selector,
+              callback: fn,
+            }];
+            this.root.addEventListener(event, this.delegator);
+          } else {
+            this.delegatorEvents.push({
+              matcher: selector,
+              callback: fn,
+            })
+          }
+          return this;
+        }
+        remove(){
+          Object.keys(this.delegatorEvents).forEach(eventName => {
+            this.root.removeEventListener(eventName, this.delegator);
+          })
+        }
+      }
+      root.Delegator = Delegator;
+    }(window, document)
+  </script>
+</body>
+</html>

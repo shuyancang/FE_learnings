@@ -21,7 +21,8 @@
     }
 
     // 方法二: 装饰器 => 高阶函数思路进行装饰, 实际上也是进行函数的覆盖生成
-    const consoleDecorator = (fn, execute, env) => {
+
+    const consoleDecorator = (fn, execute, env = window) => {
       const lastFn = env[fn];
       env[fn] = function(){
         return execute(lastFn.bind(env));
@@ -34,7 +35,51 @@
     A();
 
     // 方法三: 切片
+    Function.prototype.before = function(fn){
+      const self = this;
+      return function(...rest){
+        fn.apply(self, rest);
+        return self.apply(this, rest); // 替换, 并执行。
+      }
+    }
+    Function.prototype.after = function(fn){
+      const self = this;
+      return function (...rest) {
+        const res = self.apply(this, rest);
+        fn.apply(self, rest);
+        return res;
+      }
+    }
 
+    A = A.before(function (){
+      console.log('前置');
+    }).after(function (){
+      console.log('后置');
+    });
+
+    // Function.prototype.before = function(fn){
+    //   const self = this;
+    //   return function(...rest){
+    //     fn.call(self);
+    //     return self.call(this, ...rest);
+    //   }
+    // }
+    // Function.prototype.after = function(fn){
+    //   const self = this;
+    //   return function(...rest){
+    //     const res = self.call(this, ...rest);
+    //     fn.call(self);
+    //     return res;
+    //   }
+    // }
+    // function A(){
+    //   console.log('调用函数A');
+    // }
+    // A = A.before(function (){
+    //   console.log('前置');
+    // }).after(function (){
+    //   console.log('后置');
+    // });
   </script>
 </body>
 </html>
