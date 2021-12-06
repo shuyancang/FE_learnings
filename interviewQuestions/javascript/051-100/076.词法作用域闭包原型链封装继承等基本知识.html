@@ -48,8 +48,46 @@
 
           如果对象自身和原型上都定义了同一个属性, 则优先读取自身的属性. 即覆盖。
       
-      5. 封装: 把客观事物封装成抽象类。    
+      5. 封装: 把客观事物封装成抽象类, 类可以把自己的数据和方法让可信的类或对象操作.
+        将用户不需要知道的数据和方法隐藏, 外部无法直接访问. js中可以使用闭包实现。
+        es6以前, 构造函数创建一个类: this, prototype, ==> 原型链 的方式进行添加和声明
+        es6: class关键字.
+        属性和方法的封装: 
+          私有属性(安全, 内部使用, 不暴露), 
+          公有属性(可访问的内部属性), 
+          私有方法(不暴露的内部方法), 
+      6. 继承: 
+        js只有一种结构: 对象。
+        每个实例对象都有一个私有属性指向构造函数的原型对象。原型链层层向上直到null; 
+        几乎所有js对象都是位于原型链顶端的Object的实例。
+
+        6.1 基本概念: 一个对象想拥有被继承对象的方法属性。通过类的继承实现代码复用, 通过类的实例化来实现多个对象。
+          js中的继承通过原型实现。
+          如果不用原型, 通过new的实例不共享任何属性; 通过原型对象中定义的变量和方法被多个对象共享。 需要注意, 原型对象的属性并不是实例对象自身的属性, 只要修改原型对象, 变动会立刻体现在所有实例对象上。想法如果对象属性被修改，原型中相同属性并不会修改。
+        6.2 实现原理:
+          对于new Foo的调用(var o = new Foo()), 实际上js执行的是: 
+            var o = new Object();
+            o.prototype = Foo.prototype;
+            Foo.call(o);
     */
+    
+    // 实现继承: B继承自A;
+    function A(){}
+    function B(){}
+    B.prototype = Object.create(A.prototype);
+    B.prototype.constructor = B;
+
+    // Object.create原理
+    Object.create = function(proto, propertiesObj) {
+      function F(){};
+      F.prototype = proto;
+      return new F();
+    }
+
+    // 几种继承
+    // 1. 原型链继承
+    function 
+
   </script>
 </body>
 </html>
