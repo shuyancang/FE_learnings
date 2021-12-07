@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 编写一个js函数parseQueryStr, 将URL参数解析为一个对象
+    const url = 'http://iauto360.cn/index.php?key0=0&key1=1&key2=2';
+    function parseQueryStr (urlStr) {
+      const [urlHref, urlSearch] = urlStr.split('?') || [];
+      const res = {};
+      if(!urlSearch) {
+        return res;
+      }
+      for(let infoStr of urlSearch.split('&')) {
+        const [key, val] = decodeURIComponent(infoStr).split('=');
+        res[key] = val;
+      }
+
+      // urlSearch.split('&').reduce((pre, cur) => { // 也可使用reduce方法
+      //   const [key, val] = decodeURIComponent(cur).split('=');
+      //   pre[key] = val;
+      //   return pre;
+      // }, res)
+      return res;
+    }
+  </script>
+</body>
+</html>
