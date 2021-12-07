@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // arguments是数组吗? 如何转为真正数组
+
+    /*
+      arguments: 类数组, 可以进行forEach, 有length属性, 但并非数组
+
+      Array.prototype.slice.call(arguments);
+      [].call(arguments)
+      Array.from(arguments)
+      [...arguments]
+      [].concat.aplly([], arguments)
+      for循环手动实现
+
+      需要注意: 
+        arguments转换出来的数组长度由arguments的length属性决定
+        如果arguments内索引不连续, 自动补undefined
+        索引转换时, 只考虑0和正整数索引
+        slice会产生稀疏数组, 内容为empty
+        类数组push需要注意, push操作的是索引值为length的位置。
+    */
+  </script>
+</body>
+</html>

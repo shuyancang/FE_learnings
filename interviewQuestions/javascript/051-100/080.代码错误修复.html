@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 以最小改动解决以下代码的错误
+
+    const obj = {
+      name: 'jscoder',
+      skill: ['es6', 'react', 'angular'],
+      say: function(){
+        for (var i = 0, len = this.skill.length; i < len; i++) {
+          setTimeout(function(){
+            console.log('No.' + i + this.name);
+            console.log(this.skill[i]);
+            console.log('-----');
+          }, 0);
+          console.log(i);
+        }
+      }
+    }
+    obj.say(); // 期望得到下面的结果: 1 2 3 'No.1 es6 jscoder' ---- 'No.2 react jscoder' ---- 'No.3 angular jscoder'
+
+    // 1. this缓存
+    const obj = {
+      name: 'jscoder',
+      skill: ['es6', 'react', 'angular'],
+      say: function(){
+        for (let i = 0, len = this.skill.length; i < len; i++) {
+          const self = this;
+          setTimeout(function(){
+            console.log('No.' + i + ' ' + self.skill[i] + ' ' + self.name);
+            i !== self.skill.length && console.log('-----');
+          }, 0);
+          console.log(i + 1);
+        }
+      }
+    }
+
+    // 2. 箭头函数
+    const obj = {
+      name: 'jscoder',
+      skill: ['es6', 'react', 'angular'],
+      say: function(){
+        for (let i = 0, len = this.skill.length; i < len; i++) {
+          setTimeout(() => {
+            console.log('No.' + i + ' ' + this.skill[i] + ' ' + this.name);
+            i !== this.skill.length && console.log('-----');
+          }, 0)
+          console.log(i + 1);
+        }
+      }
+    }
+  </script>
+</body>
+</html>
