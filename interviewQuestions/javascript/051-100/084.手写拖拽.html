@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 手写一个拖拽
+    // 原生利用mousedown mouseup, mousemove事件
+
+    const node = document.querySelector('.target');
+    let isDragging = false;
+    let x, y;
+    document.addEventListener('mousedown', function(e){
+      if (e.target === node) { // 开始拖动
+        isDragging = true;
+        const targetRect = e.target.getBoundingClientRect(); // 返回目标元素的大小及相对视口位置;
+        x = e.clientX - targetRect.left;
+        y = e.clientY - targetRect.top;
+      }
+    })
+    document.addEventListener('mouseup', function(){ // 拖拽结束
+      isDragging = false;
+    });
+    document.addEventListener('mousemove', function(e){ // 拖拽中
+      if (isDragging) {
+        const moveX = e.clientX - x;
+        const moveY = e.clientY - y;
+        node.style.left = `${moveX}px`;
+        node.style.top = `${moveY}px`;
+      }
+    })
+
+    // h5原生的traggable属性及对象
+    // DataTransfer对象 < === > 被拖动元素(dragstart, drag, dragend) + 目标对象(dragenter, dragover, dragleave) + 释放drop
+    function dragStart(e){
+      e.dataTransfer.setData('text', e.target.id);
+      console.log('开始拖动')
+    }
+    function dragging(e){
+      console.log('拖动中');
+    }
+    function dragEnd(e){
+      console.log('拖动结束')
+    }
+
+    function dragTargetEnter(e){
+      e.preventDefault();
+      console.log('进入目标');
+    }
+    function dragTargetOver(e){
+      e.preventDefault();
+      console.log(e.dataTransfer.getData('text') + 'hand drag over 目标');
+    }
+
+    function dragTargetLeave(e){
+      e.preventDefault();
+      console.log(e.dataTransfer.getData('text') + '没有放下就离开了')
+    }
+
+    function dragTargetDrop(e){
+      e.stopPropagation(); // 不派发事件, 解决打开新窗口的问题
+      e.preventDefault();
+      if (e.dataTransfer.getData('text')) {
+        e.target.appendChild(document.getElementById(e.dataTransfer.getData('text')))
+      }
+      console.log('释放 在目标区')
+    }
+
+    const txtNode = document.getElementsByClassName('txt'); // 类为.txt的节点
+    for(let i = 0; i < txtNode.length; i++) {
+      txtNode[i].ondragstart = dragStart;
+      txtNode[i].ondrag = dragging;
+      txtNode[i].ondragend = dragEnd;
+    }
+    const target = document.getElementById('right');
+    target.ondragenter = dragTargetOver;
+    target.ondragleave = dragTargetLeave;
+    target.ondragover = dragTargetOver;
+    target.ondrap = dragTargetDrop;
+
+  </script>
+</body>
+</html>

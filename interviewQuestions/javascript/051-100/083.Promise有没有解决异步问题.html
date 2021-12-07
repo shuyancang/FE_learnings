@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // Promise有没有解决异步的问题
+    /*
+      Promise是js的异步操作解决方案, 为异步操作提供统一接口。起到代理作用, 充当异步和回调的总结, 使得异步操作具备同步操作的接口。
+      可以让异步写起来有类似同步操作的流程而不必一层层嵌套回调
+
+      Promise解决了callback回调地狱的问题, 最终的解决方案是利用asycn 和 await
+
+      1. 回调函数
+        缺点: 产生回调地狱, 不能try catch 捕获错误, 无法return;
+        回调地狱的根本问题在于
+          缺乏顺序性, 调试困难, 思维方式不符;
+          嵌套函数耦合, 改动关联很大(控制翻转)
+          嵌套函数过多, 错误无法处理。
+        优点: 解决了同步问题, 防止任务阻塞
+
+      2. Promsie, 链式调用, 每个then后返回的都是一个新的Promise, then中的renturn会被Promise.resolve()包装
+        优点: 解决了回调地狱问题
+        缺点: 无法取消, 错误需要回调函数来捕获。
+
+        Promise是用来管理异步编程的, 其本身并不是异步, new Promise时接受一个executor函数执行，我们一般会在executor中处理一个异步操作。
+      
+      3. Generator
+        特点: 可以控制函数的执行, 可以配合co函数库使用
+
+      4. async / await: 是异步的最终解决方案、
+        优点: 代码清晰, 不用过多的then链。
+        缺点: 将异步代码改成同步代码, 如果多个异步没有依赖性, 使用await会导致性能上的降低
+
+    */
+  </script>
+</body>
+</html>
