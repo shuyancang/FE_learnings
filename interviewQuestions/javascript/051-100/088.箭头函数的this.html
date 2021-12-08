@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 箭头函数的this;
+
+    /*
+      在函数中, this实在函数被调用执行时候确定, 函数定义时, 无法定义this
+
+      this是执行上下文环境的一部分, 每次调用函数, 都会产生一个新的执行上下文, 代码中的this始终是从执行的上下文中获取而不是从作用域链中获取;
+
+      箭头函数的this
+      1. 箭头函数没有自己的this, 只能通过作用域链向上查找离自己最近的函数的this;
+      2. 箭头函数不能作为constructor, 不能通过new调用, 同样也没有new.target这个属性;
+      3. 箭头函数没有argument属性, 可通过...rest获取
+      4. 箭头函数不能通过call和apply改变this
+      5. 箭头函数无法使用yield 不能用来作为generator函数
+      6. 箭头函数语法更简洁
+
+      const obj = {
+        name: '老王',
+        getName: () => {
+          console.log(this.name)
+        }
+      }
+      obj.getName() // window.name 
+    */
+  </script>
+</body>
+</html>
