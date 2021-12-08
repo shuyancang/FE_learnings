@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 定时器为什么不精确
+
+    /*
+      setInterval属于宏任务, 要等一轮同步代码执行完毕, 且执行完微任务后, 才会执行.实际上前面同步任务和微任务运行时间, 不可控。
+
+      到宏任务执行时, 代码检查setInterval是否到达指定时间, 如果到达就执行, 如果未到达, 就要等待下一次eventLoop
+
+      还有一部分不确定因素: 
+        setInterval若时间戳小于10ms, 就调整至10ms执行, 因为这是setInterval的规定
+        物理因素, 如果用户处于供电节点状态, 浏览器会使系统定时器时间间隔调整至16.6ms
+
+      1. 在现代浏览器中, 由于回调嵌套(至少为特定深度)或经过一定数量的连续间隔而粗发连续调用时, setTimeout和setInterval调用至少每4ms被限制一次;
+        某些浏览器执行此节流不同, 在setInterval从任何地方的调用或setTimeout嵌套至一定深度调用时, 要想在现代浏览器实现0毫秒延迟调用可以使用postMessage
+        最小延迟4ms, 固定嵌套级别是5;(chrome, firefox第五次, safari第六次, edge第三次就限制连续调用)
+
+      2. 在非活动tab卡, 超时限制为>= 1000ms
+        为减少背景选项卡的负载(和相关资源使用), 在不活动的资源卡将超时限制为1000ms以下
+        不同浏览器在不同版本开始实时此行为(firefox5, chrome11 )
+      
+      3. 限制跟踪超时脚本
+        从firefox55起, 跟踪脚本都收到了进一步的限制, 在前台运行最小延迟仍是4ms, 但后台选项卡中, 最小延迟为10秒， 该延迟在首次加载文档后30秒生效
+        控制此行为的首选项是
+          dom.mintrackingtimeout_value: 4
+          dom.mintrackingbackgroundtimeoutvalue: 10000
+          dom.timeout.trackingthrottlingdelay: 30000
+
+      4. 逾期超时
+        除了固定值意外, 当页面忙于其他任务时, 超时还会在以后触发, 需要注意的是, 直到调用的线程setTimeout()终止, 函数或代码才能执行
+        这是因为, 即使设置setTimeout以0延迟被调用, 它也被放置在队列中并计划在下一个机会运行，而不是立即。
+        当前执行的代码，必须在执行timeout队列中的功能之前完成, 因此生成的执行顺序与预期不同。
+
+    */
+
+  </script>
+</body>
+</html>

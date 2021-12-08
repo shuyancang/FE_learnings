@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    yideng;
+    console.log(1);
+  </script>
+  <script>
+    console.log(2);
+  </script>
+  <script>
+    // 判断以上两个script执行的结果
+    // 第一个script报错(yideng not finded), 不输出1, 第二个script正常暑促胡执行2;
+    // js报错后, 相同script标签js代码受影响, 新script中的js不受影响
+
+    /*
+      js是描述性脚本语言, 不需要编译成中间语言, 在浏览器中动态解析和执行
+      对于script分割的代码块， 可看做是划分了js的执行环境, 可看做几个分段执行的js
+
+      script中, Js是按照代码块进行编译和执行的, script代码块相互独立, 但, 变量和方法共享
+    */
+  </script>
+
+  <script>
+    // 写出执行结果
+      var yideng = Array(3);
+      yideng[0] = 2;
+      var result = yideng.map(function(elem){
+        return '1'
+      });
+      console.log(result); // ['1', empty * 2]; // 空位数组在map方法中不会执行回调, 跳过
+  </script>
+
+
+  <script>
+    // 写出执行结果
+    var yideng = {
+      bar: function(){
+        return this.baz;
+      },
+      baz: 1,
+    }
+    (function(){
+      console.log(typeof arguments[0]());
+    })(yideng.bar);
+    // 传入的argument[0]是一个函数, 执行时this.baz为window.baz为undefined
+    //this的指向: 谁调用指向谁, 指向是在运行时确定的。
+
+    this.baz = 2;
+    var a = {
+      bar: function () {
+        console.log(this);
+        return this.baz;
+      },
+      baz: 1,
+    };
+    function fn(f) {
+      console.log(f); // bar函数.
+      console.log(arguments[0]); // 同上
+      console.log(f()); // this为window, this.baz = 2;
+      console.log(arguments[0]()); // this为Arguments对象
+      console.log(typeof f()); // window, number
+      console.log(typeof arguments[0]()); // Arguments对象, undefined
+    }
+    fn(a.bar);
+  </script>
+</body>
+</html>

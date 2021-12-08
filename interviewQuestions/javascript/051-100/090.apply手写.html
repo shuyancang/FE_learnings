@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 手写apply函数
+    
+    // funcName.apply(this, argumentsArr);
+    Function.prototype._apply = function(ctx, rest){
+      ctx = ctx || window;
+      ctx.fn = this;
+      const result = ctx.fn(...rest);
+      delete ctx.fn;
+      return result;
+    }
+
+    // 同理, 可实现call方法的手写
+    Function.prototype._call = function(ctx, ...rest){
+      ctx = ctx || window;
+      ctx.fn = this;
+      const res = ctx.fn(...rest);
+      delete ctx.fn;
+      return res;
+    }
+
+    // bind方法的
+    Function.prototype._bind = function(ctx){
+      const self = this;
+      return function(...rest){
+        self.call(...rest);
+      }
+    }
+  </script>
+</body>
+</html>

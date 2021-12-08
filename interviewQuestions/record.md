@@ -17,7 +17,7 @@ https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/
 8. 手写generator
 9. 各种继承(链, 构造函数, 组合, 寄生组合)
 10. 手写拖拽
-
+11. 手写new, Object.create, bind, call, apply
 
 3. webpack插件
 4. react原理
