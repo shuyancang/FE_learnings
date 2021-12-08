@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 如何加快页面渲染速度, 哪些方式
+
+    /* 网站性能提升
+      1. 静态资源优化: 减少静态资源的加载时间, 主要包含html, js, css和图片
+        a. 减少http数: 合并css, 合并js, 制作雪碧图, 使用http缓存
+        b. 减小资源大小: 压缩文件, 压缩图片, base64编码小图
+        c. 异步加载组件, 图片
+        d. CDN加速和缓存: 客户端可通过最佳网络链路加载静态资源, 提高访问的速度和成功率(CND: 通过在网络各处放置节点服务器构成的一层智能虚拟网络, 可将用户的请求重导向至最近的服务街店)
+
+      2. 接口访问优化
+        a. http持久链接
+        b. 后端优化合并请求
+        c. 冷数据接口缓存到localStorage减少请求
+      
+      3. 页面渲染速度的优化
+        a. 浏览器js引擎线程和GUI渲染线程互斥, 所以执行js会阻塞渲染, 因此一般将css放顶部优先渲染, js放底部
+        b. 减少dom操作
+        c. 使用虚拟dom渲染
+        d. 时间代理
+        e. 减少页面的重绘和回流
+    
+    */
+  </script>
+</body>
+</html>

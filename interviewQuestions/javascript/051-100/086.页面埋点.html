@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 页面埋点怎么实现
+    /*
+      1. 页面埋点方案
+        1.1 现有埋点类型
+          a. 手动代码埋点: 在需要采集数据的地方调用埋点方法, 任意地方任意场景进行数据采集
+          b. 可视化埋点: 元素带有唯一标识, 通过埋点配置后台, 将元素与要采集事件关联起来, 自动生成埋点代码嵌入页面
+          c. 无埋点: 前端自动采集全部事件, 上报埋点数据, 由后端过滤和计算有用数据
+        1.2 基本实现方案
+          a. 约定通用的埋点采集接口规范(标识X-Device-Id, X-source-Url, X-Current-Url, X-User-Id等信息), body(标识PageSessionId, Event, PageTitle, CurrentTime, ExtraInfo)
+          b. 指定调用采集脚本的方式: 单页面应用(history路径监听, 页面加载/离开绑定对应的onload,unload, 事件交互绑定click, event)
+        1.3 伪代码示例
+          const collect = {
+            deviceUrl: '',
+            eventUrl: '',
+            isuploadUrl: '',
+            params: {},
+            device: {},
+          }
+          collect.setParams = function(){} // 获取埋点配置
+          collect.updatePageInfo = function(){} // 更新访问路径及页面信息
+          collect.getParams = function(){} // 获取事件参数
+          collect.getDevices = function(){} // 获取设备信息
+          collect.send = function(){} // 事件采集
+          collect.sendDevice = function(){} // 设备采集
+          collect.isupload = function(){} // 判断是否采集, 埋点采集的开关
+            判断是否采集, 不采集就注销事件监听(项目中区分游客和用户)
+            判断是否已经采集过 - 已采集过不做任何操作, 未采集的添加监听
+            判断混合引用还是web引用: web调用collect.setIframe设置iframe, 混合则将加载和加载完成事件传输给app
+          collect.clickHandler = function(){} // 点击事件处理函数
+          collect.beforeUnloadHandler = function(){} // 离开页面处理函数
+          collect.onPopStateHandler = function(){} // 页面回退时间处理函数
+          collect.event = function(){} // 系统事件初始化, 注册离开事件, 浏览器后退事件
+          collect.getBeforeload = function(){} // 记录开始加载数据信息
+          collect.onload = function(){} // 存储加载完成获取设备类型, 记录加载完成信息
+            判断cookie是否存有设备类型信息, 有表示混合应用
+            采集加载完成事件
+            调用collect。isupload判断是否进行采集
+          collect.setIframe = function () {} // web应用通过iframe嵌套进行跨域cookie通讯, 设置设备id
+          collect.saveEvent = function(){} // app与h5混合应用, 直接将信息发给app， 判断设备类型做原生方法适配器
+          collect.dispatch = function(){} // 采集自定义事件类型
+          collect.storeUserId = function(){} // 将参数userid 存入sessionStorage
+          collect.saveEventInfo = function(){} // 采集h5信息, 如果混合应用将采集信息发送给app
+          collect.init = function(){} // 页面初始化调用方法
+            获取开始加载的采集信息
+            获取sdk配置信息, 设备信息
+            改写history方法, 单页面应用跳转前调用自己方法
+            页面加载完成调用collect.onload方法
+          collect.init(); // 开始初始化
+          return { // 暴露给业务的调用方法。
+            dispatch: collect.dispatch,
+            storeUserId: collect.storeUserId,
+          }
+
+    */
+  </script>
+</body>
+</html>
