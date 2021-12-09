@@ -49,7 +49,7 @@
     (function(){
       console.log(typeof arguments[0]());
     })(yideng.bar);
-    // 传入的argument[0]是一个函数, 执行时this.baz为window.baz为undefined
+    // 传入的argument[0]是一个函数, 执行时this.baz指向arguments对象, 其[baz]为undefined
     //this的指向: 谁调用指向谁, 指向是在运行时确定的。
 
     this.baz = 2;
@@ -69,6 +69,161 @@
       console.log(typeof arguments[0]()); // Arguments对象, undefined
     }
     fn(a.bar);
+    // arguments是一个所有(非箭头)函数都可用的局部变量, 类数组对象, 可用其引用函数的参数。
+  </script>
+
+  <script>
+    // 请写出正确的执行结果
+    function yideng(){
+      return
+      {
+        a: 1;
+      }
+    }
+    var result = yideng();
+    console.log(result.a); // error
+    // 这题就是个普通的欺骗题, return 后自动添加分分号, result => undefined, 因此result.a报错;
+    // 分号自动添加情况:
+    // 如果下一行的开始与本行结尾连一起, js不自动添加分号
+    // 只有下一行的开始与本行无法放在一起解释, js才添加分号;
+    // 如果一行的起始是++, --, 后面自动添加分号
+    // 如果 continue, break, return, throw, 这四个后面直接换行, 则自动添加分号。
+    // 注: 解释引擎添加分号行为难以预测, 编写代码尽量不省略行尾分号, 另外有些js代码压缩器不自动添加分号, 遇到无分号结尾会让代码保持原状而不压缩, 可能导致脚本合并错误
+  </script>
+
+  <script>
+    2 == [[[2]]]; // true
+    // 对象与数字比较规则, 对象转为数字后, 再进行数值比较, Number([[[2]]]) => 2 与 2相等，因此true
+    /*
+      装箱: 基本数据类型转为对应引用类型; 拆箱: 引用类型转为基本数据类型
+      Number()
+        如果是bool, 转为0或1
+        如果是数字, 简单传入和返回
+        如果是null, 返回0;
+        如果是undefined, 返回NaN
+        如果是字符串: 
+          只有数字, 转为十进制数
+          含有浮点, 转为浮点数
+          包含十六进制, 转为相同大小的十进制
+          空字符串, 转为0
+          除此以外, 转为NaN
+        如果是对象(toPrimitive的流程), 调用valueOf方法, 然后进行转换, 如果转换结果为NaN, 调用toString方法, 依照前面规则继续返回字符串的转换值。
+    */
+  </script>
+
+  <script>
+    [1 < 2 < 3, 3 < 2 < 1];
+    // 输出结果为: 
+    // 从左往右进行依次计算
+    // 1 < 2 => true; true < 3 => true
+    // 3 < 2 => false; false < 1 => true
+  </script>
+
+  <script>
+    function test() {
+      console.log("out");
+    }
+    (function () {
+      if (false) {
+        function test() {
+          console.log("in");
+        }
+      }
+      test();
+    })();
+    // test函数有一个全局的, 但立即执行函数内, 有一个函数作用域内的test声明, 在块内提升到函数作用与顶部, 覆盖掉全局. 但因为是false, 因此并未赋值。
+    // 到test()时, test仅仅是undefined, 因此报错, typeerror, not a function
+
+    // 如果在函数外，在不同的浏览器就会有不同的结果
+    function test() {
+      console.log(1);
+    }
+    if (true) {
+      function test() {
+        console.log(3);
+      }
+    } else {
+      function test() {
+        console.log(2);
+      }
+    }
+    test(); //最新的浏览器输出3   safri输出2  在早期的一些过渡版本中输出1
+
+    var a = 10;
+    if (false) {
+      var a = 11;
+    }
+    console.log(a); //10
+
+    var c = 10;
+    var c;
+    console.log(c); //10
+
+    var b = 10;
+    (function () {
+      if (false) {
+        var b = 11;
+      }
+      console.log(b); //undefined
+    })();
+    // 注意：函数可以被有条件来声明，这意味着，函数声明可能出现在一个 厲巚 语句里，但是，这种声明方式在不同的浏览器里可能有不同的效果。因此，不应该在生产环境代码中使用这种声明方式，应该使用函数表达式来代替。
+
+    //知识点: 
+    // 1. 局部变量优先级比全局变量优先级高: js不会告诉你是否多次声明同一变量, 他只会对后续的声明视而不见。不过他会执行后续声明中的变量初始化。
+    var a;
+    var a;
+    a = 10;
+
+    var b;
+    b = 10;
+    (function () {
+      var b;
+      if (false) {
+        b = 11;
+      }
+      console.log(b); //当前作用域，局部作用域的优先级是高于全局变量的，所以这里为undefined
+    })(); 
+    // 2. 函数声明与函数表达式的区别: 关键是理解提升。
+    // 3. 变量提升与函数提升: 
+    //  变量提升以变量作用域决定, 及全局作用域中声明的变量会提升至全局最顶层, 函数内变量的声明会提升至函数作用域最顶层。
+    //  函数提升类似变量提升, 但有些许不同。函数是一等公民, 会覆盖变量声明.
+    /*************未赋值的情况***************/
+      // 变量名与函数名相同
+      var company;
+      function company() {
+        console.log("yideng");
+      }
+      console.log(typeof company); // function,函数声明将变量声明覆盖了
+
+      /*************赋值的情况***************/
+      // 如果这个变量或者函数其中是赋值了的，那么另外一个将无法覆盖它：
+      var company = "yideng"; // 变量声明并赋值
+      function company() {
+        console.log("yideng");
+      }
+      console.log(typeof company); // string
+      // 这个其实再次赋值了
+      var company;
+      function company() {}
+      company = "yideng"; // 被重新赋值
+      console.log(typeof company);
+    //  es6块级作用域的函数声明: 明确允许在块级作用域中声明函数, 函数声明类似于var,即会提升到全局作用域或函数作用域的头部
+      // 浏览器ES6环境
+        function f() {
+          console.log("out");
+        }
+        (function () {
+          if (false) {
+            // 重复声明一次函数 f
+            function f() {
+              console.log("in");
+            }
+          }
+          f();
+        })();
+        // Uncaught TypeError: f is not a function
+        // 考虑到环境导致的⾏行为差异太⼤大，应该避免在块级作⽤用域内声明函数。如果确实需要，也应该写成函数表达式，⽽而不是函数声明语句.
+        // 另外，还有⼀一个需要注意的地⽅方。es6 的块级作⽤用域允许声明函数的规则，只在使⽤用⼤大括号的情况下成⽴立，如果没有使⽤用⼤大括号，就会报错。
   </script>
 </body>
 </html>
