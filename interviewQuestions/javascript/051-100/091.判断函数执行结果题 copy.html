@@ -225,5 +225,12 @@
         // 考虑到环境导致的⾏行为差异太⼤大，应该避免在块级作⽤用域内声明函数。如果确实需要，也应该写成函数表达式，⽽而不是函数声明语句.
         // 另外，还有⼀一个需要注意的地⽅方。es6 的块级作⽤用域允许声明函数的规则，只在使⽤用⼤大括号的情况下成⽴立，如果没有使⽤用⼤大括号，就会报错。
   </script>
+  <script>
+    function f(){
+      return f;
+    }
+    console.log(new f() instanceof f);
+    // false: instanceof用于检测a, 是否b的实例, 对于f函数来说, 有return因此new f()返回的是f的函数对象, 并不是f的实例
+  </script>
 </body>
 </html>
