@@ -18,6 +18,7 @@ https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/
 9. 各种继承(链, 构造函数, 组合, 寄生组合)
 10. 手写拖拽
 11. 手写new, Object.create, bind, call, apply
+12. clientLeft/top, offsetLeft/Top, scrollTop,left; pageX, pageY的区别。
 
 3. webpack插件
 4. react原理
