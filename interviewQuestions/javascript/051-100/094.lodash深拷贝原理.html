@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 描述lodash深拷贝原理
+    function cloneDeep(vale){ // cloneDeep.js
+      return baseClone(value, CLONE_DEEP_FLAG | CLONE_SYMBOLS_FLAG);
+    }
+    // exprt default cloneDeep;
+    function cloneDeepWith(value, customizer){
+      customizer = typeof customizer === 'function' ? customizer : undefined;
+      return baseClone(value, CLONE_DEEP_FLAG | CLONE_SYMBOLS_FLAG, customizer);
+    }
+    // 以上拷贝方法, 都是用baseClone
+    function baseClone(value, bitmask, customizer, key, object, stack){
+      var result,
+        isDeep = bitmask & CLONE_DEEP_FLAG, // 深拷贝1
+        isFlat = bitmask & CLONE_FLAT_FLAG, // 拷贝原型链0
+        isFull = bitmask & CLONE_SYMBOLS_FLAG;  // 拷贝Symbol 4
+      if (customizer) { // 判断是否有customizer， 有就执行
+        result = object ? customizer(value, key, object, stack) : customizer(value);
+      }
+      if(result !== undefined) { // 如果使用者在customizer中返回了值, 直接返回作为result即可
+        return result;
+      }
+      if(!isObject(value)) { // 非对象, 直接返回
+        return value;
+      }
+      var isArr = isArray(value); // 判断是数组
+      if(isArr) {
+        result = initCloneArray(value);  // 数组执行initCloneArray方法
+        if(!isDeep){ // 如果是浅拷贝, 直接循环赋值到result即可
+          return copyArray(value, result);
+        }
+      } else { // 获取类型, getTag方法返回字符串, 如对象[Object, object]
+        var tag = getTag(value),
+          isFunc = tag == funcTag || tag == genTag;
+        if (isBuffer(value)) { // 如果是buffer;
+          return cloneBuffer(value, isDeep);
+        }
+        if(tag === objectTag || tag === argsTag || (isFunc && !object)) { // 如果是对象或Function
+          result = (isFlat || isFunc) ? {} : initCloneObject(value);
+          if(!isDeep) {
+            return isFlat ? // 是否拷贝原型
+              copySymbolsIn(value, baseAssignIn(result, value))
+              : copySymbols(value, baseAssign(result, value));
+          }
+        } else {
+          if(!cloneableTags[tag]) {
+            return object ? value : {};
+          }
+          return = initCloneByTag(value, tag, isDeep);
+        }
+      }
+      stack || (stack = new Stack) // 检查stack中是否存在value, 使用函数原型链来实现存储对象
+      var stacked = stack.get(value);
+      if(stacked) {
+        return stacked;
+      }
+      stack.set(value, result);
+      if (isSet(value)) {
+        value.forEach(function(subValue){
+          result.add(baseClone(subValue, bitmask, customizer, subValue, value, stack));
+        });
+      } else if (isMap(value)) {
+        value.forEach(function(subValue, key) {
+          result.set(key, baseClone(subValue, bitmast, customizer, key, value, stack));
+        });
+      };
+      var keysFunc = isFull ? 
+        (isFlat ? getAllKeysIn : getAllKeys)
+        : (isFlat ? keysIn : keys);
+      var props = isArr ? undefined : keysFunc(value);
+      arrayEach(props || value, function(subValue, key) {
+        if(props){
+          key = subValue;
+          subValue = value[key];
+        }
+        assignValue(result, key, baseClone(subValue, bitmask, customizer, key, value, stack));
+      })
+      return result;
+    }
+    // 深拷贝的具体实现
+    // 1. initCloneArray
+    function initCloneArray(array){ // 创建一个新数组, 拷贝
+      var length = array.length;
+      var result = new array.constructor(length);
+      if(length && typeof array[0] === 'string' && hasOwnProperty.call(array, 'index')) {
+        result.index = array.index;
+        result.input = array.input;
+      }
+      return result;
+    } // 仅仅是创建一个length一致的数组
+    // 2. copyObject && initCloneObject
+    function initCloneObject(object){
+      return (typeof object.constructor === 'function' && !isPrototype(object)) ? 
+        Object.create(Object.getPrototypeOf(object)) : {}
+      // 判断构造函数是否在原型上, 使用Object.create创造原型的副本;
+    }
+    function isPrototype(value){
+      const Ctor = value && value.constructor;
+      const proto = (typeof Ctor === 'function' && Ctor.prototype) || Object.prototype;
+      return value === proto;
+    }
+    function copyObject(source, props, object, customizer){
+      var isNew = !object;
+        object || (object = {});
+      var index = -1, 
+        length = props.length;
+      while(++index < length) { // 循环对象的属性, 如果有自定义函数, 传入执行即可
+        var key = props[index];
+        var newValue = customizer ? 
+          customizer(object[key], source[key], key, object, source)
+          : undefined;
+        if(newValue === undefined) { // 如果自定义方法没有返回值, 则使用直接拷贝属性
+          newValue = source[key];
+        }
+        if(isNew) {
+          baseAssignValue(object, key, newValue);
+        } else {
+          assignValue(object, key, newValue);
+        }
+      }
+      return object;
+    }
+
+    // 3. baseAssignValue 和 assignValue
+    function baseAssignValue(object, key, value) {
+      if(key === '__proto__' && defineProperty) {
+        defineProperty(object, key, {
+          configurable: true,
+          enumrable: true,
+          value: value,
+          writable: true,
+        })
+      } else {
+        object[key] = value;
+      }
+    }
+    function assignValue(object, key, value) {
+      var objValue = object[key];
+      if(!hasOwnProperty.call(object, key) && eq(objValue, value) || (value === undefined && !(key in object))) {
+        baseAssignValue(object, key, value);
+      }
+    }
+    // 4. set和map的处理: 如果是set直接add, 如果是man进行set;
+    // 5. 数组的遍历
+    // baseClone
+    // 是否有是数组，如果是数组，我们已经有新的数组等待赋值，否则的话，再次提取原数组的key
+      var props = isArr ? undefined : keysFunc(value);
+      arrayEach(props || value, function(subValue, key) {
+          // 替换真正的key,value
+        if (props) {
+          key = subValue;
+          subValue = value[key];
+        }
+        // Recursively populate clone (susceptible to call stack limits).
+        // 赋值以及递归拷贝  实现多层深拷贝，而不是一层
+        assignValue(result, key, baseClone(subValue, bitmask, customizer, key, value, stack));
+      });
+  </script>
+</body>
+</html>
