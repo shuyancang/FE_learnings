@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 写出以下执行结果
+    (function(x){
+      delete x;
+      return x;
+    })(1);
+    // 1; ==> delete用于删除对象属性, 对变量并无操作效果
+    /*
+      1. delete： 用于操作删除一个对象的属性;
+      2. delete不能删除不可配置(configurable)的属性, (严格模式下抛出异常, 非严格模式下返回false)
+      3. delete可以删除隐式声明的全局变量(实际上是global的属性)
+      4. delete能删除: 可配置对象属性; 隐式全局变量; 用户自定义属性; TDZ(const, let声明指定的)
+      5. delete不能删除的: 显示声明的变量, 内置对象的属性, 从原型继承而来的属性
+      6. delete删除数组元素: 数组length属性不会变化, 数组变为empty, 被删除的元素不再属于数组, 
+      7. delete操作与释放内存没有关系(只能通过解除引用来间接释放);
+    */
+    // 下面代码输出什么？
+      var x = 1;
+      var output = (function () {
+        delete x;
+        return x;
+      })();
+      console.log(output);
+      // 答案：输出是 1。delete 操作符是将object的属性删去的操作。但是这里的 x 是并不是对象的属性， delete 操作符并不能作用。
+
+      // 下面代码输出什么?
+      x = 1;
+      var output = (function () {
+        delete x;
+        return x;
+      })();
+      console.log(output);
+      // 答案：报错 VM548:1 Uncaught ReferenceError: x is not defined,
+
+      var x = { foo: 1 };
+      var output = (function () {
+        delete x.foo;
+        return x.foo;
+      })();
+      console.log(output);
+      // 答案：输出是 undefined。x虽然是全局变量，但是它是一个object。delete作用在x.foo上，成功的将x.foo删去。所以返回undefined
+  </script>
+  <script>
+    var x = [typeof x, typeof y][1];
+    typeof x;
+    // string;
+    // typeof y返回:'undefined';因此此时var x = 'undefined'; typeof x为string;
+  </script>
+</body>
+</html>
