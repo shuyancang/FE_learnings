@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // asycn和await与Promise一样是非阻塞的。他们基于Promise实现, 不能用于普通函数的回调。
+    function _async(generatorFun){
+      return new Promise((res, rej) => {
+        const g = generatorFun();
+        function step (val) {
+          let res;
+          try{
+            res = g.next(val);
+          } catch (err) {
+            return reject(err);
+          }
+          if(res.done){
+            return res.value;
+          }
+          Promise.resolve(res.value).then(val => {
+            step(val)
+          }, err => {
+            g.throw(err);
+          })
+        }
+        step();
+      });
+    }
+  </script>
+</body>
+</html>

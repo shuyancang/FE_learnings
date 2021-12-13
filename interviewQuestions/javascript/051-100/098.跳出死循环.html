@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*
+      修改代码跳出死循环
+      while(1){
+        switch('yideng'){
+          case 'yideng':
+              // 禁止直接写一句break;
+        }
+      }
+    */
+    
+    loop1: // 标签语句
+    while(1){
+      switch('yideng'){
+        case 'yideng': break loop1;
+      }
+    }
+
+    try {
+      while(1){
+        switch('yideng') {
+          case 'yideng': throw new Error('yideng');
+        }
+      }
+    } catch(err) {
+      console.log('yideng');
+    }
+
+    function loop() {
+      while(1) {
+        switch('yideng') {
+          case 'yideng': return 'yideng';
+        }
+      }
+    }
+
+    out:
+    for(let i = 0; i < 1; i++) {
+      while(1){
+        switch('yideng'){
+          case 'yideng':
+            continue out;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
