@@ -31,6 +31,33 @@
         step();
       });
     }
+
+
+    function _myAsy(gen){ // 或另一种方式手写。
+      const g = gen();
+      function next(val){
+        return new Promise((resolve, reject) => {
+          const result = g.next(val);
+          if(result.done){
+            return;
+          }
+          Promise.resolve(result.value).then(data => next(data)).catch(err => reject(err));
+        });
+      }
+      return next();
+    }
+
+    // function* myGenerator() {
+    //     try {
+    //         console.log(yield Promise.resolve(1))
+    //         console.log(yield 2) //2
+    //         console.log(yield Promise.reject('error'))
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+
+    // const result = myAsync(myGenerator);
   </script>
 </body>
 </html>

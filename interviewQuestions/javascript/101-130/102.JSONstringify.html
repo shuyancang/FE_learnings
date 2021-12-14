@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现一个json.stringify
+    /*
+      stringify的基本转换规则: 
+        基本数据类型:
+          undefined => undefined;
+          boolean => true/false字符串;
+          number => 字符串数值
+          string => 不变
+          null => null字符串
+          NaN/Infinity => null字符串
+          Symbol => undefined
+        函数类型:  转为undefined
+        对象类型: 
+          如果有toJSON 则序列化toJSON的值;
+          如果是数组, 数组中的undefined, Symbol, 函数, 转变为null, 其余继续转换
+          如果是RegExp对象返回'{}'
+          如果是Date对象, 返回Date对象的toJSON字符串  ('2021-12-14T12:54:47.529Z')
+          如果是普通对象: 属性是undefined, 函数, symbol忽略; 所有以symbol为属性的都会忽略
+          如果有循环引用, 报错;
+    */
+
+    function _stringify(data){
+      const datatype = typeof data;
+      // if(datatype)
+    }
+  </script>
+</body>
+</html>

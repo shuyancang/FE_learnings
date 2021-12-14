@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var s = "laohu";
+    s[0] = 1;
+    console.log(s); //laohu
+    var s = "laohu";
+    s += 2020;
+    console.log(s); // laohu2020
+    // 上面两行为什么这么输出
+
+    // 字符串是原始类型, 无法修改.  但s += 2020, 是执行的s = s + 2020创建了一个新字符串, 并覆盖掉之前生成的变量。
+  </script>
+  <script>
+    // 对以下数组进行去重。
+    var arr1 = [1, "1", 2, "2", 3],
+    arr2 = [1, [1, 2, 3, ["1", "2", "3"], 4], 5, 6];
+
+    // 处理完成
+    arr1 = [1, 2, 3];
+    arr2 = [1, 2, 3, 4, 5, 6];
+
+    function arrMultRemove(arr){
+      function flatTool(arr, record){
+        for(let i = 0; i < arr.length; i++) {
+          const cur = arr[i];
+          if(Array.isArray(cur)) {
+            flatTool(cur, record);
+          } else {
+            record.push(Number(cur));
+          }
+        }
+        return record;
+      }
+      return Array.from(new Set(flatTool(arr, [])))
+    };
+  </script>
+</body>
+</html>
