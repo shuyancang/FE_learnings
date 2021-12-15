@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // js写一个单例模式, 可以具体到某个场景。
+    /*
+      单例模式: 只有一个实例
+      提供一个访问它的全局访问点, 一般购物车, 登录等都是一个单例; 
+    */
+    class SingleMode {
+      constructor({name, level}){
+        if (!SingleMode.instance) {
+          this.name = name;
+          this.level = level;
+          SingleMode.instance = this;
+        }
+        return SingleMode.instance;
+      }
+    }
+
+    function SingleFun(info){
+      this.name = info.name;
+      this.level = info.level;
+      this.info = function(){
+        console.warn(`name is ${this.name} and level is ${this.level}`);
+      }
+    }
+    SingleFun.getInstance = function(info){
+      if (!this.instance) {
+        this.instance = new SingleFun(info);
+      }
+      return this.instance;
+    }
+    var boss = SingleFun.getInstance({ name: "Jokul", level: "1" })
+    var boss2 = SingleFun.getInstance({ name: "Jokul2", level: "2" })
+  </script>
+</body>
+</html>

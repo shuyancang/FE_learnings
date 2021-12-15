@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 简述js中函数的集中调用方式
+    /*
+      函数调用模式, 方法调用模式, 构造器模式, 及call/apply
+      1. 函数调用 
+        function tt(){}  => tt()
+      2. 方法调用
+        const a = { func: function(){} } => a.func();
+        比起函数调用模式来说, 需要宿主, 调用模式中函数的this指向宿主;
+      3. 构造函数调用
+        function Test(){} => const sub = new Test();
+        所有需要由对象使用的属性, 必须使用this引导; 函数的return被改写, 如果返回非对象则返回this;
+      4. 上下文调用call,apply;
+        用于实现方法调用, 不污染对象。
+    */
+  </script>
+</body>
+</html>
