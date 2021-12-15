@@ -15,7 +15,7 @@
           undefined => undefined;
           boolean => true/false字符串;
           number => 字符串数值
-          string => 不变
+          string => "字符串"
           null => null字符串
           NaN/Infinity => null字符串
           Symbol => undefined
@@ -31,7 +31,44 @@
 
     function _stringify(data){
       const datatype = typeof data;
-      // if(datatype)
+      if (datatype !== 'object') { // 简单数据类型
+        let result = data;
+        if (Number.isNaN(data) || data === Infinity || data === -Infinity) {
+          return 'null';
+        } else if (datatype === 'function' || datatype === 'undefined' || datatype === 'symbol') {
+          return undefined;
+        } else if (datatype === 'string') {
+          return `"${data}"`;
+        }
+        return String(result); // bool或数值
+      } else if (datatype === 'object') {
+        if (data === null) {
+          return "null";
+        } else if (data.toJSON && typeof data.toJSON === 'function') {
+          return _stringify(data.toJSON());
+        } else if (data instanceof Array) { // 数组
+          let result = [];
+          data.forEach((e, i) => {
+            if (typeof e === 'undefined' || typeof e === 'function' || typeof e === 'symbol') {
+              result[i] = 'null';
+            } else {
+              result[i] = _stringify(e);
+            }
+          });
+          return `"${result}"`; // return `"${result}"`.replace(/'/g, '"');
+        } else {
+          let result = [];
+          Object.keys(data).forEach((key, i) => {
+            if (typeof e !== 'symbol') {
+              const val = data[key];
+              if (val !== undefined && typeof val !== 'function' && typeof val !== 'symbol') {
+                result.push(`"${key}:${_stringify(val)}"`);
+              }
+            }
+          });
+          return `{${result}}`.replace(/'/g, '"');
+        }
+      }
     }
   </script>
 </body>

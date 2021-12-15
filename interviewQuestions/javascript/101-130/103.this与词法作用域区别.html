@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 词法作用域与this的区别
+    // 词法作用域包含了执行上下文中的变量声明;
+    // this是执行上下文的一个可能为空的属性, 是对对象的引用
+
+    /*
+      js引擎执行一段和当前执行上下文(running execution context)无关的代码时, 会创建一个对应的执行上下文用于追踪代码执行过程, 并且将当前执行上下文指向该上下文。执行上下文的创建过程会根据语法块创建对应的环境记录；
+
+      词法作用域会通过环境记录(environment record)来存储标识符与实际变量的映射关系, 和一个外部环境(outer env) 来引用上级作用域
+
+      环境记录包括词法环境(lexical Environment)和变量环境(variable environment), 块级声明存在于词法环境, 其他声明存在于变量环境
+
+      代码执行中, 词法环境可能会创建环境记录与this绑定, 解析this时, 从当上下文开始直到全局, 返回最近可用的this绑定。
+    
+    */ 
+  </script>
+</body>
+</html>
