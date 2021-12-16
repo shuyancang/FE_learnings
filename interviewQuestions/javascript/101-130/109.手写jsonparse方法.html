@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现json.parse
+
+    // function _parse(str) { return eval(`(${str})`)}
+    // 
+
+    function _parse(str) {
+      return new Function(`return ${str}`)();
+    }
+    // Function和eval有动态编译js的作用, 但实际编程中并不推荐使用。
+  </script>
+</body>
+</html>

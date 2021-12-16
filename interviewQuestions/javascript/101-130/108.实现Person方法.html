@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 按照调用实例, 实现Person方法
+    /*
+      Person('li'); // hi! this is Li
+      Person('Dan').sleep(3).eat('dinner'); // hi! this is Dan; 等待3秒; eat dinner;
+      Person('jerry').eat('dinner').eat('supper'); // hi! this is jerry; eat dinner; eat supper;
+      Person('smith').sleepFirst(5).eat('supper'); // 等待5秒; hi! this is smith; eat supper;
+    */
+    
+    class Person{
+      taskQueue = [];
+      constructor(name){
+        this.taskQueue.push(() => this.sayHi(name));
+        this.runTaskQueue();
+      }
+
+      sayHi = (name) => {
+        console.log(`hi! this is ${name}`);
+      }
+
+      nextTask = () => {
+        if (this.taskQueue.length > 0) {
+          const task = this.taskQueue.shift();
+          if(typeof task === 'function') {
+            task();
+            this.nextTask();
+          } else if (typeof task === 'number') {
+            console.log(`sleep ${task} secends`);
+            setTimeout(() => {
+              this.nextTask()
+            }, task * 1000);
+          }
+        }
+      }
+
+      sleep = (sec) => {
+        this.taskQueue.push(sec);
+        return this;
+      }
+
+      sleepFirst = (sec) => {
+        this.taskQueue.unshift(sec);
+        return this;
+      }
+
+      runTaskQueue = () => {
+        setTimeout(() => this.nextTask());
+      }
+
+      eat = (food) => {
+        this.taskQueue.push(() => console.log(`eat ${food}`));
+      }
+    }
+
+    const person = name => new Person(name);
+
+    person('li'); // hi! this is Li
+    person('Dan').sleep(3).eat('dinner'); // hi! this is Dan; 等待3秒; eat dinner;
+    person('jerry').eat('dinner').eat('supper'); // hi! this is jerry; eat dinner; eat supper;
+    person('smith').sleepFirst(5).eat('supper'); // 等待5秒; hi! this is smith; eat supper;
+
+
+  </script>
+</body>
+</html>
