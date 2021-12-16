@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现打点计时器
+    /*
+      1. 从start 到 end, 每100毫秒输出一个数字, 每次数字增幅1;
+      2. 返回的对象中需要包含一个cancel方法, 用于停止定时;
+      3. 第一个数字需要立刻输出
+    */
+    function clocker(start, end){
+      let timer = null;
+      return {
+        cancel: function(){
+          if (timer) {
+            clearInterval(timer);
+          }
+        },
+        onStart: function(){
+          console.log(start);
+          timer = setInterval(() => {
+            if(start >= end) {
+              clearInterval(timer);
+              return;
+            }
+            console.log(++start);
+          }, 100);
+        }
+      }
+    }
+
+    // 或使用while + Promise + async进行
+
+    function clocker(start, end) {
+      let iscancel = false;
+      async function onStart(){
+        console.log(start);
+        while(start < end && !iscancel) {
+          await new Promise((res, rej) => {
+            setTimeout(() => {
+              !iscancel && console.log(++start);
+              res(start);
+            }, 100);
+          });
+        }
+      }
+      function onCancel(){
+        iscancel = true;
+      }
+      return { onStart, onCancel };
+    }
+  </script>
+</body>
+</html>

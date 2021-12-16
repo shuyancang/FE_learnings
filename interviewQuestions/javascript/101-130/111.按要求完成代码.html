@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const timeout = (ms) =>
+      new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve();
+        }, ms);
+      });
+    const ajax1 = () =>
+      timeout(2000).then(() => {
+        console.log("1");
+        return 1;
+      });
+    const ajax2 = () =>
+      timeout(1000).then(() => {
+        console.log("2");
+        return 2;
+      });
+    const ajax3 = () =>
+      timeout(2000).then(() => {
+        console.log("3");
+        return 3;
+      });
+    const mergePromise = (ajaxArray) => {
+      // 1,2,3 done [1,2,3] 此处写代码 请写出ES6、ES3 2中解法
+    };
+    mergePromise([ajax1, ajax2, ajax3]).then((data) => {
+      console.log("done");
+      console.log(data); // data 为[1,2,3]
+    });
+    // 执行结果为：1 2 3 done [1,2,3]
+
+    // const mergePromise = (ajaxArray) => {
+    //   return new Promise((res, rej) => {
+    //     const result = [];
+    //     async function promiseStep(queryList){
+    //       for (let i = 0; i < queryList.length; i++) {
+    //         const eachRes = await queryList[i]();
+    //         result[i] = eachRes;
+    //       }
+    //       res(result);
+    //     }
+    //     promiseStep(ajaxArray);
+    //   });
+    // };
+
+    const mergePromise = (ajaxArray) => { // Es6
+      return (async function(){
+        const result = [];
+        for (let i = 0; i < ajaxArray.length; i++) {
+          const eachRes = await ajaxArray[i]();
+          result[i] = eachRes;
+        }
+        return result;
+      })();
+    };
+
+    const mergePromise = (ajaxArray) => { // 递归~
+      const result = [];
+      return new Promise((res, rej) => {
+        function step(index){
+          ajaxArray[index]().then(data => {
+            result[index] = data;
+            if (index < ajaxArray.length - 1) {
+              step(index + 1);
+            }
+            if (index === ajaxArray.length - 1) {
+              res(result);
+            }
+          })
+        }
+        step(0);
+      });
+    };
+
+    // reduce方法~~~emmm, 很牛逼~
+    // const mergePromise = (ajaxArray) => {
+    //   return new Promise((resolve, reject) => {
+    //     let tem = []
+    //     let promise = ajaxArray.map(ajax => () => ajax().then(data => tem.push(data)))
+    //       .reduce((memo, cur) => {
+    //         return () => {
+    //           return memo().then(cur)
+    //         }
+    //       })
+    //     promise().then(() => {
+    //       resolve(tem)
+    //     })
+    //   })
+    // }
+  </script>
+</body>
+</html>
