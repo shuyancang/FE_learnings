@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    yideng();
+    var flag = true;
+    if (flag) {
+      function yideng() {
+        console.log("yideng1");
+      }
+    } else {
+      function yideng() {
+        console.log("yideng2");
+      }
+    }
+
+    // 报错, yideng  is not a function
+    // 块内函数提升yideng, 但块内的函数只会提升类似于var yideng到全局.
+  </script>
+
+  <script>
+    var yi = new Date("2018-08-20"), deng = new Date(2018, 08, 20);
+    [yi.getDay() === deng.getDay(), yi.getMonth() === deng.getMonth()];
+    // day相同, month数值一个9月, 一个8月, 所以getMonth不同;
+    // getDay返回的是 一周中的第几天(0 - 6); 显然8-20和9-20~~~emmm, 不会是同一个周*。
+
+  </script>
+
+  <script>
+    [typeof null, null instanceof Object];
+
+    // typeof null  => 'object';
+    // null是一个简单类型, 不是Object new出来的~ => false
+    // instance是用来测试一个对象在原型链中, 是否存在一个构造函数的prototype属性;
+  </script>
+  <script>
+    console.log("hello" + (1 < 2) ? "word" : "me");
+    // + 优先级大于 ? => 'hellotrue' ? 'word' : 'me'
+    // 输出word
+</script>
+<script>
+  function say(word) {
+    let word = "hello";
+    console.log(word);
+  }
+  say("hello Lili");
+  // let 的word, 在say形参中已经被声明, let无法进行重复声明 => 报错。
+</script>
+</body>
+</html>

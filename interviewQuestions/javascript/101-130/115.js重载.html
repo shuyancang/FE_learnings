@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // js 中如何模拟实现方法的重载
+    /*
+      js不支持重载语法, 没有重载所需要的函数签名; 没有函数签名, 真正的重载无法做到
+      函数重载: 为方便使用, 允许在同一范围内声明几个功能类似的同名函数, 这些同名函数的形式参数必须不同, 即, 一个函数完成不同的功能；
+
+      模拟1: 借助参数的个数, 执行不同的代码块
+      function someTool(...rest){
+        switch(rest.length){
+          case 0:
+          case 1: 
+          ...
+          break;
+        }
+      }
+      模拟2: 利用闭包的特性
+      function someMethod(caches, name, fn){
+        const pre = caches[name]; // 保存前一个值;
+        object[name] = function(...rest){
+          if(fn.length === rest.length){
+            return fn.applay(this, rest);
+          } else if (typeof pre === 'function') {
+            return pre.apply(this, rest);
+          }
+        }
+      }
+    */ 
+  </script>
+</body>
+</html>
