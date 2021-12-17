@@ -86,5 +86,133 @@
   console.log(min < max); // Math.min和Math.max需要参数, 如果不传返回的是Infinity和-Infinity
   // Math.min() => Infinity; Math.max() => -Infinity~~~~这可真是个坑啊~
 </script>
+<script>
+  // <textarea maxlength="10" id="yideng"></textarea>
+  document.getElementById("yideng").value = "a".repeat(10) + "b";
+
+  // aaaaaaaaaab  直接通过value设置的值, textarea的maxlength不起限制作用。
+</script>
+<script>
+  for (
+    let i = (setTimeout(() => console.log("a->", i)), 0);
+    setTimeout(() => console.log("b->", i)), i < 2;
+    i++
+  ) {
+    i++;
+  }
+  // setTimeout作用: 先赋值, 后输出;
+  // 逗号表达式: 挨个计算表达式各项, 返回值是逗号表达式最后一项的返回值(i = 1, 2; i为2)
+  // 初始化: i = 0; 此时有一个console.log(a -> 0)回调抛出等待执行;
+  // 进入第二个语句, 此时返回值为(i < 2: true此时)， 满足循环条件, 将() => console.log("b->", i)放入回调, 进入循环体
+  // 循环体执行i++; 此时i变为1; ==> 拷贝变量i和1到词法环境; 直到下次执行该语句以前i, 拷贝的i都是1; 本循环内同步任务完成, 将i放入setTimeout中; 
+  // 此处类似于:
+  //  let i = 50;
+  //  setTimeout(() => console.log(i));
+  //  i++; ==> 循环完成;
+  // 循环完成, 再次执行i++; 此时i变为2; 
+  // 判断是否满足循环条件, () => console.log("b->", i)抛出放入回调, i < 2不满足要求; 跳出循环
+  // 执行timeout宏任务回调队列:
+  // 宏任务1: setTimeout(() => console.log("a->", i)); 声明时被绑定为i; 输出a -> 1;
+  // 宏任务2: setTimeout(() => console.log('b->', i)); 在被抛出
+
+  // let的变量除了作用域在for区块中外, 还会为每次循环创建新的词法环境, 拷贝所有的变量名称与值, 直到下次执行。
+
+  // 略作修改: 输出如下: b -> 0; b -> 2; a -> 0; 条件处同步执行i是多少直接输出直到i >= 2 跳出执行为止。
+  for (
+    let i = (setTimeout(() => console.log("a->", i)), 0);
+    console.log("b->", i), i < 2;
+    i++
+  ) {
+    i++;
+  }
+</script>
+<script>
+  function sidEffecting(arr) {
+    arr[0] = arr[2];
+  }
+  function yideng(a, b, c = 3) {
+    c = 10;
+    sidEffecting(arguments);
+    return a + b + c;
+  }
+  yideng(1, 1, 1); // 12; c = 3默认值, 按照es6, a/b/c有块级作用域, 不会被修改; 
+  // 如果没有c = 3.不按照es6, 则通过arguments会修改a为c的值, 出现21的结果。
+</script>
+<script>
+  var length = 10;
+  function fn() {
+    console.log(this.length);
+  }
+  var yideng = {
+    length: 5,
+    method: function (fn) {
+      fn();
+      arguments[0]();
+    },
+  };
+  yideng.method(fn, 1);
+  // 第一个fn(), 执行时候是fn本身, 此时this指向window; => 10
+  // 第二个arguments[0](), 函数体是fn, 但this是arguments对象, 因此为参数个数2
+
+  // 函数作用域，作用域指的是变量存在的范围。函数本身也是一个值，也有自己的作用域。它的作用域和变量一样，就是其声明时所在的作用域，与其运行时所在的作用域无关。
+
+  // window.length: window中iframe的数量。
+</script>
+<script>
+  var a = (b = 1); // var a = 1;  全局b = 1;
+  (function () {
+    var a = (b = 2); // var a = 2; 全局b = 2;
+  })();
+  console.log(a, b);
+  // 函数内的var a = 2不生效; a为1;
+  // 全局的b由1 变成2;
+  // 1, 2;
+</script>
+<script>
+  var yidenga = Function.length,
+  yidengb = new Function().length;
+  console.log(yidenga === yidengb);
+  // false;
+  // function的length属性是指向fn的形参个数, 因此new Function() 为0(因为function是一个对象, length可在原型寻找)
+  // Function构造器的length: 本身就是一个函数, 它至少接受一个参数(这个参数是定义函数后的函数体); fn.__proto__.constructor.length => 1;
+  // var fn = new Function("return 1+2+3"); // Function构造器的形参实际上就是函数体字符串。
+
+  var fn = new Function("return 1+2+3"); // 注意参数类型必须为字符串形式
+  // 等同于
+  function fn() {
+    return 1 + 2 + 3;
+  }
+
+  // 带参数的函数写法
+  var fn = new Function("a", "b", "c", 'console.log("我是函数体");return a+b+c'); // 函数体语句之间用分号隔开
+  // 等同于
+  function fn(a, b, c) {
+    return a + b + c;
+  }
+
+  // 注意new Function 并不支持闭包。
+  var i = 1;
+  +(function (a, b, c) {
+    var j = 2;
+    var fn = new Function(
+      "a",
+      "b",
+      "c",
+      "console.log(i);console.log(j);console.log(a+b+c)"
+    );
+    fn(a, b, c);
+  })(1, 2, 3); // 此时函数只能访问全局的 i，无法访问内部的 j
+  // 使用 Function 构造器生成的函数，并不会在创建它们的上下文中创建闭包；它们一般在全局作用域中被创建。当运行这些函数的时候，它们只能访问自己的本地变量和全局变量，不能访问 Function 构造器被调用生成的上下文的作用域
+
+  /*
+    每个js函数实际上都是一个Function对象 (function(){}).constructor === Function;
+    Function对象没有自己的属性和方法, 因为他本身也是一个函数, 所以他也会通过原型链从自己的原型链Function.prototype上继承属性和方法
+    length是函数的属性, 指该函数有多少个必须传入的参数(形参)
+    arguments.length: 函数被调用时的参数个数(实参)
+    length作为函数的属性指形参个数, 不包括剩余参数个数, 仅包括第一个具有默认之前的参数个数
+    Fucntion构造器本身也是一个function, 他的length为1, 该属性writable: false; enumrable: false; configurable: ture;
+    Function原型对象length属性为0
+  */
+</script>
 </body>
 </html>
