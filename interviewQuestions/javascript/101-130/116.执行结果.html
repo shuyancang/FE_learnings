@@ -52,5 +52,39 @@
   say("hello Lili");
   // let 的word, 在say形参中已经被声明, let无法进行重复声明 => 报错。
 </script>
+<script>
+  function fun(n, o) {
+    console.log(o);
+    return {
+      fun: function (m) {
+        return fun(m, n);
+      },
+    };
+  }
+  var b = fun(0).fun(1).fun(2).fun(3);
+  // undefined, 0, 1, 2 显然就是个参数的替换····一步一步分析即可。
+</script>
+<script>
+  var obj = {};
+  obj.name = "first";
+  var peo = obj;
+  peo.name = "second";
+  console.log(obj.name); // seconde 显然是传址修改。
+</script>
+
+<script>
+  if ([] instanceof Object) {
+    console.log(typeof null);
+  } else {
+    console.log(typeof undefined);
+  }
+  // 'object'; []是Oject的实例(祖先级~)
+</script>
+<script>
+  var min = Math.min(),
+  max = Math.max();
+  console.log(min < max); // Math.min和Math.max需要参数, 如果不传返回的是Infinity和-Infinity
+  // Math.min() => Infinity; Math.max() => -Infinity~~~~这可真是个坑啊~
+</script>
 </body>
 </html>
