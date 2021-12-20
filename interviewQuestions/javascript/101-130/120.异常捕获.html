@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 如何处理异常
+    /*
+      1. 代码执行的异常
+        try catch: 能捕获执行错误; 不能捕获语法错误; 无法处理异步错误; 影响代码可读性
+        window.onerror: 
+          同步异步都能捕获, onerror用于捕获意料外的错误, trycatch用来可预见的监控, 结合更搞笑
+          window.onerror函数在函数返回true才不会向上抛出, 否则即使知道异常依然返回Uncaught Error
+          <img src='./404.jpg' />网络请求异常无法帮助 获取异常
+        window.addEventListener('error')
+          可以监听资源加载错误, 也可以注册多个事件处理函数;(window.addEventListener('error', (msg, url, row, col, error) => {}, true))
+          但无法判断http状态;
+      2. 资源加载的错误捕获
+        imgObj.onerror()
+        performance.getEntries
+        window.addEventlistener会捕获但不冒泡, 
+      3. 框架的错误捕获
+        Vue: errorHandler
+        React: componentDidCatch
+
+    
+    */
+  </script>
+</body>
+</html>

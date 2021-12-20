@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // es6中 let 块作用域是如何实现的.
+    /*
+      1. 原理分析
+        作用域: 隔离变量, 不同作用域下同名变量不会冲突. es5中使用lexical environment来管理静态作用域， 而非es3的ao/vo
+        
+        编译阶段: var 变量提升到函数变量环境中, let, const变量推入词法环境; 代码块内通过let和const声明的变量既不会推入变量环境也不会推入词法环境。
+        执行阶段: 
+          代码执行到代码块时, 代码块内通过let和const生命的变量推入词法环境, 代码块内变量可访问
+          代码块结束时, 通过let, const声明的变量从词法环境中推出, 代码块外不可访问
+      2. 
+        编译阶段: 
+          通过var的变量, 提升到函数变量环境中;
+          let/const声明的变量, 推入词法环境;
+          代码块内: 通过let/const声明的变量既不会推入变量环境，也不会推入词法环境。 
+        从而词法环境形成一个小的栈结构, 代码块内的let/const变量会遵循后进先出的原则被推入首位, 查询变量从栈首位开始查找。栈每个结构互相独立不受影响。
+        作用域被执行后, 该作用域的信息就会被栈顶依次弹出, 因此无法在代码块外访问代码块内的声明。这就是let/const命令能够形成块级作用域的原因。
+    */
+  </script>
+</body>
+</html>
