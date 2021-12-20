@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 闭包特权函数的使用场景。
+    // 利用闭包, 创建用于访问私有变量的公用方法(特权方法)
+    // 1. 在构造函数中定义特权方法
+    function MyObj(){
+      var someVariable = 10;
+      function privateFunc () {
+        return false;
+      }
+      this.getMethod = function(){
+        someVariable++;
+        return privateFunc;
+      }
+    }
+
+    // 2. 利用私有和特权成员, 隐藏不应该直接被修改的数据。
+    function Foo(name) {
+      this.getName = function () {
+        return name;
+      };
+    }
+    var foo = new Foo("luckyStar");
+    console.log(foo.name); //  => undefined
+    console.log(foo.getName()); //  => 'luckyStar'
+
+    // 3. 静态私有变量 : 创建特权方法也通过在私有作用域中定义私有变量或函数来实现。
+    (function () {
+      var name = "";
+      //
+      Person = function (value) {
+        name = value;
+      };
+      Person.prototype.getName = function () {
+        return name;
+      };
+      Person.prototype.setName = function (value) {
+        name = value;
+      };
+    })();
+
+    var person1 = new Person("xiaoming");
+    console.log(person1.getName()); // xiaoming
+    person1.setName("xiaohong");
+    console.log(person1.getName()); // xiaohong
+
+    var person2 = new Person("luckyStar");
+    console.log(person1.getName()); // luckyStar
+    console.log(person2.getName()); // luckyStar
+
+    // 4. 模块方式
+    var singleton = function () {
+      var privateVarible = 10;
+      function privateFunction() {
+        return false;
+      }
+
+      return {
+        publicProperty: true,
+        publicMethod: function () {
+          privateVarible++;
+          return privateFunction();
+        },
+      };
+    };
+  </script>
+</body>
+</html>
