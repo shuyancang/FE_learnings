@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // generator原理简述
+    /*
+      1. yield关键字在js中的实现:
+        首先生成器不是线程, js执行引擎仍然是基于事件循环的单线程环境, 当生成器运行的时候, 它会在一个caller的统一线程运行。 执行顺序有序明确永远不会并发。不同意系统的线程, 生成器只会在其内部用到yield的时候才会被挂起;
+      
+      2. babel转换后的generator代码: 
+        "use strict";
+        var _marked = regeneratorRuntime.mark(myGenerator);
+        function myGenerator() {
+          return regeneratorRuntime.wrap(function myGenerator$(_context) {
+            while (1) {
+              switch ((_context.prev = _context.next)) {
+                case 0:
+                  _context.next = 2;
+                  return 1;
+
+                case 2:
+                  _context.next = 4;
+                  return 2;
+
+                case 4:
+                  return _context.abrupt("return", "ending");
+
+                case 5:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _marked);
+        }
+        // regeneratorRuntime.mark编译版本中的函数源码: 
+        runtime.mark = function (genFun) {
+          genFun.__proto__ = GeneratorFunctionPrototype;
+          genFun.prototype = Object.create(Gp);
+          return genFun;
+        };
+        // 对应的GeneratorFunctionPrototype和Gp变量: 
+        var Gp = (GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(
+          IteratorPrototype
+        ));
+        GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
+        GeneratorFunctionPrototype.constructor = GeneratorFunction;
+        // Gp完整编译代码中, 对应next, throw, return
+        function defineIteratorMethods(prototype) {
+          ["next", "throw", "return"].forEach(function (method) {
+            define(prototype, method, function (arg) {
+              return this._invoke(method, arg);
+            });
+          });
+        }
+        defineIteratorMethods(Gp);
+            
+    
+    
+    */
+  </script>
+</body>
+</html>
