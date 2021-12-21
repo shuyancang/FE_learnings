@@ -50,7 +50,7 @@
         ));
         GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
         GeneratorFunctionPrototype.constructor = GeneratorFunction;
-        // Gp完整编译代码中, 对应next, throw, return
+        // Gp完整编译代码中, 对应next, throw, return函数的挂载;
         function defineIteratorMethods(prototype) {
           ["next", "throw", "return"].forEach(function (method) {
             define(prototype, method, function (arg) {
@@ -59,9 +59,34 @@
           });
         }
         defineIteratorMethods(Gp);
-            
+        // 简化版mark:
+        runtime.mark = function (genFun) {
+          var generator = Object.create({
+            next: function (arg) {
+              return this._invoke("next", arg);
+            },
+          });
+          genFun.prototype = generator;
+          return genFun;
+        };
     
-    
+        regeneratorRuntime.wrap函数: 
+        function helloWorldGenerator() {
+          return regeneratorRuntime.wrap(
+            function helloWorldGenerator$(_context) {
+              ...
+            },
+            _marked,
+            this
+          );
+        }
+        function wrap(innerFn, outerFn, self) {
+          var generator = Object.create(outerFn.prototype);
+          var context = new Context([]);
+          generator._invoke = makeInvokeMethod(innerFn, self, context);
+
+          return generator;
+        }
     */
   </script>
 </body>
