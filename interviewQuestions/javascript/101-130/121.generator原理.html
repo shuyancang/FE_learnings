@@ -87,7 +87,161 @@
 
           return generator;
         }
+
+        对于myGenerator函数, 其_context可以理解为:
+        var ContinueSentinel = {};
+        var context = {
+          done: false,
+          method: "next",
+          next: 0,
+          prev: 0,
+          abrupt: function (type, arg) {
+            var record = {};
+            record.type = type;
+            record.arg = arg;
+
+            return this.complete(record);
+          },
+          complete: function (record, afterLoc) {
+            if (record.type === "return") {
+              this.rval = this.arg = record.arg;
+              this.method = "return";
+              this.next = "end";
+            }
+
+            return ContinueSentinel;
+          },
+          stop: function () {
+            this.done = true;
+            return this.rval;
+          },
+        };
+        // 每次item.next修改next和prev的值, 直到stop; 说白了就是存储各种状态或存储上下文.
+
+        对于makeInvokeMethod函数；
+        var GenStateSuspendedStart = "suspendedStart";
+        var GenStateSuspendedYield = "suspendedYield";
+        var GenStateExecuting = "executing";
+        var GenStateCompleted = "completed";
+        function makeInvokeMethod(innerFn, self, context) {
+          var state = GenStateSuspendedStart;
+
+          return function invoke(method, arg) {
+            if (state === GenStateExecuting) {
+              throw new Error("Generator is already running");
+            }
+
+            if (state === GenStateCompleted) {
+              if (method === "throw") {
+                throw arg;
+              }
+              //  return { value: undefined, done: true };
+              return doneResult();
+            }
+
+            context.method = method;
+            context.arg = arg;
+
+            while (true) {
+              var delegate = context.delegate;
+              if (delegate) {
+                var delegateResult = maybeInvokeDelegate(delegate, context);
+                if (delegateResult) {
+                  if (delegateResult === ContinueSentinel) continue;
+                  return delegateResult;
+                }
+              }
+
+              if (context.method === "next") {
+                // Setting context._sent for legacy support of Babel's
+                // function.sent implementation.
+                context.sent = context._sent = context.arg;
+              } else if (context.method === "throw") {
+                if (state === GenStateSuspendedStart) {
+                  state = GenStateCompleted;
+                  throw context.arg;
+                }
+
+                context.dispatchException(context.arg);
+              } else if (context.method === "return") {
+                context.abrupt("return", context.arg);
+              }
+
+              state = GenStateExecuting;
+
+              var record = tryCatch(innerFn, self, context);
+              if (record.type === "normal") {
+                // If an exception is thrown from innerFn, we leave state ===
+                // GenStateExecuting and loop back for another invocation.
+                state = context.done ? GenStateCompleted : GenStateSuspendedYield;
+
+                if (record.arg === ContinueSentinel) {
+                  continue;
+                }
+
+                return {
+                  value: record.arg,
+                  done: context.done,
+                };
+              } else if (record.type === "throw") {
+                state = GenStateCompleted;
+                // Dispatch the exception by looping back around to the
+                // context.dispatchException(context.arg) call above.
+                context.method = "throw";
+                context.arg = record.arg;
+              }
+            }
+          };
+        }
+        最终返回{value: any, done: boolean}
+
     */
+
+    /*
+        核心总结: generator的核心在于上下文的保存, 每次yield执行一次传入的生成器函数, 用context对象存储; 每次执行生成器函数, 都可以从上一个执行结果开始执行;
+
+        简单模拟: generator手动调用next就自动执行下一步, 返回的是生成器对象;
+    */
+    function _generator(ctx){
+      while(1){
+        switch((ctx.prev = ctx.next)){
+          case 0: 
+            ctx.next = 2;
+            return 'step1';
+          case 2:
+            ctx.next = 4;
+            return 'step2';
+          case 4:
+            ctx.next = 6;
+            return 'step3';
+          case 6:
+          case 'end':
+            return ctx.stop();
+        }
+      }
+    }
+
+    let ctx = {
+      next: 0,
+      prev: 0,
+      done: false,
+      stop: function stop() {
+        this.done = true;
+      }
+    }
+
+    let simpleGen = function(){
+      return {
+        next: function(){
+          value = ctx.done ? undefined : _generator(ctx);
+          done = ctx.done;
+          return {
+            value,
+            done;
+          }
+        }
+      }
+    }
   </script>
 </body>
 </html>

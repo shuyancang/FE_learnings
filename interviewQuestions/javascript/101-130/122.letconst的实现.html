@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // let,const实现, 简单动手实现;
+    var a = 2;
+    {
+      let a = 3;
+    }
+
+    // ===> babel转码
+    var a = 2;
+    {
+      var _a = 3;
+    }
+
+    // 手动实现:
+    var a = 2;
+    (function(
+    ){
+      var a = 3;
+    })();
+
+    // 可以基于object.defineProperty实现const;
+    function _const(key, value){
+      Object.defineProperty(window, key, {
+        enumerable: false,
+        writable: false,
+        configurable: false,
+        get: function(){
+          return value;
+        },
+        set: function(){
+          throw new TypeError('const variable can not write');
+        }
+      });
+    }
+
+  </script>
+</body>
+</html>

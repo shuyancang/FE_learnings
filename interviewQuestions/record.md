@@ -13,7 +13,7 @@ https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/
 4. 装饰器@
 5. http的流程
 6. 浏览器渲染流程
-7. 手写Promise, 手写async+await
+7. 手写Promise, 手写async+await, 手写简单的generator
 8. 手写generator
 9. 各种继承(链, 构造函数, 组合, 寄生组合)
 10. 手写拖拽
