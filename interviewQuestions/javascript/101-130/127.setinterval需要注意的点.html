@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // setInterval需要注意哪些点
+    /*
+      返回值为非零数值, 可以用来清除对应的定时器; (与setTimeout共享一个id池子)
+      需要及时清除防止内存泄露
+      定时可能并不精确(与同步程序的具体操作有关)
+    */
+    // setinterval常被忽略的
+    /*
+      1. 被忽略的参数, setInterval第三个参数开始可以作为第一个回调的形参进行使用
+      2. setInterval的回收, 其id并不是在clear的时候被GC, clear会清除对应的定时器, 但复制的idtimer不会, 可以手动赋值null
+      3. this指向易被忽略导致错误指向.
+    */
+    var i = 0;
+    const o = {
+      i: 1,
+      fn: function(){
+        console.log(this.i);
+      }
+    }
+    setTimeout(o.fn, 1000); //0
+    // 如上, setTimeout实在全局环境下进行的, 这相当于
+    var a = o.fn;
+    a();
+  </script>
+</body>
+</html>
