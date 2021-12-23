@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 介绍class及 es5的类及区别
+    // es5的类: function; class类声明创建一个基于原型继承的具有给定名称的新类
+    
+    /*
+      class没有声明提升
+      类声明不可再次声明
+      class内部是严格模式, 构造函数可选
+      class的静态方法或原型方法均不可枚举, 且这些方法都没有原型, 不可被new
+      class必须调用new来调用
+      class内部不能重写类名
+
+      // 私有方法和私有属性用symbol模拟; 静态方法添加static
+
+      class Parent的定义, 等同于
+      Parent.prototype = {
+        constructor(){},
+        print(){}
+      }
+
+
+      function定义的原型方法 
+      可以被枚举;
+      重复定义function，会覆盖
+      通过__proto__可以向原型添加方法
+      没有私有属性
+    */
+  </script>
+</body>
+</html>
