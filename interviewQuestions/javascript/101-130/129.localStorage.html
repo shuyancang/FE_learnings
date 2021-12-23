@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // localStorage 的介绍, api
+    /*
+      localStorage简介
+        Html5本地储存, 使用键值对存取数据, 数据只能是字符串;
+        可存储的数据类型: 数组, 图片, json, 样式, 脚本(只要是能序列化成字符串的内容都可以存储)
+      
+      优势: 
+        拓展了cookie的4k限制
+        可以将第一次请求的数据直接存储到本地, 相当于一个5M大小针对前端页面的数据库, 相比于cookie可以节约贷款
+      
+      局势:
+        浏览器的大小不统一, 兼容性在IE8以上才支持
+        值类型限定为string, 需要对常见的json进行一些转换
+        localStorage在浏览器的隐私模式下不可读取
+        localStorage本质上是对字符串的读取, 如果内容过多会有一定的内存消耗，可能造成一定的卡顿
+        localStorage不会被爬虫抓取
+      
+      api
+        setItem(key, value)
+        getItem(key)
+        removeItem(key)
+      
+      一些较少使用的方法:
+        localStorage.hasOwnProperty检查存储数据中是否保存某个值
+        Object.keys(localStorage)查看所有的键
+        localStorage.key(index) 读取第index个数据的名字或键（localStorage.key(1)）
+
+      window的storage事件: 存储数据发生变化时, 会触发storage事件, 需要特别注意该事件不在导致数据变化的当前页面触发, 如果浏览器同时打开域名下多个页面, 其中一个页面改变storage, 其他所有页面的storage事件会被触发, 可以通过这种机制来实现多个窗口的通信(ie例外, 他会实现自己页面的storage事件)
+
+    */ 
+
+    
+  </script>
+</body>
+</html>

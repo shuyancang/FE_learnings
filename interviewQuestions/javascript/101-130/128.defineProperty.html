@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // defineProperty方法 及 使用
+    /*
+      Object.defineProperty在对象上定义一个新属性, 或修改对象现有属性, 返回该对象
+        可通过修改属性描述符来控制属性的访问; 通过getter和setter进行劫持(vue的响应式)
+      
+      Object.defineProperty(target, key, descriptor)
+      descriptor相关配置: 
+        value: 指定key的值
+        writable: 是否可以被重写(默认false)
+        enumerable: 是否可以被枚举(默认false)
+        configurable: 是否可以删除目标属性, 或 是否可以再次修改该属性的writable/enumerable/configurable; 默认false
+        get: function(){}; 获取
+        set: function(value)(){}; 设置; 
+
+      get和set不是必须成对, 任意设置其一即可, 如果不设置方法, 默认undefined;
+      当使用了getter或setter方法, 不允许使用writable和value属性
+
+      Object.defineProperty局限性
+        检测不到对象属性的添加和删除
+        检测不到数组长度的变化, 或数组某一项赋值
+
+      使用场景: 
+        MVVM中的双向数据绑定
+        优化对象获取和修改属性的方式
+    */
+  </script>
+</body>
+</html>

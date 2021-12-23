@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // instanceof 原理
+    // instanceof 用于判断某个实例，是否属于某个类型, (父类型, 祖先类型)
+    function _instanceof(insObj,target){
+      if(insObj === null) {
+        return false;
+      }
+      if (insObj.__proto__ === target.prototype) {
+        return true;
+      }
+      return _instanceof(insObj.__proto__, target)
+    }
+
+    function _instanceof(left, right){
+      const rightProto = right.prototype;
+      let leftProto = left.__proto__;
+      while(leftProto) {
+        if(leftProto === rightProto){
+          return true;
+        }
+        leftProto = leftProto.__proto__;
+      }
+      return false;
+    }
+  </script>
+</body>
+</html>
