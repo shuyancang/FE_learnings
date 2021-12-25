@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 手动实现一个eventEmitter
+    // on(event, fn)监听, once(event, fn)单词监听, emit(event, arg1, arg2, ...)触发event事件, off(event, fn)停止监听
+
+    // 实际上就是个缓存 + 查找的过程~
+    function EventEmitter(){
+      this.events = {};
+    }
+    EventEmitter.prototype.addListener = function addLis(evt, lis){
+      if(!this.events[evt]) {
+        this.events[evt] = [];
+      }
+      this.events[evt].push(lis);
+    }
+    EventEmitter.prototype.emit = function emit(evt, ...args){
+      const lisList = this.events[evt];
+      if(!lisList || !lisList.length){
+        return false;
+      }
+      for(let eachEvt of lisList){
+        lisList.apply(this, [event, ...args]);
+      }
+    }
+    EventEmitter.removeLis = function removeLis(evt, lis){
+      const lisList = this.events[evt];
+      if(!lisList) {
+        return false;
+      }
+      if (!lis) {
+        this.events[evt] = [];
+      } else {
+        this.events[evt] = lisList.filter(e => e !== lis);
+      }
+    }
+
+    EventEmitter.prototype.once = function once(evt, lis) {
+      let wrap = (...args) => {
+        lis.app(this, args);
+        this.removeLis(evt, wrap);
+      }
+      this.addListener(evt, wrap);
+    }
+  </script>
+</body>
+</html>
