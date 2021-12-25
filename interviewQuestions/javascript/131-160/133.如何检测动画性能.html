@@ -10,6 +10,75 @@
   <script>
     // 如何检测动画性能。
     // 1. chrome工具: 开发者工具 更多 / more tools / Rendering 选中Frame Rendering Stats可以开启页面实时帧率及页面GPU使用率; 但并不十分精确且缺乏收集上报功能;
+
+    // 2. Frame Timing API
+    // 通过一个接口获取帧相关数据, 浏览器将相关的信息挂载在window.performance上, 
+    // 相关节点: prompt for unload => redirect => app cache => DNS => TCP => Request => Response => Processing => onload;
+    // 相关关键字: navigationStart -> redirectStart -> redirectEnd -> fetchStart -> domainLookpStart -> domaiLookupEnd -> connectStart -> connectEnd -> requestStart -> requestEnd -> responseStart -> responseEnd -> domLoading -> domInteractive -> domComplete -> loadEventStart -> loadEventEnd
+    // 通过window.performance.timing可以统计页面每个时间节点耗时; 代码基本示意如下: 
+    var rendererEvents = window.performance.getEntriesByType("renderer");
+var compositeThreadEvents = window.performance.getEntriesByType("composite");
+
+//或者
+var observer = new PerformanceObserver(function(list) {
+    var perfEntries = list.getEntries();
+    for (var i = 0; i < perfEntries.length; i++) {
+        console.log("frame: ", perfEntries[i]);
+    }
+});
+    
+// subscribe to Frame Timing
+observer.observe({entryTypes: ['frame']});
+
+// 结果
+// {
+//  sourceFrameNumber: 120,
+//  startTime: 1342.549374253
+//  cpuTime: 6.454313323
+// }
+
+// 但由于兼容性不佳, Frame Tiing API属于测试阶段, 使用效果不佳
+
+// 3. 可以使用requestAnimationFrameAPI实现FPS
+// requestAnimationFrame: 希望执行动画, 并请求浏览器调用指定函数在下次重绘前更新动画, 回调次数通常是每秒60次, 因此可以借助该方法进行FPS计算.
+var rAF = function () {
+    return (
+        window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        function (callback) {
+            window.setTimeout(callback, 1000 / 60);
+        }
+    );
+}();
+
+var frame = 0;
+var allFrameCount = 0;
+var lastTime = Date.now();
+var lastFameTime = Date.now();
+
+var loop = function () {
+    var now = Date.now();
+    var fs = (now - lastFameTime);
+    var fps = Math.round(1000 / fs);
+
+    lastFameTime = now;
+    // 不置 0，在动画的开头及结尾记录此值的差值算出 FPS
+    allFrameCount++;
+    frame++;
+
+    if (now > 1000 + lastTime) {
+        var fps = Math.round((frame * 1000) / (now - lastTime));
+        console.log(`${new Date()} 1S内 FPS：`, fps);
+        frame = 0;
+        lastTime = now;
+    };
+
+    rAF(loop);
+}
+
+loop();
+
+// 普通情况下可以如此得到一个近似的web动画帧率, 存在误差(两次主线程执行js的时间间隔当成帧), 在现阶段算是一种可取方法。
   </script>
 </body>
 </html>
