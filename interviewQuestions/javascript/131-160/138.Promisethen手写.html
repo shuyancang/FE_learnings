@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // promise 动手实现, 动手实现then
+    class _Promise{
+      constructor(exc) {
+        this.init();
+        try{
+          exc(this.resolve, this.reject);
+        } catch (err) {
+          this.reject(err);
+        }
+      }
+      init(){
+        this.status = Promise.PENDING; // 状态;
+        this.value = null;
+        this.reason = null;
+        this.onFulfilledCbs = []; // 成功的回调
+        this.onRejectedCbs = []; // 失败的回调
+        this.resolve = this.resolve.bind(this);
+        this.reject = this.reject.bind(this);
+      }
+      resolve(val){
+        this.status = Promise.FULFILLED;
+        this.value = val;
+        this.onFulfilledCbs.forEach(cb => cb(val));
+      }
+      reject(err){
+        this.status = Promise.REJECT;
+        this.reason = err;
+        this.onRejectedCbs.forEach(cb => cb(err));
+      }
+      then(onFulfilled, onRejected){
+        onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : val => val;
+        onRejected = typeof onRejected === 'function' ? onRejected : val => val;
+        let promise2 = new _Promise((resolve, reject) => { // 返回一个新的promise, 实现链式调用。
+          if (this.status === Promise.FULFILLED) {
+            setTimeout(() => { // 异步方式, 才能让下面获取到new好的_Promise;
+              try{
+                let x = onFulfilled(this.value);
+                Promise.resolvePromise(promise2, x, resolve, reject);
+              } catch (e) {
+                reject(e);
+              }
+            })
+          }
+          if (this.status === Promise.REJECT) {
+            setTimeout(() => {
+              try{
+                let x = onRejected(this.reason);
+                Promise.resolvePromise(promise2, x, resolve, reject);
+              } catch (e) {
+                reject(e);
+              }
+            })
+          }
+          if (this.status === Promise.PENDING) { // 异步操作, 最开始状态改变为异步, 如settimeout内包含resolve使用发布订阅
+            this.onFulfilledCbs.push(value => {
+              setTimeout(() => {
+                try {
+                  let x = onFulfilled(value);
+                  Promise.resolvePromise(promise2, x, resolve, reject);
+                } catch (e) {
+                  reject(e);
+                }
+              })
+            })
+            this.onRejectedCbs.push(reason => {
+              setTimeout(() => {
+                try {
+                  let x = onRejected(reason);
+                  Promise.resolvePromise(promise2, x, resolve, reject);
+                } catch (e) {
+                  reject(e);
+                }
+              })
+            })
+          }
+        });
+        return promise2;
+      }
+    }
+    _Promise.PENDING = 'pending';
+    _Promise.FULFILLED = 'fulfilled';
+    _Promise.REJECT = 'rejected';
+
+    // resolvePromise规范大致如下:
+    // promise2 和 x指向同一对象，抛出错误
+    // x是一个Promise类, 则接受其状态, 并执行对应的resolve 或 reject函数;
+    // x是一个函数或者对象
+    // 以上都不是, 直接调用resolve;
+    _Promise.resolvePromise = function(promise2, x, resolve, reject){
+      let called; // 防止多次调用成功或失败
+      if (x !== null && typeof x === 'object' || typeof x === 'function') {
+        try { // x.then方法可能有, 可能没有
+          let then = x.then;
+          if(typeof then === 'function') {
+            then.call(x, value => {
+              if(called) { return; }
+              called = true;
+              Promise.resolvePromise(promise2, value, resolve, reject);
+            }, err => {
+              if(called) return;
+              called = true;
+              reject(err);
+            })
+          } else {
+            if (called) return;
+            called = true;
+            resolve(x);
+          }
+        } catch (err) {
+          if (called) return;
+          called = true;
+          resolve(x);
+        }
+      } else { // x为基本类型
+        resolve(x);
+      }
+    }
+  </script>
+</body>
+</html>

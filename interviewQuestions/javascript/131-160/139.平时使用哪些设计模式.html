@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 平时使用哪些设计模式?
+    /*
+      设计模式: 是一套被反复使用, 分类的设计经验总结, 一般23种, 分类一般是:
+
+      创造型模式
+        抽象工厂模式; 工厂方法模式; 单例模式; 构建模式; 原型模式
+
+      结构性模式
+        代理模式; 装饰器模式; 组合模式; 桥接模式; 适配器模式; 外观模式; 享元模式;
+      
+      行为型模式
+        策略模式; 命令模式; 状态模式; 责任链模式; 解释器模式; 观察者模式; 备忘录模式; 迭代器模式; 模板方法模式; 访问者模式; 中介模式
+    
+    */ 
+    // 平时常用
+    // 单例模式: 类只有一个实例; (可以通过闭包将对应的信息进行单例化)
+    // 常用场景: 全局弹框, 全局缓存, vuex中的store, redux中的Store 
+
+    // 工厂模式: 用于创建对象的接口, 由子类决定实例化哪一个类;
+    // 工具库用于导出引用(jq的$, lodash的_); React.createElement用于屏蔽直接使用new VNode
+
+    // 观察者模式: 目标和观察者是基类, 目标提供维护观察者的一些方法, 观察者提供更新接口, 
+    // es6
+    class Subject {
+        constructor() {
+            this.state = 0;
+            this.observers = []
+        }
+        getState() {
+            return this.state
+        }
+        setState(state) {
+            this.state = state;
+            this.notify();
+        }
+        notify() {
+            this.observers.forEach(observer => {
+                observer.update()
+            })
+        }
+        add(observer) {
+            this.observers.push(observer)
+        }
+    }
+
+    class Observer {
+        constructor(name, subject) {
+            this.name = name;
+            this.subject = subject;
+            this.subject.add(this)
+        }
+        update() {
+            console.warn(`${this.name} 被更新，状态为${this.subject.getState()}`)
+        }
+    }
+
+    let sub = new Subject();
+    let ob = new Observer("ob", sub); 
+
+    sub.setState(1)
+    // 一个对象维持一些列依赖它的对象, 将有关状态的任何变更自动通知给他们, 一般使用publish、subscribe的模式变量来实现;
+    // 应用场景: onClick, vue的watch, Promise, Jq的callBack, Nodejs的自定义事件
+  </script>
+</body>
+</html>
