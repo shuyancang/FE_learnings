@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // js的详细执行流程
+    /*
+    javascript 的执行流程
+前言
+我们来看下面这一段代码。
+
+print();
+console.log(str);
+var str = 'hello world!';
+function print() {
+    console.log(str)
+}
+如果你写过 js，那就知道，这段代码不会报错，会正常输出 undefined undefined。
+
+如果不能理解，不要着急，我们删除 var str = 'hello world'，再执行：
+
+print();
+console.log(str);
+function print() {
+  console.log(str);
+}
+现在就会报错了，str is not defined。这是为什么呢？如果不知道不要紧，下边我们就来了解下，要了解 javascript 的运行方式，我们就要先了解下变量提升。
+
+变量提升(hosting)
+在介绍变量提升之前，我们先通过以下两个例子来讲解 JS 中的声明和赋值。
+
+在 es6 之前，JS 都是通过 var 来声明变量。
+
+var str = "hello word";
+这一句等价于
+
+var str; // 变量声明
+str = "hello world!"; // 赋值
+下面这段代码是一个完整的函数声明，没毛病。
+
+var print = function () {
+  console.log(str);
+};
+这段代码是一个声明变量和赋值的过程，相当于
+
+var print; // 变量声明
+print = function () {
+  // 赋值
+  console.log(str);
+};
+所谓的变量提升，是指 javascript 在执行的过程中，javascript 引擎把变量提升和函数的声明部分提升到代码开头的“行为”。变量被提升后，会给变量设置值为 undefined。
+
+javascript 执行流程
+从概念的字面上来看，“变量提升”意味着变量和函数的声明会在物理层移动到代码的最前面。但其实是：变量和函数声明在代码里的位置是不会改变的，而且在编译阶段被 javascript 引擎放入内存中。JS 代码编译完成之后才会进入执行阶段。
+
+大致流程就是：一段 javascript 代码 => 编译阶段 => 执行阶段
+
+下面来看下详细的流程，还是以上边的例子为例
+
+变量提升阶段代码
+var str = undefined;
+function print() {
+  console.log(str);
+}
+执行代码阶段
+print();
+console.log(str);
+str = "hello world";
+执行流程图如下：
+
+瀃廭攪
+
+从上图可以看出，输入一段JS代码，经过编译后，会生成两部分内容：执行上下文（execution context）和可执行代码。
+
+执行上下文
+是指JS执行一段代码时的运行环境，比如调用一个函数，就会进入这个函数的执行上下文，确定该函数在执行期间的用到变量如攣攇瀃攨、变量、对象、函数等。
+
+在执行上下文中存在一个变量环境的对象（variable environment），该对象中保存了变量提升的内容，比如上面代码中变量str和函数print都保存在该对象中。
+
+类似这样：
+
+Variable Environment:
+    str -> undefined,
+    print -> function () { console.log(str) };
+接下来逐行分析下代码：
+
+print(); // 1
+console.log(str); // 2
+var str = 'hello world!'; // 3
+function print() { // 4
+    console.log(str)
+}
+编译阶段
+1和2，不是声明操作，JS引擎不做任何处理
+3，通过var 声明变量，所以JS引擎在环境对象中创建一个名为str的属性，并初始化为undefined
+4，这是一个函数声明。JS引擎发现了一个通过funtion定义的函数，所以JS引擎会将函数定义部分存到堆（HEAP)中，并在环境对象中创建一个print属性，并将print的值指向堆中函数的位置。
+这样就生成了变量环境对象，接着JS引擎会把声明之外的代码编译成字节码（可执行代码），也就是下面这一段模拟代码：
+
+print();
+console.log(str);
+str = 'hello world!';
+执行阶段
+JS引擎开始执行“可执行代码”，按照顺序一行一行的执行，过程如下：
+
+执行到print函数时，JS引擎变开始在变量环境对象中寻找该函数，由于变量环境对象中print存在该函数的引用，所以JS引擎便开始执行该函数，在执行过程发现，函数用了str变量，所以JS引擎继续在变量环境中寻找str变量，此时str在变量环境对象中的值为undefined, 所以输出undefined。
+console.log(str), JS引擎继续在变量环境对象中查找str，此时str在变量环境对象中的值为undefined, 所以输出undefined.
+str = 'hello world!'; 这是一个赋值操作，把'hello world!'赋值给str, 赋值结束后变量环境对象变成：
+Variable Environment:
+    str -> 'hello world!',
+    print -> function () { console.log(str) };
+整个流程大致差不多这样。
+
+有个问题，如果代码中存在多个相同的变量和函数时怎么办？
+示例代码：
+
+a(); // 1
+var a = 'hello world'; //2
+console.log(a); // 3
+function a() { // 4
+    console.log('inner a function 1')
+}
+
+var a = 'hello, tomorrow'; // 5
+
+console.log(a); // 6
+function a() { // 7
+    console.log('inner a function 2')
+}
+a(); // 8
+执行结果是：
+
+inner a function 2
+hello world
+hello, tomorrow
+
+报错 a is not a function
+分析下：
+
+编译阶段
+
+1，函数调用不做处理
+2, 有var声明变量，在执行环境中变量环境对象上创建a变量并赋值为undefined.
+Variable Environent:
+    a -> undefined;
+3, 函数调用，不做处理
+4, JS引擎发现有同名funtion 定义的函数a,把函数定义存储到堆中，并且在变量环境对象中查找是否有a属性，有a，然后把a的值指向该函数的在堆中的位置。此时变量环境对象变成（类似这样）：
+Variable Environent:
+    a -> function () { console.log ('inner a function 1')};
+5, 有var声明变量，在执行环境中变量环境对象上查找是否存在a属性，发现存在并攊有值，不做处理。
+6, 不做处理
+7, JS引擎发现有同过funtion 定义的函数a,把函数定义存储到堆中，并且在变量环境对象中查找是否有a属性，有a，然后把a的值指向该函数的在堆中的位置。此时变量环境对象变成（类似这样）：
+Variable Environent:
+    a -> function () { console.log ('inner a function 2')};
+然后执行可执行代码：
+
+a(); // 1
+a = 'hello world'; //2
+console.log(a); // 3
+a = 'hello, tomorrow'; // 4
+console.log(a); // 5
+a(); // 6
+1，JS引擎变开始在变量环境对象中寻找该函数，由于变量环境对象中a存在该函数的引用，所以JS引擎便开始执行该函数，输出
+inner a function 2
+2，赋值操作，把'hello world'赋值给a,此时变量环境对象变更为:
+Variable Environent:
+    a -> 'hello world';
+3，打印a的信息。
+hello world
+4， 赋值操作，把'hello, tomorrow'赋值给a,此时变量环境对象变更为:
+Variable Environent:
+    a -> 'hello, tomorrow';
+5，函数调用，但是在变量环境对象中，a 的值为'hello, tomorrow',并没有指向函数的位置，所以报错。
+    
+    
+    */
+  </script>
+</body>
+</html>
