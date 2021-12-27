@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现函数
+    // d1,,,
+    // d2,,,
+    // d3,,,
+    // 将上面的字符串输出123的和
+
+    function getSum(str){ // 栈方法, 输出。
+      let result = 0;
+      let tmp = 0; // 思路是栈, 但实际上深度只有1, 因此可以用一个变量代替。
+      for(let i = 0; i < str.length; i++) {
+        const letter = str[i];
+        if (letter >= 0) {
+          tmp = tmp * 10 + letter * 1;
+        } else {
+          result += tmp;
+          tmp = 0;
+        }
+      }
+      return result + tmp;
+    }
+
+    // 实现使用正则直接匹配出数值, 再循环即可.
+    function SumStringNumer(str) {
+        const numArr = str.match(/\d+/g);
+        return numArr.reduce((sum, value) => sum + +value, 0);
+      }
+
+      console.log(SumStringNumer(str));
+  </script>
+</body>
+</html>

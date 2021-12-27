@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现sum方法, 使得sum(x)(y) 与sum(x, y)返回结果相同
+
+    function sum(...args){
+      if(args.length === 2) {
+        return args.reduce((a, b) => a + b);
+      }
+      return function(...args2){
+        return sum(...args, ...args2);
+      }
+    } // 死方法~
+
+    function curry(fn){ // 稍稍活一点点 , 是基于fn形参进行的判定。
+      return function tmpTool(...args) {
+        return args.length >= fn.length ? fn(...args) : function(...args2){
+          return tmpTool(...args, ...args2);
+        }
+      }
+    }
+    function add(a, b){
+      return a + b;
+    }
+    const getSum = curry(add);
+  </script>
+</body>
+</html>

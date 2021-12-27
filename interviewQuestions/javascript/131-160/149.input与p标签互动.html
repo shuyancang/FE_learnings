@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type='text' id='inp' />
+  <p id='text'></p>
+  <script>
+    // 页面一个input, 一个p, 改变input后p跟着改变, 如何处理监听, 如何触发?
+    const inputDOM = document.querySelector('#inp');
+    inputDOM.addEventListener('change', () => { // 脱焦触发
+      console.log('change')
+    })
+    inputDOM.addEventListener('input', (e) => { // 值改变触发。
+      console.log('input', e.target.value)
+    })
+    // oninput时间, 在input对象value值发生变化的时候, 奏效
+    // onpropertychange: 在ie下html属性改变时候获取
+    // onchange: input对象属性改变(鼠标键盘触发), 或失去焦点触发
+
+    // 1： 监听input输入框值的变化, 随着input内容的改变修改p标签的数据;
+    // 2. input内容输入失焦, p改变。
+  </script>
+</body>
+</html>
