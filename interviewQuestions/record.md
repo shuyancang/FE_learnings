@@ -19,6 +19,7 @@ https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/
 10. 手写拖拽
 11. 手写new, Object.create, bind, call, apply
 12. clientLeft/top, offsetLeft/Top, scrollTop,left; pageX, pageY的区别。
+13. nodejs的事件循环6阶段, web浏览器的eventloop阶段。
 
 3. webpack插件
 4. react原理
