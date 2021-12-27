@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    new Promise((resolve, reject) => {
+      reject("1");
+    })
+    .catch((e) => {
+      console.log(1);
+    })
+    .then((res) => {
+      console.log(2);
+    });
+    // 1 2
+    // catch返回一个Promise, 处理拒绝的情况, 行为与.then相同. 事实上.catch(onRejected)内部是call .then方法的。
+
+
+    function a(obj) {
+      obj.a = 2; // 此时的obj指向对象的地址, 修改.a属性, 原值收到影响
+      obj = { a: 3 }; // 此时,将对象的地址, 赋值给了obj, obj对应的是另一个对象的地址了~~此后的obj修改与原obj无关。
+      return obj;
+    }
+    const obj = { a: 1 };
+    a(obj);
+    console.log(obj); // obj: {a: 2}
+  </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 请解释jsonp的工作原理
+    /*
+      1. 问题背景, 同源策略: 协议 + 域名 + 端口 , 任意一个不同, 都跨域
+      2. 突破同源: script, img, link等可以使用外链
+      3. jsonp:
+        script加载一个外链, 实际上这个script标签, 是可以获取后执行的, 所以, 如果script内有某个约定的函数, 那么这个函数是可以执行的.
+        与服务端约定一个回调函数名, 在客户端定义好这个函数, 请求url添加callback=函数名;
+        服务器接受到请求以后, 将相关的函数名和需要返回的数据, 拼成函数名(data)结构执行
+        页面获取到数据, 此时直接解析时, 就会执行对应的函数, 参数获取到即是对应的数据。
+    
+    
+    */
+  </script>
+</body>
+</html>

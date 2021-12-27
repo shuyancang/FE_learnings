@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // nextTick实在本次循环执行还是在下次循环执行, setTimeout呢?
+    /*
+      1. nextTick在本次循环, setTimeout如果在主模块中调用不一定在下次循环执行, 如果在主模块中调用, 一定是下次循环执行;
+
+      2. nodejs循环机制的六个阶段:
+        timers(timout,interval阶段) -> I/O callbacks(系统回调) -> idle prepare阶段(node内部) -> poll阶段(新的io, 操作读取文件等) -> check阶段(setImmediate执行的callback) -> close callbacks阶段(sockek.on close的callback等)
+
+      3. process.nextTick执行时机就事件循环阶段, 有两种
+        在8.12.0版： 一个事件循环的一个阶段结束, 下一个阶段开始时候执行
+        在12.16.3： 一个事件循环的一个阶段的其中一个回调函数结束，下一个回调函数开始之前执行。
+        因此, nextTick必定是本次循环执行, 除非超出执行上限。
+
+      注意: 如果nodejs10 及之前的版本, 微任务会在事件循环各个阶段执行, 即每个阶段执行完毕都会执行微任务;
+        之后(nodejs 11) 事件循环原理发生变化, 一旦执行一个阶段的宏任务, 就立刻执行微任务队列, 跟浏览器区域一致。
+
+    */
+  </script>
+</body>
+</html>
