@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 前后端通信的解决方案
+    // ajax + websocket + cors
+
+    /*
+      http缺陷, 只能客户端发起, 因此出现websocket, 由服务端主动向客户端推送. 实现真正的双向平等对话
+      
+      websocket特点: 
+        建立在tcp协议上, 服务段时间较容易
+        与http兼容性良好, 端口默认80和443, 且握手采用http协议, 不易屏蔽, 能通过各种http代理服务器
+        数据格式轻量, 性能开销小, 通信高效
+        可以发送文本, 可以发送二进制数据
+        没有同源限制, 客户端可以与任意服务器通信
+        标识符ws(加密wsss), 服务器网址就是URL
+
+      CORS
+        CORS是一个W3C标准, 跨域资源共享;
+        是一种网络浏览器技术规范, 为web服务器定义了一种方式, 允许网页从不同的域访问其资源，而这种访问被同源策略禁止；
+        CORS定义了一种浏览器和服务器交互的方式来确定是否允许跨域请求, 
+
+        他是一个妥协，有更大灵活性，但比起简单地允许所有这些的要求来说更加安全。
+        CORS是为了让ajax可以实现可控的跨域访问而生！
+
+    
+    */
+  </script>
+</body>
+</html>
