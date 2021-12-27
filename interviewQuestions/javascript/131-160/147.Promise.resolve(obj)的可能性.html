@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // Promise.resolve(obj)， obj的可能性
+
+    /*
+      obj是promise: 返回这个promise;
+      obj是thenable(带有then方法): 返回的promise会跟随这个thenable的对象并采用它的最终状态
+      否则, 返回的promise将以该obj作为fulfilled状态的返回值, 
+    
+      Promise.resolve(2) ==> Promise {<fulfilled>: 2}
+
+      Promise.resolve({
+          then: (res, rej) => {
+              res(2)
+          }
+      }) =====> Promise {<fulfilled>: 2}
+
+      Promise.resolve(new Promise((res, rej) => {
+            res(2);
+      })) ===> Promise {<fulfilled>: 2}
+    */
+  </script>
+</body>
+</html>
