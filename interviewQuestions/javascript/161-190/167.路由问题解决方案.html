@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 路由出现问题应该如何解决
+
+    /*
+      1. 项目开发容错应该提前做好, 错误上报, 日志记录;
+      2. 404界面必须, 不应让用户看到错误页面
+
+      3. 路由传参 '/somepath/:id'; router.push('/somepath', {params: id }); router.push('/somepath', {query: { id }})
+      4. 路由懒加载: webpack代码分割实现, 通过promise来加载路由, 利用js的异步事件队列;
+
+      5. history模式刷新页面404问题： 利用history.pushState方法实现对url跳转, 刷新页面时会走后端路由, 需要服务器辅助兜底
+
+      6. 路由守卫: router.beforeEach, router.afterEach, beforeleave, beforeEach, beforeupdate, beforRouterEnter
+    
+    */
+  </script>
+</body>
+</html>
