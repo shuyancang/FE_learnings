@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 介绍immutable data
+
+    /*
+      1. 什么是immutable
+        immutable data: 一旦创建就不能被修改的数据；
+        对Immutable对象的任何修改, 添加, 删除都会返回一个新的Immutable对象。
+        持久化数据结构(Persistent Data Stucture)-使用旧数据创建新数据时, 保证旧数据可用不可变;
+        为了避免deepclone性能损耗, 使用结构共享(structual Sharing), 如果对象树的一个节点发生变化, 只修改这个节点和收他影响的父节点, 其他节点共享。
+      2. 为什么immutable
+        引用带来的副作用: 对象赋值传址, 会引发很多修改上的同步问题。
+        深拷贝带来的问题: 性能;
+        js语言本身的不足, 数据不可变只能使用const, Object.freeze, 但对于复杂结构不易处理
+      3. 特点:
+        持久化数据结构: 其中不可变数据类型List,Map,Stack,OrderdMap, Set, OrderedSet, Recor均返回新对象;
+        结构共享: 基于哈希映射树和适量映射树, 只可能该副本及祖先的继承, 其他不变, 这样共享部分提升, 大大提升性能。
+        惰性操作: Seq; 不可变 + 懒惰的。
+        强大的api: 既有沿用js的类似方法, 又有更便捷的操作方法
+      4. 核心api
+        fromJS, toJS, 数据互相转化；
+        Immutable.is() 数据一致性比较
+        数据类型判断isMap, isList
+        合并merge
+        增删改查: get, getIn, set, setIn, update, updateIn, delete, deleteIn
+      5. 优点:
+        降低耦合所带来的的复杂度; 节省内存; 容易开发出撤销重做等功能; 并发安全; 拥抱函数式编程
+      6. 缺点
+        新的api,
+        增加资源大小
+        容易和原生对象混淆
+      7. 实践
+        React: 
+          利用immutable数据结构的不可变性和结构共享能够快速进行比对;
+          this.state建议当做Immutable的, 因为deepClone麻烦~
+        与flux搭配使用
+        与redux搭配使用
+      8.  原理: 持久化数据结构, 结构共享(源码涉及到的底层算法还挺复杂滴~)
+        Vector Trie数据结构: 通过一颗树, key转为二进制形式, 对应value, (hash函数将key转换)
+        数字分区: 将key作为数字对应到一棵前缀树上, 进行转换。(进制转换)
+        位分区
+        树高压缩
+        节点压缩
+        可变/不可变数据结构
+        hash冲突
+
+
+
+
+
+
+    
+    
+    
+    */
+  </script>
+</body>
+</html>
