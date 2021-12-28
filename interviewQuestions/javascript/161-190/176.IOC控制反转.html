@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // IOC控制反转, 应用场景
+
+    /*
+      IOC： inversion of control 控制反转, 是一种设计原则, 用于反转面向对象中的各种控件, 降低代码耦合, 使程序模块化易于拓展;
+
+      IOC： 将依赖模块和被依赖模块都交给容器管理，使用模块时，由容器动态将依赖注入到模块去。
+
+      一般需要控制反转模式，使用DI(Dependency Injection)依赖注入的方法实现
+
+      普通写法: 
+      function add(a, b){ return a + b}
+      function normalFn(...args){
+        return add(...args); // 普通写法, 显式的依赖add函数相互耦合。
+      }
+      // 依赖注入
+      function dependencyFn(fn, ...args){
+        return fn.call(null, ...args); // 执行函数所需要的函数, 可由外界任意传入: dependencyFn(add, 1, 2, 3);
+      }
+      // 优点: 耦合降低, 互相独立
+      // 不足：所有依赖在dependencyFn执行时引入, 如果较多时会很复杂，增加模块的复杂性 ===> 需要一个专门管理注入方和被注入方法的容器(IOC容器)
+      
+      // 控制反转: 注入的依赖，再一次解耦。在ioc内管理耦合关系。
+      function iocFn(dependFn, handleFn){
+        return function(...args){
+          return dependFn.call(null, handleFn, ...args);
+        }
+      }
+
+    
+    */
+
+
+  </script>
+</body>
+</html>
