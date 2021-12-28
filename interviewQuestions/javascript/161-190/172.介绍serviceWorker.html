@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 介绍service workder的理解
+
+    /*
+      1. 什么是Service Worker
+        本质上充当web与浏览器之间的代理服务器, 能够在网络可用时作为浏览器和网络间的代理;
+        前端请求资源过程中, 利用http请求服务端资源, 不能直接访问服务端资源, 利用http的header等信息作为凭证。Serviceworker则是在前端创建一个可直接访问资源的本地库, 不能访问时, 再通过http请求。
+      2. 与Cache的关系
+        正常客户端获取资源的优化: 缓存(不发请求就能获取数据); 提升服务器查找资源的速度; 减小内容体积。
+        应用获取资源的缓存类型分为: ServiceWorker, MemoryCache(记录在内存), DiskCache(记录在硬盘:强缓存 + 协商缓存) 和 No Cache, 资源的查找顺序从左向右, 找到即返回。
+      3. 使用逻辑: 注册 -> 线程 -> 缓存资源 -> 请求监听 -> 响应缓存;
+        3.1 注册: navigator.serviceWorker; register注册, sw.js是worker逻辑
+          navigator.serviceWorker
+          .register("/sw.js")
+          .then(function (reg) {
+            console.log("success", reg);
+          })
+          .catch(function (err) {
+            console.log("error", err);
+          });
+          // 需要注意service worker是有作用域的，为文件的当前路径。
+        3.2 激活 - 在chrome调试台, application / application / service workers可以看到相关信息;
+          ServiceWorker状(status): stopped, starting, running, stopping; 只有处于running状态的service workder才有效;
+          注册完毕后, Service Worker开始自动下载, 下载完毕后悔触发install事件, 进行监听时间并进行操作, 代码如下。
+          const CACHE_NAME = "demo-a";
+          this.addEventListener("install", function (event) {
+            console.log("install service worker success");
+            caches.open(CACHE_NAME);
+            let cacheResources = ["https://abcde.com/demo.js"];
+            event.waitUntil(
+              caches.open(CACHE_NAME).then((cache) => {
+                cache.addAll(cacheResources);
+              })
+            );
+          });
+
+          通过上面代码, demo.js被缓存下来, 下载后会进行执行激活:
+          this.addEventListener("active", function (event) {
+            console.log("service worker active success");
+          });
+          下载激活是一个独立的特殊线程, 并不影响浏览器渲染页面执行js的线程。因此无需担忧影响页面渲染。
+        3.3 更新:
+          应用加载时会下载service worker, 星下载的文件下载完毕后会进行diff操作, 并进行更新(没有依赖时, 将运行中的service worker抛弃, 新service worker激活)
+      4. 使用场景: 
+          浏览器缓存, 提升加载速度
+          离线应用, PWA
+          实现消息的主动推送, 为web引用增长一种交互方式
+      5. 兼容性
+          主流浏览器支持度不错, 但ie全系列不支持。
+    
+    */
+  </script>
+</body>
+</html>

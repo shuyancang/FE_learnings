@@ -13,9 +13,10 @@
       1. 作为对象的方法调用 => this指向调用的对象
       2. 作为普通函数调用 => this指向当前的全局对象;
       3. 构造函数调用 => 在构造器没有显示返回情况下, this返回这个对象;
-      4. call或apply调用
+      4. call或apply调用 => 改变函数中的this, 指向传入的对象
       5. 箭头函数的this => 默认绑定外层的this值, 
-
+      6. DOM event => 在HTML DOM事件处理程序中, this指向这个处理程序所绑定的HTML DOM节点
+      7. 全局环境this指向window
       
     
     */

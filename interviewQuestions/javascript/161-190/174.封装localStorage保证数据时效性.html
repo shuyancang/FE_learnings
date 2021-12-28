@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // LocalStorage进行封装, 保证数据的时效性
+
+    /*
+      LocalStorage在本次存储时, 存储量大，长时间保存，同一浏览器标签页共享，但永久有效除非手动清除, 因此可以将数据一起存一个data时间戳
+
+    */
+
+
+    const exp = 3600000; // 过期时间
+    function setStorage(key, value){
+      localStorage.setItem(key, JSON.stringify({
+        time: new Date().getTime(),
+        value,
+      }))
+    }
+    function getStorage(key) {
+      const item = localStorage.getItem(key);
+      if (!item) {
+        return '';
+      }
+      const { time, value } = JSON.stringify(item);
+      const nowTime = new Date().getTime();
+      if(nowTime - time >= exp) { // 已过期, 清除并返回空
+        localStorage.removeItem(key);
+        return '';
+      }
+      return value;
+    }
+  </script>
+</body>
+</html>
