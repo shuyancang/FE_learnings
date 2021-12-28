@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // call, bind, apply的区别
+
+    /*
+      都是用来改变函数运行时this的指向;
+
+      1. 区别: 
+        call和apply改变this后立刻执行该函数, bind只是返回改变上下文后的函数;
+        
+        fn.bind(thisArg, arg1, arg2, ...); 返回一个函数， 调用后才执行
+
+        call和apply的区别主要体现在参数的写法, 
+          call第一个参数是thisArg（不传对象则window）, call后续接收的是函数对应的后续参数;
+          apply在thisArg相同, 但后续接收的是函数执行的参数数组
+
+      2. 拓展: call和apply的一些用途
+        对象的继承: 
+        借用方法： let domNodes = Array.prototype.slice.call(document.getElementsByTagName("*"));
+        apply的妙用: 
+          数组最大项Math.max.apply(null, array), 最小项Math.min.apply(null, array)
+          数组合并 Array.prototype.push.apply(arr1, arr2);
+    */
+  </script>
+</body>
+</html>

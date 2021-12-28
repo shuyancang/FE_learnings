@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 使用正则去掉dom中的内联样式
+    var str = '<h1 id="text" style="background: #ccc;">测试元素</h1>';
+    var reg1 = /\s+style=\"[^\"]*\"/;
+
+    str= str.replace(reg1, '');
+    console.log('del style', str);
+  </script>
+</body>
+</html>
