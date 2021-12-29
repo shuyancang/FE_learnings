@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 介绍webp图片格式
+
+    /*
+      1. 支持有损压缩和无损压缩的图片文件格式, 尺寸比png, jpg缩小30%，还支持有损压缩无损压缩透明和动画;
+
+      2. 转换工具: cwebp, isparta, webp-webpack-plugin, gulp-webp
+
+      3. 浏览器兼容: ~78.65%
+        1) 利用html的picture标签进行能力检测, 不支持的使用其他替代格式
+          <picture>
+              <source type="image/webp" srcset="images/webp.webp">
+              <img src="images/webp.jpg" alt="webp image">
+          </picture>
+        2) 嗅探: 直接向浏览器插入一段base64的webp图片, 检测是否正常加载, 官方嗅探函数:
+          function check_webp_feature(feature, callback) {
+          var kTestImages = {
+                lossy: "UklGRiIAAABXRUJQVlA4IBYAAAAwAQCdASoBAAEADsD+JaQAA3AAAAAA",
+                lossless: "UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==",
+                alpha: "UklGRkoAAABXRUJQVlA4WAoAAAAQAAAAAAAAAAAAQUxQSAwAAAARBxAR/Q9ERP8DAABWUDggGAAAABQBAJ0BKgEAAQAAAP4AAA3AAP7mtQAAAA==",
+                animation: "UklGRlIAAABXRUJQVlA4WAoAAAASAAAAAAAAAAAAQU5JTQYAAAD/////AABBTk1GJgAAAAAAAAAAAAAAAAAAAGQAAABWUDhMDQAAAC8AAAAQBxAREYiI/gcA"
+            };
+            var img = new Image();
+            img.onload = function () {
+                var result = (img.width > 0) && (img.height > 0);
+                callback(feature, result);
+            };
+            img.onerror = function () {
+                callback(feature, false);
+            };
+            img.src = "data:image/webp;base64," + kTestImages[feature];
+          }
+        3) Request Header: 较为符合标准的方式, 浏览器在支持webp的情况下在http header accept携带webp/image字段, 后端确定是否返回webp图片。
+    
+    */
+  </script>
+</body>
+</html>
