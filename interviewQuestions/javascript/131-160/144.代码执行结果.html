@@ -29,6 +29,84 @@
     const obj = { a: 1 };
     a(obj);
     console.log(obj); // obj: {a: 2}
+
+
+    [1, 2, 3, 4, 5].map(parseInt);
+    // parseInt函数接受两个参数分别对应数组的值和索引
+    // 因此，以上在执行parseInt(1, 0); parseInt(2, 1); parseInt(3, 2); parseInt(4, 3); parseInt(5, 4);
+    // parseInt第二个参数radix为0时, 将按照十进制数解析;
+    // parseInt第二个参数radix为2- 36时, 如果第一个参数字符不满足指定进制的字符, 则解析为NaN;
+
+    console.log(1);
+    setTimeout(() => {
+      console.log(2);
+    });
+    process.nextTick(() => {
+      console.log(3);
+    });
+    setImmediate(() => {
+      console.log(4);
+    });
+    new Promise((resolve) => {
+      console.log(5);
+      resolve();
+      console.log(6);
+    }).then(() => {
+      console.log(7);
+    });
+    Promise.resolve().then(() => {
+      console.log(8);
+      process.nextTick(() => {
+        console.log(9);
+      });
+    });
+    // 显然， 顺序执行1, 5, 6;
+    // setImmediate是nodejs中的宏任务, nextTick是微任务， 但nexttick是node中任一阶段完成后立刻执行
+    // 因此后续输出3;
+    // 因此, 现在微任务队列中有7(promise.then), 8(promise.then), 9(promise.then后的tick); 宏任务队列有2(timeout), 4(check阶段的setImmediate); 
+    // 清除微任务, 因此后续输出: 7 8 9
+    // timeout在timer阶段执行, 因此输出2;(但如果有IO, 该出延迟到下一次执行)
+    // check阶段执行immediate: 输出4
+
+    // libuv中的事件循环6个阶段:
+    //       timers阶段: 执行setTimeout, setInterval注册回调函数, 由poll阶段控制;
+    //       I/O callbacks阶段: I/O 的 callback 推迟到下一次循环执行, 处理一些上一轮循环中少数未执行的I/O
+    //       idle, prepare阶段: 执行一些node内部回调
+    //       poll阶段: 获取新的I/O事件, 适当条件下将node阻塞在这里, 同时检测定时器是否到达
+    //       check阶段: 执行setImmediate注册的回调函数
+    //       close callbacks阶段: 执行socket.on等回调函数
+    //     在node中，不是把队列中的任务拿到一个执行栈中执行，而是将整个任务队列全部一起执行或执行到队列的上限，清空队列再去执行其他的(队列执行完毕后切换到其他队列时如果有微任务会将微任务执行完)
+    //       每轮事件循环都经过以上6个阶段, 在每个过程之后，都会间接性的去执行microtask
+    //       a. poll阶段执行程序, 同步执行poll队列中的回调, 知道队列为空或能执行的回调达到系统上线
+    //       b. 然后检查有没有预设的setImmediate, 如果有就转入check阶段, 没有就查询距离最近的timers，用这个时间来作为poll的阻塞时间，如果timer队列是空的就一直阻塞下去;
+    //       c. Nodejs中的宏任务: Timer Queue, IO Callbacks Queue, CheckQueue, Close Callbacks Queue; 在浏览器中可以认为只有一个宏队列(所有宏任务都添加到这个宏队列中), 在Nodejs中不同的宏任务放在不同的宏队列
+    //       d. NodeJs中的微任务: Next Tick Queue(放置process.nextTick回调); Other Micro Queue(其他微任务如Promise); 同样的在浏览器也可以认为只有一个微任务, 而Node中不同的微任务在不同的微队列中。
+
+    //       特例: nextTick不会在这些阶段执行，而是在每个阶段后都执行。 
+    // 微任务队列中, 
+
+
+    function Foo() {
+      getName = function () {
+        alert(1);
+      };
+      return this;
+    }
+    getName();
+    Foo.getName = function () {
+      alert(2);
+    };
+    Foo.prototype.getName = function () {
+      alert(3);
+    };
+    getName = function () {
+      alert(4);
+    };
+
+    // 请写出下面的输出结果
+    getName(); // 全局, 此时没有变量提升, 因此getName不存在, 报错, 后续不执行。
+    Foo.getName(); // 如果忽略上述报错, 执行2;
+    new Foo().getName(); // new Foo()实例对象获取的是this, 因此获取prototype上的方法。执行3
   </script>
 </body>
 </html>

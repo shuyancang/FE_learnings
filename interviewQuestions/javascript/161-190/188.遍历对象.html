@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // for of 和 for in 可否直接遍历对象; 如何解决不能遍历的问题;
+
+    /*
+      for in 可以直接遍历对象的可枚举属性;
+      for of 不可遍历对象;
+
+      for of不可遍历对象的解决方案
+        1. 使用Object.keys/entries/values(obj); 变为可枚举的数组, 再进行遍历
+        2. 部署iterator; 
+          obj[Symbol.iterator] = function(){
+            let index = 0;
+            const keys = Ojbect.keys(obj);
+            return {
+              next(){
+                if(next < keys.length) {
+                  return {
+                    value: obj[keys[index]],
+                    done: false,
+                  }
+                }
+                return {
+                  value: null,
+                  done: true,
+                }
+              }
+            }
+          }
+
+          obj[Symbol.iterator] = function *(){
+            const keys = Object.keys(this);
+            for (let i = 0, len = keys.length; i < len; i++) {
+              yield this[keys[i]];
+            }
+          }
+    
+    
+    */
+  </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // number为什么会出现精度损失, 怎样避免
+
+    /*
+      1. 原因: 
+        js中所有数字包括整数和小数,都只有一种类型number, 使用64位固定长度标识(节省存储空间);
+        0.1的二进制表示是一个无限循环小数, 对其进行截取就导致了精度丢失（0.1 ->  0.0...1, ）
+
+      2. 解决方案: 
+        tofixed将数字转为整数, 运算后再除回去。
+
+        一些辅助的库: math.js; decimal.js; d.js
+
+        使用Number.EPSILON进行判定; (ES6新增的极小常量)
+    
+    
+    */
+  </script>
+</body>
+</html>
