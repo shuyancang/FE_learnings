@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // base64 为什么能提升性能, 缺点
+    /*
+      图片base64编码, 将图片数据编码为字符串, 从而使用字符串代替图像地址
+      意义: 降低http请求次数, 减少资源消耗, 将图片直接嵌入文本中, 减少http数量从而使得资源能在同一时间到达;
+
+      缺点: 编码后体积变大, 编码解码有额外的工作损耗。
+
+      1. CRP阻塞
+        base64的代价会导致css体积增大, 意味着CRP(critical rendering path 关键渲染路径)阻塞， 浏览器在屏幕上渲染的一系列步骤和运行常称为“关键渲染路径”，图片不会导致阻塞但base64的图片如果过大，会导致用户长时间白屏，html和css阻塞渲染。
+      
+      2. CSS解析和CSSOM的损耗
+        一般CSS对象(CSSOM): 建立在web页面上的css样式映射，和dom类似。
+        cssom生成过程: 解析html，在文档中遇到link，引用外部css样式表，下载样式表，生成cssom树；
+        cssom阻止任何东西渲染，因此如果css文件混入base64过多，解析时间甚至会增加到十倍以上（一般在几十微秒到几毫秒之间）
+
+        因此需要base64技术时，要有取舍的使用。
+    
+    
+    */
+  </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 使用canvas绘图如何组织成通用组件
+
+    /*
+      1. 搞清canvas绘图的流程及所需的参数, 先以饼图为例: 要显示的数据data: [{data, color, label}], 绘制参数options
+      2. 基于data, 做出数据处理函数, 将数据处理成[{label, data, color, partion(data/sum的比例)}]
+      3. 基于option配置, 需要有工具函数定制不同的绘制方式
+      4. 总体的图形绘制函数drawPie(canvas, data, option)结构明确, canvas用于判定是否存在绘图上下文;
+      5. option应该有默认参数, 将传入的option与默认参数, 进行合并, 组成明确的option项;(json对象的深拷贝~)
+      6. 开始各项option的指定绘制:
+        title: option.title,option.position, width,color... => ctx绘制文字并filltext即可,
+        饼状图: radius, center计算
+        图例: 位置, 字体大小, 间距, 对齐方式; 
+        绘制饼状数据(beginPath, moveTo, arc, closePath, fill, fillRect等);
+    */
+
+  </script>
+</body>
+</html>

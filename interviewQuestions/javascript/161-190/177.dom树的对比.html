@@ -9,7 +9,82 @@
 <body>
   <script>
     // dom树对比: diff
-    
+    /*
+      1. 完全的两个树diff算法时间读为O(3), 但由于前端中很少跨层移动元素, 因此只需比较同级元素, 这样可以将算法时间复杂度降低到O(n);
+
+      2. 将新旧两树进行深度优先遍历, 则每个节点有序号, 每个节点和新树节点进行比较, 记录节点与节点的差异
+          对列表元素进行比对时由于tagName重复, 给子节点添加 key
+
+      3. 模拟dom结构
+        class Element{
+          constructor(type, props, children){
+            this.type = type;
+            this.props = props;
+            this.children = children;
+          }
+        }
+        function createElement(type, props, children){
+          return new Element(type, props, children);
+        }
+
+        const dom1 = createElement(
+          'ul',
+          {class: 'list'},
+          [
+            createElement('li', {class: 'item'}, ['1']),
+            createElement('li', {class: 'item'}, ['2']),
+            createElement('li', {class: 'item'}, ['3']),
+          ]
+        )
+
+        const dom2 = createElement(
+          'ul',
+          {class: 'list-new'},
+          [
+            createElement('li', {class: 'item'}, ['a']),
+            createElement('li', {class: 'item'}, ['b']),
+            createElement('li', {class: 'item'}, ['c']),
+          ]
+        )
+
+      4. 模拟差距对比
+        import _ from './util.js'; // 引入isString方法
+        const patchs = {}
+        let globalIndex = 0;
+        function diff(oldTree, newTree){
+          dfswalk(oldTree, newTree, globalIndex);
+          return patchs;
+        }
+        function dfswalk(oldTree, newTree, globalIndex){ // 递归进行深度优先遍历, 并记录差距
+          let currentPatchs = []; // 当前修改队列;
+          if(_.isString(oldTree)) { // 文本节点
+            if (_.isString(newTree) && oldTree !== newTree) { // 将当前的更改追加入当前需要修改的队列中
+              currentPatchs.push({
+                type: "TEXT",
+                text: newTree,
+              });
+            }
+          } else if (oldTree.type === newTree.type) { // 同类型节点
+            diffProps(oldTree.props, newTree.props) // 调用属性对比的函数
+            diffChildren(oldTree.children, newTree.children) // 调用子节点对比
+          }
+          if (currentPatchs.length > 0) { // 有修改, 将diff记录添加到patchs中
+            patchs[globalIndex] = currentPatchs;
+          }
+        }
+
+        function diffProps(){ // 直接对比两个dom的属性即可
+
+        }
+
+        function diffChildren(oldChildren, newChildren){ // 循环比较子节点列表, 以索引进行比对
+          oldChildren。forEach((item, index) => {
+            dfswalk(item, newChildren[index], ++globalIndex);
+          })
+        }
+
+        export diff;
+    */
   </script>
 </body>
 </html>
