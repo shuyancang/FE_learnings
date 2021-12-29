@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 说说ajax, axios和fetch的区别.
+
+    /*
+      1. ajax
+        对XHR的封装, 额外添加jsonp的支持
+        缺点:
+          本身是针对mvc的编程, 相对mvvm不便;
+          基于xhr开发, 但xhr本身不清晰, 有fetch的替代方案
+          jq项目太大, 单纯使用ajax要引入jq不合理
+      2. axios
+        本质上依然是对xhr的封装, 但是是Promise的实现版本符合es规范。
+        特性: 
+          从nodejs创建http请求;
+          支持Promise API
+          客户端支持防止CSRF: 每个请求携带一个从cookie拿到的key(假冒网站拿不到cookie中的key)
+          支持并发
+      3. fetch: 
+        号称是ajax的替代品, 
+        关注分离, 没有将输入, 输出和用时间来跟踪的状态混在一个对象里
+        
+        优势:
+          语法简洁, 更加语义化
+          基于Promise, 支持async和await
+          更加底层, 提供api丰富
+          脱离XHR, 是ES规范新的实现方式。
+    
+    */
+  </script>
+</body>
+</html>

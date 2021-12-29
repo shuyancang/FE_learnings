@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 介绍es6类概念中的super
+    /*
+      1. 概念
+        super用于访问和调用一个对象的父对象上的函数。
+        既能作为函数也能当做对象使用。
+
+        基本语法: 
+          super([arguments]) 调用父对象/父类的构造函数;
+          super.functionOnParent([arguments]) 调用父对象/父类的方法
+
+      2. super当做函数
+        super作为函数调用时, 代表父类的构造函数, es6要求，子类的构造函数必须执行一次super。
+        super作为函数被调用时, 需要注意:
+          super返回的是子类实例, 内部this指的是子类实例
+          必须在this之前使用, 否则报错;
+          super()必须在子类构造函数中执行, 否则报错;
+      
+      3. super作为对象
+        在普通方法中, 指向父类的原型对象，获取父类原型对象上的方法和属性, 不能获取父类实例上的方法和属性。
+
+        在静态方法中, 指向父类; 且在静态方法中, super内部的this只想的是子类而非实例
+
+
+      4. 通过super对属性赋值, 此时的super就是this, 赋值属性会变成子类实例的属性
+        super.x = 3; ===> 输出super.x 为undefined ===> 但此时this.x 变为了3;
+     
+      5. super中的this指向
+        父类构造函数中的super, 函数内部指向子类实例
+        普通方法中的super, 函数内部指向子类实例
+        静态方法中的super, 函数内部指向子类
+
+      注意, 使用super时候, 必须显示指明super是作为函数还是作为对象使用, 否则会报错。
+    
+    
+    
+    
+    
+    
+    */
+
+
+
+
+
+
+
+  </script>
+</body>
+</html>
