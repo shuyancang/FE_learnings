@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+      // 如何将dom转为虚拟dom
+      /*
+        虚拟dom的基本数据结构:
+        const element = {
+          $$typeof: REACT_ELEMENT_TYPE, // react用于标识 react元素的独有标识. 是一个安全策略-(唯一且无法字符串化)规避xss攻击;
+          type: type,
+          key: key,
+          ref: ref,
+          props: props,
+          _owner: owner, // 标记元素的owner
+        }
+        node.nodeType判断1: 元素类型, 3节点类型
+        node.nodeName判断标签名
+        node.attributes // 属性集合
+
+        创建基本的vnode工厂:
+        function Vnode(tag, data, value, type) {
+          this.tag = tag && tag.toLowerCase();
+          this.data = data;
+          this.value = value;
+          this.type = type;
+          this.children = [];
+        }
+
+        基本思路: 获取node, 基于node的节点类型(元素/文本), 分别进行不同的操作;
+        function getVnode(node){
+          const nodeType = node.nodeType;
+          const vnode = {};
+          if(nodeType === 1) { // 元素节点: 记录属性, 记录标签, 并递归子节点.
+            
+          } else if(nodeType === 3) { // 文本节点: 记录基本信息即可。
+
+          }
+        }
+      */
+        function getVnode(node){
+          const nodeType = node.nodeType;
+          const vnode = {};
+          if(nodeType === 1) { // 元素节点: 记录属性, 记录标签, 并递归子节点.
+            const tag = node.nodeName;
+            const attrs = node.attributes;
+            const datas = {};
+            for(let i = 0; i < Array.from(attrs).length; i++){
+              datas[Array.from(attrs)[i]] = attrs[i].nodeValue;
+            }
+            vnode = new Vnode(tag, datas, undefined, nodeType);
+            const childList = Array.from(node.childNodes);
+            for (let item of (childList)) {
+              vnode.children.push(getVnode(item));
+            } 
+          } else if(nodeType === 3) { // 文本节点: 记录基本信息即可。
+            vnode = new Vnode(undefined, undefined, node.nodeValue, nodeType);
+          }
+        }
+    </script>
+</body>
+</html>
