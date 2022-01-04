@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 字符格式转换： 153812.7 转为 153,812.7
+    // 方法一: 正则
+    const transformNum = (num) => (num+'').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    // 方法二: api使用toLocaleString
+    const apiLocalFormat = (num) => num.toLocaleString('en-US');
+    // 方法三: 字符串处理
+    const numStrFormat = (num) => { // 与1000除后进行添加
+      let [intPart, demPart] = `${num}`.split('.');
+      const res = [];
+      while (intPart >= 1000) {
+        res.push(intPart % 1000);
+        intPart = parseInt(intPart / 1000);
+      }
+      res.push(intPart);
+      if(demPart){
+        res[0] = `${res[0]}.${demPart}`;
+      }
+      return res.reverse().join(',')
+    }
+    // 方法四: intl对象 
+    const apiIntlFormat = (num) => new Intl.NumberFormat().format(num)
+  </script>
+</body>
+</html>
