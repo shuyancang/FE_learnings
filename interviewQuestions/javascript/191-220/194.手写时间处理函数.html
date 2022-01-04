@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 输入一个时间, 返回这个日期是当前时刻的几秒前, 几小时前, 几月前.
+    function timerTool(timeStamp){
+      const curTimeStamp = new Date().getTime();
+      const diffSec = parseInt((curTimeStamp - timeStamp) / 1000); // 差多少秒
+      if (diffSec < 0) {
+        return '未来时间';
+      }
+      if(diffSec <= 59) {
+        return '刚刚';
+      }
+      const minutes = parseInt(diffSec / 60); // 差多少分钟;
+      if (minutes <= 59) { // 几分钟前
+        return `${minutes}分钟前`;
+      }
+      const hours = parseInt(minutes / 60); // 差多少小时
+      if (hours <= 23) {
+        return `${hours}小时前`;
+      }
+      const days = parseInt(hours / 24);
+      if(days <= 6) {
+        return `${days}天前`;
+      }
+      const weeks = parseInt(days / 7);
+      if(weeks <= 4) {
+        return `${weeks}周前`;
+      }
+      const months = parseInt(days / 30);
+      if(months <= 11) {
+        return `${months}月前`;
+      }
+      const years = parseInt(days / 365);
+      return `${years}年前`;
+    }
+  </script>
+</body>
+</html>

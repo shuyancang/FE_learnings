@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现一个函数, 将中文数字转为数字;(包括亿，万)
+    // transformUnit('二十二') => 22;
+    // transformUnit('三千零一') => 3001;
+    // transformUnit('一百零一亿零三百') => 10100000300
+    
+    function transformUnit(str){
+      // 亿 , 万, 部分, 和普通数字相同; 含亿和万的可分割后再合并。
+      if (!str) {
+        return 0;
+      }
+      if (str.includes('亿')) {
+        const [left, right] = str.split('亿');
+        return transformUnit(left) * 100000000 + transformUnit(right) * 1;
+      }
+      if (str.includes('万')) {
+        const [left, right] = str.split('万');
+        return transformUnit(left) * 10000 + transformUnit(right) * 1;
+      }
+      const wordMap = {
+        '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9,
+      };
+      const wordType = {
+        '千': 1000,
+        '百': 100,
+        '十': 10,
+        '零': 0,
+      }
+      let num = 0;
+      let base = 1;
+      let result = 0;
+      for(let i = 0; i < str.length; i++){ // 万以内的中文数字处理
+        const word = str[i]; 
+        if(word === '零') {
+          continue;
+        }
+        if(wordType[word]){
+          result = num * wordType[word];
+          num = 0;
+        } else {
+          num = wordMap[word];
+        }
+      }
+      return result + num;
+    }
+  </script>
+</body>
+</html>

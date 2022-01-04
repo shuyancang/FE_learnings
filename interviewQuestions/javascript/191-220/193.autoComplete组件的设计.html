@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 设计autoComplete组件: 需要考虑什么问题
+
+    /*
+      1. 基本
+        自动补全组件, 根据用户的输入, 联想用户可能搜索的词提示用户, 提升用户体验
+
+      2. 通用组件：
+        设计通用组件的基本原则: 通用性，可移植性，扩展性，组件粒度要小，需要保证安全。
+        基本结构: 文本框 + 搜索按钮 + 扩展区
+        相关事件: focus, blur, change, 焦点时间处理显示隐藏，change事件处理组件搜索信息变化，search处理确定搜索
+        安全性：需要处理用户的每一次输入，转义后提交，防止直接通过搜索组件输入的文本进行服务器攻击
+        性能问题：不断的输入和输出会倒是服务器请求过分频繁，考虑使用防抖进行限制。
+
+      3. 改进方向: 
+        客户端可进行一些敏感词提示
+        可保存部分的用户输入输出记录
+        增加展示效果，清空功能
+      
+      4. 注意事项
+        不能无限制扩充组件防止臃肿
+        尽可能解耦
+        可以定义一些配置项，但不能过于繁琐。
+    */ 
+  </script>
+</body>
+</html>

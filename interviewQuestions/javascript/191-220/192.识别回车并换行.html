@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 如何识别字符串中的回车并换行
+
+    /*
+      1. 字符串中有 ↵ 符号: 直接进行字符串替换 str.replace(/↵/g, '<br/>')即可
+
+      2. 后端返回数据中有 ↵ 符号
+        字符串的回车符表现为\n, 也有可能是\n\r (不同编辑输出回车换行不同), 进行替换str.replace(/\n/g, "<br/>");
+
+      3. 循环重组替换字符串, 将字符串调整后重组输出:(不推荐~麻烦了点儿~)
+        var i;
+        var result = "";
+        var c;
+        for (i = 0; i < str.length; i++) {
+          c = str.substr(i, 1);
+          if (c == "\n") result = result + "</br>";
+          else if (c != "\r") result = result + c;
+        }
+    
+    
+    */
+  </script>
+</body>
+</html>
