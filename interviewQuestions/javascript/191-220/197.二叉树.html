@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 函数接受任何二叉树, 求二叉树所有根到叶子路径主城的数值之和
+    function getPathSum(root){
+      // 收集所有路径, 得到路径后求和
+      const paths = [];
+      if(!root) {
+        return 0;
+      }
+      const dfs = (node, path) => {
+        if(!node){ return; }
+        if (node.left === null && node.right === null) { // 到头了~
+          paths.push([...path, node.value]);
+          return;
+        }
+        if(node.left){
+          path.push(node.value);
+          dfs(node.left, path);
+          path.pop();
+        }
+        if(node.right){
+          path.push(node.value);
+          dfs(node.right, path);
+          path.pop();
+        }
+      }
+      dfs(root, []);
+      return paths.reduce((a, b) => {
+        return a + b.reduce((m, n) => m + n);
+      }, 0);
+    }
+  </script>
+</body>
+</html>

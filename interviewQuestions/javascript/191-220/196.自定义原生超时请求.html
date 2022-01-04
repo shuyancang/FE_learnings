@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现一个请求, 5s后若没有数据返回中断且提示错误
+
+    const request = (params) => {
+      const timeout = 5000;
+      return new Promise((res, rej) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open(params.method, params.url);
+        let isTimeOut = false;
+        const timer = setTimeout(() => {
+          xhr.abort();
+          isTimeOut = true;
+          rej('request is time out');
+        }, timeout);
+        xhr.onreadystatechange = () => {
+          if(xhr.readyState === 4) {
+            if(isTimeOut){ return; }
+            clearTimeout(timer);
+            if(xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
+              res(xhr.responseText);
+            } else {
+              rej('request error');
+            }
+          }
+        }
+        xhr.send(null);
+      });
+    }
+  </script>
+</body>
+</html>
