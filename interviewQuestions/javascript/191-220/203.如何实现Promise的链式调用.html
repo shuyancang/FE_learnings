@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // Promise的链式调用
+    /*
+      1. Promise的语句中resolve/rej接受的参数作为then的参数, 后续可以进行链式调用
+      2. then会给promise添加回调, 并返回一个新的promise, then语句中的return, 可以实现链式
+      3. then方法的两个参数(onFulfilled, onReject), 经过resolvePromise后就可以链式传递到下一个then中
+      4. 假定x = onFulfilled(promise.value), 执行resolvePromise(promise2, x, promise2Resolve, promise2Reject), 基于x的类型直接决议或者进行then方法的调用后决议，然后将决议后的x.value成功赋值, 输出到下一个then中.
+
+      5. 如果promise1.then()传入的onFulfilled不是一个函数, 则onFulfilled会被改写成value => value
+
+      6. Promise的状态: pending, fulfilled, rejected
+    */
+  </script>
+</body>
+</html>

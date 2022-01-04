@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // cors跨域资源共享: 简单请求和复杂请求的区别
+    /*
+      1. 简单请求
+        方法: head, get, post
+        头信息: accept, accept-language, content-language, last-event-id, content-type(application/x-www-form-urlencoded; multipart/form-data; text/plain)
+      
+        任何被一个不满足上述要求的请求可被认为复杂请求, 一个复杂请求不仅有通信内容请求, 还被妖气预请求(preflight request)
+
+        简单请求的发送, 和普通的xhr没有太大区别, 但http头中包含一个域的信息(origin)； 域中包含协议名, 地址及可选端口。不过这一项一般是浏览器代为发送，并不是开发者代码可接触到的。
+
+        Origin信息: access-control-allow-origin; access-control-allow-credentials; access-control-expose-headers; cache-control, content-language; content-type; expires; last-modified; pragma
+      
+      2. 复杂请求: 浏览器发送了不止一个请求, 最先发送“预请求”， 服务端进行“预回应”; 预请求是一种对服务端权限的请求， 只有当预请求成功，实际请求才开始执行
+        Options预请求, 包含两个cors特有内容: access-control-request-method(实际请求种类); access-control-request-headers(复杂请求所用头部的以逗号分割的列表)
+        预请求, 实际上是为实际请求发送的一个权限请求, 服务端进行回复确定浏览器能否成功完成。
+
+        复杂请求的部分响应头
+          access-control-allow-origin
+          access-control-allow-methods
+          accsss-control-allow-headers
+          access-control-allow-credentials
+          access-control-max-age
+
+    
+    */
+  </script>
+</body>
+</html>

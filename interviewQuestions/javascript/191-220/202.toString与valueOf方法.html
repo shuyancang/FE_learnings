@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // valueOf与toString的区别
+
+    /*
+      1. 基本
+        js的数据类型除了null都存在toString和valueOf方法, 这两个方法解决了值运算和现实的问题
+      
+      2. 区别
+        2.1 valueOf偏运算, toString偏现实
+        2.2 对象转换时, 强转字符串时优先toString
+        2.3 强转数字时, 优先valueOf
+        2.4 正常情况优先toString
+        2.5 运算操作符存在时候优先valueOf, 当valueOf无法运算时, 调用toString
+      
+      3. 转换规则
+        valueOf一般会把数据类型转为原始类型, 除了Date;
+
+        toString
+          Object => '[object Object]'
+          Function => 函数字符串
+          string => 不变
+          Boolean => 'true/false'
+          Number => 数字字符串
+          Date => 字符串日期
+          Array => 类似join()
+          Reg => 字符串正则
+    */
+  </script>
+</body>
+</html>
