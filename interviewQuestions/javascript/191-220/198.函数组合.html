@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现代码: 
+    function add() {
+      // your code
+    }
+    function one() {
+      // your code
+    }
+    function two() {
+      // your code
+    }
+    console.log(add(one(two()))); //3
+    console.log(add(two(one()))); //3
+
+    function add(params){
+      console.log(params)
+      return params.reduce((a, b) => a + b);
+    }
+    function one(...params){
+      if(params.length <= 0) {
+        return 1;
+      } else {
+        return [1, ...params];
+      }
+    }
+
+    function two(...params){
+      if(params.length <= 0) {
+        return 2;
+      } else {
+        return [2, ...params];
+      }
+    }
+  </script>
+</body>
+</html>

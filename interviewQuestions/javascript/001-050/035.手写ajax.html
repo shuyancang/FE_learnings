@@ -50,6 +50,30 @@
         XMLHttpRequest.responseText从服务器接受的字符串
     */
     
+      // 利用Promise封装一个ajax;
+      function promiseAjax(data){
+        return new Promise((res, rej) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open(data.method, url);
+          if (data.method === 'GET') {
+            xhr.open('GET', data.url);
+            xhr.send(null);
+          } else if (data.method === 'POST') {
+            xhr.open('POST', data.url);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send(data.params);
+          }
+          xhr.onreadystatechange = function(){
+            if(xhr.readyState === 4) {
+              if (xhr.status === 200) {
+                res(xhr.responseText);
+              } else {
+                rej(xhr.responseText);
+              }
+            }
+          }
+        });
+      }
 
 
   </script>
