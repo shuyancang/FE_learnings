@@ -108,5 +108,56 @@
     Foo.getName(); // 如果忽略上述报错, 执行2;
     new Foo().getName(); // new Foo()实例对象获取的是this, 因此获取prototype上的方法。执行3
   </script>
+
+  <script>
+    var x = 10;
+    function a(y) {
+      var x = 20;
+      return b(y);
+    }
+    function b(y) {
+      return x + y;
+    }
+    a(20); // 30
+  </script>
+
+
+  <script>
+    setTimeout(() => {
+      console.log(0);
+    }, 0);
+    new Promise((res) => setTimeout(res, 0)).then(() => {
+      console.log(1);
+      setTimeout(() => {
+        console.log(2);
+      }, 0);
+      new Promise((r => r())).then(() => {
+        console.log(3);
+      });
+    });
+    setTimeout(() => {
+      console.log(4);
+    }, 0);
+    new Promise((res) => res()).then(() => {
+      console.log(5);
+    });
+
+    // 一边到头, 直接3个宏任务, 一个微任务5; 因此清除微任务: 5; 
+    // 宏任务队列0; 
+    // 宏任务队列1; 此时生成又一个宏任务放到末尾, 此时又生成一个微任务, 执行3; 
+    // 宏任务队列4; 
+    // 最后的宏任务队列2
+  </script>
+
+  <script>
+    function a(obj) {
+      obj.a = 2;
+      obj = { a: 3 };
+      return obj;
+    }
+    const obj = { a: 1 };
+    a(obj);
+    console.log(obj); // {a: 2}
+  </script>
 </body>
 </html>

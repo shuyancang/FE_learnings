@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // bigInt及使用场景
+
+    /*
+      1. 基础:
+        js所有数值保存成为64位浮点数, 但数值的进度只能到53个二进制位(16个十进制), 因此js不适合做大规模精确计算
+        且, 大于2 * 1024的数值, 无法表示, 返回Infinity
+
+        因此, 在大整数数学运算时, 需要以任意精度表示整数很重要(科学, 经融方向), 此时需要bigInt;
+      
+      2. 使用: 与Number使用类似
+        BigInt(123); BigInt('123'); BigInt(false)
+
+        BigInt需要有参数, 且参数必须可以正常转为数值, undefined, null, '123n', 'abc'都会报错
+
+        可以直接使用bigint(整数 + n)如: 1122n; 99999999999999n
+
+      3. 与number的比较: 
+        BigInt与 Number类型不同, 因此1122n !== 1122; 但可以进行隐式类型转换, 因此1122n == 1122;
+      
+      4. 运算
+        无法使用与number一起运算, bigint只能与bigint进行运算, 结果同样返回bigint；
+        +10n ;  10n/2; 均会报错。
+        
+    */
+  </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现一个setter方法
+    /*
+      let setter = function (conten, key, value) {
+        // your code
+      };
+      let n = {
+        a: {
+          b: {
+            c: { d: 1 },
+            bx: { y: 1 },
+          },
+          ax: { y: 1 },
+        },
+      };
+      // 修改值
+      setter(n, "a.b.c.d", 3);
+      console.log(n.a.b.c.d); //3
+      setter(n, "a.b.bx", 1);
+      console.log(n.b.bx); //1
+    */
+
+    function setter(obj, key, value){
+      const keyList = key.split('.');
+      let target = obj;
+      for(let i = 0; i < keyList.length; i++){
+        const cur = keyList[i];
+        if (i === keyList.length - 1) {
+          target[cur] = value;
+        } else {
+          target[cur] = target[cur] || {};
+        }
+        target = target[cur];
+      }
+    }
+
+    // 使用reduce将obj进行层层处理同样可以实现。
+  </script>
+</body>
+</html>

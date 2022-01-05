@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 请只用数组方法和Math.random在一条语句的情况下, 实现生成给定位数的随机数组, 
+    // 例如生成10位随机数组[1.1, 102.1, 2, 3, 8, 4, 90, 123, 11, 123], 数组内数字随机生成。
+
+    new Array(10).fill(0).map(e => Math.random() * 10);
+
+    Array.from({length: 10}, e => Math.random() * 10)
+  </script>
+</body>
+</html>
