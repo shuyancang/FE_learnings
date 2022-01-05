@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // setTimeout与setInterval的区别
+
+    /*
+      1. setTimeout是定时器, 到达一定时间触发一次, setInterval是计时器, 相对于指定函数的开始时间执行, 不考虑执行函数的执行时间(当指定函数的执行时间大于时间间隔会有不同的表现)
+    
+      2. setTimeout在执行时间 + timer; 假如执行函数使用10s, timer为2s, 整个过程可能是12s;
+
+      3. setInterval是每timer执行, 如果执行函数执行时间大于timer, 那么会导致执行函数时间间隔发生变化, 间隔不一定为timer且某些间隔会被跳过。
+
+        每个setTimeout的任务会直接push到任务队列, 而setTimeout在把任务push到队列前，都要进行判断(看上次任务是否仍然在队列中)
+
+      4. setInterval的缺点
+        首先弄清楚，定时器指定的时间间隔，表示的是何时将定时器的代码添加到消息队列，而不是何时执行代码。所以真正何时执行代码的时间是不能保证的，取决于何时被主线程的事件循环取到，并执行;
+
+        可能会导致某些间隔被跳过。
+        及时setInterval方法报错, 依然继续执行；
+        无视网络延迟, 可能多个定时器会连续执行；
+
+      5. setTimeout存在最小执行时间(4ms左右), setTimeout的第二个参数仅表示最少延迟时间, 而非确切的等待时间。
+    */
+  </script>
+</body>
+</html>

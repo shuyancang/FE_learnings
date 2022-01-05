@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 对A进行实现: A.name发生变化时, 立刻执行A.getname;
+
+    // 直接利用obj的get和set方法
+    const A = {
+      get name(){
+        return 'A name';
+      },
+      set name(val){
+        return this.getName();
+      },
+      getName: function(){
+        console.log(this.name);
+      }
+    }
+
+    // 利用defineProperty的get和set方法。
+    const getName = () => {};
+    Object.defineProperty(A, 'name', {
+      get(){},
+      set(val){
+        getName();
+        return val;
+      },
+    });
+
+    // 利用Proxy
+    A.getName = function(){
+
+    };
+    const newA = new Proxy(A, {
+      get(target, key, receiver){
+        return Reflect.get(target, key, receiver);
+      },
+      set(target, key, value, receiver){
+        const res = Reflect.set(target, key, value, receiver);
+        target.getName();
+        return res;
+      }
+    })
+
+  </script>
+</body>
+</html>
