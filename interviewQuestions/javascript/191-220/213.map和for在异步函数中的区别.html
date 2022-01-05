@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // map & for 在异步函数中的区别
+
+    /*
+      map会把同步执行完毕后就立刻返回, 之后在一次一次的执行异步任务；
+      for是等待异步返回结果后，在进入下一次循环。
+    
+      const arr = [1, 2, 3, 4, 5];
+      function getData() {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve("data");
+          }, 1000);
+        });
+      }
+
+      (async () => {
+        const result = arr.map(async () => {
+          console.log("start");
+          const data = await getData();
+          console.log(data);
+          return data;
+        });
+        console.log(result);
+      })();
+      // 5start => [Promise * 5] => 5 data
+      map函数原理分析: 
+        1. 循环数组, 将数组每一项值传给回调函数;
+        2. 将回调函数的结果push到一个新的数组;
+        3. 返回新数组
+      过程中map函数是同步执行, 循环每一项到给新数组值都是同步操作;
+      代码执行结果: map不会等待回调函数的异步函数返回结果就进入下一次循环, 所以map内Promise返回值都是Promise;
+    
+
+      使用for:
+      function getData() {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve("data");
+          }, 1000);
+        });
+      }
+
+      (async () => {
+        for (let i = 0, len = arr.length; i < len; i++) {
+          console.log(i);
+          const data = await getData();
+          console.log(data);
+        }
+      })();
+      // 0 -> data -> 1 -> data -> 2 -> data ....
+    */
+  </script>
+</body>
+</html>
