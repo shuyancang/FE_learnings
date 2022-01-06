@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 利用es5实现isInteger
+    function _isInteger(num){
+      return typeof num === 'number' && (num ^ 0 === num)
+      // return typeof num === 'number' && (Math.floor(num) === num) && num !== Infinity && num !== -Infinity
+      // return typeof num === 'number' && (num % 1 === 0)
+    }
+  </script>
+</body>
+</html>

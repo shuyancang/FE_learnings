@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 输出嵌套结构所有key
+
+    // 应该是一个递归就完了吧~
+    function getAllkey(obj){
+      let keys = [];
+      for(let key in obj){
+        const value = obj[key];
+        keys.push(key);
+        if(value instanceof Object){
+          keys.push(...getAllkey(value));
+        }
+      }
+      return keys;
+    }
+  </script>
+</body>
+</html>

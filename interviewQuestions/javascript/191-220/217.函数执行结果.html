@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 写出函数执行结果:
+
+    var a = { k1: 1 };
+    var b = a; 
+    a.k3 = a = { k2: 2 };
+
+    console.log(a);
+    console.log(b);
+
+    /*
+      1. var b = a; 此时, a, b指向同一地址, 值{ k1: 1 };
+      2. a.k3的点优先级高于等号, 因此, 此时, ab同为{k1: 1, k3: undefined}
+      3. 等号从右往左执行, 因此a改变指向, a变为{k2:2};
+      4. a.k3 = (a = {k2:2}); 等号右边执行时, a已经改变指针指向, 原来的a.k3实际上是b.k3;
+      5. 因此a最终为{k2:2}, (a = {k2:2})表达式返回值为{k2:2},因此b：{k1: 1, k3: {k2: 2}}
+    */
+
+
+  </script>
+</body>
+</html>

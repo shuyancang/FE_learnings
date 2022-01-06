@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 实现Array.flat
+
+    function _flat(arr){
+      const res = [];
+      for(let item of arr) {
+        if(item instanceof Array) {
+          res.push(_flat(item));
+        } else {
+          res.push(item);
+        }
+      }
+      return res;
+    }
+
+    function _flat(arr){ // 栈方法
+      const res = [];
+      while(arr.length > 0){
+        const lastItem = arr.pop();
+        if (lastItem instanceof Array) {
+          arr.push(...lastItem);
+        } else {
+          res.push(lastItem)
+        }
+      }
+      return res.reverse();
+    }
+  </script>
+</body>
+</html>

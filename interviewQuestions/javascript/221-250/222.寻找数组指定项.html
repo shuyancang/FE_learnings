@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 给一个数组, 找到每个元素右侧第一个比他大的数字, 没有的话返回-1；返回一个数组
+
+    function findBigger(array){ // 直接暴力循环
+      const len = array.length;
+      const res = new Array(len).fill(-1);
+      for(let i = 0; i < array.length; i++) {
+        for(let j = i + 1; j < array.length; j++){
+          if(array[j] > array[i]) {
+            res[i] = array[j];
+            break;
+          }
+        }
+      }
+      return res;
+    }
+
+    function _findBigg(arr){ // 创建一个单调递减栈, arr循环每个数轮流放入, 大于栈顶就开始出栈小数并记录, 小数入栈
+      const len = arr.length;
+      const stackNum = [], stackIndex = [];
+      const res = new Array(len).fill(-1);
+      for(let i = 0; i < len; i++){
+        const num = arr[i];
+        while(stackNum.length > 0 && stackNum[stackNum.length - 1] < num) { // 新数大于stack中的数
+          stackNum.pop();
+          res[stackIndex.pop()] = num; // 更新这个数
+        }
+        stackNum.push(num);
+        stackIndex.push(i);
+      }
+      return res;
+    }
+  </script>
+</body>
+</html>

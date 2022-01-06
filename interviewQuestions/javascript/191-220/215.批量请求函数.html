@@ -10,20 +10,95 @@
   <script>
     // 实现以下函数: 
     /*
-      可以批量请求数据, 所有URL地址在urls参数中, 
-      可以通过max参数控制请求的并发数, 当所有请求结束之后, 需要执行callback回调, 发请求的函数可以直接使用fetch即可。
+      可以批量请求数据, 所有URL地址在urls参数中;
+      可以通过max参数控制请求的并发数, 当所有请求结束之后, 需要执行callback回调,
+      发请求的函数可以直接使用fetch即可。
     */
 
-    function mulFetch(url, max, callback){
-
+    function mulFetch(urls, max, callback){
+      // 1. 计算要循环多少次
+      // 2. 可以直接利用Promise.all进行处理
+      // 3. .all执行后进行callback, 继续循环, 直至请求结束。
     }
 
-    /*
-    
-    1.可视化构建，基于最初echarts进行拓展，融合有hightopo的一次接线canvas图，d3的部分关系图；
-    2.打包工具升级：
-    3. 
-    */
+    /**
+ *
+ * @param { Array } urls  请求地址数组
+ * @param { Number } max 最大并发请求数
+ * @param { Function } callback  回调地址
+ */
+function parallelFetch(urls, max, callback) { // yideng参考答案。
+  // 如果当前环境不支持 fetch , 则提示程序无法正常运行
+  if (!window.fetch || "function" !== typeof window.fetch) {
+    throw Error("当前环境不支持 fetch 请求，程序终止");
+  }
+
+  // 如果参数有误，则提示输入正确的参数
+  if (!urls || urls.length <= 0) {
+    throw Error("urls is empty: 请传入正确的请求地址");
+  }
+
+  const _urlsLength = urls.length; // 请求地址数组的长度
+  const _max = max || 1; // 保证最大并发值的有效性
+  let _currentIndex = 0; // 当前请求地址的索引
+  let _maxFetch = max <= _urlsLength ? max : _urlsLength; // 当前可以正常请求的数量，保证最大并发数的安全性
+  let _finishedFetch = 0; // 当前完成请求的数量，用于判断何时调用回调
+  
+  console.log(`开始并发请求，接口总数为 ${_urlsLength} ，最大并发数为 ${_maxFetch}`);
+  // 根据最大并发数进行循环发送，之后通过状态做递归请求
+  for (let i = 0; i < _maxFetch; i++) {
+    fetchFunc();
+  }
+  // 请求方法
+  function fetchFunc() {
+    // 如果所有请求数都完成，则执行回调方法
+    if (_finishedFetch === _urlsLength) {
+        console.log(`当前一共 ${_urlsLength} 个请求，已完成 ${_finishedFetch} 个`)
+      if ("function" === typeof callback) return callback();
+      return false;
+    }
+    // 如果当前请求的索引大于等于请求地址数组的长度，则不继续请求
+    if (_currentIndex >= _urlsLength) {
+      _maxFetch = 0;
+    }
+
+    //如果可请求的数量大于0，表示可以继续发起请求
+    if (_maxFetch > 0) {
+      console.log( `当前正发起第 ${_currentIndex + 1 } 次请求，当前一共 ${_urlsLength} 个请求，已完成 ${_finishedFetch} 个，请求地址为：${urls[_currentIndex]}`);
+      // 发起 fetch 请求
+      fetch(urls[_currentIndex])
+        .then((res) => {
+          // TODO 业务逻辑，正常的逻辑，异常的逻辑
+          // 当前请求结束，正常请求的数量 +1
+          _maxFetch += 1;
+          _finishedFetch += 1;
+          fetchFunc();
+        })
+        .catch((err) => {
+          // TODO 异常处理，处理异常逻辑
+          // 当前请求结束，正常请求的数量 +1
+          _maxFetch += 1;
+          _finishedFetch += 1;
+          fetchFunc();
+        });
+      // 每次请求，当前请求地址的索引  +1
+      _currentIndex += 1;
+      // 每次请求，可以正常请求的数量 -1
+      _maxFetch -= 1;
+    }
+  }
+}
+
+let urls = [];
+for (let i = 0; i < 100; i++) {
+  urls.push(`https://jsonplaceholder.typicode.com/todos/${i}`);
+}
+const max = 10;
+const callback = () => {
+  console.log("我请求完了");
+};
+
+parallelFetch(urls, max, callback);
     
   </script>
 </body>

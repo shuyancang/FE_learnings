@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // get, post, put区别
+    /*
+      put和post都有更改指定uri的语意，但put是idempotent方法(一个方法重复执行多次, 效果相同)
+      put请求相同, 后面请求会把前面的覆盖掉
+      post: 不会覆盖前一个相同的请求(因此用于新增资源)
+
+      get与post
+      1. get参数随uri, post参数放在request body;
+      2. get请求会被浏览器缓存, post不会(除非手动);
+      3. get参数会被完整保存在浏览记录中, post参数不会保留
+      4. get请求中的非ascii字符会被转码, post在request body通过mime可以传输非ASCII字符
+      5. 浏览器输入网址访问属于get请求
+      6. HTTP底层是tcp/ip,  get和post都是tcp链接，但请求数据量太大对浏览器和服务器都是负担，因此浏览器通常会限制url的长度(2k直接), 而大多数服务器能处理的url为64k大小
+      7. get产生一个tcp数据包, post产生两个tcp数据包, 对于get请求浏览器会把httpheader和data一起发送出去，浏览器响应200；对于post浏览器先发送header服务器响应100后浏览器发送data服务器再响应200；在网络良好情况下发一次和两次包的时间无视，但网络环境差的情况下，两次包的tcp数据包完整性上有较大优点。(并不是所有浏览器都在post发送两次包, firefox就只发一次)
+    
+    
+    */
+  </script>
+</body>
+</html>
