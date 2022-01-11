@@ -97,9 +97,8 @@
       _arrSoreQuick(arr, left, start - 1);
       _arrSoreQuick(arr, start + 1, right);
     }
-    
   </script>
-  <script> // this相关专区: new call, apply, bind, .before/.after;
+  <script> // this相关专区: new call, apply, bind, .before/.after
     function myNew(target, ...rest){ // 简写版
       const res = {};
       res.__proto__ = target.prototype;
@@ -107,6 +106,7 @@
     }
     // 完整的实现如下: 
     function newOperator(ctor){
+      newOperator.target = ctor;
       var newObj = Object.create(ctor.prototype);
       var argsArr = [].slice.call(arguments, 1);
       var ctorReturnResult = ctor.apply(newObj, argsArr);
@@ -175,10 +175,18 @@
     Son.prototype.constructor = Son;
   </script>
   <script> // 原生api专区: promise, generator, async/await, map, reduce,
-
   </script>
   <script> // 应用专区: 防抖节流, sleep, 实现函数的柯里化(sum(1)(2)(3)() = 6; sum(1)(2)() = 3)
 
+  </script>
+  <script> // 以上代码的练手区
+    Function.prototype._call = function(ctx, ...rest){
+      ctx = ctx || window;
+      ctx._fn = this;
+      const res = ctx._fn(...rest);
+      delete ctx._fn;
+      return res;
+    }
   </script>
 </body>
 </html>
