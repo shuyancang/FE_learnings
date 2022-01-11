@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 手写记录转区
+    /*
+      1. 手写排序: 冒泡, 归并, 快排;
+      2. 手写new, call, bind, apply;
+      3. 手写Array.prototype.map, reduce
+      4. 手写几种继承
+      5. 手写Promise, Promise.all, Promise.allsettled
+      6. 手写generator
+      7. 手写async, await
+      8. 实现防抖/节流函数
+    */
+  </script>
+  <script> // 排序专区: 冒泡, 归并, 快排;
+    // 1. 冒泡排序: 双层for循环, 每一轮循环将最大值放最后;
+    function _arraySortBubbling(arr){
+      const len = arr.length;
+      for(let i = 0; i < len - 1; i++){
+        for(let j = 0; j < len - 1 - i; j++){
+          if(arr[j] > arr[j + 1]){
+            [arr[j + 1], arr[j]] = [arr[j], arr[j + 1]];
+          }
+        }
+      }
+      return arr;
+    }
+    // 2. 归并排序: 先将arr从中间分隔,  直到arr不可分割, 则每个子数组在已经排好序的前提下, 进行合并即可。排序稳定但需要额外的空间。
+    function _arraySortMerge(arr){ // 原归并排序的slice方法没意义, 实际上只是拆分, 直接处理成二维数组即可
+      const len = arr.length;
+      let list = [];
+      for(let i = 0; i < len; i++){
+        list.push([arr[i]]);
+      }
+      while(list.length > 1){ // list为每个数组中只有单项的二维数组, 可以理解为每个子项已经完成排序, 因此，进行merge即可
+        let tmp = [];
+        for(let i = 0; i < list.length; i = i + 2){
+          tmp.push(arrayMerge(list[i], list[i + 1]));
+        }
+        list = tmp;
+      }
+    }
+    function arrayMerge(left, right){ // 合并两个排序后的数组
+      let lIndex = 0, rIndex = 0;
+      const res = [];
+      while(lIndex < left.length - 1 && rIndex < right.length - 1) {
+        if(left[lIndex] < right[rIndex]) {
+          res.push(left[lIndex]);
+          lIndex++;
+        } else {
+          res.push(right[rIndex]);
+          rIndex++;
+        }
+      }
+      while(lIndex < left.length - 1) {
+        res.push(left[lIndex]);
+        lIndex++;
+      }
+      while(rIndex < right.length - 1) {
+        res.push(right[rIndex]);
+        rIndex++;
+      }
+      return res;
+    }
+    
+    // 3. 快排: 在arr中, 随便找到一个位置数, 对数组进行处理, 使得最后这个数所处位置左边数都比他小, 右边数都比他大。=> 递归处理左右处理好的数组即可.
+    function _arrSoreQuick(arr, left, right){
+      if(left >= right) {
+        return;
+      }
+      let start = left, end = right, tmp = arr[left];
+      while(start < end){
+        while(start < end && arr[end] >= tmp) { // 从右往左找第一个小的值
+          end--;
+        }
+        if (start < end) { // 找到了, 小值换过来
+          arr[start] = arr[end];
+          start++;
+        }
+        while(start < end && arr[start] < tmp){ // 从左往右找第一个大的值
+          start++;
+        }
+        if(start < end) { // 找到了, 大值换过来
+          arr[end] = arr[start];
+          end--;
+        }
+      }
+      arr[start] = tmp; // 交换完毕
+      _arrSoreQuick(arr, left, start - 1);
+      _arrSoreQuick(arr, start + 1, right);
+    }
+    
+  </script>
+  <script> // this相关专区: new call, apply, bind, .before/.after;
+    function myNew(target, ...rest){ // 简写版
+      const res = {};
+      res.__proto__ = target.prototype;
+      return target.call(res, ...rest);
+    }
+    // 完整的实现如下: 
+    function newOperator(ctor){
+      var newObj = Object.create(ctor.prototype);
+      var argsArr = [].slice.call(arguments, 1);
+      var ctorReturnResult = ctor.apply(newObj, argsArr);
+      var isObject = typeof ctorReturnResult === 'object' && ctorReturnResult !== null;
+      var isFunction = typeof ctorReturnResult === 'function';
+      if(isObject || isFunction){
+          return ctorReturnResult;
+      }
+      return newObj;
+    }
+
+    Function.prototype._call = function(ctx, ...rest){
+      ctx = ctx || window;
+      ctx.fn = this;
+      const result = ctx.fn(...rest);
+      Reflect.deleteProperty(ctx, 'fn');
+      return result;
+    }
+
+    Function.prototype._bind = function(ctx, ...rest){
+      const self = this;
+      return function(...params){
+        self.call(ctx, ...rest, ...params);
+      }
+    }
+  
+  </script>
+  <script> // 继承专区, Object.create, 原型链继承, 构造函数继承, 组合继承, 组合寄生继承;
+    function Farther(){}
+    function Son(){}
+    // 原型链
+    Son.prototype = new Farther();
+    // 构造
+    function Son(){
+      Farther.call(this);
+    }
+    // 实例继承
+    function Son(){
+      const res = new Farther();
+      return res;
+    }
+    // 拷贝继承
+    function Son(){
+      const far = new Farther();
+      for(let key in far){
+        Son.prototype[key] = far[key];
+      }
+    }
+
+    // 组合继承
+    function Son(){
+      Farther.call(this);
+    }
+    Son.prototype = new Farther();
+    Son.prototype.constructor = Farther;
+
+    // 寄生组合继承
+    function Son(){
+      Animal.call(this);
+    }
+    (function(){
+      function A(){};
+      A.prototype = Animal.prototype;
+      Son.prototype = new A();
+    })();
+    Son.prototype.constructor = Son;
+  </script>
+  <script> // 原生api专区: promise, generator, async/await, map, reduce,
+
+  </script>
+  <script> // 应用专区: 防抖节流, sleep, 实现函数的柯里化(sum(1)(2)(3)() = 6; sum(1)(2)() = 3)
+
+  </script>
+</body>
+</html>
