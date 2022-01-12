@@ -175,18 +175,194 @@
     Son.prototype.constructor = Son;
   </script>
   <script> // 原生api专区: promise, generator, async/await, map, reduce,
-  </script>
-  <script> // 应用专区: 防抖节流, sleep, 实现函数的柯里化(sum(1)(2)(3)() = 6; sum(1)(2)() = 3)
+    function _Promise(fn){ // 基础够用版Promise
+      const _this = this;
+      _this.status = 'pending';
+      _this.data = undefined;
+      _this.error = undefined;
+      function res(val){
+        _this.data = val;
+        _this.status = 'fulfilled';
+      }
+      function rej(err){
+        _this.error = err;
+        _this.status = 'rejected';
+      }
+      try{
+        fn(res, rej);
+      } catch (err) {
+        rej(err);
+      }
+    }
+    _Promise.prototype.then = function(onFul, onRec){
+      if (_this.status === 'fulfilled') {
+        onFul(_this.data);
+      } else if (_this.status === 'rejected') {
+        onRec(_this.error);
+      }
+    }
 
-  </script>
-  <script> // 以上代码的练手区
-    Function.prototype._call = function(ctx, ...rest){
-      ctx = ctx || window;
-      ctx._fn = this;
-      const res = ctx._fn(...rest);
-      delete ctx._fn;
+    // 完全版Promise;
+    const PENDING = 'pending';
+    const FULLFILLED = 'fullfilled';
+    const REJECTED = 'rejected';
+    const _Promise = function(fn){
+      this.status = PENDING;
+      this.value = undefined;
+      this.reason = undefined;
+      this.onFullfilledCallbacks = []; // 收集完成状态对应的onFullfilled函数
+      this.onRejectedCallbacks = []; // 收集失败状态对应的onRejected函数
+      function resolve(value){ // 成功接收
+        if (value instanceof _Promise) { // resolve跟一个Promise
+          return value.then(resolve, reject); // 将Promise
+        }
+        setTimeout(() => { // 保证本次执行为异步执行;
+          this.status = FULLFILLED;
+          this.value = value;
+          this.onFullfilledCallbacks.forEach(cb => cb(this.value));
+        })
+      }
+      function reject(reason) { // 失败状态接收
+        setTimeout(() => {
+          this.status = REJECTED;
+          this.reason = reason;
+          this.onRejectedCallbacks.forEach(cb => cb(this.reason));
+        });
+      }
+      try {
+        fn(resolve, reject);
+      } catch (err) {
+        reject(err);
+      }
+    }
+
+    _Promise.prototype.then = function(onFullfilled, onRejected){
+      onFullfilled = (typeof onFullfilled === 'function') ? onFullfilled : (val => val); // 保证参数默认类型
+      onRejected = (typeof onRejected === 'function') ? onRejected : (err => { throw err; }); 
+      if (this.status === FULLFILLED) { // 已完成状态
+        const nextPromise = new Promise((res, rej) => {
+          setTimeout(() => {
+            try {
+              // res(onFullfilled(this.value)); // 保证继续往后链式传输promise
+              resolvePromise(nextPromise, onFullfilled(this.value), res, rej);
+            } catch (e) {
+              rej(e);
+            }
+          });
+        });
+        return nextPromise;
+      }
+      if (this.state === REJECTED) {
+        const nextPromise = new Promise((res, rej) => {
+          setTimeout(() => {
+            try {
+              // rej(onRejected(this.reason))
+              resolvePromise(nextPromise, onRejected(this.reason), res, rej);
+            } catch (error) {
+              rej(error);
+            }
+          });
+        })
+        return nextPromise;
+      }
+      if (this.state === PENDING) { // 等待状态; 将相关的Promise进行缓存, 等待执行到对应状态时再进行处理
+        const nextPromise = new Promise((res, rej) => {
+          this.onFullfilledCallbacks.push(val => {
+            try {
+              resolvePromise(nextPromise, onFullfilled(val), res, rej);
+            } catch (error) {
+              rej(error)
+            }
+          });
+          this.onRejectedCallbacks.push(reason => {
+            try {
+              resolvePromise(nextPromise, onRejected(reason), res, rej);
+            } catch (error) {
+              rej(error);
+            }
+          })
+        });
+        return nextPromise;
+      }
+    }
+
+    function resolvePromise(newPromise, x, resolve, reject){
+      let called = false;
+      try {
+        if (typeof x.then === 'function') {
+          then.call(
+            x,
+            y => {
+              if(called) return;
+              called = true;
+              resolvePromise(newPromise, y, resolve, reject);
+            },
+            r => {
+              if(called) return;
+              called = true;
+              reject(r);
+            }
+          )
+        } else {
+          resolve(x);
+        }
+      } catch (error) {
+        resolve(x);
+      }
+    }
+
+    function _gen(){
+
+    }
+
+    function _async(){
+
+    }
+
+    function _map(fn, ctx){
+      ctx = ctx || this;
+      const res = [];
+      for (let i = 0; i < this.length; i++) {
+        res.push(fn.call(ctx, this[i], i, this));
+      }
       return res;
     }
+
+    function _reduce(fn, initValue){
+      const len = this.length;
+      let start = 0, res;
+      if(initValue !== undefined) {
+        start = 1;
+        res = this[0];
+      }
+      for(let i = start; i < len; i++) {
+        res = fn(res, this[i], i, this);
+      }
+      return res;
+    }
+  </script>
+  <script> // 应用专区: 防抖节流, sleep, 实现函数的柯里化(sum(1)(2)(3)() = 6; sum(1)(2)() = 3), 手写ajax, 手写请求缓存
+    function throttle(){
+
+    }
+    function debounce(){
+
+    }
+    function sleep(){
+
+    }
+    function klSum(){
+
+    }
+    function _ajax(){
+
+    }
+    function query(){
+
+    }
+  </script>
+  <script> // 以上代码的练手区
+    
   </script>
 </body>
 </html>
