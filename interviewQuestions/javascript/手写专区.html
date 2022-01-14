@@ -8,13 +8,7 @@
 </head>
 <body>
   <script>
-    // 手写记录转区
     /*
-      1. 手写排序: 冒泡, 归并, 快排;
-      2. 手写new, call, bind, apply;
-      3. 手写Array.prototype.map, reduce
-      4. 手写几种继承
-      5. 手写Promise, Promise.all, Promise.allsettled
       6. 手写generator
       7. 手写async, await
       8. 实现防抖/节流函数
@@ -134,7 +128,7 @@
     }
   
   </script>
-  <script> // 继承专区, Object.create, 原型链继承, 构造函数继承, 组合继承, 组合寄生继承;
+  <script> // 继承专区, 原型链继承, 构造函数继承, 组合继承, 组合寄生继承; Object.create
     function Farther(){}
     function Son(){}
     // 原型链
@@ -173,6 +167,12 @@
       Son.prototype = new A();
     })();
     Son.prototype.constructor = Son;
+
+    function objCreate(target){
+      function A(){};
+      A.prototype = target;
+      return new A;
+    }
   </script>
   <script> // 原生api专区: promise, generator, async/await, map, reduce,
     function _Promise(fn){ // 基础够用版Promise
@@ -310,13 +310,63 @@
         resolve(x);
       }
     }
-
-    function _gen(){
-
+    // generator原理三部分: 上下文(context) 生成器_gen:function, 执行器run:function
+    const context = {
+      pre: 0,
+      next: 0,
+      done: false,
     }
+    function _gen(context){
+      while(true){
+        switch(context.pre = context.next){
+          case 0:
+            context.next = 2;
+            return 'result1: 0';
+          case 2:
+            context.next = 4;
+            return 'result2: 2';
+          case 4:
+            context.next = 6;
+            return 'result3: 4';
+          case 6: 
+            context.done = true;
+            return;
+        }
+      }
+    }
+    function _run(){
+      return {
+        next: function(){
+          return {
+            value: _gen(context),
+            done: context.done,
+          }
+        }
+      }
+    }
+    
 
-    function _async(){
-
+    function _async(generatorFun){
+      return new Promise((res, rej) => {
+        const g = generatorFun();
+        function step (val) {
+          let res;
+          try{
+            res = g.next(val);
+          } catch (err) {
+            return reject(err);
+          }
+          if(res.done){
+            return res.value;
+          }
+          Promise.resolve(res.value).then(val => {
+            step(val)
+          }, err => {
+            g.throw(err);
+          })
+        }
+        step();
+      });
     }
 
     function _map(fn, ctx){
@@ -331,9 +381,11 @@
     function _reduce(fn, initValue){
       const len = this.length;
       let start = 0, res;
-      if(initValue !== undefined) {
+      if(initValue === undefined) {
         start = 1;
         res = this[0];
+      } else {
+        res = initValue;
       }
       for(let i = start; i < len; i++) {
         res = fn(res, this[i], i, this);
@@ -342,12 +394,29 @@
     }
   </script>
   <script> // 应用专区: 防抖节流, sleep, 实现函数的柯里化(sum(1)(2)(3)() = 6; sum(1)(2)() = 3), 手写ajax, 手写请求缓存
-    function throttle(){
-
+    function throttle(fn, wait){ // 节流: 固定时间内, 只执行一次, 该时间周期内若有多次执行拒绝。降低频率
+      let timer = 0;
+      return function(...rest){
+        const cur = Date.now();
+        if(timer === 0 || cur - timer > wait) {
+          fn.call(this, ...rest);
+          timer = cur;
+        }
+      }
     }
-    function debounce(){
 
+    function debounce(fn, wait){ // 防抖: 延迟执行, 多次执行只执行最后一次。
+      let timer = null;
+      return function(...rest){
+        if(timer){
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            fn.call(this, ...rest);
+          }, wait);
+        }
+      }
     }
+
     function sleep(){
 
     }
@@ -362,7 +431,7 @@
     }
   </script>
   <script> // 以上代码的练手区
-    
+
   </script>
 </body>
 </html>

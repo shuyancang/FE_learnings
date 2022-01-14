@@ -22,11 +22,14 @@
           if (rest.length === 0) { // 传入初始值, reduce从0开始计算, 不传则以1开始, [0]作为默认值
             res = this[0];
             start = 1;
+          } else {
+            res = rest[0]
           }
           while (start < this.length) {
             res = callback(res, this[start], start, this);
             start++;
           }
+          // arr.map((pre, cur) => pre + cur)
         }
       })
     }
