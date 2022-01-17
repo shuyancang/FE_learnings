@@ -406,14 +406,12 @@
     }
 
     function debounce(fn, wait){ // 防抖: 延迟执行, 多次执行只执行最后一次。
-      let timer = null;
+      let timer = null; // 如果需要有返回值, 可以在此处 let res = null;
       return function(...rest){
-        if(timer){
-          clearTimeout(timer);
-          timer = setTimeout(() => {
-            fn.call(this, ...rest);
-          }, wait);
-        }
+        clearTimeout(time);
+        timer = setTimeout(() => {
+          fn.apply(this, rest); // 函数如果需要返回值, 在此处接收,赋值给res,
+        }, wait)
       }
     }
 
@@ -424,18 +422,48 @@
       // })
       // 或使用* generator, 或使用async 
     }
-    function klSum(){ // sum(1)(2)(3)
-
+    // 实现 sum(1)(2)(3); 
+    // 1. fn参数明确
+    const curry = (fn) => {
+      return function recursionTool(...args){
+        if (args.length === fn.length) { // 明确fn参数的个数时;
+          return fn(...args);
+        }
+        return (...nextArgs) => recursionTool(...args, ...nextArgs) // 递归将当前参数, 放到后续中执行。
+      }
+    } 
+    // 2. fn参数随意
+    const klSum = (fn) => {
+      let args = [];
+      return function temp(...nextArgs) {
+        if (nextArgs.length > 0) {
+          args = [...args, ...nextArgs];
+          return temp;
+        }
+        const val = fn(...args);
+        args = [];
+        return val;
+      }
     }
-    function _ajax(){ // 
 
+    function _ajax(options){ // 
+      const { method = 'GET', params, url } =  options || {};
+      const query = new XMLHttpRequest();
+      query.open(method, url);
+      query.send(params);
+      query.onreadystatechange = function(status){
+        if(status === 4) {
+          
+        }
+      }
     }
     function queryWithCaches(){ // 
 
     }
   </script>
   <script> // 以上代码的练手区
-
+    
+    
   </script>
 </body>
 </html>
