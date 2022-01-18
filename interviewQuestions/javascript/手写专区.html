@@ -447,23 +447,59 @@
     }
 
     function _ajax(options){ // 
-      const { method = 'GET', params, url } =  options || {};
-      const query = new XMLHttpRequest();
-      query.open(method, url);
-      query.send(params);
-      query.onreadystatechange = function(status){
-        if(status === 4) {
-          
+      const { method = 'GET', params, url, headers } =  options || {};
+      return new Promise((res, rej) => {
+        const query = new XMLHttpRequest();
+        query.open(method, url);
+        Object.keys(headers).forEach((key) => {
+          query.setRequestHeader(key, headers[key]);
+        })
+        query.send(params || null);
+        query.onreadystatechange = function(){
+          if(query.readyState === 4) {
+            if(query.status === 200) {
+              res(query.responseText);
+            } else {
+              rej(query.responseText);
+            }
+          }
         }
-      }
+      });
     }
-    function queryWithCaches(){ // 
 
+    const caches = {}; // key: 
+    function queryWithCaches(options){ // 缓存请求
+      const { url, method } = options;
+      const queryKey = `${url}_${method}`;
+      if (!caches[queryKey]) { // 没有缓存
+        return new Promise((res, rej) => {
+          const curRequest = _ajax(options);
+          caches[queryKey] = {
+            status: 'pendding',
+            value: curRequest,
+          }
+          curRequest.then((data) => {
+            caches[queryKey] = {
+              status: 'fulfilled',
+              value: data,
+            }
+            return res(data);
+          }).catch(err => {
+            caches[queryKey] = {
+              status: 'rejected',
+              value: err,
+            }
+            return rej(err);
+          });
+        })
+      }
+      const { value, status } = caches[queryKey];
+      return Promise.resolve(value);
     }
   </script>
   <script> // 以上代码的练手区
-    
-    
+   
+
   </script>
 </body>
 </html>
