@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // webpack做了哪些优化, 开发效率和打包策略
+
+    /*
+      1. 构建速度
+        使用高版本webpack(4);
+          v8本身的优化
+          默认使用md4 hash算法
+          webpacks ast可以直接从loader传递给ast减少解析时间
+          使用字符串方法代替正则
+        多线程(happypack, thread-loader);
+        缩小打包作用域
+          exculde、include, 
+          resolve.modules第三方路径, 
+          resolve.extensions减少后缀尝试, 
+          noParse(对不需要解析的库进行忽略, 被忽略的文件里不应该包含import, require, define的模块语句)
+          IgnorePlugin完全排除模块
+          alias合理 使用
+        充分利用缓存开启二次构建速度
+          babel-loader开启缓存
+          terser-webpack-plugin缓存
+          使用cache-loader或hard-source-webpack-plugin
+        dll分包, 将dllReferencePlugin对manifest.json引用, 将一些基本代码打包成静态资源避免反复编译
+
+        Noparse: 不去解析某个库的依赖关系, (如果jq独立, 不去解析库里内部依赖的东西), 在独立库使用。
+        IgnorePlugin: 忽略某些内容, 不解析依赖库中某些引用(moment中的./local忽略国际化)
+        dllPlugin: 优化打包时间不多次打包, 生成manifest.json文件后在webpack.config中使用Dllplugin和DllReferencePlugin
+        threadloader将loader放在worker池里运行，以实现多线程构建, 需要将loader放在loader之前，在高开销的loader中使用
+
+        压缩加速: optimization: minimizer: TerserPlugin(terser-webpack-plugin);
+      
+      2. 优化webpack打包体积
+        压缩代码: paralle-uglify-plugin; terser-webpack-plugin, mini-css-extract-plugin(提取css), optimize-css-assets-webpack-plugin压缩
+        提取公共资源: html-webpack-externals-plugin将基础包通过cdn引入不打入bundle, 使用splitchunksplugin进行分离, 
+        基础包分离: 基础包放入cdn;
+        Tree-shaking:  purgecss-webpack-plugin和mini-css-extract-plugin配合, 检测工程中没有引用过的模块将起去掉。(es6 module), 禁用babelloader中的模块解析, 方式commjs模块无法清除; 使用uncss、purifycss清除无用css代码
+        scope hoisting: 构建代码存在大量闭包, 运行时函数作用域过多, 使用期将所有模块代码按照应用顺序放在一个函数作用域中(适当重命名防止冲突);必须是Es6语法, 需要配置mainFields对第三方模块优先使用jsnext:main指向es6模块化语法
+        图片压缩: image-webpack-loader; 基imagemin(node库);
+        动态polyfill: 采用polyfill-service自返给用户需要的polyfill, 通过@babel-preset-env通过useBuilIns: usage动态加载
+
+      3. speed-measure-webpack-plugin： webpack性能打包查看必备插件。
+
+    
+    
+    */
+  </script>
+</body>
+</html>
