@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // amd 与 cmd
+    /*
+       1. amd:
+          使用requireJS;
+          异步加载模块, 所有依赖模块的语句，都在一个回调函数中， 加载完毕后执行回调: define(id, dependencies, factory)
+          依赖前置
+          文件有依赖关系时，被依赖的文件应该早于依赖文件加载到浏览器
+          js加载浏览器停止渲染，加载文件愈多，页面事件越长。
+
+        2. cmd
+          sea.js推广中产生
+          推送依赖就近；
+          推崇一个文件一个模块，所以文件名常作为模块id，一般不在define中写依赖，而是在factory中写。
+          define(id, deps, factory), 其中factory有三个参数function(require, exportes, module){}
+          require接受模块标识作为唯一参数用于获取其他模块, exports用来对外提供模块接口，module上存储当前模块相关联的属性和方法。
+    
+    
+    */
+  </script>
+</body>
+</html>
