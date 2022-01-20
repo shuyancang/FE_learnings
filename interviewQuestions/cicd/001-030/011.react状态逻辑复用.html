@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // react的状态逻辑复用
+    /*
+      1. mixins: 早起提供的api可以进行部分的继承。
+        缺点: 存在隐式依赖, 多个mixin可能冲突, 降低了引用的可预测性。 
+        ===> 很难确定mixin的依赖和维护, 不敢轻易删改, 无法轻松的明确mixin的输入和输出，于是放弃继承， 走向HOC(组合)
+      
+      2. HOC：接受组件类型参数返回组件，都是高阶。
+        优点: 
+          组建树结构，降低耦合和复杂度
+          代码复用，逻辑抽象
+          渲染劫持，属性代理(劫持组件的props和state)
+          可以作为装饰器来使用
+        缺点：
+          扩展性限制
+          不要在render中使用，每次render都会创建一个高阶组件会导致状态丢失影响性能
+          静态方法丢失，需要手动处理静态方法
+          refs不会往下传递，需要使用forwardRef
+          多层嵌套会增加复杂度和理解成本
+          不可见性
+      3. Render Props: 一种在React组件中使用一个值为函数的props共享代码的技术。
+        this.props.render()
+        优点: 数据共享, 代码复用, 将组件内的state作为props传递给调用者, 渲染逻辑交给调用者;
+        缺点: 无法在return外访问数据, 嵌套写法不优雅;
+
+      4. hooks: 真正的在下层尝试解决方案。解决细粒度的逻辑复用问题。契合react理念
+        优点：
+          解决嵌套问题，简洁优雅
+          解耦，能更方便的把ui和状态分离，解耦更彻底
+          组合：函数的hooks相互组合，千变万化
+          解决类的问题：this指向错误，业务逻辑在不同生命周期中的分割，代码复用成本高。
+        缺点：
+          有两个生命周期函数暂时不能替代：getSnapshotBeforeUpdate和componentDidCatch
+          额外的学习成本
+          写法的限制: 不能再循环, 条件, 嵌套中使用, 只能在函数顶层使用, 增加重构成本。
+          破坏了纯函数的浅比较性能优化效果。
+          在闭包场景中, 可能引用到旧的state和props
+          react.memo不能完全替代shouldComponentUpdate
+          useState设计上不太完美(数组对象直接成型无效)
+          不能使用装饰器
+          ref函数组件需要使用forwardRef
+    
+    
+    */
+  </script>
+</body>
+</html>
