@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // redux 的 异步解决方案
+    /*
+      redux: 单向数据流, action触发reducer修改store, redux利用中间件修改dispatch方法, 异步操作通过中间件完成
+
+      redux-thunk
+        编写返回函数而不是action的创建者
+        可以延迟action的发送/ 或条件发送
+        内部函数接收store的方法: dispatch  和 getState
+        优点: 学习成本低
+        缺点: 代码复杂, 分散, 耦合严重(与action), action形式不统一
+
+      redux-saga: 独自负责副作用
+        优点: 
+          异步解耦, 接口一目了然
+          action是普通对象, 不传函数
+          异常处理轻松
+          功能强大灵活，可以串行，并行，延迟，等待执行等。
+          已与测试
+          通过worker和watcher可以实现非阻塞异步调用也可以实现非阻塞调用下的监听
+          异步流程可以控制，可以随时取消
+        缺点：学习成本高，体积较大，功能过剩，ts支持不友好
+      
+      Redux-observable
+        优点: 功能最强, 背靠rxjs，可以做到几乎想做的所有异步处理
+        缺点：学习成本最高，社区一般。
+    
+    
+    */
+  </script>
+</body>
+</html>

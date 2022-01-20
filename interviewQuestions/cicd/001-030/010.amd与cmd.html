@@ -20,7 +20,7 @@
         2. cmd
           sea.js推广中产生
           推送依赖就近；
-          推崇一个文件一个模块，所以文件名常作为模块id，一般不在define中写依赖，而是在factory中写。
+          推崇一个文件一个模块，所以文件名常作为模块id，一般不在define中写依赖，而是在factory中写；
           define(id, deps, factory), 其中factory有三个参数function(require, exportes, module){}
           require接受模块标识作为唯一参数用于获取其他模块, exports用来对外提供模块接口，module上存储当前模块相关联的属性和方法。
     
