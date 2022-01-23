@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // webpack 是如何处理模块循环引用的情况的.
+
+    /*
+      1. 与node的循环引用原理相同, 利用installedModules缓存已加载的模块的exports, 通过读取缓存的exports避免再次执行.
+
+      2. 理论上循环引用会导致堆栈溢出, 但并不是所有的循环引用都会导致循环溢出。
+    
+      3. webpack引用打包: 
+        var installedModules = {}; 
+        installedModules[moduleId]检测是否存在对应的module, 存在return installedModules[moduleId].exports;
+
+        创建一个新module用于后续调用:
+        var module = (installedModules[moduleId] = {
+          i: moduleId,
+          l: false,
+          exports: {},
+        });
+
+        // 从 modules 中找到对应的模块初始化函数并执行
+        modules[moduleId].call(
+          module.exports,
+          module,
+          module.exports,
+          __webpack_require__
+        );
+      
+      4. __webpack_require__:
+        根据moduleId查看installedModules是否存在对应的module,如果存在返回对应的module.exports;
+        如果module不存在就创建一个新的module对象, 且使installedModule[moduleId]指向新建的module对象;
+        根据moduleid 从modules中找到对应的模块初始化并执行, 一次传入module, module.exports, __webpack_require__;
+        返回module.exports;
+
+      5. webpack遇到模块循环引用时, 返回的是当前已经执行的部分, 而不是全部, 因此可能会有差异. webpack基于commonjs的模块, 输入的是被输出值的拷贝, 而不是引用；
+
+      6. 如果模块导出的是函数, 这样的循环引用会导致栈溢出。在打包时候不论是否栈溢出，都不会报错, 可以借用circular-dependency-plugin提示
+
+      7. 扩展, webpack如何解决两次以上引入问题的:
+        7.1 webpack解析文件时, 会通过入口文件来分析依赖模块, 最后生成的模板是一个立即执行的函数, 重新定义了————webpack_require__方法, 模块依赖会按照各自标识的方式作为参数传递给函数。
+        7.2 编译代码主要包含两个部分: Runtime, 模块.上半部分的Runtime保证模块的顺序加载和运行，下半部分的js代码包裹了一个函数，及模块，运行时模块是作为runtime的参数传递进去的。
+        7.3 添加模块链的函数中, 在添加新模块前会先通过模块标识来判断是否存在, 已经存在的模块不会重复添加到模块队列中。
+    */
+  </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // Redux 如何优化的
+    /*
+      1. Pure: 保证纯函数
+      2. Reducer: 需要保证reducer的纯粹性, 不能再reducer中执行有副作用的操作或调用不纯粹的函数。
+      3. 性能: 
+        connect: 封装后, 分别对state, 和propsm每个值进行浅对比并创建索引, 值不变则组件不额外进行渲染。
+        combineReducer: 遍历创建引用, 计算最终数据状态, 将数据进行浅对比(标记hashChanged)。=> 变更返回新对象, 在原有对象上的修改不会渲染。
+      4. Immutable
+      5. 实例测试
+    
+    
+    */ 
+  </script>
+</body>
+</html>

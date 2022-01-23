@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // hooks
+    /*
+      1. 什么是hooks, 为什么需要hooks
+        React.Component问题: 
+          组件复用状态逻辑很难;
+          复杂组件难以理解, 高阶和函数组件嵌套过深;
+          class组件的this指向问题
+          声明周期
+        hooks:
+          useState返回状态及更新状态的函数
+          useEffect接受有副作用代码的函数
+          useContext接受上下文对象, 并返回当前上下文值
+          useReducer接受reducer搭配dispatch配对状态
+          useCallback返回memoized版本, 在依赖变更时候修改
+          useMemo纯的记忆函数
+          useRef返回一个可变的ref对象, current被初始化为传递的参数
+          useImperativeMethods自定义使用ref时公开给父组件的实例
+          useMutationEffect: 更新兄弟组件前它在dom改变的同一阶段同步触发
+          useLayoutEffect: DOM改变后同步触发，用来读取dom布局
+      
+      2. 实现原理
+        React维护两个链表: currentHook 和 workInprogressHook; 每个节点类型都是Hook, 调用useXXX创造hook对象, 挂到链表尾部; 
+        hook通过Fiber.memoizedState关联到Fiber, 对应的Fiber维护memoizedState属性, 指向Hook链表头部。
+
+        Hooks{ memoizedState, baseState, baseUpdate, queue, next }
+        Effect{ tag, create, destroy, deps, next } 
+
+        ReactHooks维护一个workInProgressHook变量, 每次调用会调用createWorkInProgressHooks函数。
+        hooks的串联不是数组, 是链式数据结构, 根据next串联, 因此不能在判断/循环/嵌套使用, 否则破坏嵌套结构。
+    
+    */
+  </script>
+</body>
+</html>

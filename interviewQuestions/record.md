@@ -51,6 +51,14 @@ https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/
   怎么看待业务需求和开发技术的，
   平时时间如何分配的：开发时间，带团队的花费时间，自我提升时间。
 
+公司二: 
+1. 对http和websocket的了解, websocket在哪一层, 怎么传参
+2. react源码里使用了那些数据结构, 大根堆/小根堆, expirationTime是怎么更新的,
+3. 介绍react的Fiber和更新的流程
+4. 大屏的开发中，遇到了那些问题，怎么处理的
+
+
+
 技能清单
 后端语言：熟悉 Node.js 及其 Web 框架 Express/Koa，熟练使用 Koa 开发中间件，SSR，以及 React 同构项目。
 数据库端：熟悉 MongoDB，SQL Server 数据库。

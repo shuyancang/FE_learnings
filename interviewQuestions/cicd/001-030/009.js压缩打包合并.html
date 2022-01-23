@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 说明js压缩, 合并, 打包原理； 
+    /*
+      1. 压缩合并打包原理:
+        压缩原理: 去掉注释; 去掉换行符+空格; 压缩变量名函数名;
+        合并原理: 合并多个js后再输出, 可以自建combo服务从url获取对应的静态资源名, 再河滨高输出, 一般前端项目打包过程已处理完成。
+        打包原理: 基于入口文件, 根据代码中出现的import/require语法, 推断出这个文件所依赖的资源模块, 解析依赖, 最终形成整个文件的依赖关系树, 根据依赖数对每个资源进行处理，其中包含代码的编译优化。输出一个到目标文件中。
+      
+      2. 为什么需要压缩，合并，打包
+        可以有效减少js代码大小，加快http速度
+        同域名请求常有并发请求限制，过多会导致队首阻塞，合并可以减少http请求数量
+        对项目的模块化，工程化，都有效率的提升。
+
+      3. 分别列出常用的工具或插件：
+        压缩：uglifyjswebpackplugin
+        合并：combo
+        打包：webpack
+      
+
+    
+    
+    */
+  </script>
+</body>
+</html>

@@ -406,14 +406,12 @@
     }
 
     function debounce(fn, wait){ // 防抖: 延迟执行, 多次执行只执行最后一次。
-      let timer = null;
+      let timer = null; // 如果需要有返回值, 可以在此处 let res = null;
       return function(...rest){
-        if(timer){
-          clearTimeout(timer);
-          timer = setTimeout(() => {
-            fn.call(this, ...rest);
-          }, wait);
-        }
+        clearTimeout(time);
+        timer = setTimeout(() => {
+          fn.apply(this, rest); // 函数如果需要返回值, 在此处接收,赋值给res,
+        }, wait)
       }
     }
 
@@ -424,17 +422,83 @@
       // })
       // 或使用* generator, 或使用async 
     }
-    function klSum(){ // sum(1)(2)(3)
-
+    // 实现 sum(1)(2)(3); 
+    // 1. fn参数明确
+    const curry = (fn) => {
+      return function recursionTool(...args){
+        if (args.length === fn.length) { // 明确fn参数的个数时;
+          return fn(...args);
+        }
+        return (...nextArgs) => recursionTool(...args, ...nextArgs) // 递归将当前参数, 放到后续中执行。
+      }
+    } 
+    // 2. fn参数随意
+    const klSum = (fn) => {
+      let args = [];
+      return function temp(...nextArgs) {
+        if (nextArgs.length > 0) {
+          args = [...args, ...nextArgs];
+          return temp;
+        }
+        const val = fn(...args);
+        args = [];
+        return val;
+      }
     }
-    function _ajax(){ // 
 
+    function _ajax(options){ // 
+      const { method = 'GET', params, url, headers } =  options || {};
+      return new Promise((res, rej) => {
+        const query = new XMLHttpRequest();
+        query.open(method, url);
+        Object.keys(headers).forEach((key) => {
+          query.setRequestHeader(key, headers[key]);
+        })
+        query.send(params || null);
+        query.onreadystatechange = function(){
+          if(query.readyState === 4) {
+            if(query.status === 200) {
+              res(query.responseText);
+            } else {
+              rej(query.responseText);
+            }
+          }
+        }
+      });
     }
-    function queryWithCaches(){ // 
 
+    const caches = {}; // key: 
+    function queryWithCaches(options){ // 缓存请求
+      const { url, method } = options;
+      const queryKey = `${url}_${method}`;
+      if (!caches[queryKey]) { // 没有缓存
+        return new Promise((res, rej) => {
+          const curRequest = _ajax(options);
+          caches[queryKey] = {
+            status: 'pendding',
+            value: curRequest,
+          }
+          curRequest.then((data) => {
+            caches[queryKey] = {
+              status: 'fulfilled',
+              value: data,
+            }
+            return res(data);
+          }).catch(err => {
+            caches[queryKey] = {
+              status: 'rejected',
+              value: err,
+            }
+            return rej(err);
+          });
+        })
+      }
+      const { value, status } = caches[queryKey];
+      return Promise.resolve(value);
     }
   </script>
   <script> // 以上代码的练手区
+    
 
   </script>
 </body>

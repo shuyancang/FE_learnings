@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // git的快照, git的工作区, git的tag
+    /*
+      1. git快照: 
+        基本思路与Immutable类似, 对每个修改生成一个新的对象, 维护一个属性结构, 新修改指挥添加某些节点, 返回新指针, 并与就对象公用相同部分。
+
+        git快照类似, 在文件系统层面实现, 快照将旧文件保存为一个应用, 新文件继续使用与旧文件相同的磁盘空间, 不同部分写入星的磁盘空间。
+
+        git是文件系统层面上的保存diff
+      
+      2. git工作区: 工作区, 暂存区, 版本库.
+        工作区: 用户本地的工作目录(working dir)
+        暂存区: 临时用于房子文件改动的缓存区域(stage/index)
+        版本库: 包含所有版本和分支的仓库, git跟踪文件的增删改(repo)
+
+      3. git工作流程
+        工作区变更 => 修改放入暂存区 => 提交到本地仓库 => 推送到远端仓库
+    
+      4. git标签
+        git tag v1.1
+        git tag
+        git push --tags
+    
+    
+    
+    */
+  </script>
+</body>
+</html>
