@@ -7,13 +7,6 @@
   <title>Document</title>
 </head>
 <body>
-  <script>
-    /*
-      6. 手写generator
-      7. 手写async, await
-      8. 实现防抖/节流函数
-    */
-  </script>
   <script> // 排序专区: 冒泡, 归并, 快排;
     // 1. 冒泡排序: 双层for循环, 每一轮循环将最大值放最后;
     function _arraySortBubbling(arr){
@@ -126,7 +119,22 @@
         self.call(ctx, ...rest, ...params);
       }
     }
-  
+    
+    Function.prototype.before = function(fn){
+      const self = this;
+      return function(...rest){
+        fn.call(self, ...rest);
+        return self.call(this, ...rest);
+      }
+    }
+    Function.prototype.after = function(fn){
+      const self = this;
+      return function(...rest){
+        const res = self.call(this, ...rest);
+        fn.call(self, ...rest);
+        return res;
+      }
+    }
   </script>
   <script> // 继承专区, 原型链继承, 构造函数继承, 组合继承, 组合寄生继承; Object.create
     function Farther(){}
