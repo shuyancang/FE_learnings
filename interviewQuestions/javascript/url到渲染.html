@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 从输入url到页面加载的过程:
+
+    // 首先浏览器是多进程的, brower进程, 插件进程, GPU进程, 渲染进程, 网络进程; 
+    // 在浏览器渲染进程中, 又包括了: GUI线程, js引擎线程, 事件触发线程, 定时器线程, http请求线程;
+    // 基本几个阶段: 解析URL(浏览器进程) -> http请求(网络进程) -> 资源加载(渲染进程)
+
+    /* 各阶段:
+      1. 浏览器进程 -> 网络进程, 发起url请求；
+      2. 网络进程: 接收响应头数据 -> 转发给浏览器进程;
+      3. 浏览器进程: 接受响应头 -> 进入渲染进程;
+      4. 渲染进程: 基于响应头, 提交导航, 确认提交完成数据通道建立;
+      5. 渲染进程: 移除旧文档，更新浏览器进程;
+    */
+
+    /* url请求: 
+      1. 浏览器进程接收url, 将url转发给网络进程
+        url解析: 协议头(protocal), 主机域名/ip地址(host), 端口(port), 路径(path), query, hash;
+      2. 构建请求
+      3. 查找缓存: 强缓存(cache control, expires) -> 状态码200(from cache), 协商缓存(etag, last-modify) -> 状态码304
+      4. ip地址及端口 -> DNS
+        4.1 DNS查询ip先检查缓存: 浏览器缓存 -> 操作系统缓存(hosts) -> 路由缓存
+        4.2 以上缓存不存在时, 查询网络服务商的本地DNS(LDNS)服务器
+        4.3 LDNS不存在, 根域名服务器(Root Server)请求解析: 基于顶级域名返回顶级域名服务器, 然后返回次级域名服务器, 进而获取ip地址(缓存结果)
+        4.4 DNS解析缓慢, 基于DNS的相关优化:
+          DNS Prefetching: 请求连接前浏览器会先尝试解析域名并缓存,这样就不需要进行DNS解析了
+            · 服务端设置X-DNS-Prefetch-Control: on预解析
+            · html预解析<meta http-equiv="x-dns-prefetch-control" content="on">
+            · 特定域名解析<link rel="dns-prefetch" href="//fonts.googleapis.com">
+          域名收敛: 静态资源放在一个域名下, 减少DNS请求
+          HTTPDNS: 基于http协议向httpdns服务器发送域名解析请求, 替代dns协议向运营商发起解析请求;
+
+          有些网站会经过CND调度：经过DNS系统解析会将域名解析权交给CND专用DNS服务器
+            · CDN的DNS服务器将全局负载均衡设备ip地址返回用户;
+            · 用户向负载均衡设备ip地址发送访问请求, 根据用户ip及内容, 返回用户所属区的负载均衡设备
+            · 区域负载均衡设备箱全局负载均衡设备返回一台缓存服务器的ip地址, (依据ip, url内容, 服务器当前负载)
+            · 全局负载均衡设备将服务器ip地址返回用户, 用户转为向缓存服务器发起请求
+      5. HTTP, TCP队列及链接(并发不超过6个, 超出进入TCP队列等待)
+        5.1 http五层协议栈: 应用层, 传输层, 网络层, 数据链路层, 物理层;
+        5.2 TCP/IP链接: HTTP的本质是建立该链接
+        5.3 三次握手: 
+            客户端closed, 服务端listen
+            一次握手: 客户端发送syn报文, 指定初始化序列号, 客户端syn-send状态
+            二次握手: 服务端接受syn并确认, 设置ack(isn(x) + 1), 发送syn=1, 将自己的初始化序列号发挥isn(y), 发送到客户端, 服务端进入syn-receive状态  
+            三次握手: 客户端收到syn报文, 发送ack报文, 标识已接收到客户端syn报文, 客户端处于established状态, 服务端获取到后也处于established状态； 
+            三次握手后连接建立: 确认双方接受发送正常, 指定初始化序列号保证可靠传输, 如果https三次握手过程还会进行数字证书的验证及加密秘钥的生成
+        5.4 四次挥手:
+
+      6. 请求 <-> 响应
+      8. 断开连接
+    
+    
+    
+    */
+  </script>
+</body>
+</html>
