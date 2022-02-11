@@ -27,6 +27,44 @@
         url解析: 协议头(protocal), 主机域名/ip地址(host), 端口(port), 路径(path), query, hash;
       2. 构建请求
       3. 查找缓存: 强缓存(cache control, expires) -> 状态码200(from cache), 协商缓存(etag, last-modify) -> 状态码304
+        3.1 检查强缓存: 不需要发送http请求;
+          http1.0使用expires, 在服务器返回响应头中, 告诉过期时间 => 缺陷过期时间不准确, 作为兼容使用
+          http1.1 使用cache-control: 返回过期时长(Cache-Control:max-age:3600)
+          cache-control优先: public,private, no-cache, no-store, s-maxage
+        3.2 协商缓存: 强缓存失效后由服务器基于标识确定是否使用缓存
+          Etag: 文件内容的唯一标识, 请求基于if-none-match匹配 
+          last-modifed: 与if-modifed-since进行匹配, 对比
+          精确度上etag优于last-modifed, 对于文件内容未改变的编辑的资源, 或在秒级内改变多次的资源, last-modified不佳
+          性能上last-modified优先, etag需要基于文件的内容生成hash
+          两者都支持时, etag优先。
+        3.3 浏览器缓存优先级从高到底: Service Worker -> Memory Cache -> Disk Cache -> Push Cache
+          Service Worker: 
+            · 运行于浏览器背后的独立线程, 要求传输协议https(因涉及请求拦截, 需保证安全)
+            · 不同于内建缓存, 可自由控制缓存文件，如何匹配，如何读取
+            · 注册, 监听install, 访问拦截
+          Memory Cache: 内存缓存, 包含当前已抓取的资源, 比读取磁盘数据块
+            常用preloader相关指令<link rel="prefetch">下载资源
+            内存缓存不会关心返回资源的http缓存头, 匹配也不仅仅是url，还对content-type、cors等做校验
+          Disk Cache: 硬盘缓存: 读取速度慢, 但容量和存取时效较高
+            覆盖面最大, 根据http header字段判断缓存资源
+            对于跨站点的相同地址资源一旦被硬盘缓存, 就不会再次请求
+            遇到大文件, 或当前内存使用率高时，文件优先存储硬盘
+          Push Cache: 推送缓存
+            http/2内容, 以上三种缓存均没命中是使用, 只在session存在, 一旦会话结束即释放。
+            所有资源都能被推送, 能被缓存, 但edge和safari支持较差
+            可以推送no-cache 和 no-store的资源
+            一旦链接关闭就释放
+            多个页面可使用同一个http/2链接, 可以使用同一个push Cache
+            只能被使用一次
+            浏览器可以拒绝已经存在的资源推送
+            可以给其他域名推送资源
+          常用的缓存策略: 
+            频繁变动资源: Cache-Control: no-cache
+            不常变化的资源: Cache-Control: max-age:31536000
+          用户行为对浏览器缓存影响: 
+            打开网页地址栏输入: 查看disk cache
+            普通刷新: memory cache, 其次disk cache
+            强刷: 不使用缓存
       4. ip地址及端口 -> DNS
         4.1 DNS查询ip先检查缓存: 浏览器缓存 -> 操作系统缓存(hosts) -> 路由缓存
         4.2 以上缓存不存在时, 查询网络服务商的本地DNS(LDNS)服务器
@@ -44,23 +82,127 @@
             · 用户向负载均衡设备ip地址发送访问请求, 根据用户ip及内容, 返回用户所属区的负载均衡设备
             · 区域负载均衡设备箱全局负载均衡设备返回一台缓存服务器的ip地址, (依据ip, url内容, 服务器当前负载)
             · 全局负载均衡设备将服务器ip地址返回用户, 用户转为向缓存服务器发起请求
-      5. HTTP, TCP队列及链接(并发不超过6个, 超出进入TCP队列等待)
+      5. HTTP, HTTPS, TCP队列及链接(并发不超过6个, 超出进入TCP队列等待, 浏览器对同一域名下tcp连接有限制一般是2-10个不等)
         5.1 http五层协议栈: 应用层, 传输层, 网络层, 数据链路层, 物理层;
         5.2 TCP/IP链接: HTTP的本质是建立该链接
-        5.3 三次握手: 
-            客户端closed, 服务端listen
-            一次握手: 客户端发送syn报文, 指定初始化序列号, 客户端syn-send状态
-            二次握手: 服务端接受syn并确认, 设置ack(isn(x) + 1), 发送syn=1, 将自己的初始化序列号发挥isn(y), 发送到客户端, 服务端进入syn-receive状态  
-            三次握手: 客户端收到syn报文, 发送ack报文, 标识已接收到客户端syn报文, 客户端处于established状态, 服务端获取到后也处于established状态； 
-            三次握手后连接建立: 确认双方接受发送正常, 指定初始化序列号保证可靠传输, 如果https三次握手过程还会进行数字证书的验证及加密秘钥的生成
-        5.4 四次挥手:
+        5.3 三次握手: 初始: 客户端closed, 服务端listen
+          一次握手: 客户端发送syn报文, 指定初始化序列号, 客户端syn-send状态
+          二次握手: 服务端接受syn并确认, 设置ack(isn(x) + 1), 发送syn=1, 将自己的初始化序列号发回isn(y), 发送到客户端, 服务端进入syn-receive状态  
+          三次握手: 客户端收到syn报文, 发送ack报文, 标识已接收到客户端syn报文, 客户端处于established状态, 服务端获取到后也处于established状态； 
+          三次握手作用 => 确认双方接受发送正常, 指定初始化序列号保证可靠传输, 如果https三次握手过程还会进行数字证书的验证及加密秘钥的生成
+        5.4 四次挥手: 初始双方都established状态
+          一次挥手: 客户端发送FIN报文, 后处于fin-wait-1状态
+          二次挥手: 服务端收到fin，发送ack报文, 后处于closed-wait状态, 客户端接收后处于fin-wait-2状态
+          三次挥手: 服务端也想断开连接，给客户端发送fin报文，此时状态是last-ack状态
+          四次挥手: 客户端接收到fin后发送ack应答, 客户端处于time-wait状态, 服务端接受后设置为closed，客户端等待2msl后状态变closed
+          每次的报文发送都会带上自己的序列号seq
+          四次挥手作用 => 服务端收到fin报文不会立刻关闭连接，先回复ack;只有等服务端所有报文发送完才发送fin报文。
+        5.5 get与post
+          本质都是tcp连接, 但get产生一个tcp数据包直接发送header和data, post先发送headers服务端响应100后在发送data
+        5.6 长连接与短连接: 
+          tcp/ip层面: 长连接(一个tcp/id可连续发送多个数据包, 如果没有数据包双方发送检测包以维持连接, 一般自己做在线维持-类似于心跳); 短连接(有数据交互就建立, 数据发送完成就断开)
+          http层面: 1.0默认短连接, 1.1默认长链接如果客户端再次访问使用已有连接
+        5.7 http2.0: 一个tcp/ip可发送多个资源, 分割成更小的帧, 提升明显
+          特性1：应用层和传输层中增加二进制分帧层(头部帧 + 数据帧) ，所有数据传输分为连接->流(一组请求响应)->帧(流中每段数据)这三个层次;
+          特性2: 多路复用, 所有数据通信在一个连接完成, 每个数据帧发送端准备完成后即可, 无需等待前一个请求的响应, 每帧携带"身份"进行重组, 解决队首阻塞问题, 降低资源开销和数据传输延时;
+          特性3: 头部压缩, 1.x请求响应重复携带不便的头部数据变为重用, 仅发送更变头部信息。基于一个默认值查找表进行更改, 每次当前请求都仅包含被修改的字段;
+          特性4: 请求优先级, 2.0可以乱序传输因此利用优先级树(父节点流优先子节点流, 兄弟节点按照权重)确保传输
+          特性5: 服务器推送
+        5.8 https: http + ssl/tls = https
+          http明文传输因此数据可能被窃取或篡改(中间人攻击), 利用对称加密 + 非对称加密 + 数字证书认证 构建https提高安全性
+          https的tls握手步骤(15个完整步骤, 9个主要步骤): 
+            客户端发送hello支持的ssl/tls协议及支持的加密算法集合压缩方法信息给客户端;
+            客户端响应hello选定双方支持的ssl/tls协议版本加密方法压缩方法给客户端
+            服务端发送证书给客户端(可选); 双向验证, 服务端请求客户端证书(可选)
+            服务端通知客户端初始协商结束
+            双向验证, 客户端向服务端发送客户端证书(可选)
+            客户端使用服务端公钥, 对客户端公钥和秘钥加密 发送至服务端
+            双向验证: 客户端用本地私钥生成数字签名，发送给服务端，让其通过客户端公钥进行身份验证(可选)
+            双方基于秘钥种子等信息生成通信秘钥;
+            客户端通知服务端将通讯方式切换到加密模式
+            客户端做好加密通讯准备
+            服务端通知客户端已将通讯方式切换至加密模式
+            服务端做好加密通讯准备
+            双方使用客户端秘钥通过对称加密算法进行加密
+            通讯结束后，任意一方发出ssl信息
+        5.9 对称加密与非对称加密
+          对称加密: 加解密用的同样的秘钥
+          非对称加密: 一队密钥(公钥私钥), 公钥加密的数据只有私钥能解密, 私钥加密的数据只有公钥能解密
+          对称加密安全问题: 第三方很容易获取加密方法, 因为加密方法也能解密, 中间人可以劫持数据破解, 将加密方式破解;
+          非对称加密: 服务器两把钥匙公钥公开, 私钥自己知道
+            浏览器将client_random和加密方法列表给服务器,
+            服务端把server_random加密方法和公钥传给浏览器,
+            浏览器用公钥将client_random和server_random加密, 生成通信暗号
+          非对称加密问题: 服务器数据只能用私钥加密, 中间人一旦拿到公钥, 就能对服务端数据进行解密, 就被破解了。
+          非对称加密与对称加密的结合: 
+            浏览器给服务端发送client_random和加密方法列表
+            服务器收到后返回server_random 加密方法和公钥
+            浏览器收到接着生成一个随机数pre_random用公钥加密, 传个服务器
+            服务器接受后用是要解密这个pre_random
+            浏览器和服务器有三个相同的凭证client_random, pre_random, server_random两者用相同方法混合三个随机数, 生成最终的秘钥
+            浏览器和服务器用这个相同的密钥进行通信，即对称加密
+          对称加密和非对称加密结合的本质: 防止私钥加密的数据外传, 增加一个pre_random, 因为很难拿到是要, 所以pre_random很难破解。
+        5.10 数字证书:遇到dns劫持无法判断目标服务器是否安全 -> 添加数字证书让服务器证明自己的身份.
+          获取授权: CA；
+          数字证书作用: 服务端向浏览器证明身份, 将公钥传给浏览器.
+          数值证书的组成: 服务器公钥和其他信息用hash算法生成一个信息摘要 -> 通过ca的私钥生成数值签名
+          验证过程: 整数签名中保存hash函数, 获取证书中的明文内容, 用hash函数生成消息 => 用ca公钥解密整数中的数值签名, 也获取一份摘要, 对比。
+      6. 报文, 请求 <-> 响应
+        6.1 报文结构
+          请求报文: 请求行 + 请求头 + 空行 + 请求体
+          响应报文: 状态行 + 消息报头 + 空行 + 响应正文
+        6.2 常见请求方法: 
+          get, post, head, options, put, delete, (trace, connect)
+        6.3 常用请求头: 
+          Accept, Accept-Encoding, Content-Type, Cache-Control, if-modifined-since, expires, max-age, if-none-match, cookie, host, origin, referer, user-agent;
+        6.4 常见响应头: 
+          Access-Control-Allow-Headers/Methods/Origin, Content-type, Date, Cache-Control, Last-modified, expires, etag, max-age, keep-alive
+        6.5 http状态码: 
+          1xx: 请求接受继续处理;
+          2xx: 成功;
+          3xx: 重定向;
+          4xx: 客户端错误;
+          5xx: 服务端错误;
+        
 
-      6. 请求 <-> 响应
       8. 断开连接
     
     
     
     */
+
+    function getDfsLev(obj){
+      if (typeof obj !== 'object' || obj === null){
+        return 0;
+      }
+      const values = Object.values(obj);
+      if(values.length === 0) {
+        return 1;
+      }
+      let result = 0;
+      for(const val of values){
+        result = Math.max(result, getLev(val) + 1);
+      }
+      return result;
+    }
+
+    function getBfsLev(obj){
+      if (typeof obj !== 'object' || obj === null){
+        return 0;
+      }
+      let result = 0;
+      let records = [obj];
+      while(records.length > 0){
+        const nextRecords = [];
+        result++;
+        records.forEach(e => {
+          const values = Object.values(e).filter(k => typeof k === 'object' && k !== null);
+          nextRecords.push(...values);
+        });
+        records = nextRecords;
+      }
+      return result;
+    }
   </script>
 </body>
 </html>
