@@ -170,8 +170,34 @@
           CSSOM构建过程与构建DOM即为相似, 过程中浏览器确定每个节点样式是什么;
           CSS匹配html元素非常负责且有性能问题, 因此dom树要小, css尽量使用id和class, 不要过度层叠。
         7.3 构建渲染树
+          DOM树与CSSOM树生成后，合并为渲染树
+          渲染树只会包含需要显示的节点和节点的样式信息(display:none不会渲染)
+          浏览器渲染过程中, 如果遇到js即停止渲染(GUI渲染线程与js引擎线程互斥); 不只是渲染, js同样会组织CSSOM和DOMtree的构建;
+          通过script设置defer和async属性可以使得js加载不阻塞dom构建
+      8. 页面布局
+        浏览器生成渲染树以后根据渲染树布局: 回流。
+        布局流程的输出是一个盒模型。
+        8.1 合成：
+          · 普通文档流可以理解为一个默认的复合图层, 元素都处于这同一个复合图层中;
+          · 3dTransition, translate3d, translate, animation, transition, video, canvas, webgl, cssfilter, willchange等会将元素变成一个复合层 -> 硬件加速
+          · 硬件加速时使用index, 避免造成不必要的复合层;
+        8.2 重绘与重排
+          重绘: 修改元素外观以外的部分样式, 引用新样式修改某个元素
+          重排: 元素内容结构尺寸发生变化, 需要重新计算样式和渲染树
+          引起重排: 
+            渲染初始化; 修改dom; 修改样式表; 用户事件(悬停/滚动/输入框输入文字/改变窗口大小)
+            修改或获取某些属性应发回流: offset(top/left/wid/hei..), scroll(top...), client(top...), width, height, getComputedStyle
+          优化方案: 
+            简化样式表, 简化dom元素的层级, 尽量少table(重绘重排成本更高), 
+            尽量不要把读和写操作一起, 尽量批处理
+            缓存重排结果
+            离线缓存dom
+            虚拟dom
+            必要时使用display:none(不影响重绘重排), visibility对重排无影响会影响重绘
+          引起重绘: border-radius, box-shadow, color等
+          优化方案: 避免代价太高重绘的style, gif设置为display:none避免重绘; 为大范围重绘的区域生成独立的层, 减少重绘
+        8.3 css格式模型: 包含块, 控制框, display 
           
-
 
     
     */
