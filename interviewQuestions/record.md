@@ -57,6 +57,28 @@ https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/
 3. 介绍react的Fiber和更新的流程
 4. 大屏的开发中，遇到了那些问题，怎么处理的
 
+蓝湖一面: 
+react: hooks和class相比解决了什么问题; class component中this的指向什么情况下会出现异常; 
+js的继承是怎么实现的
+完成一道算法题: 
+    interface TreeNode {id: string,  children: TreeNode[], obj: {id1, id2, ...}}
+    todo : findFarther(idList: Array[string], treeNodes) -> 找到idList最近公共祖先。
+你在项目中做了哪些优化, 有没有量化的指标, 是怎么实现的
+webpack打包中构建速度优化, 项目体积优化, 
+二叉树是什么样子的数据结构, 有那些应用
+二分搜索的时间复杂度是多少, 为什么是这个时间复杂度。
+
+蓝湖二面(前端leader): 
+1. 写一个扫雷游戏
+2. redux做了什么, 为什么要使用, 有什么优化
+3. 可视化进行了哪些尝试, 相关的优化路线。
+
+蓝湖三面(技术总监)
+1. 最近工作技术上有成就感事儿，分享; 
+2. 遇到的挑战, 怎么处理的, 结果如何;
+3. 思考这样一个场景: 线上突然爆出问题, 页面使用8小时候, crash, 你会怎么尝试去解决?
+4. 你认为的更强的自己
+5. 你是怎么发挥自己在团队中的作用
 
 
 技能清单
