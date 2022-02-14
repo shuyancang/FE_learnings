@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    //设计一个请求池，支持限制最大并发数，如下所示：
+    function createRequest({pool = 2}){
+      const records = [1, 2, 3, 4, 5, 6];
+      const result = [];
+      return new Promise((res, rej) => {
+        const result = [];
+        function queueQuery(){
+          Promise.all(records.splice(0, pool).map(e => {
+            return new Promise((m, n) => {
+              setTimeout(() => {
+                m(e);
+              }, Math.random() * 3000);
+            });
+          })).then(data => {
+            console.log(records, data, '----');
+            result.push(...data);
+            if(records.length > 0){
+              queueQuery()
+            } else if(records.length === 0) {
+              res(result);
+            }
+          });
+        }
+        queueQuery();
+      })
+    }
+    createRequest({pool: 2}).then(data => {
+        console.log(data, 'end')
+    })
+
+    //希望达到的效果是：最多同时有3个请求在获取图片，如下所示
+    const request = createRequest({pool:3});
+    [1,2, 3, 4, 5, 6, 7].forEach((e)=>request(e))
+  </script>
+</body>
+</html>
