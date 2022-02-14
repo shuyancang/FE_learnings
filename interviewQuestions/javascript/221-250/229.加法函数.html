@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 假设本地机器无法做加减乘除法，需要通过远程请求让服务端来实现。
+    // 以加法为例，现有远程API的模拟实现
+    const addRemote = async (a, b) => new Promise(resolve => {
+      setTimeout(() => resolve(a + b), 1000)
+    })
+    
+    // 请实现本地的add方法，调用addRemote，能最优的实现输入数字的加法。
+    async function add(...inputs) {
+        // return inputs.reduce((a, b) => {
+        //     return a.then(data => addRemote(data, b))
+        // }, Promise.resolve(0))
+        return new Promise((res, rej) => {
+          let result = 0;
+          async function getSum(){
+            for(let i = 0; i < inputs.length; i++){
+              result = await addRemote(result, inputs[i]);
+            }
+            res(result);
+          }
+          getSum();
+        });
+    }
+    
+    // 请用示例验证运行结果:
+    add(1, 2)
+        .then(result => {
+        console.log(result) // 3
+        })
+    
+    add(3, 5, 2)
+        .then(result => {
+        console.log(result) // 10
+        })
+  </script>
+</body>
+</html>
