@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="./base64.js"></script>
+  <pack-image></pack-image>
+  <script>
+    class PackImage extends HTMLElement {
+      constructor() {
+        super();
+        const container = document.createElement('div')
+        const image = document.createElement('img')
+        image.src = `data:image/jpeg;base64, ${img0}`
+        const text = document.createElement('p')
+        container.append(image, text)
+        this.appendChild(container)
+      }
+      connectedCallback(){
+        console.log('connectedCallback')
+      }
+      disconnectedCallback(){
+        console.log('disconnectedCallback')
+      }
+      attributeChangedCallback(attrName, oldVal, newVal){
+        console.log('attributeChangedCallback', attrName, oldVal, newVal)
+      }
+      adoptedCallback(){
+        console.log('adoptedCallback')
+      }
+    }
+    customElements.define('pack-image', PackImage)
+  </script>
+</body>
+</html>

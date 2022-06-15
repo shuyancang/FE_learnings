@@ -7,22 +7,25 @@
   <title>Document</title>
 </head>
 <body>
+  <script src="./base64.js"></script>
   <pack-player></pack-player>
   <script>
+    // imgList: base64列表
     class PackPlayer extends HTMLElement {
       constructor() {
         super();
         const container = document.createElement('div')
-
-        const image = document.createElement('img')
-        image.className = 'image'
-        image.src = "./imgs/05pack.jpg"
-
+        const imgElements = imgList.map(e => {
+          const image = document.createElement('img')
+          image.src = `data:image/jpeg;base64, ${e}`
+          image.width = 192
+          image.height = 108
+          image.style.margin = '4px'
+          return image
+        })
         const text = document.createElement('p')
-        text.className = 'price'
-        text.textContent = `0 / 680`
-
-        container.append(image, text)
+        text.textContent = `0 / ${imgList.length}`
+        container.append(...imgElements, text)
         this.appendChild(container)
       }
     }
