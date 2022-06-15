@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <pack-player></pack-player>
+  <script>
+    class PackPlayer extends HTMLElement {
+      constructor() {
+        super();
+        const container = document.createElement('div')
+
+        const image = document.createElement('img')
+        image.className = 'image'
+        image.src = "./imgs/05pack.jpg"
+
+        const text = document.createElement('p')
+        text.className = 'price'
+        text.textContent = `0 / 680`
+
+        container.append(image, text)
+        this.appendChild(container)
+      }
+    }
+    customElements.define('pack-player', PackPlayer)
+  </script>
+</body>
+</html>
