@@ -8,7 +8,7 @@
 </head>
 <body>
   <script src="./base64.js"></script>
-  <pack-image></pack-image>
+  <pack-image title="pack-player" text="text"></pack-image>
   <script>
     class PackImage extends HTMLElement {
       constructor() {
@@ -16,20 +16,28 @@
         const container = document.createElement('div')
         const image = document.createElement('img')
         image.src = `data:image/jpeg;base64, ${img0}`
-        const text = document.createElement('p')
-        container.append(image, text)
+        this.textInfo = document.createElement('p')
+        this.textInfo.textContent = this.getAttribute('title')
+        container.append(image, this.textInfo)
         this.appendChild(container)
       }
-      connectedCallback(){
+      static get observedAttributes(){
+        console.log('???')
+        return ['title', 'text']
+      }
+      connectedCallback(){ // 自定义元素第一次被连接到文档DOM时被调用
         console.log('connectedCallback')
       }
-      disconnectedCallback(){
+      disconnectedCallback(){ // 自定义元素与dom断开链接调用
         console.log('disconnectedCallback')
       }
-      attributeChangedCallback(attrName, oldVal, newVal){
+      attributeChangedCallback(attrName, oldVal, newVal){ // 自定义元素属性change调用。
         console.log('attributeChangedCallback', attrName, oldVal, newVal)
+        setInterval(() => {
+          this.textInfo.textContent = `${Math.random()}`
+        }, 3000)
       }
-      adoptedCallback(){
+      adoptedCallback(){ // 自定义元素被移动到新文档时被调用
         console.log('adoptedCallback')
       }
     }
