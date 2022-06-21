@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <template id="pack-player">
+    <style>
+      .box{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+      }
+      img{
+          width: 500px;
+      }
+      p{
+        padding-left: 10px;
+        font-size: 72px;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        background-color: lightblue;
+      }
+    </style>
+    <div class="box">
+      <img src="./imgs/05pack.jpg" />
+      <p>0 / 15</p>
+    </div>
+  </template>
+  <pack-player></pack-player>
+  <p>test</p>
+  <script>
+    class PackPlayer extends HTMLElement {
+      constructor() {
+        super()
+        this.attachShadow({ mode: 'open' })
+        const player = document.querySelector('#pack-player')
+        const content = player.content.cloneNode(true)
+        this.shadowRoot.appendChild(content)
+      }
+    }
+    customElements.define('pack-player', PackPlayer)
+  </script>
+</body>
+</html>
