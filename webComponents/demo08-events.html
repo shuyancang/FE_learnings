@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <template id="pack-player">
+    <style>
+      :host{
+        display: flex;
+        width: 50vw;
+        height: 40vh;
+        background-color: #ececec;
+      }
+      .box{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+      }
+      img{
+          width: 500px;
+      }
+    </style>
+    <div class="box">
+      <img id="imagePic" src="./imgs/05pack.jpg" />
+      <button>下一个</button>
+    </div>
+  </template>
+  <pack-player />
+  <script src="./base64.js"></script>
+  <script>
+    let imageIndex = 0
+    let timer = null
+    class PackPlayer extends HTMLElement {
+      constructor() {
+        super()
+        const shadowRoot = this.attachShadow({ mode: 'open' })
+        const player = document.querySelector('#pack-player')
+        const content = player.content.cloneNode(true)
+        shadowRoot.appendChild(content)
+        this.imageList = imgList
+        this.image = shadowRoot.querySelector('img')
+        this.button = shadowRoot.querySelector('button')
+        this.init()
+      }
+      init(){
+        const imageDOM = this.image
+        imageDOM.onclick = function(){
+          if(timer){
+            clearInterval(timer)
+          }
+          timer = setInterval(() => {
+            imageIndex = (imageIndex + 15) % 16
+            imageDOM.src = `data:image/jpeg;base64, ${imgList[imageIndex]}`
+          }, 66)
+        }
+        this.button.onclick = function(){
+          if(timer){
+            clearInterval(timer)
+          }
+          timer = setInterval(() => {
+            imageIndex = (imageIndex + 1) % 16
+            imageDOM.src = `data:image/jpeg;base64, ${imgList[imageIndex]}`
+          }, 66)
+        }
+      }
+    }
+    customElements.define('pack-player', PackPlayer)
+  </script>
+</body>
+</html>

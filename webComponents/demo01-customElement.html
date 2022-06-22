@@ -30,6 +30,11 @@
       }
     }
     customElements.define('pack-player', PackPlayer)
+    // customElements.define('pack-player', PackPlayer, options)
+    // options控制如何定义,  { extends: 'p' }
+    // console.log(customElements.get('pack-player') === PackPlayer) // true
+    customElements.whenDefined('pack-player').then(res => console.log('whenDefined', res))
+    // 自定义元素被定义时执行, 返回undefined. ; 如果已经被定义, 则立即执行。
   </script>
 </body>
 </html>

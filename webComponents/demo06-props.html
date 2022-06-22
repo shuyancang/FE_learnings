@@ -31,28 +31,48 @@
       }
     </style>
     <div class="box">
-      <img src="./imgs/05pack.jpg" />
-      <!-- <a href="https://baidu.com">ttttt</a> -->
-      <p>0 / 15</p>
+      <img id="imagePic" />
+      <p>
+        <span id="imageIndex"></span>
+        <span>/</span>
+        <span id="totalImage"></span>
+      </p>
     </div>
   </template>
-  <pack-player></pack-player>
-  <p>test</p>
+  <pack-player
+    src="./imgs/05pack.jpg"
+    total="15"
+    index="0"
+  ></pack-player>
   <script>
     class PackPlayer extends HTMLElement {
       constructor() {
         super()
-        const shadowRoot = this.attachShadow({ mode: 'open' }) // mode: open | closed标识是否封闭是否允许外部访问。返回值为ShadowRoot(mode为open时) 或 null(mode为closed时)
+        const shadowRoot = this.attachShadow({ mode: 'open' })
         const player = document.querySelector('#pack-player')
         const content = player.content.cloneNode(true)
-        // shadowRoot.appendChild(content)
         this.shadowRoot.appendChild(content)
-        // console.log(shadowRoot === this.shadowRoot)
+      }
+      static get observedAttributes(){
+        return ['src', 'total', 'index']
+      }
+      attributeChangedCallback(attrName, oldVal, newVal){
+        console.log(attrName, oldVal, newVal)
+        // console.log(this.attributes) // ===> 基于attributes 进行Proxy
+        switch(attrName){
+          case 'src':
+            this.shadowRoot.querySelector('#imagePic').src = newVal
+            break
+          case 'index':
+            this.shadowRoot.querySelector('#imageIndex').textContent = newVal
+            break
+          case 'total':
+            this.shadowRoot.querySelector('#totalImage').textContent = newVal
+            break
+        }
       }
     }
     customElements.define('pack-player', PackPlayer)
-    console.log(document.querySelector('pack-player').shadowRoot)
-    console.log(document.querySelectorAll('img')) // 被隔离掉了。
   </script>
 </body>
 </html>

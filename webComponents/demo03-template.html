@@ -20,6 +20,7 @@
         super()
         const player = document.querySelector('#pack-player')
         console.log(player.content) // document-fragment
+        // 模板可以复用, 因此cloneNode, 而不是直接添加子元素。
         this.appendChild(player.content.cloneNode(true))
       }
     }

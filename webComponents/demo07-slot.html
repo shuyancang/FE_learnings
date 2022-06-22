@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <template id="pack-player">
+    <style>
+      :host{
+        display: flex;
+        width: 50vw;
+        height: 40vh;
+        background-color: #ececec;
+      }
+      .box{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+      }
+      img{
+          width: 500px;
+      }
+    </style>
+    <div class="box">
+      <img id="imagePic" />
+      <p>
+        <span id="imageIndex"></span>
+        <span>/</span>
+        <span id="totalImage"></span>
+      </p>
+      <slot name="action-btn"></slot>
+    </div>
+  </template>
+  <pack-player
+    src="./imgs/05pack.jpg"
+    total="15"
+    index="0"
+  >
+    <div slot="action-btn">
+      <span>我要打十个</span>
+    </div>
+  </pack-player>
+  <pack-player
+    src="./imgs/05pack.jpg"
+    total="15"
+    index="0"
+  >
+    <div slot="action-btn">
+      <span>苟一手, 认个错先</span>
+    </div>
+  </pack-player>
+  <script>
+    class PackPlayer extends HTMLElement {
+      constructor() {
+        super()
+        const shadowRoot = this.attachShadow({ mode: 'open' })
+        const player = document.querySelector('#pack-player')
+        const content = player.content.cloneNode(true)
+        this.shadowRoot.appendChild(content)
+      }
+      static get observedAttributes(){
+        return ['src', 'total', 'index']
+      }
+      attributeChangedCallback(attrName, oldVal, newVal){
+        console.log(attrName, oldVal, newVal)
+        // console.log(this.attributes) // ===> 基于attributes 进行Proxy
+        switch(attrName){
+          case 'src':
+            this.shadowRoot.querySelector('#imagePic').src = newVal
+            break
+          case 'index':
+            this.shadowRoot.querySelector('#imageIndex').textContent = newVal
+            break
+          case 'total':
+            this.shadowRoot.querySelector('#totalImage').textContent = newVal
+            break
+        }
+      }
+    }
+    customElements.define('pack-player', PackPlayer)
+  </script>
+</body>
+</html>
