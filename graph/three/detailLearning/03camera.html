@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="../three.js"></script>
+  <script>
+    const scene = new THREE.Scene()
+    console.log(scene.position)
+    // const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1,1000 );
+    const camera = new THREE.OrthographicCamera(-50, 50, 50, -50, 0.1,1000);
+    console.log(camera.position)
+    // camera.position 是Victor3D
+    // camera.position.x = -10; // 设置相机位置
+    // camera.position.y = 40;
+    // camera.position.z = 30;
+    camera.position.set(-30, 30, 30)
+    console.log(camera.position)
+
+    // camera: isCamera
+    // OrthographicCamera(left,right,top,bottom,near,far): 正交相机, 无论物体距离远近, 图片中物体大小不变 - 2D或UI
+    // PerspectiveCamera(fov,aspect,near,far) 透视相机-模拟人眼, 3D中最常用投影
+    // StereoCamera 立体相机, 用于创建3D立体影响 或 视察屏障
+    // ArrayCamera: 一组相机, 提升VR渲染。
+
+    camera.lookAt(scene.position); // 相机拍摄向场景;
+    
+    const axes = new THREE.AxesHelper(20); 
+    scene.add(axes); // 将测试工具加入场景
+
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(1000, 600);
+
+    document.body.appendChild(renderer.domElement); // 将renderer挂到body
+    renderer.render(scene, camera); // 渲染场景
+  </script>
+</body>
+</html>
