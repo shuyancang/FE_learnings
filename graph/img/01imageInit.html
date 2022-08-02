@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas width="1100px" height="1100px" id="canvas"></canvas>
+    <script>
+      // 001.bmp是一个1100 * 1100的图片
+      const canvas = document.querySelector('#canvas')
+      const { width, height } = canvas
+      const ctx = canvas.getContext('2d')
+      const clampedArr = new Uint8ClampedArray(width * height * 4)
+
+      const offset = 54
+      fetch("./001.bmp")
+        .then((res) => res.arrayBuffer())
+        .then((buffer) => {
+          console.log(buffer); // byteLength: 3630054
+          const data = new Uint8Array(buffer, offset) // Uint8Array(3630000) = 3 * 1100 * 1100
+          for(let i = 0; i < width; i++){
+            for (let j = 0; j < height; j++){
+              clampedArr[i * j] = data[i * j]
+              clampedArr[i * j + 1] = data[i * j + 1]
+              clampedArr[i * j + 2] = data[i * j + 2]
+              clampedArr[i * j + 3] = 127
+            }
+          }
+          console.log(clampedArr)
+          // for(let )
+        });
+
+    </script>
+  </body>
+</html>

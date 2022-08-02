@@ -4,6 +4,7 @@ const router = require('koa-simple-router');
 const serve = require('koa-static');
 const render = require('koa-swig');
 const co = require('co');
+const path = require('path')
 const app = new koa();
 
 app.context.render = co.wrap(render({
@@ -19,6 +20,7 @@ app.use(ctx => {
   ctx.body = 'hello koa 2';
 });
 
+console.log(app)
 app.use(router(_ => {
   _.get('/', (ctx, next) => {
     ctx.body = 'hello / path';
@@ -28,6 +30,12 @@ app.use(router(_ => {
       title: '学习koa2',
       // userinfo: ct
     })
+  })
+  _.get('/packplayer', async(ctx, next) => {
+
+  })
+  _.get('/images', (ctx, next) => {
+    ctx.body = 'images';
   })
 }))
 
