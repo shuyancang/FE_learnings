@@ -13,12 +13,15 @@
       const canvas = document.querySelector('#canvas')
       const { width, height } = canvas
       const ctx = canvas.getContext('2d')
-      const imageData = ctx.createImageData(width, height) // 
+      const imageData = ctx.createImageData(width, height) //
       // imageData.data: Uint8ClampedArray(4840000)
       console.log(imageData.data)
       const offset = 54
       fetch("./001.bmp")
-        .then((res) => res.arrayBuffer())
+        .then((res) => {
+          console.log(res)
+          return res.arrayBuffer()
+        })
         .then((buffer) => {
           console.log(buffer); // byteLength: 3630054
           const data = new Uint8Array(buffer, offset) // Uint8Array(3630000) = 3 * 1100 * 1100
@@ -33,7 +36,6 @@
           }
           ctx.putImageData(imageData, 0, 0)
         });
-
     </script>
   </body>
 </html>

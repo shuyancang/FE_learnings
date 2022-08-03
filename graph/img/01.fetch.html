@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 最常见的fetch
+    fetch(
+      'http://player.aidi.hobot.cc/api/packcvt/v1/convert?pack_url=dmpv2://plat-qa-data/issue-data/artificial-collection/multicam/x8b/%E5%A4%A7%E9%80%9AEP-018/20220314/ADAS_20220314-135723_223_5_1560163591720.pack'
+    )
+    .then(res => res.json())
+    .then(res => {
+        console.log(res) // {code: 0, message: 'success', data: 'success'}
+    })
+  </script>
+</body>
+</html>
