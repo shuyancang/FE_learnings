@@ -7,15 +7,39 @@
   <title>Document</title>
 </head>
 <body>
-  <div id="copy" style="background:center / contain no-repeat url('./assets/001.bmp');width: 100px;height: 100px;"></div>
+  <!-- <div id="source" style="background:center / contain no-repeat url('./assets/001.bmp');width: 100px;height: 100px;"></div> -->
+  <!-- <svg width="100px" height="100px">
+    <image id="svg" href='./assets/001.bmp' x="0" y="0" height="50px" width="50px"/>
+  </svg> -->
   <canvas id="box" width="500px" height="500px" style="background-color: yellowgreen;"></canvas>
   <script>
     const canvas = document.querySelector('#box')
     const ctx = canvas.getContext('2d') // CanvasRenderingContext2D 
+    
+    // ctx.drawImage可绘制target 
+    // CssImage, HtmlImage, SvgImage, HTMLVideo, HTMLCanvas, ImageBitmap, OffsetCanvas
 
-    fetch('./assets/001.bmp').then(res => {
-      ctx.drawImage(document.querySelector('copy'), 0, 0)
-    })
+    // case1: ctx.draw: CssImageValue
+    // 必须等image onload后才能执行
+    // setTimeout(() => {
+    //   const imageDom = document.querySelector('#source')
+    //   const loadedImageSource = imageDom.computedStyleMap().get('background-image')
+    //   console.log(loadedImageSource)
+    //   ctx.drawImage(loadedImageSource, 0, 0, 500, 500)
+    // }, 2000)
+
+    // case2: ctx.draw: Image
+
+    // case3: ctx.draw: Svg
+    // const svg = document.querySelector('#svg')
+    // console.log(svg instanceof SVGImageElement)
+    // ctx.drawImage(svg, 0, 0, 500, 500)
+
+    // fetch('./assets/001.bmp').then(res => {
+    //   const imageCssSource = document.querySelector('#source').computedStyleMap().get('background-image')
+    //   console.log(imageCssSource)
+    //   ctx.drawImage(imageCssSource, 0, 0)
+    // })
 </script>
 </body>
 </html>
