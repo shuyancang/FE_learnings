@@ -9,13 +9,42 @@
 <body>
   <script>
     // 最常见的fetch
-    fetch(
-      'http://player.aidi.hobot.cc/api/packcvt/v1/convert?pack_url=dmpv2://plat-qa-data/issue-data/artificial-collection/multicam/x8b/%E5%A4%A7%E9%80%9AEP-018/20220314/ADAS_20220314-135723_223_5_1560163591720.pack'
-    )
-    .then(res => res.json())
-    .then(res => {
-        console.log(res) // {code: 0, message: 'success', data: 'success'}
+    // fetch(
+    //   'http://player.aidi.hobot.cc/api/packcvt/v1/convert?pack_url=dmpv2://plat-qa-data/issue-data/artificial-collection/multicam/x8b/%E5%A4%A7%E9%80%9AEP-018/20220314/ADAS_20220314-135723_223_5_1560163591720.pack'
+    // )
+    // .then(res => res.json())
+    // .then(res => {
+    //     console.log(res) // {code: 0, message: 'success', data: 'success'}
+    // })
+
+    // 略微不同的fetch 
+    fetch('./assets/001.bmp').then(res => {
+      return res.arrayBuffer()
+    }).then(buffer => {
+      console.log(buffer) // ArrayBuffer(3630054)
     })
+
+    fetch('./assets/001.bmp').then(res => {
+      return res.blob()
+    }).then(blob => {
+      console.log(blob) // Blob {size: 3630054, type: 'image/bmp'}
+    })
+
+    // 别有用心的fetch
+    // fetch('./assets/6min02.mp4').then(async res => {
+    //   // console.log(res)
+    //   // res.body: ReadableStream
+    //   const reader = res.body.getReader()
+    //   while(true){
+    //     const { value, done } = await reader.read()
+    //     if(done){
+    //       break
+    //     }
+    //     console.log('received', value)
+    //     // 每个value都是一个Uint8Array, 
+    //   }
+    //   console.log('over')
+    // })
   </script>
 </body>
 </html>
