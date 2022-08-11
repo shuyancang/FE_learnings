@@ -12,12 +12,14 @@
     <image id="svg" href='./assets/001.bmp' x="0" y="0" height="50px" width="50px"/>
   </svg> -->
   <canvas id="box" width="500px" height="500px" style="background-color: yellowgreen;"></canvas>
+  <!-- <canvas id="copyBox" width="500px" height="500px" style="background-color: lightblue;"></canvas> -->
+  <video controls src="./assets/6min02.mp4" width=" 500px" height="500px" id="video"></video>
   <script>
     const canvas = document.querySelector('#box')
     const ctx = canvas.getContext('2d') // CanvasRenderingContext2D 
-    
+
     // ctx.drawImage可绘制target 
-    // CssImage, HtmlImage, SvgImage, HTMLVideo, HTMLCanvas, ImageBitmap, OffsetCanvas
+    // CssImage, HtmlImage, SvgImage, HTMLVideo, HTMLCanvas, OffsetCanvas
 
     // case1: ctx.draw: CssImageValue
     // 必须等image onload后才能执行
@@ -29,17 +31,32 @@
     // }, 2000)
 
     // case2: ctx.draw: Image
+    // const image = new Image()
+    // image.src = './assets/001.bmp'
+    // image.onload = () => {
+    //   ctx.drawImage(image, 0, 0, 300, 300)
+    // }
 
     // case3: ctx.draw: Svg
     // const svg = document.querySelector('#svg')
     // console.log(svg instanceof SVGImageElement)
     // ctx.drawImage(svg, 0, 0, 500, 500)
 
-    // fetch('./assets/001.bmp').then(res => {
-    //   const imageCssSource = document.querySelector('#source').computedStyleMap().get('background-image')
-    //   console.log(imageCssSource)
-    //   ctx.drawImage(imageCssSource, 0, 0)
-    // })
+    // case4: ctx.draw: canvas
+    // const image = new Image()
+    // image.src = './assets/001.bmp'
+    // image.onload = () => {
+    //   ctx.drawImage(image, 0, 0, 300, 300)
+    //   const copyCanvas = document.querySelector('#copyBox')
+    //   const copyCtx = copyCanvas.getContext('2d')
+    //   copyCtx.drawImage(canvas, 0, 0, 200, 200)
+    // }
+
+    // case5: ctx.draw: Video
+    // const video = document.querySelector('#video')
+    // setInterval(() => {
+    //   ctx.drawImage(video, 0, 0)
+    // }, 2000);
 </script>
 </body>
 </html>
