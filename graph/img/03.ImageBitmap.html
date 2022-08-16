@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas
+      id="box"
+      width="500px"
+      height="500px"
+      style="background-color: yellowgreen"
+    ></canvas>
+    <!-- <img id="img" width="200px" height="600px" src="./assets/001.bmp" /> -->
+    <script>
+      const canvas = document.querySelector("#box");
+      const ctx = canvas.getContext("2d"); // CanvasRenderingContext2D
+
+      // ImageBitmap: height, width, close
+      // createImageBitmap() 生成得到ImageBitmap
+
+      // createImageBitmap(image, [options]).then(res => )
+      // 一个图像源，可以是一个 <img>, SVG <image>, <video>, <canvas>, HTMLImageElement, SVGImageElement (en-US), HTMLVideoElement, HTMLCanvasElement, Blob, ImageData, ImageBitmap, 或 OffscreenCanvas 对象。
+      // const image = document.querySelector("img");
+      // image.onload = function () {
+      //   createImageBitmap(image, {
+      //     resizeWidth: 300,
+      //     resizeHeight: 300,
+      //     resizeQuality: "high",
+      //   }).then((res) => {
+      //     ctx.drawImage(res, 0, 0);
+      //   });
+      // };
+
+      fetch("./assets/001.bmp")
+        .then(res => res.blob())
+        .then((blob) => {
+          console.log(blob);
+          return createImageBitmap(blob, {
+            resizeWidth: 300,
+            resizeHeight: 300,
+            resizeQuality: 'high'
+          }); // Blob {size: 3630054, type: 'image/bmp'}
+        })
+        .then((res) => {
+          ctx.drawImage(res, 0, 0);
+        });
+        // Uint8ClampedArray
+    </script>
+  </body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <image src="./assets/001.bmp" width="500px" height="500px" />
+    <canvas
+      width="500px"
+      height="500px"
+      style="background-color: lightblue"
+      id="canvas"
+    ></canvas>
+    <canvas
+      width="100px"
+      height="100px"
+      style="background-color: yellowgreen"
+      id="custom"
+    ></canvas>
+    <script>
+      const canvas = document.querySelector("#canvas");
+      const { width, height } = canvas;
+      const ctx = canvas.getContext("2d");
+      let timer = performance.now();
+      fetch("./assets/001.bmp")
+        .then((res) => res.arrayBuffer())
+        .then((ab) => {
+          // new Uint8ClampedArray(buffer [, byteOffset [, length]]);
+          // 基于arraybuffer生成的图片TypedArray
+          const uintArr = new Uint8ClampedArray(ab, 54);
+          // 生成规范的ImageData
+          // ImageData()三个参数，第一个 是Uint8ClampedArray的实例，第二个和第三个表示的是 width 和 height，必须保证 Uint8ClampedArray 的 length = 4*width*height 才不会报错，如果第一个参数 Uint8ClampedArray 没有的话，自动按照 width 和 height 的大小，以 0 填充整个像素矩阵。
+          const len = 1100 * 1100 * 4;
+          const imageArr = new Uint8ClampedArray(len);
+          let index = 0;
+          const startTime = performance.now();
+          for (let i = 0; i < uintArr.length; i++) {
+            imageArr[index] = uintArr[i];
+            index++;
+            if (i % 3 === 2) {
+              imageArr[index] = 255;
+              index++;
+            }
+          }
+          console.log(performance.now() - startTime);
+          const imageData = new ImageData(imageArr, 1100, 1100);
+          return createImageBitmap(imageData, {
+            resizeWidth: 500,
+            resizeHeight: 500,
+            // resizeQuality: 'high'
+          });
+        })
+        .then((res) => {
+          ctx.drawImage(res, 0, 0);
+          console.log(performance.now() - timer);
+        });
+
+      const custom = document.querySelector("#custom");
+      const customCtx = custom.getContext("2d");
+      const customArr = new Uint8ClampedArray(100 * 100 * 4);
+      let count = 0;
+      for (let i = 0; i < customArr.length; i++) {
+        if (i % 4 === 0) {
+          customArr[i] = Math.floor(i / 160); // r
+        } else if (i % 4 === 1) {
+          customArr[i] = Math.floor((customArr.length - i) / 160); // g
+        } else if (i % 4 === 2) {
+          customArr[i] = Math.floor(i / 160);
+        } else {
+          customArr[i] = 127; // a
+        }
+      }
+      const customImageData = new ImageData(customArr, 100, 100);
+      createImageBitmap(customImageData).then((res) => {
+        customCtx.drawImage(res, 0, 0);
+      });
+    </script>
+  </body>
+</html>
